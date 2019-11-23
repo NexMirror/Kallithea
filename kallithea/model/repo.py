@@ -644,7 +644,7 @@ class RepoModel(object):
         else:
             _paths = [self.repos_path, new_parent_path, repo_name]
             # we need to make it str for mercurial
-        repo_path = os.path.join(*map(lambda x: safe_str(x), _paths))
+        repo_path = os.path.join(*(safe_str(x) for x in _paths))
 
         # check if this path is not a repository
         if is_valid_repo(repo_path, self.repos_path):

@@ -78,7 +78,7 @@ class WhooshIndexingDaemon(object):
         # filter repo list
         if repo_list:
             # Fix non-ascii repo names to unicode
-            repo_list = map(safe_unicode, repo_list)
+            repo_list = set(safe_unicode(repo_name) for repo_name in repo_list)
             self.filtered_repo_paths = {}
             for repo_name, repo in self.repo_paths.items():
                 if repo_name in repo_list:

@@ -1163,7 +1163,7 @@ class Repository(Base, BaseDbModel):
         # names in the database, but that eventually needs to be converted
         # into a valid system path
         p += self.repo_name.split(Repository.url_sep())
-        return os.path.join(*map(safe_unicode, p))
+        return os.path.join(*(safe_unicode(d) for d in p))
 
     @property
     def cache_keys(self):
@@ -2511,8 +2511,7 @@ class Gist(Base, BaseDbModel):
     def scm_instance(self):
         from kallithea.lib.vcs import get_repo
         base_path = self.base_path()
-        return get_repo(os.path.join(*map(safe_str,
-                                          [base_path, self.gist_access_id])))
+        return get_repo(os.path.join(safe_str(base_path), safe_str(self.gist_access_id)))
 
 
 class UserSshKeys(Base, BaseDbModel):

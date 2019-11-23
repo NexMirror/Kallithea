@@ -168,7 +168,7 @@ class JSONRPCController(TGController):
         # self.kargs and dispatch control to WGIController
         argspec = inspect.getargspec(self._func)
         arglist = argspec[0][1:]
-        defaults = map(type, argspec[3] or [])
+        defaults = [type(arg) for arg in argspec[3] or []]
         default_empty = type(NotImplemented)
 
         # kw arguments required by this method

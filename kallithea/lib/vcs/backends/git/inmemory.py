@@ -47,7 +47,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         for node in self.added + self.changed:
             # Compute subdirs if needed
             dirpath, nodename = posixpath.split(node.path)
-            dirnames = map(safe_str, dirpath and dirpath.split('/') or [])
+            dirnames = safe_str(dirpath).split('/') if dirpath else []
             parent = commit_tree
             ancestors = [('', parent)]
 

@@ -27,7 +27,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def tags(self):
-        return map(safe_unicode, self._ctx.tags())
+        return [safe_unicode(tag) for tag in self._ctx.tags()]
 
     @LazyProperty
     def branch(self):
@@ -95,7 +95,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def bookmarks(self):
-        return map(safe_unicode, self._ctx.bookmarks())
+        return [safe_unicode(bookmark) for bookmark in self._ctx.bookmarks()]
 
     @LazyProperty
     def message(self):

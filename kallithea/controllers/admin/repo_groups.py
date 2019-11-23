@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import itertools
 import logging
 import traceback
 
@@ -42,7 +41,7 @@ from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoGroupPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.utils2 import safe_int
+from kallithea.lib.utils2 import safe_int, safe_unicode
 from kallithea.model.db import RepoGroup, Repository
 from kallithea.model.forms import RepoGroupForm, RepoGroupPermsForm
 from kallithea.model.meta import Session
@@ -120,9 +119,7 @@ class RepoGroupsController(BaseController):
         )
 
         for repo_gr in group_iter:
-            children_groups = map(h.safe_unicode,
-                itertools.chain((g.name for g in repo_gr.parents),
-                                (x.name for x in [repo_gr])))
+            children_groups = [safe_unicode(g.name) for g in repo_gr.parents] + [safe_unicode(repo_gr.name)]
             repo_count = repo_gr.repositories.count()
             repo_groups_data.append({
                 "raw_name": repo_gr.group_name,

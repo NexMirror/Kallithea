@@ -101,7 +101,7 @@ def main(argv=None):
         parser.error('Please specify method name')
 
     try:
-        margs = dict(map(lambda s: s.split(':', 1), other))
+        margs = dict(s.split(':', 1) for s in other)
     except ValueError:
         sys.stderr.write('Error parsing arguments \n')
         sys.exit()

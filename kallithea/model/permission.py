@@ -73,8 +73,7 @@ class PermissionModel(object):
             return '.'.join(perm_name.split('.')[:1])
 
         perms = UserToPerm.query().filter(UserToPerm.user == user).all()
-        defined_perms_groups = map(_get_group,
-                                (x.permission.permission_name for x in perms))
+        defined_perms_groups = set(_get_group(x.permission.permission_name) for x in perms)
         log.debug('GOT ALREADY DEFINED:%s', perms)
         DEFAULT_PERMS = Permission.DEFAULT_USER_PERMISSIONS
 

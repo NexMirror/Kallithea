@@ -379,7 +379,7 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
             h %= 1
             HSV_tuple = [h, 0.95, 0.95]
             RGB_tuple = hsv_to_rgb(*HSV_tuple)
-            yield map(lambda x: str(int(x * 256)), RGB_tuple)
+            yield [str(int(x * 256)) for x in RGB_tuple]
 
     cgenerator = gen_color()
 
