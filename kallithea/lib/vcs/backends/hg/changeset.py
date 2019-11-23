@@ -246,9 +246,9 @@ class MercurialChangeset(BaseChangeset):
         """
         fctx = self._get_filectx(path)
         if 'x' in fctx.flags():
-            return 0100755
+            return 0o100755
         else:
-            return 0100644
+            return 0o100644
 
     def get_file_content(self, path):
         """

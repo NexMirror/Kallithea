@@ -750,7 +750,7 @@ class ScmModel(object):
                     with open(_hook_file, 'wb') as f:
                         tmpl = tmpl.replace('_TMPL_', kallithea.__version__)
                         f.write(tmpl)
-                    os.chmod(_hook_file, 0755)
+                    os.chmod(_hook_file, 0o755)
                 except IOError as e:
                     log.error('error writing %s: %s', _hook_file, e)
             else:

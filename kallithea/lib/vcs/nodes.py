@@ -255,7 +255,7 @@ class FileNode(Node):
         super(FileNode, self).__init__(path, kind=NodeKind.FILE)
         self.changeset = changeset
         self._content = content
-        self._mode = mode or 0100644
+        self._mode = mode or 0o100644
 
     @LazyProperty
     def mode(self):

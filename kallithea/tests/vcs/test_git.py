@@ -657,7 +657,7 @@ class TestGitSpecificWithRepo(_BackendTestMixin):
                 'added': [
                     FileNode('foobar/static/js/admin/base.js', content='base'),
                     FileNode('foobar/static/admin', content='admin',
-                        mode=0120000), # this is a link
+                        mode=0o120000), # this is a link
                     FileNode('foo', content='foo'),
                 ],
             },

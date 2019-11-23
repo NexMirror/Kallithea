@@ -144,13 +144,13 @@ class TestNodeBasic(object):
         assert not mode & stat.S_IXOTH
 
     def test_file_node_is_executable(self):
-        node = FileNode('foobar', 'empty... almost', mode=0100755)
+        node = FileNode('foobar', 'empty... almost', mode=0o100755)
         assert node.is_executable
 
-        node = FileNode('foobar', 'empty... almost', mode=0100500)
+        node = FileNode('foobar', 'empty... almost', mode=0o100500)
         assert node.is_executable
 
-        node = FileNode('foobar', 'empty... almost', mode=0100644)
+        node = FileNode('foobar', 'empty... almost', mode=0o100644)
         assert not node.is_executable
 
     def test_mimetype(self):
