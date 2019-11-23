@@ -26,7 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 from collections import defaultdict
-from itertools import ifilter
 
 from pygments import lexers
 
@@ -59,15 +58,11 @@ def get_index_filenames():
     """
     Get list of known indexable filenames from pygment lexer internals
     """
-
     filenames = []
-
-    def likely_filename(s):
-        return s.find('*') == -1 and s.find('[') == -1
-
     for lx, t in sorted(lexers.LEXERS.items()):
-        for f in ifilter(likely_filename, t[-2]):
-            filenames.append(f)
+        for f in t[-2]:
+            if '*' not in f and '[' not in f:
+                filenames.append(f)
 
     return filenames
 
