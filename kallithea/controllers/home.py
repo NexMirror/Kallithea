@@ -93,6 +93,10 @@ class HomeController(BaseController):
                     ],
                    }]
 
+            for res_dict in res:
+                for child in (res_dict['children']):
+                    child['obj'].pop('_changeset_cache', None)  # bytes cannot be encoded in json ... but this value isn't relevant on client side at all ...
+
             data = {
                 'more': False,
                 'results': res,
