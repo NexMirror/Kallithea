@@ -108,7 +108,7 @@ class RcConf(object):
     def __getitem__(self, key):
         return self._conf[key]
 
-    def __nonzero__(self):
+    def __bool__(self):
         if self._conf:
             return True
         return False

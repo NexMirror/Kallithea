@@ -87,7 +87,7 @@ class MailBase(object):
     def __delitem__(self, key):
         del self.headers[normalize_header(key)]
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.body is not None or len(self.headers) > 0 or len(self.parts) > 0
 
     def keys(self):

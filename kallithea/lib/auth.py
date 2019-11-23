@@ -760,7 +760,7 @@ class _PermsFunction(object):
     def __init__(self, *required_perms):
         self.required_perms = required_perms # usually very short - a list is thus fine
 
-    def __nonzero__(self):
+    def __bool__(self):
         """ Defend against accidentally forgetting to call the object
             and instead evaluating it directly in a boolean context,
             which could have security implications.
