@@ -169,7 +169,7 @@ class JSONRPCController(TGController):
         argspec = inspect.getargspec(self._func)
         arglist = argspec[0][1:]
         defaults = map(type, argspec[3] or [])
-        default_empty = types.NotImplementedType
+        default_empty = type(NotImplemented)
 
         # kw arguments required by this method
         func_kwargs = dict(itertools.izip_longest(reversed(arglist), reversed(defaults),
