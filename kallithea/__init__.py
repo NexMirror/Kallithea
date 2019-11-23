@@ -31,6 +31,9 @@ import platform
 import sys
 
 
+if sys.version_info < (3, 6):
+    raise Exception('Kallithea requires python 3.6 or later')
+
 VERSION = (0, 5, 99)
 BACKENDS = {
     'hg': 'Mercurial repository',

@@ -220,7 +220,7 @@ commit_parse_limit = 25
 <%text>## used, which is correct in many cases but for example not when using uwsgi.</%text>
 <%text>## If you change this setting, you should reinstall the Git hooks via</%text>
 <%text>## Admin > Settings > Remap and Rescan.</%text>
-# git_hook_interpreter = /srv/kallithea/venv/bin/python2
+# git_hook_interpreter = /srv/kallithea/venv/bin/python3
 %if git_hook_interpreter:
 git_hook_interpreter = ${git_hook_interpreter}
 %endif

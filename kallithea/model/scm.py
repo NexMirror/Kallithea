@@ -700,7 +700,7 @@ class ScmModel(object):
         # FIXME This may not work on Windows and may need a shell wrapper script.
         return (kallithea.CONFIG.get('git_hook_interpreter')
                 or sys.executable
-                or '/usr/bin/env python2')
+                or '/usr/bin/env python3')
 
     def install_git_hooks(self, repo, force_create=False):
         """

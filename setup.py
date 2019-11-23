@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 import platform
@@ -11,6 +11,9 @@ from setuptools.command import sdist
 
 if sys.version_info < (2, 6) or sys.version_info >= (3,):
     raise Exception('Kallithea requires python 2.7')
+# But temporarily, at the same time:
+if sys.version_info < (3, 6):
+    raise Exception('Kallithea requires Python 3.6 or later')
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -62,7 +65,7 @@ requirements = [
     "URLObject >= 2.3.4, < 2.5",
     "Routes >= 2.0, < 2.5",
     "dulwich >= 0.19.0, < 0.20",
-    "mercurial >= 5.1, < 5.4",
+    "mercurial >= 5.2, < 5.4",
     "decorator >= 4.2.1, < 4.5",
     "Paste >= 2.0.3, < 3.1",
     "bleach >= 3.0, < 3.2",
