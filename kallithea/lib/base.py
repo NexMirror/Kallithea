@@ -30,7 +30,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 import datetime
 import logging
-import time
 import traceback
 import warnings
 
@@ -300,7 +299,6 @@ class BaseVCSController(object):
         return _get_ip_addr(environ)
 
     def __call__(self, environ, start_response):
-        start = time.time()
         try:
             # try parsing a request for this VCS - if it fails, call the wrapped app
             parsed_request = self.parse_request(environ)
@@ -343,10 +341,6 @@ class BaseVCSController(object):
 
         except webob.exc.HTTPException as e:
             return e(environ, start_response)
-        finally:
-            log_ = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log_.debug('Request time: %.3fs', time.time() - start)
-            meta.Session.remove()
 
 
 class BaseController(TGController):
