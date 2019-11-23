@@ -309,7 +309,7 @@ def loadplugin(plugin):
                         "a subclass of %s" % (plugin, KallitheaAuthPluginBase))
 
     plugin = pluginclass()
-    if plugin.plugin_settings.im_func != KallitheaAuthPluginBase.plugin_settings.im_func:
+    if plugin.plugin_settings.__func__ != KallitheaAuthPluginBase.plugin_settings:
         raise TypeError("Authentication class %s.KallitheaAuthPluginBase "
                         "has overridden the plugin_settings method, which is "
                         "forbidden." % plugin)
