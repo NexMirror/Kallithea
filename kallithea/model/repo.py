@@ -128,7 +128,7 @@ class RepoModel(object):
 
         tmpl = template.get_def(tmpl)
         kwargs.update(dict(_=_, h=h, c=c, request=request))
-        return tmpl.render(*args, **kwargs)
+        return tmpl.render_unicode(*args, **kwargs)
 
     def get_repos_as_dict(self, repos_list, repo_groups_list=None,
                           admin=False,
