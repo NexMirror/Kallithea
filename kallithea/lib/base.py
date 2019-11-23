@@ -628,7 +628,7 @@ def jsonify(func, *args, **kwargs):
         warnings.warn(msg, Warning, 2)
         log.warning(msg)
     log.debug("Returning JSON wrapped action output")
-    return json.dumps(data, encoding='utf-8')
+    return json.dumps(data)
 
 @decorator.decorator
 def IfSshEnabled(func, *args, **kwargs):
