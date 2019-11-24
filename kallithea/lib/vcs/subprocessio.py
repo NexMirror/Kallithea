@@ -44,7 +44,7 @@ class StreamFeeder(threading.Thread):
         if type(source) in (type(''), bytes, bytearray):  # string-like
             self.bytes = bytes(source)
         else:  # can be either file pointer or file-like
-            if type(source) in (int, long):  # file pointer it is
+            if isinstance(source, int):  # file pointer it is
                 # converting file descriptor (int) stdin into file-like
                 source = os.fdopen(source, 'rb', 16384)
             # let's see if source is file-like by now

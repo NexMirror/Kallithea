@@ -139,7 +139,7 @@ class BaseDbModel(object):
             return None
         if isinstance(value, cls):
             return value
-        if isinstance(value, (int, long)):
+        if isinstance(value, int):
             return cls.get(value)
         if isinstance(value, basestring) and value.isdigit():
             return cls.get(int(value))
