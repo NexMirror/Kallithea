@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import cStringIO
 import logging
 import os
 import posixpath
@@ -485,12 +484,8 @@ class ScmModel(object):
             # in any other case this will throw exceptions and deny commit
             if isinstance(content, (basestring,)):
                 content = safe_str(content)
-            elif isinstance(content, (file, cStringIO.OutputType,)):
-                content = content.read()
             else:
-                raise Exception('Content is of unrecognized type %s' % (
-                    type(content)
-                ))
+                content = content.read()
             processed_nodes.append((f_path, content))
 
         message = safe_unicode(message)

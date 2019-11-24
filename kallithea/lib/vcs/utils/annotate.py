@@ -1,5 +1,3 @@
-import StringIO
-
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 
@@ -83,12 +81,12 @@ class AnnotateHtmlFormatter(HtmlFormatter):
             return ''.join((changeset.id, '\n'))
 
     def _wrap_tablelinenos(self, inner):
-        dummyoutfile = StringIO.StringIO()
+        inner_lines = []
         lncount = 0
         for t, line in inner:
             if t:
                 lncount += 1
-            dummyoutfile.write(line)
+            inner_lines.append(line)
 
         fl = self.linenostart
         mw = len(str(lncount + fl - 1))
@@ -147,7 +145,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
                   '<tr><td class="linenos"><div class="linenodiv"><pre>' +
                   ls + '</pre></div></td>' +
                   '<td class="code">')
-        yield 0, dummyoutfile.getvalue()
+        yield 0, ''.join(inner_lines)
         yield 0, '</td></tr></table>'
 
         '''
@@ -175,5 +173,5 @@ class AnnotateHtmlFormatter(HtmlFormatter):
                   ''.join(headers_row) +
                   ''.join(body_row_start)
                   )
-        yield 0, dummyoutfile.getvalue()
+        yield 0, ''.join(inner_lines)
         yield 0, '</td></tr></table>'

@@ -22,7 +22,6 @@ import json
 import logging
 import random
 import re
-import StringIO
 import textwrap
 import urlparse
 
@@ -246,12 +245,12 @@ class CodeHtmlFormatter(HtmlFormatter):
             yield i, t
 
     def _wrap_tablelinenos(self, inner):
-        dummyoutfile = StringIO.StringIO()
+        inner_lines = []
         lncount = 0
         for t, line in inner:
             if t:
                 lncount += 1
-            dummyoutfile.write(line)
+            inner_lines.append(line)
 
         fl = self.linenostart
         mw = len(str(lncount + fl - 1))
@@ -304,7 +303,7 @@ class CodeHtmlFormatter(HtmlFormatter):
                       '<tr><td class="linenos"><div class="linenodiv">'
                       '<pre>' + ls + '</pre></div></td>'
                       '<td id="hlcode" class="code">')
-        yield 0, dummyoutfile.getvalue()
+        yield 0, ''.join(inner_lines)
         yield 0, '</td></tr></table>'
 
 

@@ -37,9 +37,8 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
 
         for x in xrange(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            decompressed = StringIO.StringIO()
-            decompressed.write(out.read('repo/' + node_path))
-            assert decompressed.getvalue() == self.tip.get_node(node_path).content
+            decompressed = out.read('repo/' + node_path)
+            assert decompressed == self.tip.get_node(node_path).content
 
     def test_archive_tgz(self):
         path = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_tgz-')[1]
