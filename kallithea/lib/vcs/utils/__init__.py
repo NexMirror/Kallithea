@@ -66,89 +66,57 @@ def safe_int(val, default=None):
     return val
 
 
-def safe_unicode(str_, from_encoding=None):
+def safe_unicode(s):
     """
-    safe unicode function. Does few trick to turn str_ into unicode
-
-    In case of UnicodeDecode error we try to return it with encoding detected
-    by chardet library if it fails fallback to unicode with errors replaced
-
-    :param str_: string to decode
-    :rtype: unicode
-    :returns: unicode object
+    Safe unicode function. Use a few tricks to turn s into unicode string:
+    In case of UnicodeDecodeError with configured default encodings, try to
+    detect encoding with chardet library, then fall back to first encoding with
+    errors replaced.
     """
-    if isinstance(str_, unicode):
-        return str_
+    if isinstance(s, unicode):
+        return s
 
-    if not from_encoding:
-        from kallithea.lib.vcs.conf import settings
-        from_encoding = settings.DEFAULT_ENCODINGS
+    if not isinstance(s, str):  # use __str__ / __unicode__ and don't expect UnicodeDecodeError
+        return unicode(s)
 
-    if not isinstance(from_encoding, (list, tuple)):
-        from_encoding = [from_encoding]
-
-    try:
-        return unicode(str_)
-    except UnicodeDecodeError:
-        pass
-
-    for enc in from_encoding:
+    from kallithea.lib.vcs.conf import settings
+    for enc in settings.DEFAULT_ENCODINGS:
         try:
-            return unicode(str_, enc)
+            return unicode(s, enc)
         except UnicodeDecodeError:
             pass
 
     try:
         import chardet
-        encoding = chardet.detect(str_)['encoding']
-        if encoding is None:
-            raise Exception()
-        return str_.decode(encoding)
-    except (ImportError, UnicodeDecodeError, Exception):
-        return unicode(str_, from_encoding[0], 'replace')
+        encoding = chardet.detect(s)['encoding']
+        if encoding is not None:
+            return s.decode(encoding)
+    except (ImportError, UnicodeDecodeError):
+        pass
+
+    return unicode(s, settings.DEFAULT_ENCODINGS[0], 'replace')
 
 
-def safe_str(unicode_, to_encoding=None):
+def safe_str(s):
     """
-    safe str function. Does few trick to turn unicode_ into string
-
-    In case of UnicodeEncodeError we try to return it with encoding detected
-    by chardet library if it fails fallback to string with errors replaced
-
-    :param unicode_: unicode to encode
-    :rtype: str
-    :returns: str object
+    Safe str function. Use a few tricks to turn s into bytes string:
+    In case of UnicodeEncodeError with configured default encodings, fall back
+    to first configured encoding with errors replaced.
     """
+    if isinstance(s, str):
+        return s
 
-    # if it's not basestr cast to str
-    if not isinstance(unicode_, basestring):
-        return str(unicode_)
+    if not isinstance(s, unicode):
+        return str(s)
 
-    if isinstance(unicode_, str):
-        return unicode_
-
-    if not to_encoding:
-        from kallithea.lib.vcs.conf import settings
-        to_encoding = settings.DEFAULT_ENCODINGS
-
-    if not isinstance(to_encoding, (list, tuple)):
-        to_encoding = [to_encoding]
-
-    for enc in to_encoding:
+    from kallithea.lib.vcs.conf import settings
+    for enc in settings.DEFAULT_ENCODINGS:
         try:
-            return unicode_.encode(enc)
+            return s.encode(enc)
         except UnicodeEncodeError:
             pass
 
-    try:
-        import chardet
-        encoding = chardet.detect(unicode_)['encoding']
-        if encoding is None:
-            raise UnicodeEncodeError()
-
-        return unicode_.encode(encoding)
-    except (ImportError, UnicodeEncodeError):
-        return unicode_.encode(to_encoding[0], 'replace')
+    return s.encode(settings.DEFAULT_ENCODINGS[0], 'replace')
 
 
 # Regex taken from http://www.regular-expressions.info/email.html
