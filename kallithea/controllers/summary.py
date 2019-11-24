@@ -38,6 +38,7 @@ from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPBadRequest
 
+import kallithea.lib.helpers as h
 from kallithea.config.conf import ALL_EXTS, ALL_READMES, LANGUAGES_EXTENSIONS_MAP
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
@@ -45,7 +46,7 @@ from kallithea.lib.celerylib.tasks import get_commits_stats
 from kallithea.lib.compat import json
 from kallithea.lib.markup_renderer import MarkupRenderer
 from kallithea.lib.page import RepoPage
-from kallithea.lib.utils2 import safe_int
+from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import FileNode
@@ -104,7 +105,11 @@ class SummaryController(BaseRepoController):
     def index(self, repo_name):
         p = safe_int(request.GET.get('page'), 1)
         size = safe_int(request.GET.get('size'), 10)
-        collection = c.db_repo_scm_instance
+        try:
+            collection = c.db_repo_scm_instance.get_changesets()
+        except EmptyRepositoryError as e:
+            h.flash(safe_str(e), category='warning')
+            collection = []
         c.cs_pagination = RepoPage(collection, page=p, items_per_page=size)
         page_revisions = [x.raw_id for x in list(c.cs_pagination)]
         c.cs_comments = c.db_repo.get_comments(page_revisions)
