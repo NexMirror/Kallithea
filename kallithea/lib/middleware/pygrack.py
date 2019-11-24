@@ -186,7 +186,7 @@ class GitRepository(object):
         _path = self._get_fixedpath(req.path_info)
         if _path.startswith('info/refs'):
             app = self.inforefs
-        elif [a for a in self.valid_accepts if a in req.accept]:
+        elif req.accept.acceptable_offers(self.valid_accepts):
             app = self.backend
         try:
             resp = app(req, environ)
