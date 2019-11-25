@@ -120,10 +120,6 @@ class Node(object):
         return None
 
     @LazyProperty
-    def unicode_path(self):
-        return safe_unicode(self.path)
-
-    @LazyProperty
     def name(self):
         """
         Returns name of the node so if its path
