@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import urllib
+import urllib.parse
 
 from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.model.db import Repository, User
@@ -159,7 +159,7 @@ class _BaseTestCase(base.TestController):
         response = self.app.get(base.url(controller='forks', action='forks',
                                     repo_name=repo_name))
         response.mustcontain(
-            """<a href="/%s">%s</a>""" % (urllib.quote(fork_name), fork_name)
+            """<a href="/%s">%s</a>""" % (urllib.parse.quote(fork_name), fork_name)
         )
         fork_repo = Repository.get_by_repo_name(safe_unicode(fork_name))
         assert fork_repo
@@ -180,7 +180,7 @@ class _BaseTestCase(base.TestController):
         response = self.app.get(base.url(controller='forks', action='forks',
                                     repo_name=fork_name))
         response.mustcontain(
-            """<a href="/%s">%s</a>""" % (urllib.quote(fork_name_2), fork_name_2)
+            """<a href="/%s">%s</a>""" % (urllib.parse.quote(fork_name_2), fork_name_2)
         )
 
         # remove these forks

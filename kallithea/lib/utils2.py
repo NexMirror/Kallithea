@@ -36,7 +36,7 @@ import os
 import pwd
 import re
 import time
-import urllib
+import urllib.parse
 
 import urlobject
 from tg.i18n import ugettext as _
@@ -322,14 +322,14 @@ def credentials_filter(uri):
 
 def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None):
     parsed_url = urlobject.URLObject(prefix_url)
-    prefix = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
+    prefix = safe_unicode(urllib.parse.unquote(parsed_url.path.rstrip('/')))
     try:
         system_user = pwd.getpwuid(os.getuid()).pw_name
     except Exception: # TODO: support all systems - especially Windows
         system_user = 'kallithea' # hardcoded default value ...
     args = {
         'scheme': parsed_url.scheme,
-        'user': safe_unicode(urllib.quote(safe_str(username or ''))),
+        'user': safe_unicode(urllib.parse.quote(safe_str(username or ''))),
         'netloc': parsed_url.netloc + prefix,  # like "hostname:port/prefix" (with optional ":port" and "/prefix")
         'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,

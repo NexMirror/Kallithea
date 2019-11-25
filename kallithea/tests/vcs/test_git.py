@@ -1,7 +1,7 @@
 import datetime
 import os
 import sys
-import urllib2
+import urllib.error
 
 import mock
 import pytest
@@ -32,7 +32,7 @@ class TestGitRepository(object):
 
     def test_git_cmd_injection(self):
         repo_inject_path = TEST_GIT_REPO + '; echo "Cake";'
-        with pytest.raises(urllib2.URLError):
+        with pytest.raises(urllib.error.URLError):
             # Should fail because URL will contain the parts after ; too
             GitRepository(get_new_dir('injection-repo'), src_url=repo_inject_path, update_after_clone=True, create=True)
 

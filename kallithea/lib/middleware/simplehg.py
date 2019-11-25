@@ -30,7 +30,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import os
-import urllib
+import urllib.parse
 
 import mercurial.hgweb
 
@@ -121,7 +121,7 @@ class SimpleHg(BaseVCSController):
                             break
                         action = 'pull'
                         for cmd_arg in hgarg[5:].split(';'):
-                            cmd, _args = urllib.unquote_plus(cmd_arg).split(' ', 1)
+                            cmd, _args = urllib.parse.unquote_plus(cmd_arg).split(' ', 1)
                             op = cmd_mapping.get(cmd, 'push')
                             if op != 'pull':
                                 assert op == 'push'

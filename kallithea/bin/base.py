@@ -29,7 +29,7 @@ import os
 import pprint
 import random
 import sys
-import urllib2
+import urllib.request
 
 from kallithea.lib import ext_json
 from kallithea.lib.utils2 import ascii_bytes
@@ -68,10 +68,10 @@ def api_call(apikey, apihost, method=None, **kw):
         raise Exception('please specify method name !')
     apihost = apihost.rstrip('/')
     id_ = random.randrange(1, 9999)
-    req = urllib2.Request('%s/_admin/api' % apihost,
+    req = urllib.request.Request('%s/_admin/api' % apihost,
                       data=ascii_bytes(ext_json.dumps(_build_data(id_))),
                       headers={'content-type': 'text/plain'})
-    ret = urllib2.urlopen(req)
+    ret = urllib.request.urlopen(req)
     raw_json = ret.read()
     json_data = ext_json.loads(raw_json)
     id_ret = json_data['id']

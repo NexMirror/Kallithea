@@ -32,7 +32,7 @@ import os
 import re
 import tempfile
 import time
-import urllib2
+import urllib.request
 from subprocess import PIPE, Popen
 from tempfile import _RandomNameSequence
 
@@ -329,11 +329,11 @@ class TestVCSOperations(base.TestController):
                          owner=base.TEST_USER_ADMIN_LOGIN,
                          repo_type=vt.repo_type),
         }
-        req = urllib2.Request(
+        req = urllib.request.Request(
             'http://%s:%s/_admin/api' % webserver.server_address,
             data=ascii_bytes(json.dumps(params)),
             headers={'content-type': 'application/json'})
-        response = urllib2.urlopen(req)
+        response = urllib.request.urlopen(req)
         result = json.loads(response.read())
         # Expect something like:
         # {u'result': {u'msg': u'Created new repository `new_XXX`', u'task': None, u'success': True}, u'id': 7, u'error': None}

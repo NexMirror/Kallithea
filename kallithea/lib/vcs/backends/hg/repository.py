@@ -13,8 +13,9 @@ import datetime
 import logging
 import os
 import time
-import urllib
-import urllib2
+import urllib.error
+import urllib.parse
+import urllib.request
 from collections import OrderedDict
 
 import mercurial.commands
@@ -314,20 +315,20 @@ class MercurialRepository(BaseRepository):
 
         if authinfo:
             # create a password manager
-            passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+            passmgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
             handlers.extend((mercurial.url.httpbasicauthhandler(passmgr),
                              mercurial.url.httpdigestauthhandler(passmgr)))
 
-        o = urllib2.build_opener(*handlers)
+        o = urllib.request.build_opener(*handlers)
         o.addheaders = [('Content-Type', 'application/mercurial-0.1'),
                         ('Accept', 'application/mercurial-0.1')]
 
-        req = urllib2.Request(
+        req = urllib.request.Request(
             "%s?%s" % (
                 test_uri,
-                urllib.urlencode({
+                urllib.parse.urlencode({
                     'cmd': 'between',
                     'pairs': "%s-%s" % ('0' * 40, '0' * 40),
                 })
@@ -339,14 +340,14 @@ class MercurialRepository(BaseRepository):
                 raise Exception('Return Code is not 200')
         except Exception as e:
             # means it cannot be cloned
-            raise urllib2.URLError("[%s] org_exc: %s" % (cleaned_uri, e))
+            raise urllib.error.URLError("[%s] org_exc: %s" % (cleaned_uri, e))
 
         if not url_prefix: # skip svn+http://... (and git+... too)
             # now check if it's a proper hg repo
             try:
                 mercurial.httppeer.instance(repoui or mercurial.ui.ui(), url, False).lookup(b'tip')
             except Exception as e:
-                raise urllib2.URLError(
+                raise urllib.error.URLError(
                     "url [%s] does not look like an hg repo org_exc: %s"
                     % (cleaned_uri, e))
 
@@ -490,7 +491,7 @@ class MercurialRepository(BaseRepository):
         """
         url = safe_str(url)
         if url != 'default' and '://' not in url:
-            url = "file:" + urllib.pathname2url(url)
+            url = "file:" + urllib.request.pathname2url(url)
         return url
 
     def get_changeset(self, revision=None):

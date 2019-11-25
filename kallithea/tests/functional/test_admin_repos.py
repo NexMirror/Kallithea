@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import urllib
+import urllib.parse
 
 import mock
 import pytest
@@ -410,7 +410,7 @@ class _BaseTestCase(base.TestController):
         assert response.json == {u'result': True}
         self.checkSessionFlash(response,
                                u'Created repository <a href="/%s">%s</a>'
-                               % (urllib.quote(repo_name), repo_name_unicode))
+                               % (urllib.parse.quote(repo_name), repo_name_unicode))
         # test if the repo was created in the database
         new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).one()

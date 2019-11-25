@@ -28,7 +28,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 import base64
 import logging
-import urllib2
+import urllib.parse
+import urllib.request
 
 from kallithea.lib import auth_modules, ext_json
 from kallithea.lib.compat import hybrid_property
@@ -72,10 +73,10 @@ class CrowdServer(object):
         self._make_opener()
 
     def _make_opener(self):
-        mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
         mgr.add_password(None, self._uri, self.user, self.passwd)
-        handler = urllib2.HTTPBasicAuthHandler(mgr)
-        self.opener = urllib2.build_opener(handler)
+        handler = urllib.request.HTTPBasicAuthHandler(mgr)
+        self.opener = urllib.request.build_opener(handler)
 
     def _request(self, url, body=None, headers=None,
                  method=None, noformat=False,
@@ -88,7 +89,7 @@ class CrowdServer(object):
         if headers:
             _headers.update(headers)
         log.debug("Sent to crowd at %s:\nHeaders: %s\nBody:\n%s", url, _headers, body)
-        req = urllib2.Request(url, body, _headers)
+        req = urllib.request.Request(url, body, _headers)
         if method:
             req.get_method = lambda: method
 
@@ -119,14 +120,14 @@ class CrowdServer(object):
         """Authenticate a user against crowd. Returns brief information about
         the user."""
         url = ("%s/rest/usermanagement/%s/authentication?username=%s"
-               % (self._uri, self._version, urllib2.quote(username)))
+               % (self._uri, self._version, urllib.parse.quote(username)))
         body = ascii_bytes(ext_json.dumps({"value": password}))
         return self._request(url, body)
 
     def user_groups(self, username):
         """Retrieve a list of groups to which this user belongs."""
         url = ("%s/rest/usermanagement/%s/user/group/nested?username=%s"
-               % (self._uri, self._version, urllib2.quote(username)))
+               % (self._uri, self._version, urllib.parse.quote(username)))
         return self._request(url)
 
 

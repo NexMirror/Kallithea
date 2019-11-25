@@ -14,8 +14,9 @@ import logging
 import os
 import re
 import time
-import urllib
-import urllib2
+import urllib.error
+import urllib.parse
+import urllib.request
 from collections import OrderedDict
 
 import mercurial.url  # import httpbasicauthhandler, httpdigestauthhandler
@@ -178,19 +179,19 @@ class GitRepository(BaseRepository):
 
         if authinfo:
             # create a password manager
-            passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+            passmgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
             handlers.extend((mercurial.url.httpbasicauthhandler(passmgr),
                              mercurial.url.httpdigestauthhandler(passmgr)))
 
-        o = urllib2.build_opener(*handlers)
+        o = urllib.request.build_opener(*handlers)
         o.addheaders = [('User-Agent', 'git/1.7.8.0')]  # fake some git
 
-        req = urllib2.Request(
+        req = urllib.request.Request(
             "%s?%s" % (
                 test_uri,
-                urllib.urlencode({"service": 'git-upload-pack'})
+                urllib.parse.urlencode({"service": 'git-upload-pack'})
             ))
 
         try:
@@ -199,12 +200,12 @@ class GitRepository(BaseRepository):
                 raise Exception('Return Code is not 200')
         except Exception as e:
             # means it cannot be cloned
-            raise urllib2.URLError("[%s] org_exc: %s" % (cleaned_uri, e))
+            raise urllib.error.URLError("[%s] org_exc: %s" % (cleaned_uri, e))
 
         # now detect if it's proper git repo
         gitdata = resp.read()
         if 'service=git-upload-pack' not in gitdata:
-            raise urllib2.URLError(
+            raise urllib.error.URLError(
                 "url [%s] does not look like an git" % cleaned_uri)
 
         return True

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
 
 
 class RecaptchaResponse(object):
@@ -30,13 +30,13 @@ def submit(g_recaptcha_response, private_key, remoteip):
             return s.encode('utf-8')
         return s
 
-    params = urllib.urlencode({
+    params = urllib.parse.urlencode({
         'secret': encode_if_necessary(private_key),
         'remoteip': encode_if_necessary(remoteip),
         'response': encode_if_necessary(g_recaptcha_response),
     }).encode('ascii')
 
-    req = urllib2.Request(
+    req = urllib.request.Request(
         url="https://www.google.com/recaptcha/api/siteverify",
         data=params,
         headers={
@@ -45,7 +45,7 @@ def submit(g_recaptcha_response, private_key, remoteip):
         }
     )
 
-    httpresp = urllib2.urlopen(req)
+    httpresp = urllib.request.urlopen(req)
     return_values = json.loads(httpresp.read())
     httpresp.close()
 

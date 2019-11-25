@@ -37,8 +37,8 @@ import os
 import sys
 import tempfile
 import time
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
 from os.path import dirname
 
 from kallithea.lib import vcs
@@ -73,13 +73,13 @@ PROJECTS = [
 
 
 cj = http.cookiejar.FileCookieJar(os.path.join(tempfile.gettempdir(), 'rc_test_cookie.txt'))
-o = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+o = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
 o.addheaders = [
     ('User-agent', 'kallithea-crawler'),
     ('Accept-Language', 'en - us, en;q = 0.5')
 ]
 
-urllib2.install_opener(o)
+urllib.request.install_opener(o)
 
 
 def _get_repo(proj):
@@ -101,7 +101,7 @@ def test_changelog_walk(proj, pages=100):
 
         page = '/'.join((proj, 'changelog',))
 
-        full_uri = (BASE_URI % page) + '?' + urllib.urlencode({'page': i})
+        full_uri = (BASE_URI % page) + '?' + urllib.parse.urlencode({'page': i})
         s = time.time()
         f = o.open(full_uri)
 

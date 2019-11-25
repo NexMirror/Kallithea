@@ -27,7 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 from __future__ import print_function
 
-import urllib2
+import urllib.request
 import uuid
 from configparser import ConfigParser
 
@@ -83,9 +83,9 @@ class API(object):
 
         data = ascii_bytes(ext_json.dumps(data))
         headers = {'content-type': 'text/plain'}
-        req = urllib2.Request(self.url, data, headers)
+        req = urllib.request.Request(self.url, data, headers)
 
-        response = urllib2.urlopen(req)
+        response = urllib.request.urlopen(req)
         response = ext_json.load(response)
 
         if uid != response["id"]:
