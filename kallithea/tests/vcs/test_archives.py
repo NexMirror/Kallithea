@@ -1,6 +1,6 @@
 import datetime
+import io
 import os
-import StringIO
 import tarfile
 import tempfile
 import zipfile
@@ -70,7 +70,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
         tmppath = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_default_stream-')[1]
         with open(tmppath, 'wb') as stream:
             self.tip.fill_archive(stream=stream)
-        mystream = StringIO.StringIO()
+        mystream = io.BytesIO()
         self.tip.fill_archive(stream=mystream)
         mystream.seek(0)
         with open(tmppath, 'rb') as f:
