@@ -172,7 +172,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             return []
 
         def get_tree_for_dir(tree, dirname):
-            for name, mode, id in tree.iteritems():
+            for name, mode, id in tree.items():
                 if name == dirname:
                     obj = self.repository._repo[id]
                     if isinstance(obj, objects.Tree):

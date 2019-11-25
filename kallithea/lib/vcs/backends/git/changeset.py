@@ -79,7 +79,7 @@ class GitChangeset(BaseChangeset):
     @LazyProperty
     def tags(self):
         _tags = []
-        for tname, tsha in self.repository.tags.iteritems():
+        for tname, tsha in self.repository.tags.items():
             if tsha == self.raw_id:
                 _tags.append(tname)
         return _tags
@@ -123,7 +123,7 @@ class GitChangeset(BaseChangeset):
             curdir = ''
 
             # initially extract things from root dir
-            for item, stat, id in tree.iteritems():
+            for item, stat, id in tree.items():
                 if curdir:
                     name = '/'.join((curdir, item))
                 else:
@@ -137,7 +137,7 @@ class GitChangeset(BaseChangeset):
                 else:
                     curdir = dir
                 dir_id = None
-                for item, stat, id in tree.iteritems():
+                for item, stat, id in tree.items():
                     if dir == item:
                         dir_id = id
                 if dir_id:
@@ -149,7 +149,7 @@ class GitChangeset(BaseChangeset):
                     raise ChangesetError('%s have not been found' % curdir)
 
                 # cache all items from the given traversed tree
-                for item, stat, id in tree.iteritems():
+                for item, stat, id in tree.items():
                     if curdir:
                         name = '/'.join((curdir, item))
                     else:
@@ -407,7 +407,7 @@ class GitChangeset(BaseChangeset):
         dirnodes = []
         filenodes = []
         als = self.repository.alias
-        for name, stat, id in tree.iteritems():
+        for name, stat, id in tree.items():
             if path != '':
                 obj_path = '/'.join((path, name))
             else:

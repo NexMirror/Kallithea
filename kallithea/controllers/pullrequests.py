@@ -109,7 +109,7 @@ class PullrequestsController(BaseRepoController):
         tipbranch = None
 
         branches = []
-        for abranch, branchrev in repo.branches.iteritems():
+        for abranch, branchrev in repo.branches.items():
             n = 'branch:%s:%s' % (abranch, branchrev)
             desc = abranch
             if branchrev == tiprev:
@@ -133,14 +133,14 @@ class PullrequestsController(BaseRepoController):
                 log.debug('branch %r not found in %s', branch, repo)
 
         bookmarks = []
-        for bookmark, bookmarkrev in repo.bookmarks.iteritems():
+        for bookmark, bookmarkrev in repo.bookmarks.items():
             n = 'book:%s:%s' % (bookmark, bookmarkrev)
             bookmarks.append((n, bookmark))
             if rev == bookmarkrev:
                 selected = n
 
         tags = []
-        for tag, tagrev in repo.tags.iteritems():
+        for tag, tagrev in repo.tags.items():
             if tag == 'tip':
                 continue
             n = 'tag:%s:%s' % (tag, tagrev)

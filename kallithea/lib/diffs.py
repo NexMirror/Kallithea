@@ -397,7 +397,7 @@ class DiffProcessor(object):
                 'new_lineno': '',
                 'action':     'context',
                 'line':       msg,
-                } for _op, msg in stats['ops'].iteritems()
+                } for _op, msg in stats['ops'].items()
                   if _op not in [MOD_FILENODE]])
 
             _files.append({

@@ -119,11 +119,11 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
         assert doc_changeset not in default_branch_changesets
 
     def test_get_changeset_by_branch(self):
-        for branch, sha in self.repo.branches.iteritems():
+        for branch, sha in self.repo.branches.items():
             assert sha == self.repo.get_changeset(branch).raw_id
 
     def test_get_changeset_by_tag(self):
-        for tag, sha in self.repo.tags.iteritems():
+        for tag, sha in self.repo.tags.items():
             assert sha == self.repo.get_changeset(tag).raw_id
 
     def test_get_changeset_parents(self):

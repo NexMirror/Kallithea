@@ -252,7 +252,7 @@ class GitRepository(BaseRepository):
 
     def _get_all_revisions2(self):
         # alternate implementation using dulwich
-        includes = [ascii_str(sha) for key, (sha, type_) in self._parsed_refs.iteritems()
+        includes = [ascii_str(sha) for key, (sha, type_) in self._parsed_refs.items()
                     if type_ != b'T']
         return [c.commit.id for c in self._repo.get_walker(include=includes)]
 
@@ -360,7 +360,7 @@ class GitRepository(BaseRepository):
             return {}
         sortkey = lambda ctx: ctx[0]
         _branches = [(key, ascii_str(sha))
-                     for key, (sha, type_) in self._parsed_refs.iteritems() if type_ == b'H']
+                     for key, (sha, type_) in self._parsed_refs.items() if type_ == b'H']
         return OrderedDict(sorted(_branches, key=sortkey, reverse=False))
 
     @LazyProperty
@@ -377,7 +377,7 @@ class GitRepository(BaseRepository):
 
         sortkey = lambda ctx: ctx[0]
         _tags = [(key, ascii_str(sha))
-                 for key, (sha, type_) in self._parsed_refs.iteritems() if type_ == b'T']
+                 for key, (sha, type_) in self._parsed_refs.items() if type_ == b'T']
         return OrderedDict(sorted(_tags, key=sortkey, reverse=True))
 
     def tag(self, name, user, revision=None, message=None, date=None,
@@ -447,7 +447,7 @@ class GitRepository(BaseRepository):
                 (b'refs/remotes/origin/', b'RH'),
                 (b'refs/tags/', b'T')]
         _refs = {}
-        for ref, sha in refs.iteritems():
+        for ref, sha in refs.items():
             for k, type_ in keys:
                 if ref.startswith(k):
                     _key = ref[len(k):]
@@ -470,7 +470,7 @@ class GitRepository(BaseRepository):
                     if n not in [b'HEAD']:
                         heads[n] = val
 
-        return heads if reverse else dict((y, x) for x, y in heads.iteritems())
+        return heads if reverse else dict((y, x) for x, y in heads.items())
 
     def get_changeset(self, revision=None):
         """

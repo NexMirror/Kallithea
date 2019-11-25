@@ -219,7 +219,7 @@ class MarkupRenderer(object):
             docutils_settings.update({'input_encoding': 'unicode',
                                       'report_level': 4})
 
-            for k, v in docutils_settings.iteritems():
+            for k, v in docutils_settings.items():
                 directives.register_directive(k, v)
 
             parts = publish_parts(source=source,

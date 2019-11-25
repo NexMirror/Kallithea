@@ -94,7 +94,7 @@ class BaseDbModel(object):
             # update with attributes from __json__
             if callable(_json_attr):
                 _json_attr = _json_attr()
-            for k, val in _json_attr.iteritems():
+            for k, val in _json_attr.items():
                 d[k] = val
         return d
 

@@ -68,7 +68,7 @@ class DefaultsController(BaseController):
 
         try:
             form_result = _form.to_python(dict(request.POST))
-            for k, v in form_result.iteritems():
+            for k, v in form_result.items():
                 setting = Setting.create_or_update(k, v)
             Session().commit()
             h.flash(_('Default settings updated successfully'),

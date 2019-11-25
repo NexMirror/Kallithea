@@ -34,7 +34,7 @@ class TestAdminController(base.TestController):
         with open(os.path.join(FIXTURES, 'journal_dump.csv')) as f:
             for row in csv.DictReader(f):
                 ul = UserLog()
-                for k, v in row.iteritems():
+                for k, v in row.items():
                     v = safe_unicode(v)
                     if k == 'action_date':
                         v = strptime(v)

@@ -544,7 +544,7 @@ def ValidPerms(type_='repo'):
 
             # CLEAN OUT ORG VALUE FROM NEW MEMBERS, and group them using
             new_perms_group = defaultdict(dict)
-            for k, v in value.copy().iteritems():
+            for k, v in value.copy().items():
                 if k.startswith('perm_new_member'):
                     del value[k]
                     _type, part = k.split('perm_new_member_')
@@ -564,7 +564,7 @@ def ValidPerms(type_='repo'):
                 if new_member and new_perm and new_type:
                     perms_new.add((new_member, new_perm, new_type))
 
-            for k, v in value.iteritems():
+            for k, v in value.items():
                 if k.startswith('u_perm_') or k.startswith('g_perm_'):
                     member = k[7:]
                     t = {'u': 'user',

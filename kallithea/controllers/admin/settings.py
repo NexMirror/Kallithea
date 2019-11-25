@@ -423,7 +423,7 @@ class SettingsController(BaseController):
         import kallithea
         c.ini = kallithea.CONFIG
         server_info = Setting.get_server_info()
-        for key, val in server_info.iteritems():
+        for key, val in server_info.items():
             setattr(c, key, val)
 
         return htmlfill.render(

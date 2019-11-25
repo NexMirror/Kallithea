@@ -791,13 +791,13 @@ class TestGitHooks(object):
         Tests if hooks are installed in repository if they are missing.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             if os.path.exists(hook_path):
                 os.remove(hook_path)
 
         ScmModel().install_git_hooks(repo=self.repo)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             assert os.path.exists(hook_path)
 
     def test_kallithea_hooks_updated(self):
@@ -805,13 +805,13 @@ class TestGitHooks(object):
         Tests if hooks are updated if they are Kallithea hooks already.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path, "w") as f:
                 f.write("KALLITHEA_HOOK_VER=0.0.0\nJUST_BOGUS")
 
         ScmModel().install_git_hooks(repo=self.repo)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path) as f:
                 assert "JUST_BOGUS" not in f.read()
 
@@ -820,13 +820,13 @@ class TestGitHooks(object):
         Tests if hooks are left untouched if they are not Kallithea hooks.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path, "w") as f:
                 f.write("#!/bin/bash\n#CUSTOM_HOOK")
 
         ScmModel().install_git_hooks(repo=self.repo)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path) as f:
                 assert "CUSTOM_HOOK" in f.read()
 
@@ -835,12 +835,12 @@ class TestGitHooks(object):
         Tests if hooks are forcefully updated even though they are custom hooks.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path, "w") as f:
                 f.write("#!/bin/bash\n#CUSTOM_HOOK")
 
         ScmModel().install_git_hooks(repo=self.repo, force_create=True)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path) as f:
                 assert "KALLITHEA_HOOK_VER" in f.read()

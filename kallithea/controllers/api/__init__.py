@@ -180,7 +180,7 @@ class JSONRPCController(TGController):
         USER_SESSION_ATTR = 'apiuser'
 
         # get our arglist and check if we provided them as args
-        for arg, default in func_kwargs.iteritems():
+        for arg, default in func_kwargs.items():
             if arg == USER_SESSION_ATTR:
                 # USER_SESSION_ATTR is something translated from API key and
                 # this is checked before so we don't need validate it

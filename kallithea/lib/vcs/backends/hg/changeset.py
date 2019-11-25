@@ -340,7 +340,7 @@ class MercurialChangeset(BaseChangeset):
             if os.path.dirname(d) == path]
 
         als = self.repository.alias
-        for k, vals in self._extract_submodules().iteritems():
+        for k, vals in self._extract_submodules().items():
             #vals = url,rev,type
             loc = vals[0]
             cs = vals[1]

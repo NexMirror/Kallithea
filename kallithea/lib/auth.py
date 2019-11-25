@@ -442,7 +442,7 @@ class AuthUser(object):
             self.is_default_user = False
         else:
             # copy non-confidential database fields from a `db.User` to this `AuthUser`.
-            for k, v in dbuser.get_dict().iteritems():
+            for k, v in dbuser.get_dict().items():
                 assert k not in ['api_keys', 'permissions']
                 setattr(self, k, v)
             self.is_default_user = dbuser.is_default_user
@@ -525,7 +525,7 @@ class AuthUser(object):
         """
         Returns list of repositories you're an admin of
         """
-        return [x[0] for x in self.permissions['repositories'].iteritems()
+        return [x[0] for x in self.permissions['repositories'].items()
                 if x[1] == 'repository.admin']
 
     @property
@@ -533,7 +533,7 @@ class AuthUser(object):
         """
         Returns list of repository groups you're an admin of
         """
-        return [x[0] for x in self.permissions['repositories_groups'].iteritems()
+        return [x[0] for x in self.permissions['repositories_groups'].items()
                 if x[1] == 'group.admin']
 
     @property
@@ -541,7 +541,7 @@ class AuthUser(object):
         """
         Returns list of user groups you're an admin of
         """
-        return [x[0] for x in self.permissions['user_groups'].iteritems()
+        return [x[0] for x in self.permissions['user_groups'].items()
                 if x[1] == 'usergroup.admin']
 
     def __repr__(self):
