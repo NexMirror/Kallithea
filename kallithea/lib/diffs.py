@@ -292,7 +292,7 @@ class DiffProcessor(object):
         if not isinstance(diff, bytes):
             raise Exception('Diff must be bytes - got %s' % type(diff))
 
-        self._diff = diff
+        self._diff = memoryview(diff)
         self.adds = 0
         self.removes = 0
         self.diff_limit = diff_limit
@@ -315,7 +315,7 @@ class DiffProcessor(object):
                 self.limited_diff = True
                 continue
 
-            head, diff_lines = _get_header(self.vcs, buffer(self._diff, start, end - start))
+            head, diff_lines = _get_header(self.vcs, self._diff[start:end])
 
             op = None
             stats = {
