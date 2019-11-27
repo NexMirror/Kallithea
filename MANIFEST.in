@@ -7,6 +7,7 @@ include           LICENSE-MERGELY.html
 include           LICENSE.md
 include           MIT-Permissive-License.txt
 include           README.rst
+include           conftest.py
 include           dev_requirements.txt
 include           development.ini
 include           pytest.ini
