@@ -1,10 +1,8 @@
 import datetime
-import errno
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-
-from kallithea.lib.vcs.utils.hgcompat import memfilectx, memctx, hex, tolocal
+from kallithea.lib.vcs.utils.hgcompat import hex, memctx, memfilectx, tolocal
 
 
 class MercurialInMemoryChangeset(BaseInMemoryChangeset):
@@ -57,7 +55,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,
-                        copied=False)
+                        copysource=False)
 
             # or changed
             for node in self.changed:
@@ -67,7 +65,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,
-                        copied=False)
+                        copysource=False)
 
             raise RepositoryError("Given path haven't been marked as added,"
                                   "changed or removed (%s)" % path)

@@ -19,14 +19,15 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-import click
-import kallithea.bin.kallithea_cli_base as cli_base
-
 import os
+
+import click
 import pkg_resources
 
 import kallithea
+import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.utils2 import ask_ok
+
 
 @cli_base.register_command(config_file=True)
 def extensions_create():

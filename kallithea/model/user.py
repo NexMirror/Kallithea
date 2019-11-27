@@ -32,17 +32,14 @@ import logging
 import time
 import traceback
 
+from sqlalchemy.exc import DatabaseError
 from tg import config
 from tg.i18n import ugettext as _
 
-from sqlalchemy.exc import DatabaseError
-
-from kallithea.lib.utils2 import safe_unicode, generate_api_key, get_current_authuser
 from kallithea.lib.caching_query import FromCache
-from kallithea.model.db import Permission, User, UserToPerm, \
-    UserEmailMap, UserIpMap
-from kallithea.lib.exceptions import DefaultUserException, \
-    UserOwnsReposException
+from kallithea.lib.exceptions import DefaultUserException, UserOwnsReposException
+from kallithea.lib.utils2 import generate_api_key, get_current_authuser, safe_unicode
+from kallithea.model.db import Permission, User, UserEmailMap, UserIpMap, UserToPerm
 from kallithea.model.meta import Session
 
 
@@ -338,7 +335,7 @@ class UserModel(object):
                 log.debug('password reset user %s found', user)
                 token = self.get_reset_password_token(user,
                                                       timestamp,
-                                                      h.authentication_token())
+                                                      h.session_csrf_secret_token())
                 # URL must be fully qualified; but since the token is locked to
                 # the current browser session, we must provide a URL with the
                 # current scheme and hostname, rather than the canonical_url.
@@ -371,8 +368,6 @@ class UserModel(object):
                      timestamp=timestamp)
 
     def verify_reset_password_token(self, email, timestamp, token):
-        from kallithea.lib.celerylib import tasks
-        from kallithea.lib import auth
         import kallithea.lib.helpers as h
         user = User.get_by_email(email)
         if user is None:
@@ -391,7 +386,7 @@ class UserModel(object):
 
         expected_token = self.get_reset_password_token(user,
                                                        timestamp,
-                                                       h.authentication_token())
+                                                       h.session_csrf_secret_token())
         log.debug('computed password reset token: %s', expected_token)
         log.debug('received password reset token: %s', token)
         return expected_token == token

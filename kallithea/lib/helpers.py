@@ -19,35 +19,44 @@ available to Controllers. This module is available to both as 'h'.
 """
 import hashlib
 import json
-import StringIO
 import logging
+import random
 import re
-import urlparse
+import StringIO
 import textwrap
+import urlparse
 
 from beaker.cache import cache_region
-from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
+from pygments.formatters.html import HtmlFormatter
 from tg.i18n import ugettext as _
-
-from webhelpers.html import literal, HTML, escape
-from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
-    select, submit, text, password, textarea, radio, form as insecure_form
-from webhelpers.number import format_byte_size
-from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.pylonslib.secure_form import secure_form, authentication_token
-from webhelpers.text import chop_at, truncate, wrap_paragraphs
-from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
-    convert_boolean_attrs, NotGiven, _make_safe_id_component
+from webhelpers2.html import HTML, escape, literal
+from webhelpers2.html.tags import NotGiven, Option, Options, _input, _make_safe_id_component, checkbox, end_form
+from webhelpers2.html.tags import form as insecure_form
+from webhelpers2.html.tags import hidden, link_to, password, radio
+from webhelpers2.html.tags import select as webhelpers2_select
+from webhelpers2.html.tags import submit, text, textarea
+from webhelpers2.number import format_byte_size
+from webhelpers2.text import chop_at, truncate, wrap_paragraphs
 
 from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
-from kallithea.lib.pygmentsutils import get_custom_lexer
-from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
-    time_to_datetime, AttributeDict, safe_int, MENTIONS_REGEX
+#==============================================================================
+# PERMS
+#==============================================================================
+from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoPermissionLevel
 from kallithea.lib.markup_renderer import url_re
-from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
+from kallithea.lib.pygmentsutils import get_custom_lexer
+from kallithea.lib.utils2 import MENTIONS_REGEX, AttributeDict
+from kallithea.lib.utils2 import age as _age
+from kallithea.lib.utils2 import credentials_filter, safe_int, safe_str, safe_unicode, str2bool, time_to_datetime
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
+#==============================================================================
+# SCM FILTERS available via h.
+#==============================================================================
+from kallithea.lib.vcs.utils import author_email, author_name
+
 
 log = logging.getLogger(__name__)
 
@@ -144,17 +153,41 @@ def shorter(s, size=20, firstline=False, postfix='...'):
     return s
 
 
-def _reset(name, value=None, id=NotGiven, type="reset", **attrs):
-    """
-    Reset button
-    """
-    _set_input_attrs(attrs, type, name, value)
-    _set_id_attr(attrs, id, name)
-    convert_boolean_attrs(attrs, ["disabled"])
-    return HTML.input(**attrs)
+def reset(name, value, id=NotGiven, **attrs):
+    """Create a reset button, similar to webhelpers2.html.tags.submit ."""
+    return _input("reset", name, value, id, attrs)
 
 
-reset = _reset
+def select(name, selected_values, options, id=NotGiven, **attrs):
+    """Convenient wrapper of webhelpers2 to let it accept options as a tuple list"""
+    if isinstance(options, list):
+        option_list = options
+        # Handle old value,label lists ... where value also can be value,label lists
+        options = Options()
+        for x in option_list:
+            if isinstance(x, tuple) and len(x) == 2:
+                value, label = x
+            elif isinstance(x, basestring):
+                value = label = x
+            else:
+                log.error('invalid select option %r', x)
+                raise
+            if isinstance(value, list):
+                og = options.add_optgroup(label)
+                for x in value:
+                    if isinstance(x, tuple) and len(x) == 2:
+                        group_value, group_label = x
+                    elif isinstance(x, basestring):
+                        group_value = group_label = x
+                    else:
+                        log.error('invalid select option %r', x)
+                        raise
+                    og.add_option(group_label, group_value)
+            else:
+                options.add_option(label, value)
+    return webhelpers2_select(name, selected_values, options, id=id, **attrs)
+
+
 safeid = _make_safe_id_component
 
 
@@ -386,7 +419,7 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
 
 
 class _Message(object):
-    """A message returned by ``Flash.pop_messages()``.
+    """A message returned by ``pop_flash_messages()``.
 
     Converting the message to a string returns the message text. Instances
     also have the following attributes:
@@ -408,45 +441,53 @@ class _Message(object):
         return escape(safe_unicode(self.message))
 
 
-class Flash(_Flash):
-
-    def __call__(self, message, category=None, ignore_duplicate=False, logf=None):
-        """
-        Show a message to the user _and_ log it through the specified function
-
-        category: notice (default), warning, error, success
-        logf: a custom log function - such as log.debug
-
-        logf defaults to log.info, unless category equals 'success', in which
-        case logf defaults to log.debug.
-        """
-        if logf is None:
-            logf = log.info
-            if category == 'success':
-                logf = log.debug
-
-        logf('Flash %s: %s', category, message)
-
-        super(Flash, self).__call__(message, category, ignore_duplicate)
-
-    def pop_messages(self):
-        """Return all accumulated messages and delete them from the session.
-
-        The return value is a list of ``Message`` objects.
-        """
-        from tg import session
-        messages = session.pop(self.session_key, [])
-        session.save()
-        return [_Message(*m) for m in messages]
+def _session_flash_messages(append=None, clear=False):
+    """Manage a message queue in tg.session: return the current message queue
+    after appending the given message, and possibly clearing the queue."""
+    key = 'flash'
+    from tg import session
+    if key in session:
+        flash_messages = session[key]
+    else:
+        if append is None:  # common fast path - also used for clearing empty queue
+            return []  # don't bother saving
+        flash_messages = []
+        session[key] = flash_messages
+    if append is not None and append not in flash_messages:
+        flash_messages.append(append)
+    if clear:
+        session.pop(key, None)
+    session.save()
+    return flash_messages
 
 
-flash = Flash()
+def flash(message, category=None, logf=None):
+    """
+    Show a message to the user _and_ log it through the specified function
 
-#==============================================================================
-# SCM FILTERS available via h.
-#==============================================================================
-from kallithea.lib.vcs.utils import author_name, author_email
-from kallithea.lib.utils2 import credentials_filter, age as _age
+    category: notice (default), warning, error, success
+    logf: a custom log function - such as log.debug
+
+    logf defaults to log.info, unless category equals 'success', in which
+    case logf defaults to log.debug.
+    """
+    if logf is None:
+        logf = log.info
+        if category == 'success':
+            logf = log.debug
+
+    logf('Flash %s: %s', category, message)
+
+    _session_flash_messages(append=(category, message))
+
+
+def pop_flash_messages():
+    """Return all accumulated messages and delete them from the session.
+
+    The return value is a list of ``Message`` objects.
+    """
+    return [_Message(*m) for m in _session_flash_messages(clear=True)]
+
 
 age = lambda x, y=False: _age(x, y)
 capitalize = lambda x: x.capitalize()
@@ -500,13 +541,16 @@ def is_hg(repository):
     return _type == 'hg'
 
 
-@cache_region('long_term', 'user_or_none')
-def user_or_none(author):
-    """Try to match email part of VCS committer string with a local user - or return None"""
-    from kallithea.model.db import User
+@cache_region('long_term', 'user_attr_or_none')
+def user_attr_or_none(author, show_attr):
+    """Try to match email part of VCS committer string with a local user and return show_attr
+    - or return None if user not found"""
     email = author_email(author)
     if email:
-        return User.get_by_email(email, cache=True) # cache will only use sql_cache_short
+        from kallithea.model.db import User
+        user = User.get_by_email(email, cache=True) # cache will only use sql_cache_short
+        if user is not None:
+            return getattr(user, show_attr)
     return None
 
 
@@ -515,9 +559,9 @@ def email_or_none(author):
     Return primary email of user, email part of the specified author name, or None."""
     if not author:
         return None
-    user = user_or_none(author)
-    if user is not None:
-        return user.email # always use main email address - not necessarily the one used to find user
+    email = user_attr_or_none(author, 'email')
+    if email is not None:
+        return email # always use user's main email address - not necessarily the one used to find user
 
     # extract email from the commit string
     email = author_email(author)
@@ -532,16 +576,13 @@ def person(author, show_attr="username"):
     """Find the user identified by 'author', return one of the users attributes,
     default to the username attribute, None if there is no user"""
     from kallithea.model.db import User
-    # attr to return from fetched user
-    person_getter = lambda usr: getattr(usr, show_attr)
-
     # if author is already an instance use it for extraction
     if isinstance(author, User):
-        return person_getter(author)
+        return getattr(author, show_attr)
 
-    user = user_or_none(author)
-    if user is not None:
-        return person_getter(user)
+    value = user_attr_or_none(author, show_attr)
+    if value is not None:
+        return value
 
     # Still nothing?  Just pass back the author name if any, else the email
     return author_name(author) or email(author)
@@ -753,52 +794,52 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
     # action : translated str, callback(extractor), icon
     action_map = {
-    'user_deleted_repo':           (_('[deleted] repository'),
-                                    None, 'icon-trashcan'),
-    'user_created_repo':           (_('[created] repository'),
-                                    None, 'icon-plus'),
-    'user_created_fork':           (_('[created] repository as fork'),
-                                    None, 'icon-fork'),
-    'user_forked_repo':            (_('[forked] repository'),
-                                    get_fork_name, 'icon-fork'),
-    'user_updated_repo':           (_('[updated] repository'),
-                                    None, 'icon-pencil'),
-    'user_downloaded_archive':      (_('[downloaded] archive from repository'),
-                                    get_archive_name, 'icon-download-cloud'),
-    'admin_deleted_repo':          (_('[delete] repository'),
-                                    None, 'icon-trashcan'),
-    'admin_created_repo':          (_('[created] repository'),
-                                    None, 'icon-plus'),
-    'admin_forked_repo':           (_('[forked] repository'),
-                                    None, 'icon-fork'),
-    'admin_updated_repo':          (_('[updated] repository'),
-                                    None, 'icon-pencil'),
-    'admin_created_user':          (_('[created] user'),
-                                    get_user_name, 'icon-user'),
-    'admin_updated_user':          (_('[updated] user'),
-                                    get_user_name, 'icon-user'),
-    'admin_created_users_group':   (_('[created] user group'),
-                                    get_users_group, 'icon-pencil'),
-    'admin_updated_users_group':   (_('[updated] user group'),
-                                    get_users_group, 'icon-pencil'),
-    'user_commented_revision':     (_('[commented] on revision in repository'),
-                                    get_cs_links, 'icon-comment'),
-    'user_commented_pull_request': (_('[commented] on pull request for'),
-                                    get_pull_request, 'icon-comment'),
-    'user_closed_pull_request':    (_('[closed] pull request for'),
-                                    get_pull_request, 'icon-ok'),
-    'push':                        (_('[pushed] into'),
-                                    get_cs_links, 'icon-move-up'),
-    'push_local':                  (_('[committed via Kallithea] into repository'),
-                                    get_cs_links, 'icon-pencil'),
-    'push_remote':                 (_('[pulled from remote] into repository'),
-                                    get_cs_links, 'icon-move-up'),
-    'pull':                        (_('[pulled] from'),
-                                    None, 'icon-move-down'),
-    'started_following_repo':      (_('[started following] repository'),
-                                    None, 'icon-heart'),
-    'stopped_following_repo':      (_('[stopped following] repository'),
-                                    None, 'icon-heart-empty'),
+        'user_deleted_repo':           (_('[deleted] repository'),
+                                        None, 'icon-trashcan'),
+        'user_created_repo':           (_('[created] repository'),
+                                        None, 'icon-plus'),
+        'user_created_fork':           (_('[created] repository as fork'),
+                                        None, 'icon-fork'),
+        'user_forked_repo':            (_('[forked] repository'),
+                                        get_fork_name, 'icon-fork'),
+        'user_updated_repo':           (_('[updated] repository'),
+                                        None, 'icon-pencil'),
+        'user_downloaded_archive':      (_('[downloaded] archive from repository'),
+                                        get_archive_name, 'icon-download-cloud'),
+        'admin_deleted_repo':          (_('[delete] repository'),
+                                        None, 'icon-trashcan'),
+        'admin_created_repo':          (_('[created] repository'),
+                                        None, 'icon-plus'),
+        'admin_forked_repo':           (_('[forked] repository'),
+                                        None, 'icon-fork'),
+        'admin_updated_repo':          (_('[updated] repository'),
+                                        None, 'icon-pencil'),
+        'admin_created_user':          (_('[created] user'),
+                                        get_user_name, 'icon-user'),
+        'admin_updated_user':          (_('[updated] user'),
+                                        get_user_name, 'icon-user'),
+        'admin_created_users_group':   (_('[created] user group'),
+                                        get_users_group, 'icon-pencil'),
+        'admin_updated_users_group':   (_('[updated] user group'),
+                                        get_users_group, 'icon-pencil'),
+        'user_commented_revision':     (_('[commented] on revision in repository'),
+                                        get_cs_links, 'icon-comment'),
+        'user_commented_pull_request': (_('[commented] on pull request for'),
+                                        get_pull_request, 'icon-comment'),
+        'user_closed_pull_request':    (_('[closed] pull request for'),
+                                        get_pull_request, 'icon-ok'),
+        'push':                        (_('[pushed] into'),
+                                        get_cs_links, 'icon-move-up'),
+        'push_local':                  (_('[committed via Kallithea] into repository'),
+                                        get_cs_links, 'icon-pencil'),
+        'push_remote':                 (_('[pulled from remote] into repository'),
+                                        get_cs_links, 'icon-move-up'),
+        'pull':                        (_('[pulled] from'),
+                                        None, 'icon-move-down'),
+        'started_following_repo':      (_('[started following] repository'),
+                                        None, 'icon-heart'),
+        'stopped_following_repo':      (_('[stopped following] repository'),
+                                        None, 'icon-heart-empty'),
     }
 
     action_str = action_map.get(action, action)
@@ -828,14 +869,6 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
     # returned callbacks we need to call to get
     return [lambda: literal(action), action_params_func, action_parser_icon]
-
-
-
-#==============================================================================
-# PERMS
-#==============================================================================
-from kallithea.lib.auth import HasPermissionAny, \
-    HasRepoPermissionLevel, HasRepoGroupPermissionLevel
 
 
 #==============================================================================
@@ -905,7 +938,7 @@ def gravatar_url(email_address, size=30, default=''):
         return default
 
     parsed_url = urlparse.urlparse(url.current(qualified=True))
-    url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL ) \
+    url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL) \
                .replace('{email}', email_address) \
                .replace('{md5email}', hashlib.md5(safe_str(email_address).lower()).hexdigest()) \
                .replace('{netloc}', parsed_url.netloc) \
@@ -1061,7 +1094,7 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
                 return '<div class="label label-meta" data-tag="see">see =&gt; %s</div>' % seen
             license = match_obj.group('license')
             if license:
-                return '<div class="label label-meta" data-tag="license"><a href="http:\/\/www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
+                return '<div class="label label-meta" data-tag="license"><a href="http://www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
             tagtype = match_obj.group('tagtype')
             if tagtype:
                 tagvalue = match_obj.group('tagvalue')
@@ -1273,11 +1306,22 @@ def ip_range(ip_addr):
     return '%s - %s' % (s, e)
 
 
+session_csrf_secret_name = "_session_csrf_secret_token"
+
+def session_csrf_secret_token():
+    """Return (and create) the current session's CSRF protection token."""
+    from tg import session
+    if not session_csrf_secret_name in session:
+        session[session_csrf_secret_name] = str(random.getrandbits(128))
+        session.save()
+    return session[session_csrf_secret_name]
+
 def form(url, method="post", **attrs):
-    """Like webhelpers.html.tags.form but automatically using secure_form with
-    authentication_token for POST. authentication_token is thus never leaked
-    in the URL."""
+    """Like webhelpers.html.tags.form , but automatically adding
+    session_csrf_secret_token for POST. The secret is thus never leaked in GET
+    URLs.
+    """
+    form = insecure_form(url, method, **attrs)
     if method.lower() == 'get':
-        return insecure_form(url, method=method, **attrs)
-    # webhelpers will turn everything but GET into POST
-    return secure_form(url, method=method, **attrs)
+        return form
+    return form + HTML.div(hidden(session_csrf_secret_name, session_csrf_secret_token()), style="display: none;")

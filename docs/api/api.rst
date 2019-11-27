@@ -32,7 +32,7 @@ Clients must send JSON encoded JSON-RPC requests::
 For example, to pull to a local "CPython" mirror using curl::
 
     curl https://kallithea.example.com/_admin/api -X POST -H 'content-type:text/plain' \
-        --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repo":"CPython"}}'
+        --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repoid":"CPython"}}'
 
 In general, provide
  - *id*, a value of any type, can be used to match the response with the request that it is replying to.
@@ -160,37 +160,6 @@ OUTPUT::
 
     id : <id_given_in_input>
     result : "Caches of repository `<reponame>`"
-    error :  null
-
-lock
-^^^^
-
-Set the locking state on the given repository by the given user.
-If the param ``userid`` is skipped, it is set to the ID of the user who is calling this method.
-If param ``locked`` is skipped, the current lock state of the repository is returned.
-This command can only be executed using the api_key of a user with admin rights, or that of a regular user with admin or write access to the repository.
-
-INPUT::
-
-    id : <id_for_response>
-    api_key : "<api_key>"
-    method :  "lock"
-    args :    {
-                "repoid" : "<reponame or repo_id>"
-                "userid" : "<user_id or username = Optional(=apiuser)>",
-                "locked" : "<bool true|false = Optional(=None)>"
-              }
-
-OUTPUT::
-
-    id : <id_given_in_input>
-    result : {
-                 "repo": "<reponame>",
-                 "locked": "<bool true|false>",
-                 "locked_since": "<float lock_time>",
-                 "locked_by": "<username>",
-                 "msg": "User `<username>` set lock state for repo `<reponame>` to `<false|true>`"
-             }
     error :  null
 
 get_ip
@@ -601,7 +570,6 @@ OUTPUT::
                 "repo_type" :        "<repo_type>",
                 "clone_uri" :        "<clone_uri>",
                 "enable_downloads":  "<bool>",
-                "enable_locking":    "<bool>",
                 "enable_statistics": "<bool>",
                 "private":           "<bool>",
                 "created_on" :       "<date_time_created>",
@@ -755,7 +723,6 @@ OUTPUT::
                 "owner":             "<repo_owner>",
                 "fork_of":           "<name_of_fork_parent>",
                 "enable_downloads":  "<bool>",
-                "enable_locking":    "<bool>",
                 "enable_statistics": "<bool>",
               },
               …
@@ -820,7 +787,6 @@ INPUT::
                 "clone_uri" :        "<clone_uri> = Optional(None)",
                 "landing_rev" :      "<landing_rev> = Optional('tip')",
                 "enable_downloads":  "<bool> = Optional(False)",
-                "enable_locking":    "<bool> = Optional(False)",
                 "enable_statistics": "<bool> = Optional(False)",
               }
 
@@ -841,7 +807,6 @@ OUTPUT::
                 "owner":             "<username or user_id>",
                 "fork_of":           "<name_of_fork_parent>",
                 "enable_downloads":  "<bool>",
-                "enable_locking":    "<bool>",
                 "enable_statistics": "<bool>",
               },
             }
@@ -870,7 +835,6 @@ INPUT::
                 "clone_uri" :        "<clone_uri> = Optional(None)",
                 "landing_rev" :      "<landing_rev> = Optional('tip')",
                 "enable_downloads":  "<bool> = Optional(False)",
-                "enable_locking":    "<bool> = Optional(False)",
                 "enable_statistics": "<bool> = Optional(False)",
               }
 
@@ -891,7 +855,6 @@ OUTPUT::
                 "owner":             "<username or user_id>",
                 "fork_of":           "<name_of_fork_parent>",
                 "enable_downloads":  "<bool>",
-                "enable_locking":    "<bool>",
                 "enable_statistics": "<bool>",
                 "last_changeset":    {
                                        "author":   "<full_author>",
@@ -901,8 +864,6 @@ OUTPUT::
                                        "revision": "<numeric_revision>",
                                        "short_id": "<short_id>"
                                      }
-                "locked_by": "<username>",
-                "locked_date": "<float lock_time>",
               },
             }
     error:  null
@@ -1277,24 +1238,8 @@ OUTPUT::
 API access for web views
 ------------------------
 
-API access can also be turned on for each web view in Kallithea that is
-decorated with the ``@LoginRequired`` decorator. Some views use
-``@LoginRequired(api_access=True)`` and are always available. By default only
-RSS/Atom feed views are enabled. Other views are
-only available if they have been whitelisted. Edit the
-``api_access_controllers_whitelist`` option in your .ini file and define views
-that should have API access enabled.
-
-For example, to enable API access to patch/diff, raw file and archive::
-
-    api_access_controllers_whitelist =
-        ChangesetController:changeset_patch,
-        ChangesetController:changeset_raw,
-        FilesController:raw,
-        FilesController:archivefile
-
-After this change, a Kallithea view can be accessed without login using
-bearer authentication, by including this header with the request::
+Kallithea HTTP entry points can also be accessed without login using bearer
+authentication by including this header with the request::
 
     Authentication: Bearer <api_key>
 

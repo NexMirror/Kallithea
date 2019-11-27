@@ -14,8 +14,10 @@
 """WSGI middleware initialization for the Kallithea application."""
 
 import logging.config
+
 from kallithea.config.app_cfg import base_config
 from kallithea.config.environment import load_environment
+
 
 __all__ = ['make_app']
 

@@ -105,7 +105,6 @@ def _cruserhook(*args, **kwargs):
       :param active:
       :param password:
       :param emails:
-      :param inherit_default_permissions:
       :param created_by:
     """
     return 0
@@ -169,7 +168,6 @@ def _dluserhook(*args, **kwargs):
       :param active:
       :param password:
       :param emails:
-      :param inherit_default_permissions:
       :param deleted_by:
     """
     return 0
@@ -189,7 +187,6 @@ def _pushhook(*args, **kwargs):
     Post push hook
     kwargs available:
 
-      :param server_url: url of instance that triggered this hook
       :param config: path to .ini config used
       :param scm: type of VS 'git' or 'hg'
       :param username: name of user who pushed
@@ -215,7 +212,6 @@ def _pullhook(*args, **kwargs):
     Post pull hook
     kwargs available::
 
-      :param server_url: url of instance that triggered this hook
       :param config: path to .ini config used
       :param scm: type of VS 'git' or 'hg'
       :param username: name of user who pulled

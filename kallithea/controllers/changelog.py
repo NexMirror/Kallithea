@@ -28,19 +28,19 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from tg import request, session, tmpl_context as c
+from tg import request, session
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPFound, HTTPNotFound, HTTPBadRequest
+from webob.exc import HTTPBadRequest, HTTPFound, HTTPNotFound
 
 import kallithea.lib.helpers as h
 from kallithea.config.routing import url
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import RepoPage
-from kallithea.lib.vcs.exceptions import RepositoryError, ChangesetDoesNotExistError, \
-    ChangesetError, NodeDoesNotExistError, EmptyRepositoryError
 from kallithea.lib.utils2 import safe_int, safe_str
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, NodeDoesNotExistError, RepositoryError
 
 
 log = logging.getLogger(__name__)
@@ -88,7 +88,8 @@ class ChangelogController(BaseRepoController):
         if (branch_name and
             branch_name not in c.db_repo_scm_instance.branches and
             branch_name not in c.db_repo_scm_instance.closed_branches and
-            not revision):
+            not revision
+        ):
             raise HTTPFound(location=url('changelog_file_home', repo_name=c.repo_name,
                                     revision=branch_name, f_path=f_path or ''))
 

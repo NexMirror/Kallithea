@@ -26,28 +26,26 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import os
-import traceback
 import logging
+import os
 import rfc822
-
-from time import mktime
+import traceback
+from collections import OrderedDict
 from operator import itemgetter
-from string import lower
+from time import mktime
 
 from tg import config
 
 from kallithea import CELERY_ON
 from kallithea.lib import celerylib
+from kallithea.lib.compat import json
 from kallithea.lib.helpers import person
+from kallithea.lib.hooks import log_create_repository
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.utils import author_email
-from kallithea.lib.compat import json, OrderedDict
-from kallithea.lib.hooks import log_create_repository
-
-from kallithea.model.db import Statistics, RepoGroup, Repository, User
+from kallithea.model.db import RepoGroup, Repository, Statistics, User
 
 
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
@@ -75,7 +73,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
     DBS = celerylib.get_session()
     lockkey = celerylib.__get_lockkey('get_commits_stats', repo_name, ts_min_y,
                             ts_max_y)
-    lockkey_path = config['app_conf']['cache_dir']
+    lockkey_path = config.get('cache_dir') or config['app_conf']['cache_dir']  # Backward compatibility for TurboGears < 2.4
 
     log.info('running task with lockkey %s', lockkey)
 
@@ -99,7 +97,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             return True
 
         skip_date_limit = True
-        parse_limit = int(config['app_conf'].get('commit_parse_limit'))
+        parse_limit = int(config.get('commit_parse_limit'))
         last_rev = None
         last_cs = None
         timegetter = itemgetter('time')
@@ -171,11 +169,11 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                 if k >= ts_min_y and k <= ts_max_y or skip_date_limit:
                     co_day_auth_aggr[akc(cs.author)] = {
                                         "label": akc(cs.author),
-                                        "data": [{"time":k,
-                                                 "commits":1,
-                                                 "added":len(cs.added),
-                                                 "changed":len(cs.changed),
-                                                 "removed":len(cs.removed),
+                                        "data": [{"time": k,
+                                                 "commits": 1,
+                                                 "added": len(cs.added),
+                                                 "changed": len(cs.changed),
+                                                 "removed": len(cs.removed),
                                                  }],
                                         "schema": ["commits"],
                                         }
@@ -349,7 +347,6 @@ def create_repo(form_data, cur_user):
     # repo creation defaults, private and repo_type are filled in form
     defs = Setting.get_default_repo_settings(strip_prefix=True)
     enable_statistics = defs.get('repo_enable_statistics')
-    enable_locking = defs.get('repo_enable_locking')
     enable_downloads = defs.get('repo_enable_downloads')
 
     try:
@@ -366,7 +363,6 @@ def create_repo(form_data, cur_user):
             copy_fork_permissions=copy_fork_permissions,
             copy_group_permissions=copy_group_permissions,
             enable_statistics=enable_statistics,
-            enable_locking=enable_locking,
             enable_downloads=enable_downloads,
             state=state
         )
@@ -490,15 +486,13 @@ def __get_codes_stats(repo_name):
     tip = repo.get_changeset()
     code_stats = {}
 
-    def aggregate(cs):
-        for f in cs[2]:
-            ext = lower(f.extension)
-            if ext in LANGUAGES_EXTENSIONS_MAP.keys() and not f.is_binary:
+    for _topnode, _dirnodes, filenodes in tip.walk('/'):
+        for filenode in filenodes:
+            ext = filenode.extension.lower()
+            if ext in LANGUAGES_EXTENSIONS_MAP.keys() and not filenode.is_binary:
                 if ext in code_stats:
                     code_stats[ext] += 1
                 else:
                     code_stats[ext] = 1
-
-    map(aggregate, tip.walk('/'))
 
     return code_stats or {}

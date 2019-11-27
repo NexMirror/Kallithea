@@ -14,11 +14,11 @@ To make sure that the config really has been initialized, we check one of the
 mandatory settings.
 """
 
-import os
-import warnings
-
-import tg
 import celery
+import celery.result as result
+import tg
+from celery.bin import worker
+from celery.task import task
 
 
 def celery_config(config):
@@ -56,7 +56,3 @@ def celery_config(config):
 # Create celery app from the TurboGears configuration file
 app = celery.Celery()
 app.config_from_object(celery_config(tg.config))
-
-import celery.result as result
-from celery.task import task
-from celery.bin import worker

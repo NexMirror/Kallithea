@@ -9,34 +9,27 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
+import datetime
+import logging
 import os
 import time
 import urllib
 import urllib2
-import logging
-import datetime
+from collections import OrderedDict
 
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
-
 from kallithea.lib.vcs.exceptions import (
-    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError,
-    RepositoryError, VCSError, TagAlreadyExistError, TagDoesNotExistError
-)
-from kallithea.lib.vcs.utils import (
-    author_email, author_name, date_fromtimestamp, makedate, safe_unicode, safe_str,
-)
-from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
-from kallithea.lib.vcs.utils.paths import abspath
+    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
+from kallithea.lib.vcs.utils import author_email, author_name, date_fromtimestamp, makedate, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.hgcompat import (
-    ui, nullid, match, patch, diffopts, clone, get_contact,
-    localrepo, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
-    httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer, tag
-)
+    Abort, RepoError, RepoLookupError, clone, diffopts, get_contact, hex, hg_url, httpbasicauthhandler, httpdigestauthhandler, httppeer, localrepo, match_exact, nullid, patch, peer, scmutil, sshpeer, tag, ui)
+from kallithea.lib.vcs.utils.lazy import LazyProperty
+from kallithea.lib.vcs.utils.paths import abspath
 
 from .changeset import MercurialChangeset
 from .inmemory import MercurialInMemoryChangeset
 from .workdir import MercurialWorkdir
+
 
 log = logging.getLogger(__name__)
 
@@ -264,7 +257,7 @@ class MercurialRepository(BaseRepository):
             self.get_changeset(rev1)
         self.get_changeset(rev2)
         if path:
-            file_filter = match(self.path, '', [path], exact=True)
+            file_filter = match_exact(path)
         else:
             file_filter = None
 

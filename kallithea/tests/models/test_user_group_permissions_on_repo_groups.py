@@ -1,13 +1,12 @@
 import functools
 
-from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.db import RepoGroup
-
 from kallithea.model.meta import Session
-from kallithea.tests.models.common import _create_project_tree, check_tree_perms, \
-    _get_perms, _check_expected_count, expected_count, _destroy_project_tree
+from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user_group import UserGroupModel
 from kallithea.tests.fixture import Fixture
+from kallithea.tests.models.common import _check_expected_count, _create_project_tree, _destroy_project_tree, _get_perms, check_tree_perms, expected_count
+
 
 fixture = Fixture()
 
@@ -129,14 +128,14 @@ def test_user_permissions_on_group_with_recursive_mode_inner_group():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        check_tree_perms(name, perm, group, 'repository.none')
+        check_tree_perms(name, perm, group, 'repository.none' if name.endswith('_private') else 'repository.read')
 
     for name, perm in items:
-        check_tree_perms(name, perm, group, 'group.none')
+        check_tree_perms(name, perm, group, 'group.read')
 
 
 def test_user_permissions_on_group_with_recursive_mode_deepest():
-    ## set permission to g0_3 group to none
+    ## set permission to g0/g0_1/g0_1_1 group to write
     recursive = 'all'
     group = u'g0/g0_1/g0_1_1'
     permissions_setup_func(group, 'group.write', recursive=recursive)
@@ -153,7 +152,7 @@ def test_user_permissions_on_group_with_recursive_mode_deepest():
 
 
 def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
-    ## set permission to g0_3 group to none
+    ## set permission to g0/g0_2 group to admin
     recursive = 'all'
     group = u'g0/g0_2'
     permissions_setup_func(group, 'group.admin', recursive=recursive)
@@ -208,4 +207,4 @@ def test_user_permissions_on_group_with_recursive_mode_on_repo_groups():
         check_tree_perms(name, perm, group, 'repository.read')
 
     for name, perm in items:
-        check_tree_perms(name, perm, group, 'group.none')
+        check_tree_perms(name, perm, group, 'group.read')

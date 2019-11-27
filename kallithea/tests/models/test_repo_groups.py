@@ -1,14 +1,14 @@
 import os
+
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
-
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.repo import RepoModel
 from kallithea.model.db import RepoGroup
 from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()
@@ -51,9 +51,6 @@ class TestRepoGroups(TestController):
         path = [TESTS_TMP_PATH] + list(path)
         path = os.path.join(*path)
         return os.path.isdir(path)
-
-    def _check_folders(self):
-        print os.listdir(TESTS_TMP_PATH)
 
     def __delete_group(self, id_):
         RepoGroupModel().delete(id_)

@@ -26,26 +26,26 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-import formencode
 import traceback
-from formencode import htmlfill
 
-from tg import tmpl_context as c, request
+import formencode
+from formencode import htmlfill
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
 import kallithea.lib.helpers as h
-
 from kallithea.config.routing import url
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
-    HasRepoPermissionLevel, HasPermissionAnyDecorator, HasPermissionAny
+from kallithea.lib.auth import HasPermissionAny, HasPermissionAnyDecorator, HasRepoPermissionLevel, HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
-from kallithea.model.db import Repository, UserFollowing, User, Ui
-from kallithea.model.repo import RepoModel
+from kallithea.model.db import Repository, Ui, User, UserFollowing
 from kallithea.model.forms import RepoForkForm
-from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices
+from kallithea.model.repo import RepoModel
+from kallithea.model.scm import AvailableRepoGroupChoices, ScmModel
+
 
 log = logging.getLogger(__name__)
 
@@ -82,7 +82,7 @@ class ForksController(BaseRepoController):
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
 
         if c.repo_info.stats:
-            last_rev = c.repo_info.stats.stat_on_revision+1
+            last_rev = c.repo_info.stats.stat_on_revision + 1
         else:
             last_rev = 0
         c.stats_revision = last_rev

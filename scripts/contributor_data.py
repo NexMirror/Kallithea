@@ -30,6 +30,7 @@ name_fixes['Lukasz Balcerzak'] = "Łukasz Balcerzak <lukaszbalcerzak@gmail.com>"
 name_fixes['mao <mao@lins.fju.edu.tw>'] = "Ching-Chen Mao <mao@lins.fju.edu.tw>"
 name_fixes['marcink'] = "Marcin Kuźmiński <marcin@python-works.com>"
 name_fixes['Marcin Kuzminski'] = "Marcin Kuźmiński <marcin@python-works.com>"
+name_fixes['mikespook'] = "mikespook <mikespook@gmail.com>"
 name_fixes['nansenat16@null.tw'] = "nansenat16 <nansenat16@null.tw>"
 name_fixes['Peter Vitt'] = "Peter Vitt <petervitt@web.de>"
 name_fixes['philip.j@hostdime.com'] = "Philip Jameson <philip.j@hostdime.com>"
@@ -61,6 +62,36 @@ no_about.add(('Stefan Engel <mail@engel-stefan.de>', '2012'))
 no_about.add(('Ton Plomp <tcplomp@gmail.com>', '2013'))
 # Was reworked and contributed later and shadowed by other contributions:
 no_about.add(('Sean Farley <sean.michael.farley@gmail.com>', '2013'))
+
+# Contributors in about.html and CONTRIBUTORS not appearing in repository
+# history:
+other = [
+    # Work folded into commits attributed to others:
+    ('2013', 'Ilya Beda <ir4y.ix@gmail.com>'),
+    ('2015', 'Bradley M. Kuhn <bkuhn@sfconservancy.org>'),
+    # Translators previously listed in
+    # kallithea/i18n/*/LC_MESSAGES/kallithea.po and originating from before the
+    # use of Weblate.
+    ('2012', 'Augusto Herrmann <augusto.herrmann@gmail.com>'),
+    ('2012', 'Nemcio <areczek01@gmail.com>'),
+    ('2012', 'Nemcio <bogdan114@g.pl>'),
+    ('2013', 'Andrey Mivrenik <myvrenik@gmail.com>'),
+    ('2013', 'ArcheR <aleclitvinov1980@gmail.com>'),
+    ('2013', 'gnustavo <gustavo@gnustavo.com>'),
+    ('2013', 'ivlevdenis <ivlevdenis.ru@gmail.com>'),
+    ('2013', 'Mikhail Zholobov <legal90@gmail.com>'),
+    ('2013', 'mokeev1995 <mokeev_andre@mail.ru>'),
+    ('2013', 'Nemcio <areczek01@gmail.com>'),
+    ('2013', 'Ruslan Bekenev <furyinbox@gmail.com>'),
+    ('2013', 'shirou - しろう'),
+    ('2013', 'softforwinxp <softforwinxp@gmail.com>'),
+    ('2013', 'stephanj <info@stephan-jauernick.de>'),
+    ('2013', 'zhmylove <zhmylove@narod.ru>'),
+    ('2013', 'こいんとす <tkondou@gmail.com>'),
+    ('2014', 'invision70 <invision70@gmail.com>'),
+    ('2014', 'SkryabinD <skryabind@gmail.com>'),
+    ('2014', 'whosaysni <whosaysni@gmail.com>'),
+]
 
 # Preserve contributors listed in about.html but not appearing in repository
 # history:

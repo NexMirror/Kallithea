@@ -1,7 +1,5 @@
+from kallithea.lib.rcmail.exceptions import BadHeaders, InvalidMessage
 from kallithea.lib.rcmail.response import MailResponse
-
-from kallithea.lib.rcmail.exceptions import BadHeaders
-from kallithea.lib.rcmail.exceptions import InvalidMessage
 
 
 class Attachment(object):

@@ -27,10 +27,11 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import sys
 import platform
+import sys
 
-VERSION = (0, 4, 1)
+
+VERSION = (0, 4, 99)
 BACKENDS = {
     'hg': 'Mercurial repository',
     'git': 'Git repository',
@@ -43,14 +44,6 @@ CONFIG = {}
 
 # Linked module for extensions
 EXTENSIONS = {}
-
-try:
-    import kallithea.brand
-except ImportError:
-    pass
-else:
-    assert False, 'Database rebranding is no longer supported; see README.'
-
 
 __version__ = '.'.join(str(each) for each in VERSION)
 __platform__ = platform.system()

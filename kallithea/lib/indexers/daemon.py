@@ -26,33 +26,31 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
+import logging
 import os
 import sys
-import logging
 import traceback
-
+from os.path import dirname
 from shutil import rmtree
 from time import mktime
 
-from os.path import dirname
+from whoosh.index import create_in, exists_in, open_dir
+from whoosh.qparser import QueryParser
+
+from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
+from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA
+from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.vcs.exceptions import ChangesetError, NodeDoesNotExistError, RepositoryError
+from kallithea.model.db import Repository
+from kallithea.model.scm import ScmModel
+
 
 # Add location of top level folder to sys.path
 project_path = dirname(dirname(dirname(dirname(os.path.realpath(__file__)))))
 sys.path.append(project_path)
 
-from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
-from kallithea.model.scm import ScmModel
-from kallithea.model.db import Repository
-from kallithea.lib.utils2 import safe_unicode, safe_str
-from kallithea.lib.indexers import SCHEMA, IDX_NAME, CHGSETS_SCHEMA, \
-    CHGSET_IDX_NAME
 
-from kallithea.lib.vcs.exceptions import ChangesetError, RepositoryError, \
-    NodeDoesNotExistError
 
-from whoosh.index import create_in, open_dir, exists_in
-from whoosh.query import *
-from whoosh.qparser import QueryParser
 
 log = logging.getLogger('whoosh_indexer')
 

@@ -25,32 +25,30 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import itertools
 import logging
 import traceback
+
 import formencode
-import itertools
-
 from formencode import htmlfill
-
-from tg import request, tmpl_context as c, app_globals
-from tg.i18n import ugettext as _, ungettext
-from webob.exc import HTTPFound, HTTPForbidden, HTTPNotFound, HTTPInternalServerError
+from tg import app_globals, request
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
+from tg.i18n import ungettext
+from webob.exc import HTTPForbidden, HTTPFound, HTTPInternalServerError, HTTPNotFound
 
 import kallithea
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, \
-    HasRepoGroupPermissionLevelDecorator, HasRepoGroupPermissionLevel, \
-    HasPermissionAny
+from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoGroupPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
+from kallithea.lib.utils2 import safe_int
 from kallithea.model.db import RepoGroup, Repository
-from kallithea.model.scm import RepoGroupList, AvailableRepoGroupChoices
-from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.forms import RepoGroupForm, RepoGroupPermsForm
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from kallithea.lib.utils2 import safe_int
-from sqlalchemy.sql.expression import func
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.scm import AvailableRepoGroupChoices, RepoGroupList
 
 
 log = logging.getLogger(__name__)

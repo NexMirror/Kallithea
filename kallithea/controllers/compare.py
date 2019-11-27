@@ -30,20 +30,22 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import re
 
-from tg import request, tmpl_context as c
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPFound, HTTPBadRequest, HTTPNotFound
+from webob.exc import HTTPBadRequest, HTTPFound, HTTPNotFound
 
 from kallithea.config.routing import url
-from kallithea.lib.utils2 import safe_str, safe_int
-from kallithea.lib.vcs.utils.hgcompat import unionrepo
-from kallithea.lib import helpers as h
-from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
+from kallithea.controllers.changeset import _context_url, _ignorews_url
 from kallithea.lib import diffs
-from kallithea.model.db import Repository
-from kallithea.controllers.changeset import _ignorews_url, _context_url
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
+from kallithea.lib.utils2 import safe_int, safe_str
+from kallithea.lib.vcs.utils.hgcompat import unionrepo
+from kallithea.model.db import Repository
+
 
 log = logging.getLogger(__name__)
 

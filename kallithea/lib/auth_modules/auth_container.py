@@ -26,10 +26,12 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
+
 from kallithea.lib import auth_modules
-from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str
 from kallithea.lib.compat import hybrid_property
-from kallithea.model.db import User, Setting
+from kallithea.lib.utils2 import safe_str, safe_unicode, str2bool
+from kallithea.model.db import Setting
+
 
 log = logging.getLogger(__name__)
 

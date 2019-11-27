@@ -28,20 +28,21 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from tg import request, tmpl_context as c
 from sqlalchemy.orm import joinedload
-from whoosh.qparser.default import QueryParser
-from whoosh.qparser.dateparse import DateParserPlugin
+from sqlalchemy.sql.expression import and_, func, or_
+from tg import request
+from tg import tmpl_context as c
 from whoosh import query
-from sqlalchemy.sql.expression import or_, and_, func
+from whoosh.qparser.dateparse import DateParserPlugin
+from whoosh.qparser.default import QueryParser
 
 from kallithea.config.routing import url
-from kallithea.model.db import UserLog
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
+from kallithea.lib.auth import HasPermissionAnyDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.utils2 import safe_int, remove_prefix, remove_suffix
 from kallithea.lib.indexers import JOURNAL_SCHEMA
 from kallithea.lib.page import Page
+from kallithea.lib.utils2 import remove_prefix, remove_suffix, safe_int
+from kallithea.model.db import UserLog
 
 
 log = logging.getLogger(__name__)

@@ -16,12 +16,6 @@ def import_class(class_path):
     splitted = class_path.split('.')
     mod_path = '.'.join(splitted[:-1])
     class_name = splitted[-1]
-    try:
-        class_mod = __import__(mod_path, {}, {}, [class_name])
-    except ImportError as err:
-        msg = "There was problem while trying to import backend class. " \
-            "Original error was:\n%s" % err
-        raise VCSError(msg)
+    class_mod = __import__(mod_path, {}, {}, [class_name])
     cls = getattr(class_mod, class_name)
-
     return cls

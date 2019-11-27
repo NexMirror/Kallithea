@@ -14,6 +14,7 @@
 
 import logging
 
+
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = xrange(30, 38)
 
 # Sequences

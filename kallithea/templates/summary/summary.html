@@ -8,15 +8,6 @@
 <%def name="breadcrumbs_links()">
     ${_('Summary')}
 
-    ## locking icon
-    %if c.db_repo.enable_locking:
-     %if c.db_repo.locked[0]:
-       <span class="locking_locked icon-block" data-toggle="tooltip" title="${_('Repository locked by %s') % h.person_by_id(c.db_repo.locked[0])}"></span>
-     %else:
-       <span class="locking_unlocked icon-ok" data-toggle="tooltip" title="${_('Repository unlocked')}"></span>
-     %endif
-    %endif
-
     ##FORK
     %if c.db_repo.fork:
         - <i class="icon-fork"></i>${_('Fork of')} "<a href="${h.url('summary_home',repo_name=c.db_repo.fork.repo_name)}">${c.db_repo.fork.repo_name}</a>"
@@ -62,16 +53,33 @@ ${self.repo_context_bar('summary')}
             <div class="form-group form-inline">
                 <label>${_('Clone URL')}:</label>
                 <div id="clone-url">
-                  <div id="clone_by_name" class="input-group">
+                  <div id="clone_by_name" class="input-group"
+                    %if c.ssh_repo_url:
+                        style="display:none"
+                    %endif
+                    >
                     <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url}"/>
-                    <span class="input-group-addon btn">${_('Show by ID')}</span>
+                    <span class="input-group-addon btn use-id">${_('Use ID')}</span>
+                    %if c.ssh_repo_url:
+                    <span class="input-group-addon btn use-ssh">${_('Use SSH')}</span>
+                    %endif
                   </div>
                   <div id="clone_by_id" class="input-group" style="display:none">
                     <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url_id}"/>
-                    <span class="input-group-addon btn">${_('Show by Name')}</span>
+                    <span class="input-group-addon btn use-name">${_('Use Name')}</span>
+                    %if c.ssh_repo_url:
+                    <span class="input-group-addon btn use-ssh">${_('Use SSH')}</span>
+                    %endif
                   </div>
+                  %if c.ssh_repo_url:
+                  <div id="clone_ssh" class="input-group">
+                    <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
+                    <input id="ssh_url" class="form-control" size="80" readonly="readonly" value="${c.ssh_repo_url}"/>
+                    <span class="input-group-addon btn use-name">${_('Use HTTP')}</span>
+                  </div>
+                  %endif
                 </div>
             </div>
 
@@ -96,7 +104,7 @@ ${self.repo_context_bar('summary')}
 
             <div class="form-group">
               <label>${_('Download')}:</label>
-              <div>
+              <div class="form-inline">
                 %if len(c.db_repo_scm_instance.revisions) == 0:
                   ${_('There are no downloads yet')}
                 %elif not c.enable_downloads:
@@ -108,7 +116,7 @@ ${self.repo_context_bar('summary')}
                     <span id="${'zip_link'}">
                         <a class="btn btn-default btn-sm" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i>${_('Download as zip')}</a>
                     </span>
-                    ${h.hidden('download_options')}
+                    ${h.hidden('download_options', class_='form-control')}
                     <span>
                       <label data-toggle="tooltip" title="${_('Check this to download archive with subrepos')}">
                           <input id="archive_subrepos" type="checkbox" name="subrepos" />
@@ -242,15 +250,24 @@ $(document).ready(function(){
         }
     });
 
+    var $clone_url = $('#clone-url');
     var $clone_by_name = $('#clone_by_name');
     var $clone_by_id = $('#clone_by_id');
-    $clone_by_name.find('.btn').click(function(e){
-        $clone_by_name.hide();
-        $clone_by_id.show();
-    });
-    $clone_by_id.find('.btn').click(function(e){
-        $clone_by_id.hide();
+    var $clone_ssh = $('#clone_ssh');
+    $clone_url.on('click', '.btn.use-name', function(e){
         $clone_by_name.show();
+        $clone_by_id.hide();
+        $clone_ssh.hide();
+    });
+    $clone_url.on('click', '.btn.use-id', function(e){
+        $clone_by_id.show();
+        $clone_by_name.hide();
+        $clone_ssh.hide();
+    });
+    $clone_url.on('click', '.btn.use-ssh', function(e){
+        $clone_by_id.hide();
+        $clone_by_name.hide();
+        $clone_ssh.show();
     });
 
     var cache = {}

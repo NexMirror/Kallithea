@@ -26,23 +26,23 @@ import mock
 from tg import request
 from tg.util.webtest import test_context
 
-from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist, ChangesetStatus
-from kallithea.model.meta import Session
-from kallithea.model.repo import RepoModel
-from kallithea.model.user import UserModel
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.user_group import UserGroupModel
-from kallithea.model.gist import GistModel
-from kallithea.model.scm import ScmModel
-from kallithea.model.comment import ChangesetCommentsModel
-from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.pull_request import CreatePullRequestAction#, CreatePullRequestIterationAction, PullRequestModel
 from kallithea.lib import helpers
 from kallithea.lib.auth import AuthUser
 from kallithea.lib.db_manage import DbManage
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.tests.base import invalidate_all_caches, GIT_REPO, HG_REPO, \
-    TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TEST_USER_ADMIN_EMAIL
+from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.db import ChangesetStatus, Gist, RepoGroup, Repository, User, UserGroup
+from kallithea.model.gist import GistModel
+from kallithea.model.meta import Session
+from kallithea.model.pull_request import CreatePullRequestAction  # , CreatePullRequestIterationAction, PullRequestModel
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.scm import ScmModel
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
+from kallithea.tests.base import (
+    GIT_REPO, HG_REPO, IP_ADDR, TEST_USER_ADMIN_EMAIL, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH, invalidate_all_caches)
 
 
 log = logging.getLogger(__name__)
@@ -117,7 +117,6 @@ class Fixture(object):
             parent_group_id=u'-1',
             perms_updates=[],
             perms_new=[],
-            enable_locking=False,
             recursive=False
         )
         defs.update(custom)
@@ -262,7 +261,7 @@ class Fixture(object):
         }
         form_data.update(kwargs)
         gist = GistModel().create(
-            description=form_data['description'], owner=form_data['owner'],
+            description=form_data['description'], owner=form_data['owner'], ip_addr=IP_ADDR,
             gist_mapping=form_data['gist_mapping'], gist_type=form_data['gist_type'],
             lifetime=form_data['lifetime']
         )
@@ -303,7 +302,9 @@ class Fixture(object):
                 }
             }
             cs = ScmModel().create_nodes(
-                user=TEST_USER_ADMIN_LOGIN, repo=repo,
+                user=TEST_USER_ADMIN_LOGIN,
+                ip_addr=IP_ADDR,
+                repo=repo,
                 message=message,
                 nodes=nodes,
                 parent_cs=_cs,
@@ -312,7 +313,9 @@ class Fixture(object):
         else:
             cs = ScmModel().commit_change(
                 repo=repo.scm_instance, repo_name=repo.repo_name,
-                cs=parent, user=TEST_USER_ADMIN_LOGIN,
+                cs=parent,
+                user=TEST_USER_ADMIN_LOGIN,
+                ip_addr=IP_ADDR,
                 author=author,
                 message=message,
                 content=content,
@@ -365,7 +368,7 @@ def create_test_env(repos_test_path, config):
                         tests=True)
     dbmanage.create_tables(override=True)
     # for tests dynamically set new root paths based on generated content
-    dbmanage.create_settings(dbmanage.config_prompt(repos_test_path))
+    dbmanage.create_settings(dbmanage.prompt_repo_root_path(repos_test_path))
     dbmanage.create_default_user()
     dbmanage.admin_prompt()
     dbmanage.create_permissions()
@@ -406,7 +409,7 @@ def create_test_index(repo_location, config, full_index):
     """
 
     from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
-    from kallithea.lib.pidlock import DaemonLock, LockHeld
+    from kallithea.lib.pidlock import DaemonLock
 
     index_location = os.path.join(config['index_dir'])
     if not os.path.exists(index_location):

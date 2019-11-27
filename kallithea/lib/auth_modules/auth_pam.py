@@ -23,8 +23,17 @@ Original author and date, and relevant copyright and licensing information is be
 :author: Alexey Larikov
 """
 
+import grp
 import logging
+import pwd
+import re
+import socket
+import threading
 import time
+
+from kallithea.lib import auth_modules
+from kallithea.lib.compat import formatted_json, hybrid_property
+
 
 try:
     from pam import authenticate as pam_authenticate
@@ -33,14 +42,7 @@ except ImportError:
     from pam import pam
     pam_authenticate = pam().authenticate
 
-import pwd
-import grp
-import re
-import socket
-import threading
 
-from kallithea.lib import auth_modules
-from kallithea.lib.compat import formatted_json, hybrid_property
 
 log = logging.getLogger(__name__)
 
@@ -82,7 +84,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "type": "string",
                 "description": "Regex for extracting user name/email etc "
                                "from Unix userinfo",
-                "default": "(?P<last_name>.+),\s*(?P<first_name>\w+)",
+                "default": r"(?P<last_name>.+),\s*(?P<first_name>\w+)",
                 "formname": "Gecos Regex"
             }
         ]

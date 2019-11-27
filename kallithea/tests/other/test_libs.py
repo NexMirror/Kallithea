@@ -27,11 +27,14 @@ Original author and date, and relevant copyright and licensing information is be
 
 import datetime
 import hashlib
+
 import mock
-from kallithea.tests.base import *
+from tg.util.webtest import test_context
+
 from kallithea.lib.utils2 import AttributeDict
 from kallithea.model.db import Repository
-from tg.util.webtest import test_context
+from kallithea.tests.base import *
+
 
 proto = 'http'
 TEST_URLS = [
@@ -267,26 +270,26 @@ class TestLibs(TestController):
                 grav = gravatar_url(email_address=em, size=24)
                 assert grav == 'https://example.com/%s/%s' % (_md5(em), 24)
 
-    @parametrize('tmpl,repo_name,overrides,prefix,expected', [
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '', 'http://vps1:8000/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '/prefix', 'http://vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/prefix', 'http://user@vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '/prefix', 'http://username@vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/prefix/', 'http://user@vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '/prefix/', 'http://username@vps1:8000/prefix/group/repo1'),
-        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {}, '', 'http://vps1:8000/_23'),
-        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
-        ('http://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
-        ('http://{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://vps1:8000/_23'),
-        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://username@proxy1.example.com/group/repo1'),
-        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', {}, '', 'https://proxy1.example.com/group/repo1'),
-        ('https://proxy1.example.com/{user}/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://proxy1.example.com/username/group/repo1'),
+    @parametrize('clone_uri_tmpl,repo_name,username,prefix,expected', [
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', None, '', 'http://vps1:8000/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', 'username', '', 'http://username@vps1:8000/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', None, '/prefix', 'http://vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', 'user', '/prefix', 'http://user@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', 'username', '/prefix', 'http://username@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', 'user', '/prefix/', 'http://user@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', 'username', '/prefix/', 'http://username@vps1:8000/prefix/group/repo1'),
+        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', None, '', 'http://vps1:8000/_23'),
+        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', 'username', '', 'http://username@vps1:8000/_23'),
+        ('http://{user}@{netloc}/_{repoid}', 'group/repo1', 'username', '', 'http://username@vps1:8000/_23'),
+        ('http://{netloc}/_{repoid}', 'group/repo1', 'username', '', 'http://vps1:8000/_23'),
+        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', 'username', '', 'https://username@proxy1.example.com/group/repo1'),
+        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', None, '', 'https://proxy1.example.com/group/repo1'),
+        ('https://proxy1.example.com/{user}/{repo}', 'group/repo1', 'username', '', 'https://proxy1.example.com/username/group/repo1'),
     ])
-    def test_clone_url_generator(self, tmpl, repo_name, overrides, prefix, expected):
+    def test_clone_url_generator(self, clone_uri_tmpl, repo_name, username, prefix, expected):
         from kallithea.lib.utils2 import get_clone_url
-        clone_url = get_clone_url(uri_tmpl=tmpl, qualified_home_url='http://vps1:8000'+prefix,
-                                  repo_name=repo_name, repo_id=23, **overrides)
+        clone_url = get_clone_url(clone_uri_tmpl=clone_uri_tmpl, prefix_url='http://vps1:8000' + prefix,
+                                  repo_name=repo_name, repo_id=23, username=username)
         assert clone_url == expected
 
     def _quick_url(self, text, tmpl="""<a class="changeset_hash" href="%s">%s</a>""", url_=None):
@@ -532,26 +535,32 @@ class TestLibs(TestController):
 
     @parametrize('test,expected', [
       ("", None),
-      ("/_2", '2'),
-      ("_2", '2'),
-      ("/_2/", '2'),
-      ("_2/", '2'),
-
-      ("/_21", '21'),
-      ("_21", '21'),
-      ("/_21/", '21'),
-      ("_21/", '21'),
-
-      ("/_21/foobar", '21'),
-      ("_21/121", '21'),
-      ("/_21/_12", '21'),
-      ("_21/prefix/foo", '21'),
+      ("/_2", None),
+      ("_2", 2),
+      ("_2/", None),
     ])
-    def test_get_repo_by_id(self, test, expected):
-        from kallithea.lib.utils import _extract_id_from_repo_name
-        _test = _extract_id_from_repo_name(test)
-        assert _test == expected, 'url:%s, got:`%s` expected: `%s`' % (test, _test, expected)
+    def test_get_permanent_id(self, test, expected):
+        from kallithea.lib.utils import _get_permanent_id
+        extracted = _get_permanent_id(test)
+        assert extracted == expected, 'url:%s, got:`%s` expected: `%s`' % (test, _test, expected)
 
+    @parametrize('test,expected', [
+      ("", ""),
+      ("/", "/"),
+      ("/_ID", '/_ID'),
+      ("ID", "ID"),
+      ("_ID", 'NAME'),
+      ("_ID/", 'NAME/'),
+      ("_ID/1/2", 'NAME/1/2'),
+      ("_IDa", '_IDa'),
+    ])
+    def test_fix_repo_id_name(self, test, expected):
+        repo = Repository.get_by_repo_name(HG_REPO)
+        test = test.replace('ID', str(repo.repo_id))
+        expected = expected.replace('NAME', repo.repo_name).replace('ID', str(repo.repo_id))
+        from kallithea.lib.utils import fix_repo_id_name
+        replaced = fix_repo_id_name(test)
+        assert replaced == expected, 'url:%s, got:`%s` expected: `%s`' % (test, replaced, expected)
 
     @parametrize('canonical,test,expected', [
         ('http://www.example.org/', '/abc/xyz', 'http://www.example.org/abc/xyz'),

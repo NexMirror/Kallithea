@@ -19,11 +19,18 @@
     > .select2-chosen {
       margin-right: inherit; // don't leave room for .select2-arrow
       line-height: inherit;
+      padding: 0;
     }
     > .select2-arrow {
       display: none;
     }
   }
+}
+
+.select2-chosen,
+.select2-choice > span:first-child,
+.select2-container .select2-choices .select2-search-field input {
+    padding: 0 12px;
 }
 
 // Style these like Bootstrap .dropdown-menu
@@ -65,4 +72,8 @@
 /* fix select2 input style if input-sm is used */
 .select2-container.input-sm input {
   .input-sm;
+}
+
+.form-inline .select2-container.form-control {
+  display: inline-block;
 }

@@ -250,18 +250,6 @@ show_revision_number = false
 <%text>## Kallithea url, ie. http[s]://kallithea.example.com/_admin/gists/<gistid></%text>
 gist_alias_url =
 
-<%text>## white list of API enabled controllers. This allows to add list of</%text>
-<%text>## controllers to which access will be enabled by api_key. eg: to enable</%text>
-<%text>## api access to raw_files put `FilesController:raw`, to enable access to patches</%text>
-<%text>## add `ChangesetController:changeset_patch`. This list should be "," separated</%text>
-<%text>## Syntax is <ControllerClass>:<function>. Check debug logs for generated names</%text>
-<%text>## Recommended settings below are commented out:</%text>
-api_access_controllers_whitelist =
-#    ChangesetController:changeset_patch,
-#    ChangesetController:changeset_raw,
-#    FilesController:raw,
-#    FilesController:archivefile
-
 <%text>## default encoding used to convert from and to unicode</%text>
 <%text>## can be also a comma separated list of encoding in case of mixed encodings</%text>
 default_encoding = utf-8
@@ -316,10 +304,6 @@ issue_sub =
 <%text>## handling that. Set this variable to 403 to return HTTPForbidden</%text>
 auth_ret_code =
 
-<%text>## locking return code. When repository is locked return this HTTP code. 2XX</%text>
-<%text>## codes don't break the transactions while 4XX codes do</%text>
-lock_ret_code = 423
-
 <%text>## allows to change the repository location in settings page</%text>
 allow_repo_location_change = True
 
@@ -337,6 +321,34 @@ allow_custom_hooks_settings = True
 #    .editorconfig
 #    INSTALL
 #    CHANGELOG
+
+<%text>####################################</%text>
+<%text>###           SSH CONFIG        ####</%text>
+<%text>####################################</%text>
+
+<%text>## SSH is disabled by default, until an Administrator decides to enable it.</%text>
+ssh_enabled = false
+
+<%text>## File where users' SSH keys will be stored *if* ssh_enabled is true.</%text>
+#ssh_authorized_keys = /home/kallithea/.ssh/authorized_keys
+%if user_home_path:
+ssh_authorized_keys = ${user_home_path}/.ssh/authorized_keys
+%endif
+
+<%text>## Path to be used in ssh_authorized_keys file to invoke kallithea-cli with ssh-serve.</%text>
+#kallithea_cli_path = /srv/kallithea/venv/bin/kallithea-cli
+%if kallithea_cli_path:
+kallithea_cli_path = ${kallithea_cli_path}
+%endif
+
+<%text>## Locale to be used in the ssh-serve command.</%text>
+<%text>## This is needed because an SSH client may try to use its own locale</%text>
+<%text>## settings, which may not be available on the server.</%text>
+<%text>## See `locale -a` for valid values on this system.</%text>
+#ssh_locale = C.UTF-8
+%if ssh_locale:
+ssh_locale = ${ssh_locale}
+%endif
 
 <%text>####################################</%text>
 <%text>###        CELERY CONFIG        ####</%text>
@@ -389,33 +401,32 @@ beaker.cache.sql_cache_short.key_length = 256
 
 <%text>## Name of session cookie. Should be unique for a given host and path, even when running</%text>
 <%text>## on different ports. Otherwise, cookie sessions will be shared and messed up.</%text>
-beaker.session.key = kallithea
+session.key = kallithea
 <%text>## Sessions should always only be accessible by the browser, not directly by JavaScript.</%text>
-beaker.session.httponly = true
+session.httponly = true
 <%text>## Session lifetime. 2592000 seconds is 30 days.</%text>
-beaker.session.timeout = 2592000
+session.timeout = 2592000
 
 <%text>## Server secret used with HMAC to ensure integrity of cookies.</%text>
-beaker.session.secret = ${uuid()}
+session.secret = ${uuid()}
 <%text>## Further, encrypt the data with AES.</%text>
-#beaker.session.encrypt_key = <key_for_encryption>
-#beaker.session.validate_key = <validation_key>
+#session.encrypt_key = <key_for_encryption>
+#session.validate_key = <validation_key>
 
 <%text>## Type of storage used for the session, current types are</%text>
 <%text>## dbm, file, memcached, database, and memory.</%text>
 
 <%text>## File system storage of session data. (default)</%text>
-#beaker.session.type = file
+#session.type = file
 
 <%text>## Cookie only, store all session data inside the cookie. Requires secure secrets.</%text>
-#beaker.session.type = cookie
+#session.type = cookie
 
 <%text>## Database storage of session data.</%text>
-#beaker.session.type = ext:database
-#beaker.session.sa.url = postgresql://postgres:qwe@localhost/kallithea
-#beaker.session.table_name = db_session
+#session.type = ext:database
+#session.sa.url = postgresql://postgres:qwe@localhost/kallithea
+#session.table_name = db_session
 
-%if error_aggregation_service == 'appenlight':
 <%text>############################</%text>
 <%text>## ERROR HANDLING SYSTEMS ##</%text>
 <%text>############################</%text>
@@ -427,6 +438,7 @@ get trace_errors.smtp_server = smtp_server
 get trace_errors.smtp_port = smtp_port
 get trace_errors.from_address = error_email_from
 
+%if error_aggregation_service == 'appenlight':
 <%text>####################</%text>
 <%text>### [appenlight] ###</%text>
 <%text>####################</%text>
@@ -553,7 +565,7 @@ script_location = kallithea:alembic
 keys = root, routes, kallithea, sqlalchemy, tg, gearbox, beaker, templates, whoosh_indexer, werkzeug, backlash
 
 [handlers]
-keys = console, console_sql
+keys = console, console_color, console_color_sql, null
 
 [formatters]
 keys = generic, color_formatter, color_formatter_sql
@@ -565,67 +577,63 @@ keys = generic, color_formatter, color_formatter_sql
 [logger_root]
 level = NOTSET
 handlers = console
+# For coloring based on log level:
+# handlers = console_color
 
 [logger_routes]
 level = WARN
 handlers =
 qualname = routes.middleware
 <%text>## "level = DEBUG" logs the route matched and routing variables.</%text>
-propagate = 1
 
 [logger_beaker]
 level = WARN
 handlers =
 qualname = beaker.container
-propagate = 1
 
 [logger_templates]
 level = WARN
 handlers =
 qualname = pylons.templating
-propagate = 1
 
 [logger_kallithea]
 level = WARN
 handlers =
 qualname = kallithea
-propagate = 1
 
 [logger_tg]
 level = WARN
 handlers =
 qualname = tg
-propagate = 1
 
 [logger_gearbox]
 level = WARN
 handlers =
 qualname = gearbox
-propagate = 1
 
 [logger_sqlalchemy]
 level = WARN
-handlers = console_sql
+handlers =
 qualname = sqlalchemy.engine
-propagate = 0
+# For coloring based on log level and pretty printing of SQL:
+# level = INFO
+# handlers = console_color_sql
+# propagate = 0
 
 [logger_whoosh_indexer]
 level = WARN
 handlers =
 qualname = whoosh_indexer
-propagate = 1
 
 [logger_werkzeug]
 level = WARN
 handlers =
 qualname = werkzeug
-propagate = 1
 
 [logger_backlash]
 level = WARN
 handlers =
 qualname = backlash
-propagate = 1
 
 <%text>##############</%text>
 <%text>## HANDLERS ##</%text>
@@ -636,10 +644,21 @@ class = StreamHandler
 args = (sys.stderr,)
 formatter = generic
 
-[handler_console_sql]
+[handler_console_color]
+# ANSI color coding based on log level
 class = StreamHandler
 args = (sys.stderr,)
-formatter = generic
+formatter = color_formatter
+
+[handler_console_color_sql]
+# ANSI color coding and pretty printing of SQL statements
+class = StreamHandler
+args = (sys.stderr,)
+formatter = color_formatter_sql
+
+[handler_null]
+class = NullHandler
+args = ()
 
 <%text>################</%text>
 <%text>## FORMATTERS ##</%text>
@@ -658,3 +677,21 @@ datefmt = %Y-%m-%d %H:%M:%S
 class = kallithea.lib.colored_formatter.ColorFormatterSql
 format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S
+
+<%text>#################</%text>
+<%text>## SSH LOGGING ##</%text>
+<%text>#################</%text>
+
+# The default loggers use 'handler_console' that uses StreamHandler with
+# destination 'sys.stderr'. In the context of the SSH server process, these log
+# messages would be sent to the client, which is normally not what you want.
+# By default, when running ssh-serve, just use NullHandler and disable logging
+# completely. For other logging options, see:
+# https://docs.python.org/2/library/logging.handlers.html
+
+[ssh_serve:logger_root]
+level = CRITICAL
+handlers = null
+
+# Note: If logging is configured with other handlers, they might need similar
+# muting for ssh-serve too.

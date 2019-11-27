@@ -27,23 +27,23 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+from __future__ import print_function
 
-import os
-import re
-import sys
-import time
-import uuid
-import datetime
-import urllib
 import binascii
+import datetime
+import os
+import pwd
+import re
+import time
+import urllib
 
-import webob
 import urlobject
-from webhelpers.text import collapse, remove_formatting, strip_tags
+from tg.i18n import ugettext as _
+from tg.i18n import ungettext
+from webhelpers2.text import collapse, remove_formatting, strip_tags
 
-from tg.i18n import ugettext as _, ungettext
-from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.compat import json
+from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
 def str2bool(_str):
@@ -101,13 +101,13 @@ def convert_line_endings(line, mode):
     from string import replace
 
     if mode == 0:
-            line = replace(line, '\r\n', '\n')
-            line = replace(line, '\r', '\n')
+        line = replace(line, '\r\n', '\n')
+        line = replace(line, '\r', '\n')
     elif mode == 1:
-            line = replace(line, '\r\n', '\r')
-            line = replace(line, '\n', '\r')
+        line = replace(line, '\r\n', '\r')
+        line = replace(line, '\n', '\r')
     elif mode == 2:
-            line = re.sub("\r(?!\n)|(?<!\r)\n", "\r\n", line)
+        line = re.sub("\r(?!\n)|(?<!\r)\n", "\r\n", line)
     return line
 
 
@@ -305,7 +305,8 @@ def age(prevdate, show_short_version=False, now=None):
     month_lengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     if deltas['day'] < 0:
         if prevdate.month == 2 and (prevdate.year % 4 == 0 and
-            (prevdate.year % 100 != 0 or prevdate.year % 400 == 0)):
+            (prevdate.year % 100 != 0 or prevdate.year % 400 == 0)
+        ):
             deltas['day'] += 29
         else:
             deltas['day'] += month_lengths[prevdate.month - 1]
@@ -411,28 +412,31 @@ def credentials_filter(uri):
     return ''.join(uri)
 
 
-def get_clone_url(uri_tmpl, qualified_home_url, repo_name, repo_id, **override):
-    parsed_url = urlobject.URLObject(qualified_home_url)
-    decoded_path = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
+def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None):
+    parsed_url = urlobject.URLObject(prefix_url)
+    prefix = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
+    try:
+        system_user = pwd.getpwuid(os.getuid()).pw_name
+    except Exception: # TODO: support all systems - especially Windows
+        system_user = 'kallithea' # hardcoded default value ...
     args = {
         'scheme': parsed_url.scheme,
-        'user': '',
-        'netloc': parsed_url.netloc+decoded_path,  # path if we use proxy-prefix
-        'prefix': decoded_path,
+        'user': safe_unicode(urllib.quote(safe_str(username or ''))),
+        'netloc': parsed_url.netloc + prefix,  # like "hostname:port/prefix" (with optional ":port" and "/prefix")
+        'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,
-        'repoid': str(repo_id)
+        'repoid': str(repo_id),
+        'system_user': safe_unicode(system_user),
+        'hostname': parsed_url.hostname,
     }
-    args.update(override)
-    args['user'] = urllib.quote(safe_str(args['user']))
-
-    for k, v in args.items():
-        uri_tmpl = uri_tmpl.replace('{%s}' % k, v)
+    url = re.sub('{([^{}]+)}', lambda m: args.get(m.group(1), m.group(0)), clone_uri_tmpl)
 
     # remove leading @ sign if it's present. Case of empty user
-    url_obj = urlobject.URLObject(uri_tmpl)
-    url = url_obj.with_netloc(url_obj.netloc.lstrip('@'))
+    url_obj = urlobject.URLObject(url)
+    if not url_obj.username:
+        url_obj = url_obj.with_username(None)
 
-    return safe_unicode(url)
+    return safe_unicode(url_obj)
 
 
 def get_changeset_safe(repo, rev):
@@ -448,7 +452,7 @@ def get_changeset_safe(repo, rev):
     from kallithea.lib.vcs.backends.base import EmptyChangeset
     if not isinstance(repo, BaseRepository):
         raise Exception('You must pass an Repository '
-                        'object as first argument got %s', type(repo))
+                        'object as first argument got %s' % type(repo))
 
     try:
         cs = repo.get_changeset(rev)
@@ -483,7 +487,7 @@ def extract_mentioned_usernames(text):
     Returns list of (possible) usernames @mentioned in given text.
 
     >>> extract_mentioned_usernames('@1-2.a_X,@1234 not@not @ddd@not @n @ee @ff @gg, @gg;@hh @n\n@zz,')
-    ['1-2.a_X', '1234', 'ddd', 'ee', 'ff', 'gg', 'hh', 'zz']
+    ['1-2.a_X', '1234', 'ddd', 'ee', 'ff', 'gg', 'gg', 'hh', 'zz']
     """
     return MENTIONS_REGEX.findall(text)
 
@@ -506,21 +510,6 @@ class AttributeDict(dict):
     __delattr__ = dict.__delitem__
 
 
-def fix_PATH(os_=None):
-    """
-    Get current active python path, and append it to PATH variable to fix issues
-    of subprocess calls and different python versions
-    """
-    if os_ is None:
-        import os
-    else:
-        os = os_
-
-    cur_path = os.path.split(sys.executable)[0]
-    if not os.environ['PATH'].startswith(cur_path):
-        os.environ['PATH'] = '%s:%s' % (cur_path, os.environ['PATH'])
-
-
 def obfuscate_url_pw(engine):
     from sqlalchemy.engine import url as sa_url
     from sqlalchemy.exc import ArgumentError
@@ -533,24 +522,23 @@ def obfuscate_url_pw(engine):
     return str(_url)
 
 
-def get_server_url(environ):
-    req = webob.Request(environ)
-    return req.host_url + req.script_name
-
-
-def _extract_extras():
+def get_hook_environment():
     """
-    Extracts the Kallithea extras data from os.environ, and wraps it into named
-    AttributeDict object
+    Get hook context by deserializing the global KALLITHEA_EXTRAS environment
+    variable.
+
+    Called early in Git out-of-process hooks to get .ini config path so the
+    basic environment can be configured properly. Also used in all hooks to get
+    information about the action that triggered it.
     """
+
     try:
         extras = json.loads(os.environ['KALLITHEA_EXTRAS'])
     except KeyError:
         raise Exception("Environment variable KALLITHEA_EXTRAS not found")
 
     try:
-        for k in ['username', 'repository', 'locked_by', 'scm', 'make_lock',
-                  'action', 'ip']:
+        for k in ['username', 'repository', 'scm', 'action', 'ip']:
             extras[k]
     except KeyError:
         raise Exception('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
@@ -558,7 +546,24 @@ def _extract_extras():
     return AttributeDict(extras)
 
 
-def _set_extras(extras):
+def set_hook_environment(username, ip_addr, repo_name, repo_alias, action=None):
+    """Prepare global context for running hooks by serializing data in the
+    global KALLITHEA_EXTRAS environment variable.
+
+    Most importantly, this allow Git hooks to do proper logging and updating of
+    caches after pushes.
+
+    Must always be called before anything with hooks are invoked.
+    """
+    from kallithea import CONFIG
+    extras = {
+        'ip': ip_addr, # used in log_push/pull_action action_logger
+        'username': username,
+        'action': action or 'push_local', # used in log_push_action_raw_ids action_logger
+        'repository': repo_name,
+        'scm': repo_alias, # used to pick hack in log_push_action_raw_ids
+        'config': CONFIG['__file__'], # used by git hook to read config
+    }
     os.environ['KALLITHEA_EXTRAS'] = json.dumps(extras)
 
 
@@ -676,7 +681,7 @@ def repo_name_slug(value):
     slug = remove_formatting(value)
     slug = strip_tags(slug)
 
-    for c in """`?=[]\;'"<>,/~!@#$%^&*()+{}|: """:
+    for c in r"""`?=[]\;'"<>,/~!@#$%^&*()+{}|: """:
         slug = slug.replace(c, '-')
     slug = recursive_replace(slug, '-')
     slug = collapse(slug, '-')
@@ -693,4 +698,4 @@ def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
         retries = retries - 1
         if retries < 0:
             raise IOError
-        print complaint
+        print(complaint)

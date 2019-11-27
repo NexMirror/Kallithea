@@ -37,11 +37,11 @@ import logging
 
 import formencode
 from formencode import All
-
 from tg.i18n import ugettext as _
 
 from kallithea import BACKENDS
 from kallithea.model import validators as v
+
 
 log = logging.getLogger(__name__)
 
@@ -182,7 +182,6 @@ def RepoGroupForm(edit=False, old_data=None, repo_groups=None,
                                       testValueList=True,
                                       if_missing=None, not_empty=True),
                               v.Int(min=-1, not_empty=True))
-        enable_locking = v.StringBoolean(if_missing=False)
         chained_validators = [v.ValidRepoGroup(edit, old_data)]
 
     return _RepoGroupForm
@@ -264,7 +263,6 @@ def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
 
         repo_enable_statistics = v.StringBoolean(if_missing=False)
         repo_enable_downloads = v.StringBoolean(if_missing=False)
-        repo_enable_locking = v.StringBoolean(if_missing=False)
 
         if edit:
             owner = All(v.UnicodeString(not_empty=True), v.ValidRepoUser())
@@ -373,6 +371,7 @@ def ApplicationVisualisationForm():
         use_gravatar = v.StringBoolean(if_missing=False)
         gravatar_url = v.UnicodeString(min=3)
         clone_uri_tmpl = v.UnicodeString(min=3)
+        clone_ssh_tmpl = v.UnicodeString()
 
     return _ApplicationVisualisationForm
 
@@ -387,8 +386,6 @@ def ApplicationUiSettingsForm():
         )
         hooks_changegroup_update = v.StringBoolean(if_missing=False)
         hooks_changegroup_repo_size = v.StringBoolean(if_missing=False)
-        hooks_changegroup_push_logger = v.StringBoolean(if_missing=False)
-        hooks_outgoing_pull_logger = v.StringBoolean(if_missing=False)
 
         extensions_largefiles = v.StringBoolean(if_missing=False)
         extensions_hgsubversion = v.StringBoolean(if_missing=False)
@@ -428,7 +425,6 @@ def CustomDefaultPermissionsForm():
     class _CustomDefaultPermissionsForm(formencode.Schema):
         filter_extra_fields = True
         allow_extra_fields = True
-        inherit_default_permissions = v.StringBoolean(if_missing=False)
 
         create_repo_perm = v.StringBoolean(if_missing=False)
         create_user_group_perm = v.StringBoolean(if_missing=False)
@@ -447,7 +443,6 @@ def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS.keys()):
         default_repo_private = v.StringBoolean(if_missing=False)
         default_repo_enable_statistics = v.StringBoolean(if_missing=False)
         default_repo_enable_downloads = v.StringBoolean(if_missing=False)
-        default_repo_enable_locking = v.StringBoolean(if_missing=False)
 
     return _DefaultsForm
 

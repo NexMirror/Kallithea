@@ -1,7 +1,7 @@
+from kallithea.lib.diffs import BIN_FILENODE, CHMOD_FILENODE, COPIED_FILENODE, DEL_FILENODE, MOD_FILENODE, NEW_FILENODE, RENAMED_FILENODE, DiffProcessor
 from kallithea.tests.base import *
-from kallithea.lib.diffs import DiffProcessor, NEW_FILENODE, DEL_FILENODE, \
-    MOD_FILENODE, RENAMED_FILENODE, CHMOD_FILENODE, BIN_FILENODE, COPIED_FILENODE
 from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 
@@ -294,7 +294,6 @@ class TestDiffLib(TestController):
         for d in chunks[1]:
             l.append('%(action)-7s %(new_lineno)3s %(old_lineno)3s %(line)r\n' % d)
         s = ''.join(l)
-        print s
         assert s == r'''
 context ... ... u'@@ -51,6 +51,13 @@\n'
 unmod    51  51 u'<u>\t</u>begin();\n'

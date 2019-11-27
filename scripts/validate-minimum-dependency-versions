@@ -1,0 +1,55 @@
+#!/bin/bash
+# Test that installation of all dependencies works fine if versions are set to
+# the minimum ones.
+
+set -e
+
+if [ -n "$VIRTUAL_ENV" ]; then
+    echo "This script will create its own virtualenv - please don't run it inside an existing one." >&2
+    exit 1
+fi
+
+cd "$(hg root)"
+
+venv=build/minimum-dependency-versions-venv
+log=build/minimum-dependency-versions.log
+min_requirements=build/minimum-dependency-versions-requirements.txt
+echo "virtualenv: $venv"
+echo "log: $log"
+echo "minimum requirements file: $min_requirements"
+
+# clean up previous runs
+rm -rf "$venv" "$log"
+mkdir -p "$venv"
+
+# Make a light weight parsing of setup.py and dev_requirements.txt,
+# finding all >= requirements and dumping into a custom requirements.txt
+# while fixating the requirement at the lower bound.
+sed -n 's/.*"\(.*\)>=\(.*\)".*/\1==\2/p' setup.py > "$min_requirements"
+sed 's/>=/==/p' dev_requirements.txt >> "$min_requirements"
+
+virtualenv -p "$(command -v python2)" "$venv"
+source "$venv/bin/activate"
+pip install --upgrade pip setuptools
+pip install -e . -r "$min_requirements" python-ldap python-pam 2> >(tee "$log" >&2)
+
+# Strip out the known Python 2.7 deprecation message.
+sed -i '/DEPRECATION: Python 2\.7 will reach the end of its life/d' "$log"
+
+# Treat any message on stderr as a problem, for the caller to interpret.
+if [ -s "$log" ]; then
+    echo
+    echo "Error: pip detected following problems:"
+    cat "$log"
+    echo
+    exit 1
+fi
+
+freeze_txt=build/minimum-dependency-versions.txt
+pip freeze > $freeze_txt
+echo "Installation of minimum packages was successful, providing a set of packages as in $freeze_txt . Now running test suite..."
+
+pytest
+
+echo "Test suite execution was successful."
+echo "You can now do additional validation using virtual env '$venv'."

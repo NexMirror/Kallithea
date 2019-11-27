@@ -25,32 +25,32 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import traceback
 import calendar
-import logging
 import itertools
+import logging
+import traceback
+from datetime import date, timedelta
 from time import mktime
-from datetime import timedelta, date
 
-from tg import tmpl_context as c, request
+from beaker.cache import cache_region
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPBadRequest
 
-from beaker.cache import cache_region, region_invalidate
-
-from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, \
-    NodeDoesNotExistError
-from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MAP
-from kallithea.model.db import Statistics, CacheInvalidation, User
-from kallithea.lib.utils2 import safe_int, safe_str
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
-from kallithea.lib.base import BaseRepoController, render, jsonify
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.markup_renderer import MarkupRenderer
+from kallithea.config.conf import ALL_EXTS, ALL_READMES, LANGUAGES_EXTENSIONS_MAP
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.celerylib.tasks import get_commits_stats
 from kallithea.lib.compat import json
-from kallithea.lib.vcs.nodes import FileNode
+from kallithea.lib.markup_renderer import MarkupRenderer
 from kallithea.lib.page import RepoPage
+from kallithea.lib.utils2 import safe_int
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, NodeDoesNotExistError
+from kallithea.lib.vcs.nodes import FileNode
+from kallithea.model.db import Statistics
+
 
 log = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ class SummaryController(BaseRepoController):
         log.debug('Looking for README file')
 
         @cache_region('long_term', '_get_readme_from_cache')
-        def _get_readme_from_cache(key, kind):
+        def _get_readme_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             readme_data = None
             readme_file = None
             try:
@@ -97,10 +97,7 @@ class SummaryController(BaseRepoController):
             return readme_data, readme_file
 
         kind = 'README'
-        valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
-        if not valid:
-            region_invalidate(_get_readme_from_cache, None, '_get_readme_from_cache', repo_name, kind)
-        return _get_readme_from_cache(repo_name, kind)
+        return _get_readme_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
 
     @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
@@ -113,23 +110,16 @@ class SummaryController(BaseRepoController):
         c.cs_comments = c.db_repo.get_comments(page_revisions)
         c.cs_statuses = c.db_repo.statuses(page_revisions)
 
+        c.ssh_repo_url = None
         if request.authuser.is_default_user:
-            username = ''
+            username = None
         else:
-            username = safe_str(request.authuser.username)
+            username = request.authuser.username
+            if c.ssh_enabled:
+                c.ssh_repo_url = c.db_repo.clone_url(clone_uri_tmpl=c.clone_ssh_tmpl)
 
-        _def_clone_uri = _def_clone_uri_by_id = c.clone_uri_tmpl
-        if '{repo}' in _def_clone_uri_by_id:
-            _def_clone_uri_by_id = _def_clone_uri_by_id.replace('{repo}', '_{repoid}')
-        elif '_{repoid}' in _def_clone_uri:
-            _def_clone_uri = _def_clone_uri.replace('_{repoid}', '{repo}')
-        else:
-            log.error("Configured clone_uri_tmpl %r has no '{repo}' or '_{repoid}' and cannot toggle to use repo id URLs", c.clone_uri_tmpl)
-
-        c.clone_repo_url = c.db_repo.clone_url(user=username,
-                                                uri_tmpl=_def_clone_uri)
-        c.clone_repo_url_id = c.db_repo.clone_url(user=username,
-                                                uri_tmpl=_def_clone_uri_by_id)
+        c.clone_repo_url = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=False, username=username)
+        c.clone_repo_url_id = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=True, username=username)
 
         if c.db_repo.enable_statistics:
             c.show_stats = True
@@ -146,13 +136,12 @@ class SummaryController(BaseRepoController):
             c.no_data = False is c.db_repo.enable_statistics
             lang_stats_d = json.loads(stats.languages)
 
-            lang_stats = ((x, {"count": y,
-                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})
-                          for x, y in lang_stats_d.items())
+            lang_stats = [(x, {"count": y,
+                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x, '?')})
+                          for x, y in lang_stats_d.items()]
+            lang_stats.sort(key=lambda k: (-k[1]['count'], k[0]))
 
-            c.trending_languages = (
-                sorted(lang_stats, reverse=True, key=lambda k: k[1])[:10]
-            )
+            c.trending_languages = lang_stats[:10]
         else:
             c.no_data = True
             c.trending_languages = []

@@ -12,19 +12,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pytest
+
+from kallithea.model.db import Repository
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.scm import ScmModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.model.db import Repository
-from kallithea.model.repo import RepoModel
-from kallithea.model.meta import Session
-from kallithea.model.scm import ScmModel
+
 
 fixture = Fixture()
+
+@pytest.fixture
+def custom_settings(set_test_settings):
+    # overwrite DEFAULT_CLONE_SSH = 'ssh://{system_user}@{hostname}/{repo}'
+    set_test_settings(
+        ('clone_ssh_tmpl', 'ssh://ssh_user@ssh_hostname/{repo}', 'unicode'),
+        )
 
 
 class TestSummaryController(TestController):
 
-    def test_index_hg(self):
+    def test_index_hg(self, custom_settings):
         self.log_user()
         ID = Repository.get_by_repo_name(HG_REPO).repo_id
         response = self.app.get(url(controller='summary',
@@ -39,8 +49,7 @@ class TestSummaryController(TestController):
         response.mustcontain(
             """<i class="icon-globe">"""
         )
-
-        # clone url...
+        # clone URLs
         response.mustcontain(
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
             (TEST_USER_ADMIN_LOGIN, HG_REPO)
@@ -49,8 +58,13 @@ class TestSummaryController(TestController):
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
             (TEST_USER_ADMIN_LOGIN, ID)
         )
+        response.mustcontain(
+            '''<input id="ssh_url" class="form-control" size="80" readonly="readonly" value="ssh://ssh_user@ssh_hostname/%s"/>''' %
+            (HG_REPO)
+        )
 
-    def test_index_git(self):
+
+    def test_index_git(self, custom_settings):
         self.log_user()
         ID = Repository.get_by_repo_name(GIT_REPO).repo_id
         response = self.app.get(url(controller='summary',
@@ -65,14 +79,18 @@ class TestSummaryController(TestController):
         response.mustcontain(
             """<i class="icon-globe">"""
         )
-
-        # clone url...
+        # clone URLs
         response.mustcontain(
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
-            (TEST_USER_ADMIN_LOGIN, GIT_REPO))
+            (TEST_USER_ADMIN_LOGIN, GIT_REPO)
+        )
         response.mustcontain(
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
             (TEST_USER_ADMIN_LOGIN, ID)
+        )
+        response.mustcontain(
+            '''<input id="ssh_url" class="form-control" size="80" readonly="readonly" value="ssh://ssh_user@ssh_hostname/%s"/>''' %
+            (GIT_REPO)
         )
 
     def test_index_by_id_hg(self):
@@ -141,12 +159,12 @@ class TestSummaryController(TestController):
             '["rst", {"count": 16, "desc": ["Rst"]}], '
             '["css", {"count": 2, "desc": ["Css"]}], '
             '["sh", {"count": 2, "desc": ["Bash"]}], '
-            '["yml", {"count": 1, "desc": ["Yaml"]}], '
-            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}], '
-            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["bat", {"count": 1, "desc": ["Batch"]}], '
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
+            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}], '
             '["ini", {"count": 1, "desc": ["Ini"]}], '
-            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}]]'
+            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}]]',
         )
 
     def test_index_statistics(self):
@@ -174,12 +192,12 @@ class TestSummaryController(TestController):
             '["rst", {"count": 16, "desc": ["Rst"]}], '
             '["css", {"count": 2, "desc": ["Css"]}], '
             '["sh", {"count": 2, "desc": ["Bash"]}], '
-            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}], '
-            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["bat", {"count": 1, "desc": ["Batch"]}], '
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
-            '["ini", {"count": 1, "desc": ["Ini"]}], '
             '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}], '
-            '["bat", {"count": 1, "desc": ["Batch"]}]]'
+            '["ini", {"count": 1, "desc": ["Ini"]}], '
+            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}]]',
         )
 
     def test_index_statistics_git(self):

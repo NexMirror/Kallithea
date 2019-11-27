@@ -1,11 +1,5 @@
-import time
-
 from kallithea.model.db import User, UserIpMap
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
 from kallithea.tests.base import *
-
-from tg.util.webtest import test_context
 
 
 class TestAdminPermissionsController(TestController):
@@ -29,7 +23,7 @@ class TestAdminPermissionsController(TestController):
 
         response = self.app.post(url('edit_user_ips_update', id=default_user_id),
                                  params=dict(new_ip='0.0.0.0/24',
-                                 _authentication_token=self.authentication_token()))
+                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
         invalidate_all_caches()
         response = self.app.get(url('admin_permissions_ips'),
                                 extra_environ={'REMOTE_ADDR': '0.0.0.1'})
@@ -43,7 +37,7 @@ class TestAdminPermissionsController(TestController):
 
         response = self.app.post(url('edit_user_ips_update', id=default_user_id),
                                  params=dict(new_ip='0.0.1.0/24',
-                                 _authentication_token=self.authentication_token()))
+                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
         invalidate_all_caches()
 
         response = self.app.get(url('admin_permissions_ips'),
@@ -54,7 +48,7 @@ class TestAdminPermissionsController(TestController):
         x = UserIpMap.query().filter_by(ip_addr='0.0.1.0/24').first()
         response = self.app.post(url('edit_user_ips_delete', id=default_user_id),
                                  params=dict(del_ip_id=x.ip_id,
-                                             _authentication_token=self.authentication_token()))
+                                             _session_csrf_secret_token=self.session_csrf_secret_token()))
         invalidate_all_caches()
 
         response = self.app.get(url('admin_permissions_ips'),
@@ -65,7 +59,7 @@ class TestAdminPermissionsController(TestController):
         x = UserIpMap.query().filter_by(ip_addr='0.0.0.0/24').first()
         response = self.app.post(url('edit_user_ips_delete', id=default_user_id),
                                  params=dict(del_ip_id=x.ip_id,
-                                             _authentication_token=self.authentication_token()))
+                                             _session_csrf_secret_token=self.session_csrf_secret_token()))
         invalidate_all_caches()
 
         response = self.app.get(url('admin_permissions_ips'),
@@ -86,7 +80,7 @@ class TestAdminPermissionsController(TestController):
                 perm_new_member_1='repository.read',
                 perm_new_member_name_1=user.username,
                 perm_new_member_type_1='user',
-                _authentication_token=self.authentication_token()),
+                _session_csrf_secret_token=self.session_csrf_secret_token()),
             status=302)
 
         assert not response.location.endswith(url('edit_repo_perms_update', repo_name=HG_REPO))
@@ -97,7 +91,7 @@ class TestAdminPermissionsController(TestController):
             params=dict(
                 obj_type='user',
                 user_id=user.user_id,
-                _authentication_token=self.authentication_token()),
+                _session_csrf_secret_token=self.session_csrf_secret_token()),
             status=302)
 
         assert response.location.endswith(url('login_home', came_from=url('edit_repo_perms_revoke', repo_name=HG_REPO)))
@@ -111,7 +105,7 @@ class TestAdminPermissionsController(TestController):
                 perm_new_member_1='repository.read',
                 perm_new_member_name_1=user.username,
                 perm_new_member_type_1='user',
-                _authentication_token=self.authentication_token()),
+                _session_csrf_secret_token=self.session_csrf_secret_token()),
             status=302)
 
         assert response.location.endswith(url('edit_repo_perms_update', repo_name=HG_REPO))
@@ -121,6 +115,6 @@ class TestAdminPermissionsController(TestController):
             params=dict(
                 obj_type='user',
                 user_id=user.user_id,
-                _authentication_token=self.authentication_token()),
+                _session_csrf_secret_token=self.session_csrf_secret_token()),
             status=200)
         assert not response.body

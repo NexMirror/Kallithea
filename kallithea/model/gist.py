@@ -25,19 +25,19 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import logging
 import os
 import random
-import time
-import logging
-import traceback
 import shutil
+import time
+import traceback
 
-from kallithea.lib.utils2 import safe_unicode, safe_int, \
-    time_to_datetime, AttributeDict
 from kallithea.lib.compat import json
+from kallithea.lib.utils2 import AttributeDict, safe_int, safe_unicode, time_to_datetime
 from kallithea.model.db import Gist, Session, User
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
+
 
 log = logging.getLogger(__name__)
 
@@ -97,7 +97,7 @@ class GistModel(object):
         cs = repo.scm_instance.get_changeset(revision)
         return cs, [n for n in cs.get_node('/')]
 
-    def create(self, description, owner, gist_mapping,
+    def create(self, description, owner, ip_addr, gist_mapping,
                gist_type=Gist.GIST_PUBLIC, lifetime=-1):
         """
 
@@ -159,7 +159,9 @@ class GistModel(object):
             scm_instance_no_cache=lambda: repo,
         ))
         ScmModel().create_nodes(
-            user=owner.user_id, repo=fake_repo,
+            user=owner.user_id,
+            ip_addr=ip_addr,
+            repo=fake_repo,
             message=message,
             nodes=processed_mapping,
             trigger_push_hook=False
@@ -181,7 +183,7 @@ class GistModel(object):
             log.error(traceback.format_exc())
             raise
 
-    def update(self, gist, description, owner, gist_mapping, gist_type,
+    def update(self, gist, description, owner, ip_addr, gist_mapping, gist_type,
                lifetime):
         gist = Gist.guess_instance(gist)
         gist_repo = gist.scm_instance
@@ -226,6 +228,7 @@ class GistModel(object):
 
         ScmModel().update_nodes(
             user=owner.user_id,
+            ip_addr=ip_addr,
             repo=fake_repo,
             message=message,
             nodes=gist_mapping_op,

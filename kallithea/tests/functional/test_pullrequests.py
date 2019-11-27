@@ -1,14 +1,13 @@
 import re
+
 import pytest
 
-from tg.util.webtest import test_context
-
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
+from kallithea.controllers.pullrequests import PullrequestsController
 from kallithea.model.db import PullRequest, User
 from kallithea.model.meta import Session
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
 
-from kallithea.controllers.pullrequests import PullrequestsController
 
 fixture = Fixture()
 
@@ -30,7 +29,7 @@ class TestPullrequestsController(TestController):
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response = response.follow()
@@ -49,7 +48,7 @@ class TestPullrequestsController(TestController):
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response = response.follow()
@@ -69,7 +68,7 @@ class TestPullrequestsController(TestController):
                                   'other_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response = response.follow()
@@ -92,7 +91,7 @@ class TestPullrequestsController(TestController):
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         pull_request1_id = re.search('/pull-request/(\d+)/', response.location).group(1)
@@ -106,7 +105,7 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'review_members': [regular_user.user_id],
                                  },
                                  status=302)
@@ -124,7 +123,7 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_title': 'Title',
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'org_review_members': [admin_user.user_id], # fake - just to get some 'meanwhile' warning ... but it is also added ...
                                   'review_members': [regular_user2.user_id, admin_user.user_id],
                                  },
@@ -151,7 +150,7 @@ class TestPullrequestsController(TestController):
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                 status=302)
         # location is of the form:
@@ -168,7 +167,7 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'review_members': [str(invalid_user_id)],
                                  },
                                  status=400)
@@ -187,7 +186,7 @@ class TestPullrequestsController(TestController):
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                 status=302)
         # location is of the form:
@@ -203,7 +202,7 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'review_members': [str(invalid_user_id)],
                                  },
                                  status=400)
@@ -235,7 +234,7 @@ class TestPullrequestsController(TestController):
                 'other_ref': 'branch:default:3d1091ee5a533b1f4577ec7d8a226bb315fb1336',
                 'pullrequest_title': 'title',
                 'pullrequest_desc': 'description',
-                '_authentication_token': self.authentication_token(),
+                '_session_csrf_secret_token': self.session_csrf_secret_token(),
             },
             status=302)
         pr1_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
@@ -254,7 +253,7 @@ class TestPullrequestsController(TestController):
                 'pullrequest_title': 'title',
                 'pullrequest_desc': 'description',
                 'owner': TEST_USER_REGULAR_LOGIN,
-                '_authentication_token': self.authentication_token(),
+                '_session_csrf_secret_token': self.session_csrf_secret_token(),
              },
              status=302)
         pr2_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
@@ -276,7 +275,7 @@ class TestPullrequestsController(TestController):
                 'pullrequest_title': 'title',
                 'pullrequest_desc': 'description',
                 'owner': TEST_USER_REGULAR_LOGIN,
-                '_authentication_token': self.authentication_token(),
+                '_session_csrf_secret_token': self.session_csrf_secret_token(),
              },
              status=302)
         pr3_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))

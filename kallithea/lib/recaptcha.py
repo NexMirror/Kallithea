@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
 import urllib
 import urllib2
-import json
 
 
 class RecaptchaResponse(object):
@@ -51,7 +51,7 @@ def submit(g_recaptcha_response, private_key, remoteip):
 
     if not (isinstance(return_values, dict)):
         return RecaptchaResponse(is_valid=False, error_code='incorrect-captcha-sol')
-    elif (("success" in return_values) and ((return_values["success"] == True) or (return_values["success"] == "true"))):
+    elif (("success" in return_values) and ((return_values["success"] is True) or (return_values["success"] == "true"))):
         return RecaptchaResponse(is_valid=True)
     elif (("error-codes" in return_values) and isinstance(return_values["error-codes"], list) and (len(return_values["error-codes"]) > 0)):
         return RecaptchaResponse(is_valid=False, error_code=return_values["error-codes"][0])

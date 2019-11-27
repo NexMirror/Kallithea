@@ -29,9 +29,10 @@ Original author and date, and relevant copyright and licensing information is be
 import base64
 import logging
 import urllib2
+
 from kallithea.lib import auth_modules
-from kallithea.lib.compat import json, formatted_json, hybrid_property
-from kallithea.model.db import User
+from kallithea.lib.compat import formatted_json, hybrid_property, json
+
 
 log = logging.getLogger(__name__)
 

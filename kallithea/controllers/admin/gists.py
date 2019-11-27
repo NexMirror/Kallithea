@@ -25,27 +25,28 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import time
 import logging
 import traceback
-import formencode.htmlfill
 
-from tg import request, response, tmpl_context as c
+import formencode.htmlfill
+from sqlalchemy.sql.expression import or_
+from tg import request, response
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden
+from webob.exc import HTTPForbidden, HTTPFound, HTTPNotFound
 
 from kallithea.config.routing import url
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import LoginRequired
+from kallithea.lib.base import BaseController, jsonify, render
+from kallithea.lib.page import Page
+from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
+from kallithea.lib.vcs.exceptions import NodeNotChangedError, VCSError
+from kallithea.model.db import Gist
 from kallithea.model.forms import GistForm
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
-from kallithea.model.db import Gist, User
-from kallithea.lib import helpers as h
-from kallithea.lib.base import BaseController, render, jsonify
-from kallithea.lib.auth import LoginRequired
-from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
-from kallithea.lib.page import Page
-from sqlalchemy.sql.expression import or_
-from kallithea.lib.vcs.exceptions import VCSError, NodeNotChangedError
+
 
 log = logging.getLogger(__name__)
 
@@ -118,6 +119,7 @@ class GistsController(BaseController):
             gist = GistModel().create(
                 description=form_result['description'],
                 owner=request.authuser.user_id,
+                ip_addr=request.ip_addr,
                 gist_mapping=nodes,
                 gist_type=gist_type,
                 lifetime=form_result['lifetime']
@@ -215,7 +217,8 @@ class GistsController(BaseController):
                 GistModel().update(
                     gist=c.gist,
                     description=rpost['description'],
-                    owner=c.gist.owner,
+                    owner=c.gist.owner, # FIXME: request.authuser.user_id ?
+                    ip_addr=request.ip_addr,
                     gist_mapping=nodes,
                     gist_type=c.gist.gist_type,
                     lifetime=rpost['lifetime']

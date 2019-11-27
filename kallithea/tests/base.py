@@ -15,18 +15,15 @@
 import datetime
 import logging
 import os
-import pytest
 import re
 import tempfile
 import time
 
-from tg import config
+import pytest
 from webtest import TestApp
 
-from kallithea import model
-from kallithea.model.db import User
-from kallithea.model.meta import Session
 from kallithea.lib.utils2 import safe_str
+from kallithea.model.db import User
 
 
 log = logging.getLogger(__name__)
@@ -45,8 +42,8 @@ __all__ = [
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
     'TEST_USER_ADMIN_EMAIL', 'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',
     'TEST_USER_REGULAR_EMAIL', 'TEST_USER_REGULAR2_LOGIN',
-    'TEST_USER_REGULAR2_PASS', 'TEST_USER_REGULAR2_EMAIL', 'TEST_HG_REPO',
-    'TEST_HG_REPO_CLONE', 'TEST_HG_REPO_PULL', 'TEST_GIT_REPO',
+    'TEST_USER_REGULAR2_PASS', 'TEST_USER_REGULAR2_EMAIL', 'IP_ADDR',
+    'TEST_HG_REPO', 'TEST_HG_REPO_CLONE', 'TEST_HG_REPO_PULL', 'TEST_GIT_REPO',
     'TEST_GIT_REPO_CLONE', 'TEST_GIT_REPO_PULL', 'HG_REMOTE_REPO',
     'GIT_REMOTE_REPO', 'HG_TEST_REVISION', 'GIT_TEST_REVISION',
 ]
@@ -66,6 +63,8 @@ TEST_USER_REGULAR_EMAIL = 'test_regular@example.com'
 TEST_USER_REGULAR2_LOGIN = 'test_regular2'
 TEST_USER_REGULAR2_PASS = 'test12'
 TEST_USER_REGULAR2_EMAIL = 'test_regular2@example.com'
+
+IP_ADDR = '127.0.0.127'
 
 HG_REPO = u'vcs_test_hg'
 GIT_REPO = u'vcs_test_git'
@@ -154,7 +153,8 @@ class TestController(object):
         self._logged_username = username
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': username,
-                                  'password': password})
+                                  'password': password,
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         if 'Invalid username or password' in response.body:
             pytest.fail('could not login using %s %s' % (username, password))
@@ -175,8 +175,8 @@ class TestController(object):
         user = user and user.username
         assert user == expected_username
 
-    def authentication_token(self):
-        return self.app.get(url('authentication_token')).body
+    def session_csrf_secret_token(self):
+        return self.app.get(url('session_csrf_secret_token')).body
 
     def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:

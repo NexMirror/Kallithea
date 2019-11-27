@@ -25,18 +25,17 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import binascii
 import os
 import time
-import binascii
 
-from kallithea.lib.vcs.utils.hgcompat import nullrev, revrange
 from kallithea.lib import helpers as h
-from kallithea.lib.utils import action_logger
+from kallithea.lib.exceptions import UserCreationError
+from kallithea.lib.utils import action_logger, make_ui, setup_cache_regions
+from kallithea.lib.utils2 import get_hook_environment, safe_str, safe_unicode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.exceptions import HTTPLockedRC, UserCreationError
-from kallithea.lib.utils import make_ui, setup_cache_regions
-from kallithea.lib.utils2 import safe_str, safe_unicode, _extract_extras
-from kallithea.model.db import Repository, User, Ui
+from kallithea.lib.vcs.utils.hgcompat import revrange
+from kallithea.model.db import Repository, User
 
 
 def _get_scm_size(alias, root_path):
@@ -78,48 +77,14 @@ def repo_size(ui, repo, hooktype=None, **kwargs):
     ui.status(msg)
 
 
-def push_lock_handling(ui, repo, **kwargs):
-    """Pre push function, currently used to ban pushing when repository is locked.
-
-    Called as Mercurial hook prechangegroup.push_lock_handling or from the Git pre-receive hook calling handle_git_pre_receive.
-    """
-    ex = _extract_extras()
-
-    usr = User.get_by_username(ex.username)
-    if ex.locked_by[0] and usr.user_id != int(ex.locked_by[0]):
-        locked_by = User.get(ex.locked_by[0]).username
-        # this exception is interpreted in git/hg middlewares and based
-        # on that proper return code is server to client
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
-        else:
-            raise _http_ret
-
-
-def pull_lock_handling(ui, repo, **kwargs):
-    """Called as Mercurial hook preoutgoing.pull_lock_handling or from Kallithea before invoking Git"""
-    # pre pull function ...
-    ex = _extract_extras()
-    if ex.locked_by[0]:
-        locked_by = User.get(ex.locked_by[0]).username
-        # this exception is interpreted in git/hg middlewares and based
-        # on that proper return code is server to client
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
-        else:
-            raise _http_ret
-
-
 def log_pull_action(ui, repo, **kwargs):
-    """Logs user last pull action, and also handle locking
+    """Logs user last pull action
 
     Called as Mercurial hook outgoing.pull_logger or from Kallithea before invoking Git.
+
+    Does *not* use the action from the hook environment but is always 'pull'.
     """
-    ex = _extract_extras()
+    ex = get_hook_environment()
 
     user = User.get_by_username(ex.username)
     action = 'pull'
@@ -132,57 +97,35 @@ def log_pull_action(ui, repo, **kwargs):
         kw.update(ex)
         callback(**kw)
 
-    if ex.make_lock is not None and ex.make_lock:
-        Repository.lock(Repository.get_by_repo_name(ex.repository), user.user_id)
-        #msg = 'Made lock on repo `%s`' % repository
-        #ui.status(msg)
-
-    if ex.locked_by[0]:
-        locked_by = User.get(ex.locked_by[0]).username
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
     return 0
 
 
-def log_push_action(ui, repo, **kwargs):
+def log_push_action(ui, repo, node, node_last, **kwargs):
     """
-    Register that changes have been pushed - log it *and* invalidate caches.
-    Note: It is not only logging, but also the side effect invalidating cahes!
-    The function should perhaps be renamed.
+    Entry point for Mercurial hook changegroup.push_logger.
 
-    Called as Mercurial hook changegroup.push_logger or from the Git
-    post-receive hook calling handle_git_post_receive ... or from scm _handle_push.
+    The pushed changesets is given by the revset 'node:node_last'.
 
-    Revisions are passed in different hack-ish ways.
+    Note: This hook is not only logging, but also the side effect invalidating
+    cahes! The function should perhaps be renamed.
     """
-    ex = _extract_extras()
+    _h = binascii.hexlify
+    revs = [_h(repo[r].node()) for r in revrange(repo, [node + ':' + node_last])]
+    process_pushed_raw_ids(revs)
+    return 0
 
-    action_tmpl = ex.action + ':%s'
-    revs = []
-    if ex.scm == 'hg':
-        node = kwargs['node']
 
-        def get_revs(repo, rev_opt):
-            if rev_opt:
-                revs = revrange(repo, rev_opt)
+def process_pushed_raw_ids(revs):
+    """
+    Register that changes have been added to the repo - log the action *and* invalidate caches.
 
-                if len(revs) == 0:
-                    return (nullrev, nullrev)
-                return max(revs), min(revs)
-            else:
-                return len(repo) - 1, 0
+    Called from  Mercurial changegroup.push_logger calling hook log_push_action,
+    or from the Git post-receive hook calling handle_git_post_receive ...
+    or from scm _handle_push.
+    """
+    ex = get_hook_environment()
 
-        stop, start = get_revs(repo, [node + ':'])
-        _h = binascii.hexlify
-        revs = [_h(repo[r].node()) for r in xrange(start, stop + 1)]
-    elif ex.scm == 'git':
-        revs = kwargs.get('_git_revs', [])
-        if '_git_revs' in kwargs:
-            kwargs.pop('_git_revs')
-
-    action = action_tmpl % ','.join(revs)
+    action = '%s:%s' % (ex.action, ','.join(revs))
     action_logger(ex.username, action, ex.repository, ex.ip, commit=True)
 
     from kallithea.model.scm import ScmModel
@@ -195,19 +138,6 @@ def log_push_action(ui, repo, **kwargs):
         kw = {'pushed_revs': revs}
         kw.update(ex)
         callback(**kw)
-
-    if ex.make_lock is not None and not ex.make_lock:
-        Repository.unlock(Repository.get_by_repo_name(ex.repository))
-        ui.status(safe_str('Released lock on repo `%s`\n' % ex.repository))
-
-    if ex.locked_by[0]:
-        locked_by = User.get(ex.locked_by[0]).username
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
-
-    return 0
 
 
 def log_create_repository(repository_dict, created_by, **kwargs):
@@ -281,7 +211,6 @@ def log_create_user(user_dict, created_by, **kwargs):
      'active',
      'password',
      'emails',
-     'inherit_default_permissions'
 
     """
     from kallithea import EXTENSIONS
@@ -354,7 +283,6 @@ def log_delete_user(user_dict, deleted_by, **kwargs):
      'active',
      'password',
      'emails',
-     'inherit_default_permissions'
 
     """
     from kallithea import EXTENSIONS
@@ -379,7 +307,7 @@ def _hook_environment(repo_path):
     from kallithea.config.environment import load_environment
     from kallithea.model.base import init_model
 
-    extras = _extract_extras()
+    extras = get_hook_environment()
     ini_file_path = extras['config']
     #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
     app_conf = appconfig('config:%s' % ini_file_path)
@@ -400,15 +328,13 @@ def _hook_environment(repo_path):
         raise OSError('Repository %s not found in database'
                       % (safe_str(repo_path)))
 
-    baseui = make_ui('db')
+    baseui = make_ui()
     return baseui, repo
 
 
 def handle_git_pre_receive(repo_path, git_stdin_lines):
     """Called from Git pre-receive hook"""
-    baseui, repo = _hook_environment(repo_path)
-    scm_repo = repo.scm_instance
-    push_lock_handling(baseui, scm_repo)
+    # Currently unused. TODO: remove?
     return 0
 
 
@@ -419,53 +345,59 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
     # the post push hook should never use the cached instance
     scm_repo = repo.scm_instance_no_cache()
 
-    _hooks = dict(baseui.configitems('hooks')) or {}
-    # if push hook is enabled via web interface
-    if _hooks.get(Ui.HOOK_PUSH_LOG):
-        rev_data = []
-        for l in git_stdin_lines:
-            old_rev, new_rev, ref = l.strip().split(' ')
-            _ref_data = ref.split('/')
-            if _ref_data[1] in ['tags', 'heads']:
-                rev_data.append({'old_rev': old_rev,
-                                 'new_rev': new_rev,
-                                 'ref': ref,
-                                 'type': _ref_data[1],
-                                 'name': '/'.join(_ref_data[2:])})
+    rev_data = []
+    for l in git_stdin_lines:
+        old_rev, new_rev, ref = l.strip().split(' ')
+        _ref_data = ref.split('/')
+        if _ref_data[1] in ['tags', 'heads']:
+            rev_data.append({'old_rev': old_rev,
+                             'new_rev': new_rev,
+                             'ref': ref,
+                             'type': _ref_data[1],
+                             'name': '/'.join(_ref_data[2:])})
 
-        git_revs = []
-        for push_ref in rev_data:
-            _type = push_ref['type']
-            if _type == 'heads':
-                if push_ref['old_rev'] == EmptyChangeset().raw_id:
-                    # update the symbolic ref if we push new repo
-                    if scm_repo.is_empty():
-                        scm_repo._repo.refs.set_symbolic_ref('HEAD',
-                                            'refs/heads/%s' % push_ref['name'])
+    git_revs = []
+    for push_ref in rev_data:
+        _type = push_ref['type']
+        if _type == 'heads':
+            if push_ref['old_rev'] == EmptyChangeset().raw_id:
+                # update the symbolic ref if we push new repo
+                if scm_repo.is_empty():
+                    scm_repo._repo.refs.set_symbolic_ref('HEAD',
+                                        'refs/heads/%s' % push_ref['name'])
 
-                    # build exclude list without the ref
-                    cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
-                    stdout, stderr = scm_repo.run_git_command(cmd)
-                    ref = push_ref['ref']
-                    heads = [head for head in stdout.splitlines() if head != ref]
-                    # now list the git revs while excluding from the list
-                    cmd = ['log', push_ref['new_rev'], '--reverse', '--pretty=format:%H']
-                    cmd.append('--not')
-                    cmd.extend(heads) # empty list is ok
-                    stdout, stderr = scm_repo.run_git_command(cmd)
-                    git_revs += stdout.splitlines()
+                # build exclude list without the ref
+                cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
+                stdout, stderr = scm_repo.run_git_command(cmd)
+                ref = push_ref['ref']
+                heads = [head for head in stdout.splitlines() if head != ref]
+                # now list the git revs while excluding from the list
+                cmd = ['log', push_ref['new_rev'], '--reverse', '--pretty=format:%H']
+                cmd.append('--not')
+                cmd.extend(heads) # empty list is ok
+                stdout, stderr = scm_repo.run_git_command(cmd)
+                git_revs += stdout.splitlines()
 
-                elif push_ref['new_rev'] == EmptyChangeset().raw_id:
-                    # delete branch case
-                    git_revs += ['delete_branch=>%s' % push_ref['name']]
-                else:
-                    cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,
-                           '--reverse', '--pretty=format:%H']
-                    stdout, stderr = scm_repo.run_git_command(cmd)
-                    git_revs += stdout.splitlines()
+            elif push_ref['new_rev'] == EmptyChangeset().raw_id:
+                # delete branch case
+                git_revs += ['delete_branch=>%s' % push_ref['name']]
+            else:
+                cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,
+                       '--reverse', '--pretty=format:%H']
+                stdout, stderr = scm_repo.run_git_command(cmd)
+                git_revs += stdout.splitlines()
 
-            elif _type == 'tags':
-                git_revs += ['tag=>%s' % push_ref['name']]
+        elif _type == 'tags':
+            git_revs += ['tag=>%s' % push_ref['name']]
 
-        log_push_action(baseui, scm_repo, _git_revs=git_revs)
+    process_pushed_raw_ids(git_revs)
+
     return 0
+
+
+# Almost exactly like Mercurial contrib/hg-ssh:
+def rejectpush(ui, **kwargs):
+    """Mercurial hook to be installed as pretxnopen and prepushkey for read-only repos"""
+    ex = get_hook_environment()
+    ui.warn((b"Push access to %r denied\n") % safe_str(ex.repository))
+    return 1

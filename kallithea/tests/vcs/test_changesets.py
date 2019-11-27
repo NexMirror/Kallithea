@@ -1,24 +1,14 @@
 # encoding: utf-8
 
-import time
 import datetime
 
 import pytest
 
 from kallithea.lib import vcs
-
 from kallithea.lib.vcs.backends.base import BaseChangeset
-from kallithea.lib.vcs.nodes import (
-    FileNode, AddedFileNodesGenerator,
-    ChangedFileNodesGenerator, RemovedFileNodesGenerator
-)
-from kallithea.lib.vcs.exceptions import (
-    BranchDoesNotExistError, ChangesetDoesNotExistError,
-    RepositoryError, EmptyRepositoryError
-)
-
+from kallithea.lib.vcs.exceptions import BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
+from kallithea.lib.vcs.nodes import AddedFileNodesGenerator, ChangedFileNodesGenerator, FileNode, RemovedFileNodesGenerator
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import get_new_dir
 
 
 class TestBaseChangeset(object):

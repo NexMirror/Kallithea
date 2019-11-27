@@ -25,28 +25,28 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import datetime
+import logging
 import os
 import re
-import logging
-import datetime
+import sys
 import traceback
+from distutils.version import StrictVersion
+
 import beaker
-
-from tg import request, response
-from tg.i18n import ugettext as _
 from beaker.cache import _cache_decorate
-
-from kallithea.lib.vcs.utils.hgcompat import ui, config
-from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.exceptions import VCSError
+from tg.i18n import ugettext as _
 
 from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.model import meta
-from kallithea.model.db import Repository, User, Ui, \
-    UserLog, RepoGroup, Setting, UserGroup
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.lib.utils2 import safe_str, safe_unicode, get_current_authuser
+from kallithea.lib.utils2 import get_current_authuser, safe_str, safe_unicode
+from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.utils.fakemod import create_module
+from kallithea.lib.vcs.utils.helpers import get_scm
+from kallithea.lib.vcs.utils.hgcompat import config, ui
+from kallithea.model import meta
+from kallithea.model.db import RepoGroup, Repository, Setting, Ui, User, UserGroup, UserLog
+from kallithea.model.repo_group import RepoGroupModel
+
 
 log = logging.getLogger(__name__)
 
@@ -78,29 +78,35 @@ def get_user_group_slug(request):
     return None
 
 
-def _extract_id_from_repo_name(repo_name):
-    if repo_name.startswith('/'):
-        repo_name = repo_name.lstrip('/')
-    by_id_match = re.match(r'^_(\d{1,})', repo_name)
-    if by_id_match:
-        return by_id_match.groups()[0]
-
-
-def get_repo_by_id(repo_name):
+def _get_permanent_id(s):
+    """Helper for decoding stable URLs with repo ID. For a string like '_123'
+    return 123.
     """
-    Extracts repo_name by id from special urls. Example url is _11/repo_name
+    by_id_match = re.match(r'^_(\d+)$', s)
+    if by_id_match is None:
+        return None
+    return int(by_id_match.group(1))
 
-    :param repo_name:
-    :return: repo_name if matched else None
+
+def fix_repo_id_name(path):
     """
-    _repo_id = _extract_id_from_repo_name(repo_name)
-    if _repo_id:
+    Rewrite repo_name for _<ID> permanent URLs.
+
+    Given a path, if the first path element is like _<ID>, return the path with
+    this part expanded to the corresponding full repo name, else return the
+    provided path.
+    """
+    first, rest = path, ''
+    if '/' in path:
+        first, rest_ = path.split('/', 1)
+        rest = '/' + rest_
+    repo_id = _get_permanent_id(first)
+    if repo_id is not None:
         from kallithea.model.db import Repository
-        repo = Repository.get(_repo_id)
-        if repo:
-            # TODO: return repo instead of reponame? or would that be a layering violation?
-            return repo.repo_name
-    return None
+        repo = Repository.get(repo_id)
+        if repo is not None:
+            return repo.repo_name + rest
+    return path
 
 
 def action_logger(user, action, repo, ipaddr='', commit=False):
@@ -262,6 +268,7 @@ def is_valid_repo(repo_name, base_path, scm=None):
 
     :return True: if given path is a valid repository
     """
+    # TODO: paranoid security checks?
     full_path = os.path.join(safe_str(base_path), safe_str(repo_name))
 
     try:
@@ -315,15 +322,11 @@ ui_sections = ['alias', 'auth',
                 'ui', 'web', ]
 
 
-def make_ui(read_from='file', path=None, clear_session=True):
+def make_ui(repo_path=None, clear_session=True):
     """
-    A function that will read python rc files or database
-    and make an mercurial ui object from read options
-
-    :param path: path to mercurial config file
-    :param read_from: read from 'file' or 'db'
+    Create an Mercurial 'ui' object based on database Ui settings, possibly
+    augmenting with content from a hgrc file.
     """
-
     baseui = ui.ui()
 
     # clean the baseui object
@@ -331,39 +334,39 @@ def make_ui(read_from='file', path=None, clear_session=True):
     baseui._ucfg = config.config()
     baseui._tcfg = config.config()
 
-    if read_from == 'file':
-        if not os.path.isfile(path):
-            log.debug('hgrc file is not present at %s, skipping...', path)
-            return baseui
-        log.debug('reading hgrc from %s', path)
-        cfg = config.config()
-        cfg.read(path)
-        for section in ui_sections:
-            for k, v in cfg.items(section):
-                log.debug('settings ui from file: [%s] %s=%s', section, k, v)
-                baseui.setconfig(safe_str(section), safe_str(k), safe_str(v))
+    sa = meta.Session()
+    for ui_ in sa.query(Ui).all():
+        if ui_.ui_active:
+            ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
+            log.debug('config from db: [%s] %s=%r', ui_.ui_section,
+                      ui_.ui_key, ui_val)
+            baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
+                             ui_val)
+    if clear_session:
+        meta.Session.remove()
 
-    elif read_from == 'db':
-        sa = meta.Session()
-        ret = sa.query(Ui).all()
+    # force set push_ssl requirement to False, Kallithea handles that
+    baseui.setconfig('web', 'push_ssl', False)
+    baseui.setconfig('web', 'allow_push', '*')
+    # prevent interactive questions for ssh password / passphrase
+    ssh = baseui.config('ui', 'ssh', default='ssh')
+    baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
+    # push / pull hooks
+    baseui.setconfig('hooks', 'changegroup.kallithea_log_push_action', 'python:kallithea.lib.hooks.log_push_action')
+    baseui.setconfig('hooks', 'outgoing.kallithea_log_pull_action', 'python:kallithea.lib.hooks.log_pull_action')
 
-        hg_ui = ret
-        for ui_ in hg_ui:
-            if ui_.ui_active:
-                ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
-                log.debug('settings ui from db: [%s] %s=%r', ui_.ui_section,
-                          ui_.ui_key, ui_val)
-                baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
-                                 ui_val)
-        if clear_session:
-            meta.Session.remove()
-
-        # force set push_ssl requirement to False, Kallithea handles that
-        baseui.setconfig('web', 'push_ssl', False)
-        baseui.setconfig('web', 'allow_push', '*')
-        # prevent interactive questions for ssh password / passphrase
-        ssh = baseui.config('ui', 'ssh', default='ssh')
-        baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
+    if repo_path is not None:
+        hgrc_path = os.path.join(repo_path, '.hg', 'hgrc')
+        if os.path.isfile(hgrc_path):
+            log.debug('reading hgrc from %s', hgrc_path)
+            cfg = config.config()
+            cfg.read(hgrc_path)
+            for section in ui_sections:
+                for k, v in cfg.items(section):
+                    log.debug('config from file: [%s] %s=%s', section, k, v)
+                    baseui.setconfig(safe_str(section), safe_str(k), safe_str(v))
+        else:
+            log.debug('hgrc file is not present at %s, skipping...', hgrc_path)
 
     return baseui
 
@@ -410,10 +413,10 @@ def set_indexer_config(config):
     from kallithea.config import conf
 
     log.debug('adding extra into INDEX_EXTENSIONS')
-    conf.INDEX_EXTENSIONS.extend(re.split('\s+', config.get('index.extensions', '')))
+    conf.INDEX_EXTENSIONS.extend(re.split(r'\s+', config.get('index.extensions', '')))
 
     log.debug('adding extra into INDEX_FILENAMES')
-    conf.INDEX_FILENAMES.extend(re.split('\s+', config.get('index.filenames', '')))
+    conf.INDEX_FILENAMES.extend(re.split(r'\s+', config.get('index.filenames', '')))
 
 
 def map_groups(path):
@@ -481,7 +484,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
     # creation defaults
     defs = Setting.get_default_repo_settings(strip_prefix=True)
     enable_statistics = defs.get('repo_enable_statistics')
-    enable_locking = defs.get('repo_enable_locking')
     enable_downloads = defs.get('repo_enable_downloads')
     private = defs.get('repo_private')
 
@@ -503,7 +505,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
                 description=desc,
                 repo_group=getattr(group, 'group_id', None),
                 owner=user,
-                enable_locking=enable_locking,
                 enable_downloads=enable_downloads,
                 enable_statistics=enable_statistics,
                 private=private,
@@ -577,38 +578,49 @@ def load_rcextensions(root_path):
 # MISC
 #==============================================================================
 
+git_req_ver = StrictVersion('1.7.4')
+
 def check_git_version():
     """
-    Checks what version of git is installed in system, and issues a warning
+    Checks what version of git is installed on the system, and raise a system exit
     if it's too old for Kallithea to work properly.
     """
     from kallithea import BACKENDS
     from kallithea.lib.vcs.backends.git.repository import GitRepository
     from kallithea.lib.vcs.conf import settings
-    from distutils.version import StrictVersion
 
     if 'git' not in BACKENDS:
+        return None
+
+    if not settings.GIT_EXECUTABLE_PATH:
+        log.warning('No git executable configured - check "git_path" in the ini file.')
         return None
 
     stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
                                                     _safe=True)
 
-    m = re.search("\d+.\d+.\d+", stdout)
+    if stderr:
+        log.warning('Error/stderr from "%s --version": %r', settings.GIT_EXECUTABLE_PATH, stderr)
+
+    m = re.search(r"\d+.\d+.\d+", stdout)
     if m:
         ver = StrictVersion(m.group(0))
+        log.debug('Git executable: "%s", version %s (parsed from: "%s")',
+                  settings.GIT_EXECUTABLE_PATH, ver, stdout.strip())
+        if ver < git_req_ver:
+            log.error('Kallithea detected %s version %s, which is too old '
+                      'for the system to function properly. '
+                      'Please upgrade to version %s or later. '
+                      'If you strictly need Mercurial repositories, you can '
+                      'clear the "git_path" setting in the ini file.',
+                      settings.GIT_EXECUTABLE_PATH, ver, git_req_ver)
+            log.error("Terminating ...")
+            sys.exit(1)
     else:
         ver = StrictVersion('0.0.0')
+        log.warning('Error finding version number in "%s --version" stdout: %r',
+                    settings.GIT_EXECUTABLE_PATH, stdout.strip())
 
-    req_ver = StrictVersion('1.7.4')
-
-    log.debug('Git executable: "%s" version %s detected: %s',
-              settings.GIT_EXECUTABLE_PATH, ver, stdout)
-    if stderr:
-        log.warning('Error detecting git version: %r', stderr)
-    elif ver < req_ver:
-        log.warning('Kallithea detected git version %s, which is too old '
-                    'for the system to function properly. '
-                    'Please upgrade to version %s or later.' % (ver, req_ver))
     return ver
 
 

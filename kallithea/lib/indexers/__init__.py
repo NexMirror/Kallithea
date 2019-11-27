@@ -25,19 +25,23 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import logging
 import os
 import sys
-import logging
 from os.path import dirname
+
+from whoosh.analysis import IDTokenizer, LowercaseFilter, RegexTokenizer
+from whoosh.fields import BOOLEAN, DATETIME, ID, NUMERIC, STORED, TEXT, FieldType, Schema
+from whoosh.formats import Characters
+from whoosh.highlight import ContextFragmenter, HtmlFormatter
+from whoosh.highlight import highlight as whoosh_highlight
+
+from kallithea.lib.utils2 import LazyProperty
+
 
 # Add location of top level folder to sys.path
 sys.path.append(dirname(dirname(dirname(os.path.realpath(__file__)))))
 
-from whoosh.analysis import RegexTokenizer, LowercaseFilter, IDTokenizer
-from whoosh.fields import TEXT, ID, STORED, NUMERIC, BOOLEAN, Schema, FieldType, DATETIME
-from whoosh.formats import Characters
-from whoosh.highlight import highlight as whoosh_highlight, HtmlFormatter, ContextFragmenter
-from kallithea.lib.utils2 import LazyProperty
 
 log = logging.getLogger(__name__)
 
@@ -199,8 +203,7 @@ class WhooshResultWrapper(object):
         return res
 
     def get_short_content(self, res, chunks):
-
-        return ''.join([res['content'][chunk[0]:chunk[1]] for chunk in chunks])
+        return u''.join([res['content'][chunk[0]:chunk[1]] for chunk in chunks])
 
     def get_chunks(self):
         """
@@ -209,7 +212,11 @@ class WhooshResultWrapper(object):
         close occurrences twice.
         """
         memory = [(0, 0)]
-        if self.matcher.supports('positions'):
+        try:
+            supports_positions = self.matcher.supports('positions')
+        except AttributeError:  # 'NoneType' object has no attribute 'supports' (because matcher never get a format)
+            supports_positions = False
+        if supports_positions:
             for span in self.matcher.spans():
                 start = span.startchar or 0
                 end = span.endchar or 0

@@ -26,18 +26,16 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
 import logging
+import os
+from hashlib import md5
 
+from decorator import decorator
 from tg import config
 
-from hashlib import md5
-from decorator import decorator
-
-from kallithea import CELERY_ON, CELERY_EAGER
-from kallithea.lib.utils2 import safe_str
+from kallithea import CELERY_EAGER, CELERY_ON
 from kallithea.lib.pidlock import DaemonLock, LockHeld
-from kallithea.model.base import init_model
+from kallithea.lib.utils2 import safe_str
 from kallithea.model import meta
 
 
@@ -104,7 +102,7 @@ def __get_lockkey(func, *fargs, **fkwargs):
 def locked_task(func):
     def __wrapper(func, *fargs, **fkwargs):
         lockkey = __get_lockkey(func, *fargs, **fkwargs)
-        lockkey_path = config['app_conf']['cache_dir']
+        lockkey_path = config.get('cache_dir') or config['app_conf']['cache_dir']  # Backward compatibility for TurboGears < 2.4
 
         log.info('running task with lockkey %s', lockkey)
         try:

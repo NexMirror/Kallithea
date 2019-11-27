@@ -26,25 +26,27 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
-import os
-import sys
-import shutil
+from __future__ import print_function
+
 import logging
+import os
+import shutil
+import sys
 import tempfile
 from os.path import dirname
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 
 from paste.deploy import appconfig
 from sqlalchemy import engine_from_config
 
-from kallithea.lib.utils import setup_cache_regions
-from kallithea.model.base import init_model
-from kallithea.model import meta
-from kallithea.model.db import User, Repository, Ui
-from kallithea.lib.auth import get_crypt_password
-
-from kallithea.tests.base import HG_REPO
 from kallithea.config.environment import load_environment
+from kallithea.lib.auth import get_crypt_password
+from kallithea.lib.utils import setup_cache_regions
+from kallithea.model import meta
+from kallithea.model.base import init_model
+from kallithea.model.db import Repository, Ui, User
+from kallithea.tests.base import HG_REPO, TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS
+
 
 rel_path = dirname(dirname(dirname(dirname(os.path.abspath(__file__)))))
 conf = appconfig('config:development.ini', relative_to=rel_path)
@@ -72,11 +74,11 @@ class Command(object):
         command = cmd + ' ' + ' '.join(args)
         log.debug('Executing %s', command)
         if DEBUG:
-            print command
+            print(command)
         p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd)
         stdout, stderr = p.communicate()
         if DEBUG:
-            print stdout, stderr
+            print(stdout, stderr)
         return stdout, stderr
 
 
@@ -88,20 +90,20 @@ def get_session():
 
 
 def create_test_user(force=True):
-    print 'creating test user'
+    print('creating test user')
     sa = get_session()
 
     user = sa.query(User).filter(User.username == USER).scalar()
 
     if force and user is not None:
-        print 'removing current user'
+        print('removing current user')
         for repo in sa.query(Repository).filter(Repository.user == user).all():
             sa.delete(repo)
         sa.delete(user)
         sa.commit()
 
     if user is None or force:
-        print 'creating new one'
+        print('creating new one')
         new_usr = User()
         new_usr.username = USER
         new_usr.password = get_crypt_password(PASS)
@@ -113,11 +115,11 @@ def create_test_user(force=True):
         sa.add(new_usr)
         sa.commit()
 
-    print 'done'
+    print('done')
 
 
 def create_test_repo(force=True):
-    print 'creating test repo'
+    print('creating test repo')
     from kallithea.model.repo import RepoModel
     sa = get_session()
 
@@ -128,7 +130,7 @@ def create_test_repo(force=True):
     repo = sa.query(Repository).filter(Repository.repo_name == HG_REPO).scalar()
 
     if repo is None:
-        print 'repo not found creating'
+        print('repo not found creating')
 
         form_data = {'repo_name': HG_REPO,
                      'repo_type': 'hg',
@@ -138,7 +140,7 @@ def create_test_repo(force=True):
         rm.base_path = '/home/hg'
         rm.create(form_data, user)
 
-    print 'done'
+    print('done')
 
 
 def set_anonymous_access(enable=True):
@@ -208,9 +210,9 @@ if __name__ == '__main__':
                                         backend=backend)
         s = time.time()
         for i in range(1, int(sys.argv[2]) + 1):
-            print 'take', i
+            print('take', i)
             test_clone_with_credentials(repo=sys.argv[1], method=METHOD,
                                         backend=backend)
-        print 'time taken %.3f' % (time.time() - s)
+        print('time taken %.3f' % (time.time() - s))
     except Exception as e:
         sys.exit('stop on %s' % e)

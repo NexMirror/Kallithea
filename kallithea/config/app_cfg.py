@@ -17,30 +17,32 @@ Global configuration file for TurboGears2 specific settings in Kallithea.
 This file complements the .ini file.
 """
 
+import logging
+import os
 import platform
-import os, sys, logging
+import sys
 
+import alembic.config
+import mercurial
 import tg
+from alembic.migration import MigrationContext
+from alembic.script.base import ScriptDirectory
+from sqlalchemy import create_engine
 from tg import hooks
 from tg.configuration import AppConfig
 from tg.support.converters import asbool
-import alembic.config
-from alembic.script.base import ScriptDirectory
-from alembic.migration import MigrationContext
-from sqlalchemy import create_engine
-import mercurial
 
+import kallithea.lib.locale
+import kallithea.model.base
+from kallithea.lib.auth import set_available_permissions
 from kallithea.lib.middleware.https_fixup import HttpsFixup
+from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
-from kallithea.lib.auth import set_available_permissions
-from kallithea.lib.utils import load_rcextensions, make_ui, set_app_settings, set_vcs_config, \
-    set_indexer_config, check_git_version, repo2db_mapper
+from kallithea.lib.middleware.wrapper import RequestWrapper
+from kallithea.lib.utils import check_git_version, load_rcextensions, make_ui, set_app_settings, set_indexer_config, set_vcs_config
 from kallithea.lib.utils2 import str2bool
-import kallithea.model.base
-from kallithea.model.scm import ScmModel
 
-import formencode
 
 log = logging.getLogger(__name__)
 
@@ -120,19 +122,7 @@ else:
 def setup_configuration(app):
     config = app.config
 
-    # Verify that things work when Dulwich passes unicode paths to the file system layer.
-    # Note: UTF-8 is preferred, but for example ISO-8859-1 or mbcs should also work under the right cirumstances.
-    try:
-        u'\xe9'.encode(sys.getfilesystemencoding()) # Test using é (&eacute;)
-    except UnicodeEncodeError:
-        log.error("Cannot encode Unicode paths to file system encoding %r", sys.getfilesystemencoding())
-        for var in ['LC_CTYPE', 'LC_ALL', 'LANG']:
-            if var in os.environ:
-                val = os.environ[var]
-                log.error("Note: Environment variable %s is %r - perhaps change it to some other value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'", var, val)
-                break
-        else:
-            log.error("Note: No locale setting found in environment variables - perhaps set LC_CTYPE to some value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'")
+    if not kallithea.lib.locale.current_locale_is_valid():
         log.error("Terminating ...")
         sys.exit(1)
 
@@ -166,14 +156,14 @@ def setup_configuration(app):
             sys.exit(1)
 
     # store some globals into kallithea
-    kallithea.CELERY_ON = str2bool(config['app_conf'].get('use_celery'))
-    kallithea.CELERY_EAGER = str2bool(config['app_conf'].get('celery.always.eager'))
+    kallithea.CELERY_ON = str2bool(config.get('use_celery'))
+    kallithea.CELERY_EAGER = str2bool(config.get('celery.always.eager'))
     kallithea.CONFIG = config
 
     load_rcextensions(root_path=config['here'])
 
     set_available_permissions(config)
-    repos_path = make_ui('db').configitems('paths')[0][1]
+    repos_path = make_ui().configitems('paths')[0][1]
     config['base_path'] = repos_path
     set_app_settings(config)
 
@@ -208,6 +198,13 @@ def setup_application(app):
     # Enable https redirects based on HTTP_X_URL_SCHEME set by proxy
     if any(asbool(config.get(x)) for x in ['https_fixup', 'force_https', 'use_htsts']):
         app = HttpsFixup(app, config)
+
+    app = PermanentRepoUrl(app, config)
+
+    # Optional and undocumented wrapper - gives more verbose request/response logging, but has a slight overhead
+    if str2bool(config.get('use_wsgi_wrapper')):
+        app = RequestWrapper(app, config)
+
     return app
 
 

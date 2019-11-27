@@ -27,13 +27,15 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from tg import tmpl_context as c, request
+from tg import request
+from tg import tmpl_context as c
 
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
 from kallithea.model.db import UserFollowing
+
 
 log = logging.getLogger(__name__)
 

@@ -25,23 +25,24 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-import re
 import difflib
 import logging
+import re
 
 from tg.i18n import ugettext as _
 
 from kallithea.lib import helpers as h
+from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode, SubModuleNode
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.utils2 import safe_unicode
+
 
 log = logging.getLogger(__name__)
 
 
 def _safe_id(idstring):
-    """Make a string safe for including in an id attribute.
+    r"""Make a string safe for including in an id attribute.
 
     The HTML spec says that id attributes 'must begin with
     a letter ([A-Za-z]) and may be followed by any number

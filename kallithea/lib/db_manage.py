@@ -26,29 +26,25 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+from __future__ import print_function
+
+import logging
 import os
 import sys
-import time
 import uuid
-import logging
-import sqlalchemy
-from os.path import dirname
 
-import alembic.config
 import alembic.command
-
-from kallithea.model.user import UserModel
-from kallithea.model.base import init_model
-from kallithea.model.db import User, Permission, Ui, \
-    Setting, UserToPerm, RepoGroup, \
-    UserRepoGroupToPerm, CacheInvalidation, Repository
-
+import alembic.config
+import sqlalchemy
 from sqlalchemy.engine import create_engine
-from kallithea.model.repo_group import RepoGroupModel
+
+from kallithea.model.base import init_model
+from kallithea.model.db import Permission, RepoGroup, Repository, Setting, Ui, User, UserRepoGroupToPerm, UserToPerm
 #from kallithea.model import meta
-from kallithea.model.meta import Session, Base
-from kallithea.model.repo import RepoModel
+from kallithea.model.meta import Base, Session
 from kallithea.model.permission import PermissionModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.user import UserModel
 
 
 log = logging.getLogger(__name__)
@@ -92,7 +88,7 @@ class DbManage(object):
         else:
             destroy = self._ask_ok('Are you sure to destroy old database ? [y/n]')
         if not destroy:
-            print 'Nothing done.'
+            print('Nothing done.')
             sys.exit(0)
         if destroy:
             # drop and re-create old schemas
@@ -207,10 +203,10 @@ class DbManage(object):
         else:
             log.info('creating admin and regular test users')
             from kallithea.tests.base import TEST_USER_ADMIN_LOGIN, \
-            TEST_USER_ADMIN_PASS, TEST_USER_ADMIN_EMAIL, \
-            TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS, \
-            TEST_USER_REGULAR_EMAIL, TEST_USER_REGULAR2_LOGIN, \
-            TEST_USER_REGULAR2_PASS, TEST_USER_REGULAR2_EMAIL
+                TEST_USER_ADMIN_PASS, TEST_USER_ADMIN_EMAIL, \
+                TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS, \
+                TEST_USER_REGULAR_EMAIL, TEST_USER_REGULAR2_LOGIN, \
+                TEST_USER_REGULAR2_PASS, TEST_USER_REGULAR2_EMAIL
 
             self.create_user(TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS,
                              TEST_USER_ADMIN_EMAIL, True)
@@ -240,12 +236,11 @@ class DbManage(object):
         """Creates default settings"""
 
         for k, v, t in [
-            ('default_repo_enable_locking',  False, 'bool'),
             ('default_repo_enable_downloads', False, 'bool'),
             ('default_repo_enable_statistics', False, 'bool'),
             ('default_repo_private', False, 'bool'),
-            ('default_repo_type', 'hg', 'unicode')]:
-
+            ('default_repo_type', 'hg', 'unicode')
+        ]:
             if skip_existing and Setting.get_by_name(k) is not None:
                 log.debug('Skipping option %s', k)
                 continue
@@ -291,7 +286,7 @@ class DbManage(object):
         for repo in Repository.query():
             repo.update_changeset_cache()
 
-    def config_prompt(self, test_repo_path='', retries=3):
+    def prompt_repo_root_path(self, test_repo_path='', retries=3):
         _path = self.cli_args.get('repos_location')
         if retries == 3:
             log.info('Setting up repositories config')
@@ -335,7 +330,7 @@ class DbManage(object):
             if _path is not None:
                 sys.exit('Invalid repo path: %s' % _path)
             retries -= 1
-            return self.config_prompt(test_repo_path, retries) # recursing!!!
+            return self.prompt_repo_root_path(test_repo_path, retries) # recursing!!!
 
         real_path = os.path.normpath(os.path.realpath(path))
 
@@ -344,30 +339,23 @@ class DbManage(object):
 
         return real_path
 
-    def create_settings(self, path):
-
+    def create_settings(self, repo_root_path):
         ui_config = [
-            ('web', 'allow_archive', 'gz zip bz2', True),
-            ('web', 'baseurl', '/', True),
-            ('paths', '/', path, True),
+            ('paths', '/', repo_root_path, True),
             #('phases', 'publish', 'false', False)
             ('hooks', Ui.HOOK_UPDATE, 'hg update >&2', False),
             ('hooks', Ui.HOOK_REPO_SIZE, 'python:kallithea.lib.hooks.repo_size', True),
-            ('hooks', Ui.HOOK_PUSH_LOG, 'python:kallithea.lib.hooks.log_push_action', True),
-            ('hooks', Ui.HOOK_PUSH_LOCK, 'python:kallithea.lib.hooks.push_lock_handling', True),
-            ('hooks', Ui.HOOK_PULL_LOG, 'python:kallithea.lib.hooks.log_pull_action', True),
-            ('hooks', Ui.HOOK_PULL_LOCK, 'python:kallithea.lib.hooks.pull_lock_handling', True),
             ('extensions', 'largefiles', '', True),
-            ('largefiles', 'usercache', os.path.join(path, '.cache', 'largefiles'), True),
+            ('largefiles', 'usercache', os.path.join(repo_root_path, '.cache', 'largefiles'), True),
             ('extensions', 'hgsubversion', '', False),
             ('extensions', 'hggit', '', False),
         ]
-        for section, key, value, active in ui_config:
-            ui_conf = Ui()
-            setattr(ui_conf, 'ui_section', section)
-            setattr(ui_conf, 'ui_key', key)
-            setattr(ui_conf, 'ui_value', value)
-            setattr(ui_conf, 'ui_active', active)
+        for ui_section, ui_key, ui_value, ui_active in ui_config:
+            ui_conf = Ui(
+                ui_section=ui_section,
+                ui_key=ui_key,
+                ui_value=ui_value,
+                ui_active=ui_active)
             self.sa.add(ui_conf)
 
         settings = [
@@ -383,7 +371,7 @@ class DbManage(object):
             ('use_gravatar', True, 'bool'),
             ('gravatar_url', User.DEFAULT_GRAVATAR_URL, 'unicode'),
             ('clone_uri_tmpl', Repository.DEFAULT_CLONE_URI, 'unicode'),
-            ('update_url', Setting.DEFAULT_UPDATE_URL, 'unicode'),
+            ('clone_ssh_tmpl', Repository.DEFAULT_CLONE_SSH, 'unicode'),
         ]
         for key, val, type_ in settings:
             sett = Setting(key, val, type_)
@@ -392,7 +380,7 @@ class DbManage(object):
         self.create_auth_plugin_options()
         self.create_default_options()
 
-        log.info('created ui config')
+        log.info('Populated Ui and Settings defaults')
 
     def create_user(self, username, password, email='', admin=False):
         log.info('creating user %s', username)

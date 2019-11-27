@@ -1,13 +1,9 @@
-import stat
 import mimetypes
+import stat
 
 import pytest
 
-from kallithea.lib.vcs.nodes import DirNode
-from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.nodes import Node
-from kallithea.lib.vcs.nodes import NodeError
-from kallithea.lib.vcs.nodes import NodeKind
+from kallithea.lib.vcs.nodes import DirNode, FileNode, Node, NodeError, NodeKind
 
 
 class TestNodeBasic(object):

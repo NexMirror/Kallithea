@@ -25,13 +25,15 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import os
-import sys
-import stat
+from __future__ import print_function
+
 import argparse
 import fileinput
+import os
+import stat
+import sys
 
-from kallithea.bin.base import json, api_call, RcConf, FORMAT_JSON, FORMAT_PRETTY
+from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call, json
 
 
 def argparser(argv):
@@ -144,11 +146,11 @@ def _run(argv):
 
         json_data = api_call(apikey, host, 'create_gist', **margs)['result']
         if args.format == FORMAT_JSON:
-            print json.dumps(json_data)
+            print(json.dumps(json_data))
         elif args.format == FORMAT_PRETTY:
-            print json_data
-            print 'Created %s gist %s' % (json_data['gist']['type'],
-                                          json_data['gist']['url'])
+            print(json_data)
+            print('Created %s gist %s' % (json_data['gist']['type'],
+                                          json_data['gist']['url']))
     return 0
 
 
@@ -164,7 +166,7 @@ def main(argv=None):
     try:
         return _run(argv)
     except Exception as e:
-        print e
+        print(e)
         return 1
 
 

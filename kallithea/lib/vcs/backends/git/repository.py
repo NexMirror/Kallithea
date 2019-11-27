@@ -9,41 +9,36 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
+import errno
+import logging
 import os
+import posixpath
 import re
 import time
-import errno
 import urllib
 import urllib2
-import logging
-import posixpath
+from collections import OrderedDict
 
-from dulwich.objects import Tag
-from dulwich.repo import Repo, NotGitRepository
 from dulwich.config import ConfigFile
+from dulwich.objects import Tag
+from dulwich.repo import NotGitRepository, Repo
 
 from kallithea.lib.vcs import subprocessio
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.conf import settings
-
 from kallithea.lib.vcs.exceptions import (
-    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError,
-    RepositoryError, TagAlreadyExistError, TagDoesNotExistError
-)
-from kallithea.lib.vcs.utils import safe_str, safe_unicode, makedate, date_fromtimestamp
+    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
+from kallithea.lib.vcs.utils import date_fromtimestamp, makedate, safe_str, safe_unicode
+from kallithea.lib.vcs.utils.hgcompat import hg_url, httpbasicauthhandler, httpdigestauthhandler
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
-
-from kallithea.lib.vcs.utils.hgcompat import (
-    hg_url, httpbasicauthhandler, httpdigestauthhandler
-)
 
 from .changeset import GitChangeset
 from .inmemory import GitInMemoryChangeset
 from .workdir import GitWorkdir
 
-SHA_PATTERN = re.compile(r'^[[0-9a-fA-F]{12}|[0-9a-fA-F]{40}]$')
+
+SHA_PATTERN = re.compile(r'^([0-9a-fA-F]{12}|[0-9a-fA-F]{40})$')
 
 log = logging.getLogger(__name__)
 
@@ -149,7 +144,10 @@ class GitRepository(BaseRepository):
             else:
                 raise RepositoryError(tb_err)
 
-        return ''.join(p.output), ''.join(p.error)
+        try:
+            return ''.join(p.output), ''.join(p.error)
+        finally:
+            p.close()
 
     def run_git_command(self, cmd):
         opts = {}
@@ -283,7 +281,8 @@ class GitRepository(BaseRepository):
 
         is_bstr = isinstance(revision, (str, unicode))
         if ((is_bstr and revision.isdigit() and len(revision) < 12)
-            or isinstance(revision, int) or is_null(revision)):
+            or isinstance(revision, int) or is_null(revision)
+        ):
             try:
                 revision = self.revisions[int(revision)]
             except IndexError:
@@ -321,7 +320,7 @@ class GitRepository(BaseRepository):
     def _get_archives(self, archive_name='tip'):
 
         for i in [('zip', '.zip'), ('gz', '.tar.gz'), ('bz2', '.tar.bz2')]:
-                yield {"type": i[0], "extension": i[1], "node": archive_name}
+            yield {"type": i[0], "extension": i[1], "node": archive_name}
 
     def _get_url(self, url):
         """

@@ -67,7 +67,11 @@ var orig2_url = ${h.jshtml(h.url('files_raw_home',repo_name=c.repo_name,f_path=h
 $(document).ready(function () {
     $('#compare').mergely({
         width: 'auto',
-        height: $(window).height() - $('#compare').offset().top - $('#footer').height() - 35,
+        /* let the 2 compare panes use all the window space currently available
+           below footer (i.e. on an empty page with just header and footer): */
+        height: $(window).height()
+                - $('.footer').offset().top
+                - $('.footer').height(),
         fgcolor: {a:'#ddffdd',c:'#cccccc',d:'#ffdddd'},
         bgcolor: '#fff',
         viewport: true,

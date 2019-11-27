@@ -106,9 +106,9 @@ ${self.repo_context_bar('showpullrequest')}
               <div>
                ## TODO: use cs_ranges[-1] or org_ref_parts[1] in both cases?
                %if h.is_hg(c.pull_request.org_repo):
-                 <span>hg pull ${c.pull_request.org_repo.clone_url()} -r ${h.short_id(c.cs_ranges[-1].raw_id)}</span>
+                 <span>hg pull ${c.pull_request.org_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl)} -r ${h.short_id(c.cs_ranges[-1].raw_id)}</span>
                %elif h.is_git(c.pull_request.org_repo):
-                 <span>git pull ${c.pull_request.org_repo.clone_url()} ${c.pull_request.org_ref_parts[1]}</span>
+                 <span>git pull ${c.pull_request.org_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl)} ${c.pull_request.org_ref_parts[1]}</span>
                %endif
               </div>
             %endif
@@ -167,7 +167,7 @@ ${self.repo_context_bar('showpullrequest')}
                               </span>
                             %endfor
                           </div>
-                          <div class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
+                          <div class="message">${h.urlify_text(cs.message.splitlines()[0], c.repo_name)}</div>
                         </td>
                       %endif
                     </tr>

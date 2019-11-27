@@ -26,9 +26,11 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
+
 from sqlalchemy.orm import joinedload
 
-from kallithea.model.db import ChangesetStatus, PullRequest, Repository, User, Session
+from kallithea.model.db import ChangesetStatus, PullRequest, Repository, Session, User
+
 
 log = logging.getLogger(__name__)
 

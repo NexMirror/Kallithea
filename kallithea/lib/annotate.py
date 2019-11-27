@@ -27,10 +27,11 @@ Original author and date, and relevant copyright and licensing information is be
 
 import StringIO
 
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
-from pygments.formatters import HtmlFormatter
-from pygments import highlight
 
 
 def annotate_highlight(filenode, annotate_from_changeset_func=None,
@@ -89,7 +90,8 @@ class AnnotateHtmlFormatter(HtmlFormatter):
         self.order = order or ('ls', 'annotate', 'code')
         headers = options.pop('headers', None)
         if headers and not ('ls' in headers and 'annotate' in headers and
-            'code' in headers):
+            'code' in headers
+        ):
             raise ValueError("If headers option dict is specified it must "
                 "all 'ls', 'annotate' and 'code' keys")
         self.headers = headers

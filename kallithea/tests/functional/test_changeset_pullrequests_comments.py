@@ -1,9 +1,9 @@
 import re
 
-from kallithea.tests.base import *
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetComment, PullRequest
 from kallithea.model.meta import Session
+from kallithea.tests.base import *
 
 
 class TestChangeSetCommentsController(TestController):
@@ -18,7 +18,7 @@ class TestChangeSetCommentsController(TestController):
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         text = u'general comment on changeset'
 
-        params = {'text': text, '_authentication_token': self.authentication_token()}
+        params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -43,7 +43,7 @@ class TestChangeSetCommentsController(TestController):
         f_path = 'vcs/web/simplevcs/views/repository.py'
         line = 'n1'
 
-        params = {'text': text, 'f_path': f_path, 'line': line, '_authentication_token': self.authentication_token()}
+        params = {'text': text, 'f_path': f_path, 'line': line, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -72,7 +72,7 @@ class TestChangeSetCommentsController(TestController):
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         text = u'@%s check CommentOnRevision' % TEST_USER_REGULAR_LOGIN
 
-        params = {'text': text, '_authentication_token': self.authentication_token()}
+        params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -96,7 +96,7 @@ class TestChangeSetCommentsController(TestController):
         text = u'general comment on changeset'
 
         params = {'text': text, 'changeset_status': 'rejected',
-                '_authentication_token': self.authentication_token()}
+                '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -123,7 +123,7 @@ class TestChangeSetCommentsController(TestController):
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         text = u'general comment on changeset to be deleted'
 
-        params = {'text': text, '_authentication_token': self.authentication_token()}
+        params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -135,7 +135,7 @@ class TestChangeSetCommentsController(TestController):
         self.app.post(url("changeset_comment_delete",
                                     repo_name=HG_REPO,
                                     comment_id=comment_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         comments = ChangesetComment.query().all()
         assert len(comments) == 0
@@ -165,7 +165,7 @@ class TestPullrequestsCommentsController(TestController):
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         pr_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
@@ -176,7 +176,7 @@ class TestPullrequestsCommentsController(TestController):
         pr_id = self._create_pr()
 
         text = u'general comment on pullrequest'
-        params = {'text': text, '_authentication_token': self.authentication_token()}
+        params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -204,7 +204,7 @@ class TestPullrequestsCommentsController(TestController):
         text = u'inline comment on changeset'
         f_path = 'vcs/web/simplevcs/views/repository.py'
         line = 'n1'
-        params = {'text': text, 'f_path': f_path, 'line': line, '_authentication_token': self.authentication_token()}
+        params = {'text': text, 'f_path': f_path, 'line': line, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -232,7 +232,7 @@ class TestPullrequestsCommentsController(TestController):
         pr_id = self._create_pr()
 
         text = u'@%s check CommentOnRevision' % TEST_USER_REGULAR_LOGIN
-        params = {'text': text, '_authentication_token': self.authentication_token()}
+        params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -256,7 +256,7 @@ class TestPullrequestsCommentsController(TestController):
 
         text = u'general comment on pullrequest'
         params = {'text': text, 'changeset_status': 'rejected',
-                '_authentication_token': self.authentication_token()}
+                '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -286,7 +286,7 @@ class TestPullrequestsCommentsController(TestController):
         pr_id = self._create_pr()
 
         text = u'general comment on changeset to be deleted'
-        params = {'text': text, '_authentication_token': self.authentication_token()}
+        params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -298,7 +298,7 @@ class TestPullrequestsCommentsController(TestController):
         self.app.post(url("pullrequest_comment_delete",
                                     repo_name=HG_REPO,
                                     comment_id=comment_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         comments = ChangesetComment.query().all()
         assert len(comments) == 1
@@ -317,7 +317,7 @@ class TestPullrequestsCommentsController(TestController):
 
         text = u'general comment on pullrequest'
         params = {'text': text, 'save_close': 'close',
-                '_authentication_token': self.authentication_token()}
+                '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -340,7 +340,7 @@ class TestPullrequestsCommentsController(TestController):
 
         text = u'general comment on pullrequest'
         params = {'text': text, 'save_delete': 'delete',
-                '_authentication_token': self.authentication_token()}
+                '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -360,7 +360,7 @@ class TestPullrequestsCommentsController(TestController):
         # first close
         text = u'general comment on pullrequest'
         params = {'text': text, 'save_close': 'close',
-                '_authentication_token': self.authentication_token()}
+                '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
@@ -368,7 +368,7 @@ class TestPullrequestsCommentsController(TestController):
 
         # attempt delete, should fail
         params = {'text': text, 'save_delete': 'delete',
-                '_authentication_token': self.authentication_token()}
+                '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(url(controller='pullrequests', action='comment',
                                      repo_name=HG_REPO, pull_request_id=pr_id),
                                      params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'}, status=403)

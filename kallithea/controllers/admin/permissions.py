@@ -28,21 +28,23 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
+
 import formencode
 from formencode import htmlfill
-
-from tg import request, tmpl_context as c
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, AuthUser
+from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
-from kallithea.model.forms import DefaultPermissionsForm
-from kallithea.model.permission import PermissionModel
 from kallithea.model.db import User, UserIpMap
+from kallithea.model.forms import DefaultPermissionsForm
 from kallithea.model.meta import Session
+from kallithea.model.permission import PermissionModel
+
 
 log = logging.getLogger(__name__)
 
@@ -155,7 +157,7 @@ class PermissionsController(BaseController):
             if p.permission.permission_name.startswith('usergroup.'):
                 defaults['default_user_group_perm'] = p.permission.permission_name
 
-            if p.permission.permission_name.startswith('hg.create.write_on_repogroup'):
+            if p.permission.permission_name.startswith('hg.create.write_on_repogroup.'):
                 defaults['create_on_write'] = p.permission.permission_name
 
             elif p.permission.permission_name.startswith('hg.create.'):

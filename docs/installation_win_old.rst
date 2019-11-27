@@ -60,8 +60,8 @@ choose "Visual C++ 2008 Express" when installing.
 Step 2 -- Install Python
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install Python 2.x.y (x = 6 or 7) x86 version (32-bit). DO NOT USE A 3.x version.
-Download Python 2.x.y from:
+Install Python 2.7.x x86 version (32-bit). DO NOT USE A 3.x version.
+Download Python 2.7.x from:
 http://www.python.org/download/
 
 Choose "Windows Installer" (32-bit version) not "Windows X86-64

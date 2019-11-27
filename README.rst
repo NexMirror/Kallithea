@@ -8,17 +8,15 @@ About
 
 **Kallithea** is a fast and powerful management tool for Mercurial_ and Git_
 with a built-in push/pull server, full text search and code-review. It works on
-http/https and has a built in permission/authentication system with the ability
+HTTP/HTTPS and SSH, has a built-in permission/authentication system with the ability
 to authenticate via LDAP or ActiveDirectory. Kallithea also provides simple API
 so it's easy to integrate with existing external systems.
 
 Kallithea is similar in some respects to GitHub_ or Bitbucket_, however
 Kallithea can be run as standalone hosted application on your own server. It is
-open-source donationware and focuses more on providing a customised,
+open-source and focuses more on providing a customised,
 self-administered interface for Mercurial_ and Git_ repositories. Kallithea
-works on Unix-like systems and Windows, and is powered by the vcs_ library
-created by Łukasz Balcerzak and Marcin Kuźmiński to uniformly handle multiple
-version control systems.
+works on Unix-like systems and Windows.
 
 Kallithea was forked from RhodeCode in July 2014 and has been heavily modified.
 
@@ -26,7 +24,7 @@ Kallithea was forked from RhodeCode in July 2014 and has been heavily modified.
 Installation
 ------------
 
-Kallithea requires Python_ 2.x and it is recommended to install it in a
+Kallithea requires Python_ 2.7 and it is recommended to install it in a
 virtualenv_. Official releases of Kallithea can be installed with::
 
     pip install kallithea
@@ -62,7 +60,8 @@ Kallithea features
   request is authenticated and logged together with IP address.
 - Built for speed and performance. You can make multiple pulls/pushes
   simultaneously. Proven to work with thousands of repositories and users.
-- Supports http/https, LDAP, AD, proxy-pass authentication.
+- Supports HTTP/HTTPS with LDAP, AD, or proxy-pass authentication.
+- Supports SSH access with server-side public key management.
 - Full permissions (private/read/write/admin) together with IP restrictions for
   each repository, additional explicit forking, repositories group and
   repository creation permissions.
@@ -86,7 +85,7 @@ Kallithea features
   including Git_ binary-patches.
 - Mercurial_ and Git_ DAG graphs and Flot-powered graphs with zooming and
   statistics to track activity for repositories.
-- Admin interface with user/permission management. Admin activity journal, logs
+- Admin interface with user/permission management. Admin activity journal logs
   pulls, pushes, forks, registrations and other actions made by all users.
 - Server side forks. It is possible to fork a project and modify it freely
   without breaking the main repository.
@@ -102,7 +101,9 @@ Kallithea features
 - Optional async tasks for speed and performance using Celery_.
 - Backup scripts can do backup of whole app and send it over scp to desired
   location.
-- Based on Pylons, SQLAlchemy, SQLite, Whoosh, vcs.
+- Based on TurboGears2, SQLAlchemy, Whoosh, Bootstrap, and other open source
+  libraries.
+- Uses PostgreSQL, SQLite, or MariaDB/MySQL databases.
 
 
 License
@@ -181,6 +182,5 @@ of Kallithea.
 .. _Subversion: http://subversion.tigris.org/
 .. _Git: http://git-scm.com/
 .. _Celery: http://celeryproject.org/
-.. _vcs: http://pypi.python.org/pypi/vcs
 .. _Software Freedom Conservancy: http://sfconservancy.org/
 .. _Puppet module: https://forge.puppetlabs.com/rauch/kallithea

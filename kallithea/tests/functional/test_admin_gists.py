@@ -1,7 +1,7 @@
-from kallithea.tests.base import *
+from kallithea.model.db import Gist, User
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
-from kallithea.model.db import User, Gist
+from kallithea.tests.base import *
 
 
 def _create_gist(f_name, content='some gist', lifetime=-1,
@@ -11,7 +11,7 @@ def _create_gist(f_name, content='some gist', lifetime=-1,
         f_name: {'content': content}
     }
     owner = User.get_by_username(owner)
-    gist = GistModel().create(description, owner=owner,
+    gist = GistModel().create(description, owner=owner, ip_addr=IP_ADDR,
                        gist_mapping=gist_mapping, gist_type=gist_type,
                        lifetime=lifetime)
     Session().commit()
@@ -56,7 +56,7 @@ class TestGistsController(TestController):
     def test_create_missing_description(self):
         self.log_user()
         response = self.app.post(url('gists'),
-                                 params={'lifetime': -1, '_authentication_token': self.authentication_token()},
+                                 params={'lifetime': -1, '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=200)
 
         response.mustcontain('Missing value')
@@ -68,7 +68,7 @@ class TestGistsController(TestController):
                                          'content': 'gist test',
                                          'filename': 'foo',
                                          'public': 'public',
-                                         '_authentication_token': self.authentication_token()},
+                                         '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=302)
         response = response.follow()
         response.mustcontain('added file: foo')
@@ -82,7 +82,7 @@ class TestGistsController(TestController):
                                          'content': 'gist test',
                                          'filename': '/home/foo',
                                          'public': 'public',
-                                         '_authentication_token': self.authentication_token()},
+                                         '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=200)
         response.mustcontain('Filename cannot be inside a directory')
 
@@ -101,7 +101,7 @@ class TestGistsController(TestController):
                                          'content': 'private gist test',
                                          'filename': 'private-foo',
                                          'private': 'private',
-                                         '_authentication_token': self.authentication_token()},
+                                         '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=302)
         response = response.follow()
         response.mustcontain('added file: private-foo<')
@@ -116,7 +116,7 @@ class TestGistsController(TestController):
                                          'filename': 'foo-desc',
                                          'description': 'gist-desc',
                                          'public': 'public',
-                                         '_authentication_token': self.authentication_token()},
+                                         '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=302)
         response = response.follow()
         response.mustcontain('added file: foo-desc')
@@ -132,19 +132,19 @@ class TestGistsController(TestController):
         self.log_user()
         gist = _create_gist('delete-me')
         response = self.app.post(url('gist_delete', gist_id=gist.gist_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_delete_normal_user_his_gist(self):
         self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
         gist = _create_gist('delete-me', owner=TEST_USER_REGULAR_LOGIN)
         response = self.app.post(url('gist_delete', gist_id=gist.gist_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_delete_normal_user_not_his_own_gist(self):
         self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
         gist = _create_gist('delete-me')
         response = self.app.post(url('gist_delete', gist_id=gist.gist_id), status=403,
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_show(self):
         gist = _create_gist('gist-show-me')

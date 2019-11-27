@@ -1,8 +1,10 @@
-import time
 import datetime
 import posixpath
 import stat
+import time
+
 from dulwich import objects
+
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
 from kallithea.lib.vcs.utils import safe_str
@@ -93,7 +95,8 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             new_trees.append(parent)
             # Update ancestors
             for parent, tree, path in reversed([(a[1], b[1], b[0]) for a, b in
-                zip(ancestors, ancestors[1:])]):
+                zip(ancestors, ancestors[1:])]
+            ):
                 parent[path] = stat.S_IFDIR, tree.id
                 object_store.add_object(tree)
 

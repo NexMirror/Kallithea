@@ -1,15 +1,13 @@
+from kallithea.lib.auth import AuthUser
+from kallithea.model.db import Permission, RepoGroup, User, UserGroupRepoGroupToPerm, UserToPerm
+from kallithea.model.meta import Session
+from kallithea.model.permission import PermissionModel
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.repo import RepoModel
-from kallithea.model.db import RepoGroup, User, UserGroupRepoGroupToPerm, \
-    Permission, UserToPerm
-from kallithea.model.user import UserModel
-
-from kallithea.model.meta import Session
-from kallithea.model.user_group import UserGroupModel
-from kallithea.lib.auth import AuthUser
-from kallithea.model.permission import PermissionModel
 
 
 fixture = Fixture()
@@ -132,29 +130,20 @@ class TestPermissions(TestController):
         self.ug1 = fixture.create_user_group(u'G1')
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
 
-        # set permission to lower
-        new_perm = 'repository.none'
-        RepoModel().grant_user_permission(repo=HG_REPO, user=self.u1, perm=new_perm)
+        # set user permission none
+        RepoModel().grant_user_permission(repo=HG_REPO, user=self.u1, perm='repository.none')
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories'][HG_REPO] == new_perm
+        assert u1_auth.permissions['repositories'][HG_REPO] == 'repository.read' # inherit from default user
 
-        # grant perm for group this should not override permission from user
-        # since it has explicitly set
-        new_perm_gr = 'repository.write'
+        # grant perm for group this should override permission from user
         RepoModel().grant_user_group_permission(repo=HG_REPO,
                                                  group_name=self.ug1,
-                                                 perm=new_perm_gr)
-        # check perms
+                                                 perm='repository.write')
+
+        # verify that user group permissions win
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        perms = {
-            'repositories_groups': {},
-            'global': set(['hg.create.repository', 'repository.read',
-                           'hg.register.manual_activate']),
-            'repositories': {HG_REPO: 'repository.read'}
-        }
-        assert u1_auth.permissions['repositories'][HG_REPO] == new_perm
-        assert u1_auth.permissions['repositories_groups'] == perms['repositories_groups']
+        assert u1_auth.permissions['repositories'][HG_REPO] == 'repository.write'
 
     def test_propagated_permission_from_users_group(self):
         # make group
@@ -310,7 +299,7 @@ class TestPermissions(TestController):
         u1_auth = AuthUser(user_id=self.u1.user_id)
         assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.read'}
 
-    def test_inherited_permissions_from_default_on_user_enabled(self):
+    def test_inherit_nice_permissions_from_default_user(self):
         user_model = UserModel()
         # enable fork and create on default user
         usr = 'default'
@@ -318,8 +307,6 @@ class TestPermissions(TestController):
         user_model.grant_perm(usr, 'hg.create.repository')
         user_model.revoke_perm(usr, 'hg.fork.none')
         user_model.grant_perm(usr, 'hg.fork.repository')
-        # make sure inherit flag is turned on
-        self.u1.inherit_default_permissions = True
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
         # this user will have inherited permissions from default user
@@ -329,7 +316,7 @@ class TestPermissions(TestController):
                               'repository.read', 'group.read',
                               'usergroup.read', 'hg.create.write_on_repogroup.true'])
 
-    def test_inherited_permissions_from_default_on_user_disabled(self):
+    def test_inherit_sad_permissions_from_default_user(self):
         user_model = UserModel()
         # disable fork and create on default user
         usr = 'default'
@@ -337,8 +324,6 @@ class TestPermissions(TestController):
         user_model.grant_perm(usr, 'hg.create.none')
         user_model.revoke_perm(usr, 'hg.fork.repository')
         user_model.grant_perm(usr, 'hg.fork.none')
-        # make sure inherit flag is turned on
-        self.u1.inherit_default_permissions = True
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
         # this user will have inherited permissions from default user
@@ -348,7 +333,7 @@ class TestPermissions(TestController):
                               'repository.read', 'group.read',
                               'usergroup.read', 'hg.create.write_on_repogroup.true'])
 
-    def test_non_inherited_permissions_from_default_on_user_enabled(self):
+    def test_inherit_more_permissions_from_default_user(self):
         user_model = UserModel()
         # enable fork and create on default user
         usr = 'default'
@@ -363,19 +348,18 @@ class TestPermissions(TestController):
         user_model.revoke_perm(self.u1, 'hg.fork.repository')
         user_model.grant_perm(self.u1, 'hg.fork.none')
 
-        # make sure inherit flag is turned off
-        self.u1.inherit_default_permissions = False
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        # this user will have non inherited permissions from he's
-        # explicitly set permissions
-        assert u1_auth.permissions['global'] == set(['hg.create.none', 'hg.fork.none',
+        # this user will have inherited more permissions from default user
+        assert u1_auth.permissions['global'] == set([
+                              'hg.create.repository',
+                              'hg.fork.repository',
                               'hg.register.manual_activate',
                               'hg.extern_activate.auto',
                               'repository.read', 'group.read',
                               'usergroup.read', 'hg.create.write_on_repogroup.true'])
 
-    def test_non_inherited_permissions_from_default_on_user_disabled(self):
+    def test_inherit_less_permissions_from_default_user(self):
         user_model = UserModel()
         # disable fork and create on default user
         usr = 'default'
@@ -390,25 +374,21 @@ class TestPermissions(TestController):
         user_model.revoke_perm(self.u1, 'hg.fork.none')
         user_model.grant_perm(self.u1, 'hg.fork.repository')
 
-        # make sure inherit flag is turned off
-        self.u1.inherit_default_permissions = False
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        # this user will have non inherited permissions from he's
-        # explicitly set permissions
-        assert u1_auth.permissions['global'] == set(['hg.create.repository', 'hg.fork.repository',
+        # this user will have inherited less permissions from default user
+        assert u1_auth.permissions['global'] == set([
+                              'hg.create.repository',
+                              'hg.fork.repository',
                               'hg.register.manual_activate',
                               'hg.extern_activate.auto',
                               'repository.read', 'group.read',
                               'usergroup.read', 'hg.create.write_on_repogroup.true'])
 
     def test_inactive_user_group_does_not_affect_global_permissions(self):
-        # Issue #138: Inactive User Groups affecting permissions
         # Add user to inactive user group, set specific permissions on user
-        # group and disable inherit-from-default. User permissions should still
-        # inherit from default.
+        # group and and verify it really is inactive.
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -438,12 +418,9 @@ class TestPermissions(TestController):
                               'hg.create.write_on_repogroup.true'])
 
     def test_inactive_user_group_does_not_affect_global_permissions_inverse(self):
-        # Issue #138: Inactive User Groups affecting permissions
         # Add user to inactive user group, set specific permissions on user
-        # group and disable inherit-from-default. User permissions should still
-        # inherit from default.
+        # group and and verify it really is inactive.
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -474,7 +451,6 @@ class TestPermissions(TestController):
 
     def test_inactive_user_group_does_not_affect_repo_permissions(self):
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -499,7 +475,6 @@ class TestPermissions(TestController):
 
     def test_inactive_user_group_does_not_affect_repo_permissions_inverse(self):
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -524,7 +499,6 @@ class TestPermissions(TestController):
 
     def test_inactive_user_group_does_not_affect_repo_group_permissions(self):
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -545,7 +519,6 @@ class TestPermissions(TestController):
 
     def test_inactive_user_group_does_not_affect_repo_group_permissions_inverse(self):
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -566,7 +539,6 @@ class TestPermissions(TestController):
 
     def test_inactive_user_group_does_not_affect_user_group_permissions(self):
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -588,7 +560,6 @@ class TestPermissions(TestController):
 
     def test_inactive_user_group_does_not_affect_user_group_permissions_inverse(self):
         self.ug1 = fixture.create_user_group(u'G1')
-        self.ug1.inherit_default_permissions = False
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})

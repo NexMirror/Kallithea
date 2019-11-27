@@ -25,21 +25,18 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import logging
 import datetime
+import logging
 import re
 
 from tg import request
 from tg.i18n import ugettext as _
 
-from sqlalchemy.orm import joinedload
-
-from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
-from kallithea.model.db import PullRequest, PullRequestReviewer, \
-    ChangesetStatus, User
-from kallithea.model.notification import NotificationModel
 from kallithea.lib.utils2 import extract_mentioned_users, safe_str, safe_unicode
+from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, User
+from kallithea.model.meta import Session
+from kallithea.model.notification import NotificationModel
 
 
 log = logging.getLogger(__name__)
@@ -73,7 +70,7 @@ class PullRequestModel(object):
                                       h.canonical_hostname())]
         subject = safe_unicode(
             h.link_to(
-              _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') % \
+              _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') %
                 {'user': user.username,
                  'pr_title': pr.title,
                  'pr_nice_id': pr.nice_id()},
@@ -175,7 +172,8 @@ class CreatePullRequestAction(object):
         object.
         """
         if (h.HasRepoPermissionLevel('read')(org_repo.repo_name) and
-            h.HasRepoPermissionLevel('read')(other_repo.repo_name)):
+            h.HasRepoPermissionLevel('read')(other_repo.repo_name)
+        ):
             return True
 
         return False
@@ -361,8 +359,8 @@ class CreatePullRequestIterationAction(object):
             else:
                 infos.append(_('This iteration is based on another %s revision and there is no simple diff.') % other_ref_name)
         else:
-           infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
-           # TODO: fail?
+            infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
+            # TODO: fail?
 
         try:
             title, old_v = re.match(r'(.*)\(v(\d+)\)\s*$', title).groups()

@@ -37,7 +37,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
             </div>
 
             <div class="form-group">
-                <label class="control-label">${_('Clone URL')}:</label>
+                <label class="control-label">${_('HTTP Clone URL')}:</label>
                 <div>
                     ${h.text('clone_uri_tmpl', size=80, class_='form-control')}
                     <span class="help-block">${_('''Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.
@@ -46,8 +46,19 @@ ${h.form(url('admin_settings_visual'), method='post')}
                                                     {user}   current user username,
                                                     {netloc} network location/server host of running Kallithea server,
                                                     {repo}   full repository name,
-                                                    {repoid} ID of repository, can be used to construct clone-by-id''')}</span>
+                                                    {repoid} ID of repository, can be used to construct clone-by-id,
+                                                    {system_user}  name of the Kallithea system user,
+                                                    {hostname}  server hostname
+                                                    ''')}
+                    </span>
                 </div>
+                %if c.ssh_enabled:
+                <label class="control-label">${_('SSH Clone URL')}:</label>
+                <div>
+                    ${h.text('clone_ssh_tmpl', size=80, class_='form-control')}
+                    <span class="help-block">${_('''Schema for constructing SSH clone URL, eg. 'ssh://{system_user}@{hostname}/{repo}'.''')}</span>
+                </div>
+                %endif
             </div>
 
             <div class="form-group">

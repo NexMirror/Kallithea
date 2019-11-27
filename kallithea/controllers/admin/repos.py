@@ -27,28 +27,28 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
+
 import formencode
 from formencode import htmlfill
-from tg import request, tmpl_context as c
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from sqlalchemy.sql.expression import func
-from webob.exc import HTTPFound, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
+from webob.exc import HTTPForbidden, HTTPFound, HTTPInternalServerError, HTTPNotFound
 
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, \
-    HasRepoPermissionLevelDecorator, NotAnonymous, HasPermissionAny
-from kallithea.lib.base import BaseRepoController, render, jsonify
-from kallithea.lib.utils import action_logger
-from kallithea.lib.vcs import RepositoryError
-from kallithea.model.meta import Session
-from kallithea.model.db import User, Repository, UserFollowing, RepoGroup, \
-    Setting, RepositoryField
-from kallithea.model.forms import RepoForm, RepoFieldForm, RepoPermsForm
-from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices, RepoList
-from kallithea.model.repo import RepoModel
+from kallithea.lib.auth import HasPermissionAny, HasRepoPermissionLevelDecorator, LoginRequired, NotAnonymous
+from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.exceptions import AttachedForksError
+from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import safe_int
+from kallithea.lib.vcs import RepositoryError
+from kallithea.model.db import RepoGroup, Repository, RepositoryField, Setting, User, UserFollowing
+from kallithea.model.forms import RepoFieldForm, RepoForm, RepoPermsForm
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.scm import AvailableRepoGroupChoices, RepoList, ScmModel
+
 
 log = logging.getLogger(__name__)
 
@@ -94,15 +94,14 @@ class ReposController(BaseRepoController):
 
         defaults = RepoModel()._get_defaults(c.repo_name)
         defaults['clone_uri'] = c.repo_info.clone_uri_hidden # don't show password
+        defaults['permanent_url'] = c.repo_info.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=True)
 
         return defaults
 
     def index(self, format='html'):
-        _list = Repository.query(sorted=True).all()
-
-        c.repos_list = RepoList(_list, perm_level='admin')
+        repos_list = RepoList(Repository.query(sorted=True).all(), perm_level='admin')
         # the repo list will be filtered to only show repos where the user has read permissions
-        repos_data = RepoModel().get_repos_as_dict(c.repos_list, admin=True)
+        repos_data = RepoModel().get_repos_as_dict(repos_list, admin=True)
         # data used to render the grid
         c.data = repos_data
 
@@ -339,7 +338,8 @@ class ReposController(BaseRepoController):
                 obj_id = safe_int(request.POST.get('user_id'))
             elif obj_type == 'user_group':
                 obj_id = safe_int(request.POST.get('user_group_id'))
-            else: assert False
+            else:
+                assert False
 
             if obj_type == 'user':
                 RepoModel().revoke_user_permission(repo=repo_name, user=obj_id)
@@ -347,7 +347,8 @@ class ReposController(BaseRepoController):
                 RepoModel().revoke_user_group_permission(
                     repo=repo_name, group_name=obj_id
                 )
-            else: assert False
+            else:
+                assert False
             # TODO: implement this
             #action_logger(request.authuser, 'admin_revoked_repo_permissions',
             #              repo_name, request.ip_addr)
@@ -415,7 +416,8 @@ class ReposController(BaseRepoController):
         c.repos_list = [(None, _('-- Not a fork --'))]
         c.repos_list += [(x.repo_id, x.repo_name)
                          for x in read_access_repos
-                         if x.repo_id != c.repo_info.repo_id]
+                         if x.repo_id != c.repo_info.repo_id
+                         and x.repo_type == c.repo_info.repo_type]
 
         defaults = {
             'id_fork_of': c.repo_info.fork_id if c.repo_info.fork_id else ''
@@ -478,46 +480,6 @@ class ReposController(BaseRepoController):
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
     @HasRepoPermissionLevelDecorator('admin')
-    def edit_advanced_locking(self, repo_name):
-        """
-        Unlock repository when it is locked !
-
-        :param repo_name:
-        """
-        try:
-            repo = Repository.get_by_repo_name(repo_name)
-            if request.POST.get('set_lock'):
-                Repository.lock(repo, request.authuser.user_id)
-                h.flash(_('Repository has been locked'), category='success')
-            elif request.POST.get('set_unlock'):
-                Repository.unlock(repo)
-                h.flash(_('Repository has been unlocked'), category='success')
-        except Exception as e:
-            log.error(traceback.format_exc())
-            h.flash(_('An error occurred during unlocking'),
-                    category='error')
-        raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
-
-    @HasRepoPermissionLevelDecorator('write')
-    def toggle_locking(self, repo_name):
-        try:
-            repo = Repository.get_by_repo_name(repo_name)
-
-            if repo.enable_locking:
-                if repo.locked[0]:
-                    Repository.unlock(repo)
-                    h.flash(_('Repository has been unlocked'), category='success')
-                else:
-                    Repository.lock(repo, request.authuser.user_id)
-                    h.flash(_('Repository has been locked'), category='success')
-
-        except Exception as e:
-            log.error(traceback.format_exc())
-            h.flash(_('An error occurred during unlocking'),
-                    category='error')
-        raise HTTPFound(location=url('summary_home', repo_name=repo_name))
-
-    @HasRepoPermissionLevelDecorator('admin')
     def edit_caches(self, repo_name):
         c.repo_info = self._load_repo()
         c.active = 'caches'
@@ -541,7 +503,7 @@ class ReposController(BaseRepoController):
         c.active = 'remote'
         if request.POST:
             try:
-                ScmModel().pull_changes(repo_name, request.authuser.username)
+                ScmModel().pull_changes(repo_name, request.authuser.username, request.ip_addr)
                 h.flash(_('Pulled from remote location'), category='success')
             except Exception as e:
                 log.error(traceback.format_exc())

@@ -1,16 +1,15 @@
+import datetime
 import os
 import sys
-import mock
-import datetime
 import urllib2
 
+import mock
 import pytest
 
-from kallithea.lib.vcs.backends.git import GitRepository, GitChangeset
-from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
-from kallithea.lib.vcs.nodes import NodeKind, FileNode, DirNode, NodeState
+from kallithea.lib.vcs.backends.git import GitChangeset, GitRepository
+from kallithea.lib.vcs.exceptions import NodeDoesNotExistError, RepositoryError, VCSError
+from kallithea.lib.vcs.nodes import DirNode, FileNode, NodeKind, NodeState
 from kallithea.model.scm import ScmModel
-
 from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_GIT_REPO_CLONE, TESTS_TMP_PATH, get_new_dir
 

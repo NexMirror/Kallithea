@@ -28,12 +28,13 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import re
-import formencode
 
+import formencode
 from formencode import htmlfill
+from tg import request, session
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from tg import request, session, tmpl_context as c
-from webob.exc import HTTPFound, HTTPBadRequest
+from webob.exc import HTTPBadRequest, HTTPFound
 
 import kallithea.lib.helpers as h
 from kallithea.config.routing import url
@@ -41,11 +42,10 @@ from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils2 import safe_str
-from kallithea.model.db import User, Setting
-from kallithea.model.forms import \
-    LoginForm, RegisterForm, PasswordResetRequestForm, PasswordResetConfirmationForm
-from kallithea.model.user import UserModel
+from kallithea.model.db import Setting, User
+from kallithea.model.forms import LoginForm, PasswordResetConfirmationForm, PasswordResetRequestForm, RegisterForm
 from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
 
 
 log = logging.getLogger(__name__)
@@ -102,13 +102,14 @@ class LoginController(BaseController):
                 # Exception itself
                 h.flash(e, 'error')
             else:
-                log_in_user(user, c.form_result['remember'],
-                    is_external_auth=False)
+                auth_user = log_in_user(user, c.form_result['remember'], is_external_auth=False, ip_addr=request.ip_addr)
+                # TODO: handle auth_user is None as failed authentication?
                 raise HTTPFound(location=c.came_from)
         else:
             # redirect if already logged in
-            if request.authuser.is_authenticated:
+            if not request.authuser.is_anonymous:
                 raise HTTPFound(location=c.came_from)
+            # continue to show login to default user
 
         return render('/login.html')
 
@@ -248,10 +249,10 @@ class LoginController(BaseController):
         log.info('Logging out and deleting session for user')
         raise HTTPFound(location=url('home'))
 
-    def authentication_token(self):
+    def session_csrf_secret_token(self):
         """Return the CSRF protection token for the session - just like it
         could have been screen scraped from a page with a form.
         Only intended for testing but might also be useful for other kinds
         of automation.
         """
-        return h.authentication_token()
+        return h.session_csrf_secret_token()

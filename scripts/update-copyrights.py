@@ -41,6 +41,7 @@ contributor, the legal entity is given credit too.
 import os
 import re
 from collections import defaultdict
+
 import contributor_data
 
 
@@ -127,7 +128,7 @@ def main():
 
     insert_entries(
         filename='kallithea/templates/about.html',
-        all_entries=repo_entries + contributor_data.other_about,
+        all_entries=repo_entries + contributor_data.other_about + contributor_data.other,
         no_entries=contributor_data.no_about,
         domain_extra=contributor_data.domain_extra,
         split_re=r'(?:  <li>Copyright &copy; [^\n]*</li>\n)*',
@@ -137,7 +138,7 @@ def main():
 
     insert_entries(
         filename='CONTRIBUTORS',
-        all_entries=repo_entries + contributor_data.other_contributors,
+        all_entries=repo_entries + contributor_data.other_contributors + contributor_data.other,
         no_entries=contributor_data.total_ignore,
         domain_extra=contributor_data.domain_extra,
         split_re=r'(?:    [^\n]*\n)*',
@@ -153,6 +154,17 @@ def main():
         split_re=r'(?<=&copy;) .* (?=by various authors)',
         normalize_name=lambda name: '',
         format_f=lambda years, name: ' ' + nice_years(years, '&ndash;', ', ') + ' ',
+        )
+
+    #docs/conf.py:copyright = u'2010-2016 by various authors, licensed as GPLv3.'
+    insert_entries(
+        filename='docs/conf.py',
+        all_entries=repo_entries,
+        no_entries=contributor_data.total_ignore,
+        domain_extra={},
+        split_re=r"(?<=copyright = u').*(?= by various authors)",
+        normalize_name=lambda name: '',
+        format_f=lambda years, name: nice_years(years, '-', ', '),
         )
 
 

@@ -18,25 +18,24 @@ Tests for the JSON-RPC web api.
 
 import os
 import random
-import mock
 import re
 
+import mock
 import pytest
 
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
-from kallithea.lib.compat import json
 from kallithea.lib.auth import AuthUser
-from kallithea.model.user import UserModel
-from kallithea.model.user_group import UserGroupModel
+from kallithea.lib.compat import json
+from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.db import ChangesetStatus, PullRequest, RepoGroup, Repository, Setting, Ui, User
+from kallithea.model.gist import GistModel
+from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
-from kallithea.model.gist import GistModel
-from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.db import Repository, User, Setting, Ui, PullRequest, ChangesetStatus, RepoGroup
-from kallithea.lib.utils2 import time_to_datetime
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
 
 
 API_URL = '/_admin/api'
@@ -107,6 +106,7 @@ class _BaseTestApi(object):
         Session().commit()
         cls.TEST_USER_LOGIN = cls.test_user.username
         cls.apikey_regular = cls.test_user.api_key
+        cls.default_user_username = User.get_default_user().username
 
     @classmethod
     def teardown_class(cls):
@@ -288,6 +288,8 @@ class _BaseTestApi(object):
         r.clone_uri = os.path.join(Ui.get_by_key('paths', '/').ui_value, self.REPO)
         Session().commit()
 
+        pre_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == repo_name)]
+
         id_, params = _build_data(self.apikey, 'pull',
                                   repoid=repo_name,)
         response = api_call(self, params)
@@ -296,7 +298,11 @@ class _BaseTestApi(object):
                     'repository': repo_name}
         self._compare_ok(id_, expected, given=response.body)
 
+        post_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == repo_name)]
+
         fixture.destroy_repo(repo_name)
+
+        assert pre_cached_tip != post_cached_tip
 
     def test_api_pull_fork(self):
         fork_name = u'fork'
@@ -385,205 +391,6 @@ class _BaseTestApi(object):
 
         expected = "repository `%s` does not exist" % (self.REPO,)
         self._compare_error(id_, expected, given=response.body)
-
-    def test_api_lock_repo_lock_acquire(self):
-        try:
-            id_, params = _build_data(self.apikey, 'lock',
-                                      userid=TEST_USER_ADMIN_LOGIN,
-                                      repoid=self.REPO,
-                                      locked=True)
-            response = api_call(self, params)
-            expected = {
-                'repo': self.REPO, 'locked': True,
-                'locked_since': response.json['result']['locked_since'],
-                'locked_by': TEST_USER_ADMIN_LOGIN,
-                'lock_state_changed': True,
-                'msg': ('User `%s` set lock state for repo `%s` to `%s`'
-                        % (TEST_USER_ADMIN_LOGIN, self.REPO, True))
-            }
-            self._compare_ok(id_, expected, given=response.body)
-        finally:
-            # cleanup
-            Repository.unlock(RepoModel().get_by_repo_name(self.REPO))
-
-    def test_api_lock_repo_lock_acquire_by_non_admin(self):
-        repo_name = u'api_delete_me'
-        fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
-                            cur_user=self.TEST_USER_LOGIN)
-        try:
-            id_, params = _build_data(self.apikey_regular, 'lock',
-                                      repoid=repo_name,
-                                      locked=True)
-            response = api_call(self, params)
-            expected = {
-                'repo': repo_name,
-                'locked': True,
-                'locked_since': response.json['result']['locked_since'],
-                'locked_by': self.TEST_USER_LOGIN,
-                'lock_state_changed': True,
-                'msg': ('User `%s` set lock state for repo `%s` to `%s`'
-                        % (self.TEST_USER_LOGIN, repo_name, True))
-            }
-            self._compare_ok(id_, expected, given=response.body)
-        finally:
-            fixture.destroy_repo(repo_name)
-
-    def test_api_lock_repo_lock_acquire_non_admin_with_userid(self):
-        repo_name = u'api_delete_me'
-        fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
-                            cur_user=self.TEST_USER_LOGIN)
-        try:
-            id_, params = _build_data(self.apikey_regular, 'lock',
-                                      userid=TEST_USER_ADMIN_LOGIN,
-                                      repoid=repo_name,
-                                      locked=True)
-            response = api_call(self, params)
-            expected = 'userid is not the same as your user'
-            self._compare_error(id_, expected, given=response.body)
-        finally:
-            fixture.destroy_repo(repo_name)
-
-    def test_api_lock_repo_lock_acquire_non_admin_not_his_repo(self):
-        id_, params = _build_data(self.apikey_regular, 'lock',
-                                  repoid=self.REPO,
-                                  locked=True)
-        response = api_call(self, params)
-        expected = 'repository `%s` does not exist' % (self.REPO)
-        self._compare_error(id_, expected, given=response.body)
-
-    def test_api_lock_repo_lock_release(self):
-        id_, params = _build_data(self.apikey, 'lock',
-                                  userid=TEST_USER_ADMIN_LOGIN,
-                                  repoid=self.REPO,
-                                  locked=False)
-        response = api_call(self, params)
-        expected = {
-            'repo': self.REPO,
-            'locked': False,
-            'locked_since': None,
-            'locked_by': TEST_USER_ADMIN_LOGIN,
-            'lock_state_changed': True,
-            'msg': ('User `%s` set lock state for repo `%s` to `%s`'
-                    % (TEST_USER_ADMIN_LOGIN, self.REPO, False))
-        }
-        self._compare_ok(id_, expected, given=response.body)
-
-        # test_api_lock_repo_lock_optional_not_locked(self):
-        id_, params = _build_data(self.apikey, 'lock',
-                                  repoid=self.REPO)
-        response = api_call(self, params)
-        expected = {
-            'repo': self.REPO,
-            'locked': False,
-            'locked_since': None,
-            'locked_by': None,
-            'lock_state_changed': False,
-            'msg': ('Repo `%s` not locked.' % (self.REPO,))
-        }
-        self._compare_ok(id_, expected, given=response.body)
-
-    def test_api_lock_repo_lock_acquire_optional_userid(self):
-        try:
-            id_, params = _build_data(self.apikey, 'lock',
-                                      repoid=self.REPO,
-                                      locked=True)
-            response = api_call(self, params)
-            time_ = response.json['result']['locked_since']
-            expected = {
-                'repo': self.REPO,
-                'locked': True,
-                'locked_since': time_,
-                'locked_by': TEST_USER_ADMIN_LOGIN,
-                'lock_state_changed': True,
-                'msg': ('User `%s` set lock state for repo `%s` to `%s`'
-                        % (TEST_USER_ADMIN_LOGIN, self.REPO, True))
-            }
-
-            self._compare_ok(id_, expected, given=response.body)
-
-            # test_api_lock_repo_lock_optional_locked
-            id_, params = _build_data(self.apikey, 'lock',
-                                      repoid=self.REPO)
-            response = api_call(self, params)
-            time_ = response.json['result']['locked_since']
-            expected = {
-                'repo': self.REPO,
-                'locked': True,
-                'locked_since': time_,
-                'locked_by': TEST_USER_ADMIN_LOGIN,
-                'lock_state_changed': False,
-                'msg': ('Repo `%s` locked by `%s` on `%s`.'
-                        % (self.REPO, TEST_USER_ADMIN_LOGIN,
-                           json.dumps(time_to_datetime(time_))))
-            }
-            self._compare_ok(id_, expected, given=response.body)
-        finally:
-            # cleanup
-            Repository.unlock(RepoModel().get_by_repo_name(self.REPO))
-
-    @mock.patch.object(Repository, 'lock', crash)
-    def test_api_lock_error(self):
-        id_, params = _build_data(self.apikey, 'lock',
-                                  userid=TEST_USER_ADMIN_LOGIN,
-                                  repoid=self.REPO,
-                                  locked=True)
-        response = api_call(self, params)
-
-        expected = 'Error occurred locking repository `%s`' % self.REPO
-        self._compare_error(id_, expected, given=response.body)
-
-    def test_api_get_locks_regular_user(self):
-        id_, params = _build_data(self.apikey_regular, 'get_locks')
-        response = api_call(self, params)
-        expected = []
-        self._compare_ok(id_, expected, given=response.body)
-
-    def test_api_get_locks_with_userid_regular_user(self):
-        id_, params = _build_data(self.apikey_regular, 'get_locks',
-                                  userid=TEST_USER_ADMIN_LOGIN)
-        response = api_call(self, params)
-        expected = 'userid is not the same as your user'
-        self._compare_error(id_, expected, given=response.body)
-
-    def test_api_get_locks(self):
-        id_, params = _build_data(self.apikey, 'get_locks')
-        response = api_call(self, params)
-        expected = []
-        self._compare_ok(id_, expected, given=response.body)
-
-    def test_api_get_locks_with_one_locked_repo(self):
-        repo_name = u'api_delete_me'
-        repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
-                                   cur_user=self.TEST_USER_LOGIN)
-        Repository.lock(repo, User.get_by_username(self.TEST_USER_LOGIN).user_id)
-        try:
-            id_, params = _build_data(self.apikey, 'get_locks')
-            response = api_call(self, params)
-            expected = [repo.get_api_data()]
-            self._compare_ok(id_, expected, given=response.body)
-        finally:
-            fixture.destroy_repo(repo_name)
-
-    def test_api_get_locks_with_one_locked_repo_for_specific_user(self):
-        repo_name = u'api_delete_me'
-        repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
-                                   cur_user=self.TEST_USER_LOGIN)
-        Repository.lock(repo, User.get_by_username(self.TEST_USER_LOGIN).user_id)
-        try:
-            id_, params = _build_data(self.apikey, 'get_locks',
-                                      userid=self.TEST_USER_LOGIN)
-            response = api_call(self, params)
-            expected = [repo.get_api_data()]
-            self._compare_ok(id_, expected, given=response.body)
-        finally:
-            fixture.destroy_repo(repo_name)
-
-    def test_api_get_locks_with_userid(self):
-        id_, params = _build_data(self.apikey, 'get_locks',
-                                  userid=TEST_USER_REGULAR_LOGIN)
-        response = api_call(self, params)
-        expected = []
-        self._compare_ok(id_, expected, given=response.body)
 
     def test_api_create_existing_user(self):
         id_, params = _build_data(self.apikey, 'create_user',
@@ -899,15 +706,23 @@ class _BaseTestApi(object):
 
     def test_api_get_repo_by_non_admin_no_permission_to_repo(self):
         RepoModel().grant_user_permission(repo=self.REPO,
-                                          user=self.TEST_USER_LOGIN,
+                                          user=self.default_user_username,
                                           perm='repository.none')
+        try:
+            RepoModel().grant_user_permission(repo=self.REPO,
+                                              user=self.TEST_USER_LOGIN,
+                                              perm='repository.none')
 
-        id_, params = _build_data(self.apikey_regular, 'get_repo',
-                                  repoid=self.REPO)
-        response = api_call(self, params)
+            id_, params = _build_data(self.apikey_regular, 'get_repo',
+                                      repoid=self.REPO)
+            response = api_call(self, params)
 
-        expected = 'repository `%s` does not exist' % (self.REPO)
-        self._compare_error(id_, expected, given=response.body)
+            expected = 'repository `%s` does not exist' % (self.REPO)
+            self._compare_error(id_, expected, given=response.body)
+        finally:
+            RepoModel().grant_user_permission(repo=self.REPO,
+                                              user=self.default_user_username,
+                                              perm='repository.read')
 
     def test_api_get_repo_that_doesn_not_exist(self):
         id_, params = _build_data(self.apikey, 'get_repo',
@@ -1259,7 +1074,6 @@ class _BaseTestApi(object):
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
         ('enable_statistics', {'enable_statistics': True}),
-        ('enable_locking', {'enable_locking': True}),
         ('enable_downloads', {'enable_downloads': True}),
         ('name', {'name': u'new_repo_name'}),
         ('repo_group', {'group': u'test_group_for_update'}),
@@ -1300,7 +1114,6 @@ class _BaseTestApi(object):
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
         ('enable_statistics', {'enable_statistics': True}),
-        ('enable_locking', {'enable_locking': True}),
         ('enable_downloads', {'enable_downloads': True}),
         ('name', {'name': u'new_repo_name'}),
         ('repo_group', {'group': u'test_group_for_update'}),
@@ -1550,17 +1363,22 @@ class _BaseTestApi(object):
 
     def test_api_fork_repo_non_admin_no_permission_to_fork(self):
         RepoModel().grant_user_permission(repo=self.REPO,
-                                          user=self.TEST_USER_LOGIN,
+                                          user=self.default_user_username,
                                           perm='repository.none')
-        fork_name = u'api-repo-fork'
-        id_, params = _build_data(self.apikey_regular, 'fork_repo',
-                                  repoid=self.REPO,
-                                  fork_name=fork_name,
-        )
-        response = api_call(self, params)
-        expected = 'repository `%s` does not exist' % (self.REPO)
-        self._compare_error(id_, expected, given=response.body)
-        fixture.destroy_repo(fork_name)
+        try:
+            fork_name = u'api-repo-fork'
+            id_, params = _build_data(self.apikey_regular, 'fork_repo',
+                                      repoid=self.REPO,
+                                      fork_name=fork_name,
+            )
+            response = api_call(self, params)
+            expected = 'repository `%s` does not exist' % (self.REPO)
+            self._compare_error(id_, expected, given=response.body)
+        finally:
+            RepoModel().grant_user_permission(repo=self.REPO,
+                                              user=self.default_user_username,
+                                              perm='repository.read')
+            fixture.destroy_repo(fork_name)
 
     @parametrize('name,perm', [
         ('read', 'repository.read'),

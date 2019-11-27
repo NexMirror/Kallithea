@@ -12,9 +12,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# 'cli' is the main entry point for 'kallithea-cli', specified in setup.py as entry_points console_scripts
-from kallithea.bin.kallithea_cli_base import cli
-
 # import commands (they will add themselves to the 'cli' object)
 import kallithea.bin.kallithea_cli_celery
 import kallithea.bin.kallithea_cli_config
@@ -25,3 +22,6 @@ import kallithea.bin.kallithea_cli_iis
 import kallithea.bin.kallithea_cli_index
 import kallithea.bin.kallithea_cli_ishell
 import kallithea.bin.kallithea_cli_repo
+import kallithea.bin.kallithea_cli_ssh
+# 'cli' is the main entry point for 'kallithea-cli', specified in setup.py as entry_points console_scripts
+from kallithea.bin.kallithea_cli_base import cli

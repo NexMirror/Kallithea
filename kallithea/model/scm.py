@@ -25,38 +25,31 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import cStringIO
+import logging
 import os
-import sys
 import posixpath
 import re
-import time
+import sys
 import traceback
-import logging
-import cStringIO
-import pkg_resources
 
-from sqlalchemy import func
+import pkg_resources
 from tg.i18n import ugettext as _
 
 import kallithea
-from kallithea.lib.vcs import get_backend
-from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-
 from kallithea import BACKENDS
-from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
-    _set_extras
-from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLevel, \
-    HasUserGroupPermissionLevel, HasPermissionAny, HasPermissionAny
-from kallithea.lib.utils import get_filesystem_repos, make_ui, \
-    action_logger
-from kallithea.model.db import Repository, Session, Ui, CacheInvalidation, \
-    UserFollowing, UserLog, User, RepoGroup, PullRequest
-from kallithea.lib.hooks import log_push_action
-from kallithea.lib.exceptions import NonRelativePathError, IMCCommitError
+from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel
+from kallithea.lib.exceptions import IMCCommitError, NonRelativePathError
+from kallithea.lib.hooks import process_pushed_raw_ids
+from kallithea.lib.utils import action_logger, get_filesystem_repos, make_ui
+from kallithea.lib.utils2 import safe_str, safe_unicode, set_hook_environment
+from kallithea.lib.vcs import get_backend
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.exceptions import RepositoryError
+from kallithea.lib.vcs.nodes import FileNode
+from kallithea.lib.vcs.utils.lazy import LazyProperty
+from kallithea.model.db import PullRequest, RepoGroup, Repository, Session, Ui, User, UserFollowing, UserLog
+
 
 log = logging.getLogger(__name__)
 
@@ -178,7 +171,7 @@ class ScmModel(object):
 
         log.info('scanning for repositories in %s', repos_path)
 
-        baseui = make_ui('db')
+        baseui = make_ui()
         repos = {}
 
         for name, path in get_filesystem_repos(repos_path):
@@ -223,9 +216,10 @@ class ScmModel(object):
 
         :param repo_name: the repo for which caches should be marked invalid
         """
-        CacheInvalidation.set_invalidate(repo_name)
+        log.debug("Marking %s as invalidated and update cache", repo_name)
         repo = Repository.get_by_repo_name(repo_name)
         if repo is not None:
+            repo.set_invalidate()
             repo.update_changeset_cache()
 
     def toggle_following_repo(self, follow_repo_id, user_id):
@@ -280,7 +274,7 @@ class ScmModel(object):
             log.error(traceback.format_exc())
             raise
 
-    def is_following_repo(self, repo_name, user_id, cache=False):
+    def is_following_repo(self, repo_name, user_id):
         r = Repository.query() \
             .filter(Repository.repo_name == repo_name).scalar()
 
@@ -290,7 +284,7 @@ class ScmModel(object):
 
         return f is not None
 
-    def is_following_user(self, username, user_id, cache=False):
+    def is_following_user(self, username, user_id):
         u = User.get_by_username(username)
 
         f = UserFollowing.query() \
@@ -328,48 +322,19 @@ class ScmModel(object):
         repo.fork = fork
         return repo
 
-    def _handle_rc_scm_extras(self, username, repo_name, repo_alias,
-                              action=None):
-        from kallithea import CONFIG
-        from kallithea.lib.base import _get_ip_addr
-        try:
-            from tg import request
-            environ = request.environ
-        except TypeError:
-            # we might use this outside of request context, let's fake the
-            # environ data
-            from webob import Request
-            environ = Request.blank('').environ
-        extras = {
-            'ip': _get_ip_addr(environ),
-            'username': username,
-            'action': action or 'push_local',
-            'repository': repo_name,
-            'scm': repo_alias,
-            'config': CONFIG['__file__'],
-            'server_url': get_server_url(environ),
-            'make_lock': None,
-            'locked_by': [None, None]
-        }
-        _set_extras(extras)
-
-    def _handle_push(self, repo, username, action, repo_name, revisions):
+    def _handle_push(self, repo, username, ip_addr, action, repo_name, revisions):
         """
-        Triggers push action hooks
+        Handle that the repository has changed.
+        Adds an action log entry with the new revisions, and the head revision
+        cache and in-memory caches are invalidated/updated.
 
-        :param repo: SCM repo
         :param username: username who pushes
         :param action: push/push_local/push_remote
         :param repo_name: name of repo
         :param revisions: list of revisions that we pushed
         """
-        self._handle_rc_scm_extras(username, repo_name, repo_alias=repo.alias, action=action)
-        _scm_repo = repo._repo
-        # trigger push hook
-        if repo.alias == 'hg':
-            log_push_action(_scm_repo.ui, _scm_repo, node=revisions[0])
-        elif repo.alias == 'git':
-            log_push_action(None, _scm_repo, _git_revs=revisions)
+        set_hook_environment(username, ip_addr, repo_name, repo_alias=repo.alias, action=action)
+        process_pushed_raw_ids(revisions) # also calls mark_for_invalidation
 
     def _get_IMC_module(self, scm_type):
         """
@@ -388,7 +353,7 @@ class ScmModel(object):
         raise Exception('Invalid scm_type, must be one of hg,git got %s'
                         % (scm_type,))
 
-    def pull_changes(self, repo, username, clone_uri=None):
+    def pull_changes(self, repo, username, ip_addr, clone_uri=None):
         """
         Pull from "clone URL" or fork origin.
         """
@@ -404,24 +369,23 @@ class ScmModel(object):
             if repo.alias == 'git':
                 repo.fetch(clone_uri)
                 # git doesn't really have something like post-fetch action
-                # we fake that now. #TODO: extract fetched revisions somehow
-                # here
+                # we fake that now.
+                # TODO: extract fetched revisions ... somehow ...
                 self._handle_push(repo,
                                   username=username,
+                                  ip_addr=ip_addr,
                                   action='push_remote',
                                   repo_name=repo_name,
                                   revisions=[])
             else:
-                self._handle_rc_scm_extras(username, dbrepo.repo_name,
+                set_hook_environment(username, ip_addr, dbrepo.repo_name,
                                            repo.alias, action='push_remote')
                 repo.pull(clone_uri)
-
-            self.mark_for_invalidation(repo_name)
         except Exception:
             log.error(traceback.format_exc())
             raise
 
-    def commit_change(self, repo, repo_name, cs, user, author, message,
+    def commit_change(self, repo, repo_name, cs, user, ip_addr, author, message,
                       content, f_path):
         """
         Commit a change to a single file
@@ -446,12 +410,12 @@ class ScmModel(object):
                              parents=[cs], branch=cs.branch)
         except Exception as e:
             log.error(traceback.format_exc())
-            raise IMCCommitError(str(e))
-        finally:
-            # always clear caches, if commit fails we want fresh object also
+            # clear caches - we also want a fresh object if commit fails
             self.mark_for_invalidation(repo_name)
+            raise IMCCommitError(str(e))
         self._handle_push(repo,
                           username=user.username,
+                          ip_addr=ip_addr,
                           action='push_local',
                           repo_name=repo_name,
                           revisions=[tip.raw_id])
@@ -493,7 +457,7 @@ class ScmModel(object):
 
         return _dirs, _files
 
-    def create_nodes(self, user, repo, message, nodes, parent_cs=None,
+    def create_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
         """
         Commits specified nodes to repo.
@@ -553,16 +517,18 @@ class ScmModel(object):
                          parents=parents,
                          branch=parent_cs.branch)
 
-        self.mark_for_invalidation(repo.repo_name)
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
+                              ip_addr=ip_addr,
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
+        else:
+            self.mark_for_invalidation(repo.repo_name)
         return tip
 
-    def update_nodes(self, user, repo, message, nodes, parent_cs=None,
+    def update_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
         """
         Commits specified nodes to repo. Again.
@@ -613,15 +579,17 @@ class ScmModel(object):
                          parents=parents,
                          branch=parent_cs.branch)
 
-        self.mark_for_invalidation(repo.repo_name)
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
+                              ip_addr=ip_addr,
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
+        else:
+            self.mark_for_invalidation(repo.repo_name)
 
-    def delete_nodes(self, user, repo, message, nodes, parent_cs=None,
+    def delete_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
         """
         Deletes specified nodes from repo.
@@ -672,13 +640,15 @@ class ScmModel(object):
                          parents=parents,
                          branch=parent_cs.branch)
 
-        self.mark_for_invalidation(repo.repo_name)
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
+                              ip_addr=ip_addr,
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
+        else:
+            self.mark_for_invalidation(repo.repo_name)
         return tip
 
     def get_unread_journal(self):
@@ -695,7 +665,7 @@ class ScmModel(object):
         hist_l = []
         choices = []
         repo = self.__get_repo(repo)
-        hist_l.append(['rev:tip', _('latest tip')])
+        hist_l.append(('rev:tip', _('latest tip')))
         choices.append('rev:tip')
         if repo is None:
             return choices, hist_l

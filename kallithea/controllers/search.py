@@ -28,21 +28,22 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 import urllib
-from tg.i18n import ugettext as _
-from tg import request, config, tmpl_context as c
 
-from whoosh.index import open_dir, exists_in, EmptyIndexError
+from tg import config, request
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
+from webhelpers2.html.tools import update_params
+from whoosh.index import EmptyIndexError, exists_in, open_dir
 from whoosh.qparser import QueryParser, QueryParserError
 from whoosh.query import Phrase, Prefix
-from webhelpers.util import update_params
 
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.indexers import CHGSETS_SCHEMA, SCHEMA, CHGSET_IDX_NAME, \
-    IDX_NAME, WhooshResultWrapper
+from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA, WhooshResultWrapper
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_str, safe_int
+from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.model.repo import RepoModel
+
 
 log = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class SearchController(BaseRepoController):
         if c.cur_query:
             p = safe_int(request.GET.get('page'), 1)
             highlight_items = set()
-            index_dir = config['app_conf']['index_dir']
+            index_dir = config['index_dir']
             try:
                 if not exists_in(index_dir, index_name):
                     raise EmptyIndexError
@@ -120,8 +121,7 @@ class SearchController(BaseRepoController):
 
                     def url_generator(**kw):
                         q = urllib.quote(safe_str(c.cur_query))
-                        return update_params("?q=%s&type=%s" \
-                        % (q, safe_str(c.cur_type)), **kw)
+                        return update_params("?q=%s&type=%s" % (q, safe_str(c.cur_type)), **kw)
                     repo_location = RepoModel().repos_path
                     c.formated_results = Page(
                         WhooshResultWrapper(search_type, searcher, matcher,

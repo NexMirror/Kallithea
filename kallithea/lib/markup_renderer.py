@@ -26,14 +26,15 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import re
 import logging
+import re
 import traceback
 
-import markdown as markdown_mod
 import bleach
+import markdown as markdown_mod
 
-from kallithea.lib.utils2 import safe_unicode, MENTIONS_REGEX
+from kallithea.lib.utils2 import MENTIONS_REGEX, safe_unicode
+
 
 log = logging.getLogger(__name__)
 
@@ -49,24 +50,22 @@ class MarkupRenderer(object):
     RST_PAT = re.compile(r're?st', re.IGNORECASE)
     PLAIN_PAT = re.compile(r'readme', re.IGNORECASE)
 
-    def _detect_renderer(self, source, filename):
+    @classmethod
+    def _detect_renderer(cls, source, filename):
         """
         runs detection of what renderer should be used for generating html
         from a markup language
 
         filename can be also explicitly a renderer name
-
-        :param source:
-        :param filename:
         """
 
-        if self.MARKDOWN_PAT.findall(filename):
-            return self.markdown
-        elif self.RST_PAT.findall(filename):
-            return self.rst
-        elif self.PLAIN_PAT.findall(filename):
-            return self.rst
-        return self.plain
+        if cls.MARKDOWN_PAT.findall(filename):
+            return cls.markdown
+        elif cls.RST_PAT.findall(filename):
+            return cls.rst
+        elif cls.PLAIN_PAT.findall(filename):
+            return cls.rst
+        return cls.plain
 
     @classmethod
     def _flavored_markdown(cls, text):
@@ -91,7 +90,7 @@ class MarkupRenderer(object):
         def italic_callback(matchobj):
             s = matchobj.group(0)
             if list(s).count('_') >= 2:
-                return s.replace('_', '\_')
+                return s.replace('_', r'\_')
             return s
         text = re.sub(r'^(?! {4}|\t)\w+_\w+_\w[\w_]*', italic_callback, text)
 
@@ -112,17 +111,28 @@ class MarkupRenderer(object):
 
         return text
 
-    def render(self, source, filename=None):
+    @classmethod
+    def render(cls, source, filename=None):
         """
         Renders a given filename using detected renderer
         it detects renderers based on file extension or mimetype.
         At last it will just do a simple html replacing new lines with <br/>
 
-        :param file_name:
-        :param source:
+        >>> MarkupRenderer.render('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''', '.md')
+        u'<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
+        >>> MarkupRenderer.render('''<img class="c d" src="file://localhost/test.jpg">''', 'b.mkd')
+        u'<p><img class="c d"></p>'
+        >>> MarkupRenderer.render('''<a href="foo">foo</a>''', 'c.mkdn')
+        u'<p><a href="foo">foo</a></p>'
+        >>> MarkupRenderer.render('''<script>alert(1)</script>''', 'd.mdown')
+        u'&lt;script&gt;alert(1)&lt;/script&gt;'
+        >>> MarkupRenderer.render('''<div onclick="alert(2)">yo</div>''', 'markdown')
+        u'<div>yo</div>'
+        >>> MarkupRenderer.render('''<a href="javascript:alert(3)">yo</a>''', 'md')
+        u'<p><a>yo</a></p>'
         """
 
-        renderer = self._detect_renderer(source, filename)
+        renderer = cls._detect_renderer(source, filename)
         readme_data = renderer(source)
         # Allow most HTML, while preventing XSS issues:
         # no <script> tags, no onclick attributes, no javascript
@@ -154,21 +164,32 @@ class MarkupRenderer(object):
     @classmethod
     def markdown(cls, source, safe=True, flavored=False):
         """
-        Convert Markdown (possibly GitHub Flavored) to XSS safe HTML, possibly
-        with "safe" fall-back to plaintext.
+        Convert Markdown (possibly GitHub Flavored) to INSECURE HTML, possibly
+        with "safe" fall-back to plaintext. Output from this method should be sanitized before use.
 
         >>> MarkupRenderer.markdown('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''')
-        u'<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
+        u'<p><img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg"></p>'
         >>> MarkupRenderer.markdown('''<img class="c d" src="file://localhost/test.jpg">''')
-        u'<p><img class="c d"></p>'
+        u'<p><img class="c d" src="file://localhost/test.jpg"></p>'
         >>> MarkupRenderer.markdown('''<a href="foo">foo</a>''')
         u'<p><a href="foo">foo</a></p>'
         >>> MarkupRenderer.markdown('''<script>alert(1)</script>''')
-        u'&lt;script&gt;alert(1)&lt;/script&gt;'
+        u'<script>alert(1)</script>'
         >>> MarkupRenderer.markdown('''<div onclick="alert(2)">yo</div>''')
-        u'<div>yo</div>'
+        u'<div onclick="alert(2)">yo</div>'
         >>> MarkupRenderer.markdown('''<a href="javascript:alert(3)">yo</a>''')
-        u'<p><a>yo</a></p>'
+        u'<p><a href="javascript:alert(3)">yo</a></p>'
+        >>> MarkupRenderer.markdown('''## Foo''')
+        u'<h2>Foo</h2>'
+        >>> print MarkupRenderer.markdown('''
+        ...     #!/bin/bash
+        ...     echo "hello"
+        ... ''')
+        <table class="code-highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+        2</pre></div></td><td class="code"><div class="code-highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+        <span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span>
+        </pre></div>
+        </td></tr></table>
         """
         source = safe_unicode(source)
         try:
@@ -176,8 +197,8 @@ class MarkupRenderer(object):
                 source = cls._flavored_markdown(source)
             return markdown_mod.markdown(
                 source,
-                extensions=['codehilite', 'extra'],
-                extension_configs={'codehilite': {'css_class': 'code-highlight'}})
+                extensions=['markdown.extensions.codehilite', 'markdown.extensions.extra'],
+                extension_configs={'markdown.extensions.codehilite': {'css_class': 'code-highlight'}})
         except Exception:
             log.error(traceback.format_exc())
             if safe:
@@ -222,6 +243,6 @@ class MarkupRenderer(object):
 
         def wrapp(match_obj):
             uname = match_obj.groups()[0]
-            return '\ **@%(uname)s**\ ' % {'uname': uname}
+            return r'\ **@%(uname)s**\ ' % {'uname': uname}
         mention_hl = MENTIONS_REGEX.sub(wrapp, source).strip()
         return cls.rst(mention_hl)

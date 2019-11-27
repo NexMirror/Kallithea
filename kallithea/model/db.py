@@ -25,37 +25,35 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import collections
+import datetime
+import functools
+import hashlib
+import logging
 import os
 import time
-import logging
-import datetime
 import traceback
-import hashlib
-import collections
-import functools
 
+import ipaddr
 import sqlalchemy
+from beaker.cache import cache_region, region_invalidate
 from sqlalchemy import *
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship, joinedload, class_mapper, validates
-from beaker.cache import cache_region, region_invalidate
+from sqlalchemy.orm import class_mapper, joinedload, relationship, validates
+from tg.i18n import lazy_ugettext as _
 from webob.exc import HTTPNotFound
 
-from tg.i18n import lazy_ugettext as _
-
+import kallithea
+from kallithea.lib.caching_query import FromCache
+from kallithea.lib.compat import json
 from kallithea.lib.exceptions import DefaultUserException
+from kallithea.lib.utils2 import Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_int, safe_str, safe_unicode, str2bool, urlreadable
 from kallithea.lib.vcs import get_backend
+from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-
-from kallithea.lib.utils2 import str2bool, safe_str, get_changeset_safe, \
-    safe_unicode, remove_prefix, time_to_datetime, aslist, Optional, safe_int, \
-    get_clone_url, urlreadable
-from kallithea.lib.compat import json
-from kallithea.lib.caching_query import FromCache
-
 from kallithea.model.meta import Base, Session
+
 
 URL_SEP = '/'
 log = logging.getLogger(__name__)
@@ -325,7 +323,6 @@ class Setting(Base, BaseDbModel):
     def get_server_info(cls):
         import pkg_resources
         import platform
-        import kallithea
         from kallithea.lib.utils import check_git_version
         mods = [(p.project_name, p.version) for p in pkg_resources.working_set]
         info = {
@@ -351,10 +348,6 @@ class Ui(Base, BaseDbModel):
 
     HOOK_UPDATE = 'changegroup.update'
     HOOK_REPO_SIZE = 'changegroup.repo_size'
-    HOOK_PUSH_LOG = 'changegroup.push_logger'
-    HOOK_PUSH_LOCK = 'prechangegroup.push_lock_handling'
-    HOOK_PULL_LOG = 'outgoing.pull_logger'
-    HOOK_PULL_LOCK = 'preoutgoing.pull_lock_handling'
 
     ui_id = Column(Integer(), primary_key=True)
     ui_section = Column(String(255), nullable=False)
@@ -379,18 +372,14 @@ class Ui(Base, BaseDbModel):
     @classmethod
     def get_builtin_hooks(cls):
         q = cls.query()
-        q = q.filter(cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE,
-                                     cls.HOOK_PUSH_LOG, cls.HOOK_PUSH_LOCK,
-                                     cls.HOOK_PULL_LOG, cls.HOOK_PULL_LOCK]))
+        q = q.filter(cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE]))
         q = q.filter(cls.ui_section == 'hooks')
         return q.all()
 
     @classmethod
     def get_custom_hooks(cls):
         q = cls.query()
-        q = q.filter(~cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE,
-                                      cls.HOOK_PUSH_LOG, cls.HOOK_PUSH_LOCK,
-                                      cls.HOOK_PULL_LOG, cls.HOOK_PULL_LOCK]))
+        q = q.filter(~cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE]))
         q = q.filter(cls.ui_section == 'hooks')
         return q.all()
 
@@ -434,7 +423,6 @@ class User(Base, BaseDbModel):
     extern_type = Column(String(255), nullable=True) # FIXME: not nullable?
     extern_name = Column(String(255), nullable=True) # FIXME: not nullable?
     api_key = Column(String(255), nullable=False)
-    inherit_default_permissions = Column(Boolean(), nullable=False, default=True)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _user_data = Column("user_data", LargeBinary(), nullable=True)  # JSON data # FIXME: not nullable?
 
@@ -458,6 +446,7 @@ class User(Base, BaseDbModel):
     user_emails = relationship('UserEmailMap', cascade='all')
     # extra API keys
     user_api_keys = relationship('UserApiKeys', cascade='all')
+    ssh_keys = relationship('UserSshKeys', cascade='all')
 
     @hybrid_property
     def email(self):
@@ -607,6 +596,8 @@ class User(Base, BaseDbModel):
             _res = UserApiKeys.query().filter_by(api_key=api_key, is_expired=False).first()
             if _res:
                 res = _res.user
+        if res is None or not res.active or res.is_default_user:
+            return None
         return res
 
     @classmethod
@@ -713,7 +704,6 @@ class UserApiKeys(Base, BaseDbModel):
         Index('uak_api_key_expires_idx', 'api_key', 'expires'),
         _table_args_default_dict,
     )
-    __mapper_args__ = {}
 
     user_api_key_id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
@@ -735,7 +725,6 @@ class UserEmailMap(Base, BaseDbModel):
         Index('uem_email_idx', 'email'),
         _table_args_default_dict,
     )
-    __mapper_args__ = {}
 
     email_id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
@@ -765,7 +754,6 @@ class UserIpMap(Base, BaseDbModel):
         UniqueConstraint('user_id', 'ip_addr'),
         _table_args_default_dict,
     )
-    __mapper_args__ = {}
 
     ip_id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
@@ -775,7 +763,6 @@ class UserIpMap(Base, BaseDbModel):
 
     @classmethod
     def _get_ip_range(cls, ip_addr):
-        from kallithea.lib import ipaddr
         net = ipaddr.IPNetwork(address=ip_addr)
         return [str(net.network), str(net.broadcast)]
 
@@ -828,7 +815,6 @@ class UserGroup(Base, BaseDbModel):
     users_group_name = Column(Unicode(255), nullable=False, unique=True)
     user_group_description = Column(Unicode(10000), nullable=True) # FIXME: not nullable?
     users_group_active = Column(Boolean(), nullable=False)
-    inherit_default_permissions = Column("users_group_inherit_default_permissions", Boolean(), nullable=False, default=True)
     owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _group_data = Column("group_data", LargeBinary(), nullable=True)  # JSON data # FIXME: not nullable?
@@ -974,7 +960,7 @@ class Repository(Base, BaseDbModel):
     )
 
     DEFAULT_CLONE_URI = '{scheme}://{user}@{netloc}/{repo}'
-    DEFAULT_CLONE_URI_ID = '{scheme}://{user}@{netloc}/_{repoid}'
+    DEFAULT_CLONE_SSH = 'ssh://{system_user}@{hostname}/{repo}'
 
     STATE_CREATED = u'repo_state_created'
     STATE_PENDING = u'repo_state_pending'
@@ -985,7 +971,7 @@ class Repository(Base, BaseDbModel):
     repo_state = Column(String(255), nullable=False)
 
     clone_uri = Column(String(255), nullable=True) # FIXME: not nullable?
-    repo_type = Column(String(255), nullable=False)
+    repo_type = Column(String(255), nullable=False) # 'hg' or 'git'
     owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     private = Column(Boolean(), nullable=False)
     enable_statistics = Column("statistics", Boolean(), nullable=False, default=True)
@@ -994,8 +980,6 @@ class Repository(Base, BaseDbModel):
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     updated_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _landing_revision = Column("landing_revision", String(255), nullable=False)
-    enable_locking = Column(Boolean(), nullable=False, default=False)
-    _locked = Column("locked", String(255), nullable=True) # FIXME: not nullable?
     _changeset_cache = Column("changeset_cache", LargeBinary(), nullable=True) # JSON data # FIXME: not nullable?
 
     fork_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
@@ -1045,21 +1029,6 @@ class Repository(Base, BaseDbModel):
             raise ValueError('value must be delimited with `:` and consist '
                              'of <rev_type>:<rev>, got %s instead' % val)
         self._landing_revision = val
-
-    @hybrid_property
-    def locked(self):
-        # always should return [user_id, timelocked]
-        if self._locked:
-            _lock_info = self._locked.split(':')
-            return int(_lock_info[0]), _lock_info[1]
-        return [None, None]
-
-    @locked.setter
-    def locked(self, val):
-        if val and isinstance(val, (list, tuple)):
-            self._locked = ':'.join(map(str, val))
-        else:
-            self._locked = None
 
     @hybrid_property
     def changeset_cache(self):
@@ -1221,7 +1190,7 @@ class Repository(Base, BaseDbModel):
         Creates an db based ui object for this repository
         """
         from kallithea.lib.utils import make_ui
-        return make_ui('db', clear_session=False)
+        return make_ui(clear_session=False)
 
     @classmethod
     def is_valid(cls, repo_name):
@@ -1254,13 +1223,8 @@ class Repository(Base, BaseDbModel):
             owner=repo.owner.username,
             fork_of=repo.fork.repo_name if repo.fork else None,
             enable_statistics=repo.enable_statistics,
-            enable_locking=repo.enable_locking,
             enable_downloads=repo.enable_downloads,
             last_changeset=repo.changeset_cache,
-            locked_by=User.get(self.locked[0]).get_api_data() \
-                if self.locked[0] else None,
-            locked_date=time_to_datetime(self.locked[1]) \
-                if self.locked[1] else None
         )
         if with_revision_names:
             scm_repo = repo.scm_instance_no_cache()
@@ -1279,22 +1243,6 @@ class Repository(Base, BaseDbModel):
 
         return data
 
-    @classmethod
-    def lock(cls, repo, user_id, lock_time=None):
-        if lock_time is not None:
-            lock_time = time.time()
-        repo.locked = [user_id, lock_time]
-        Session().commit()
-
-    @classmethod
-    def unlock(cls, repo):
-        repo.locked = None
-        Session().commit()
-
-    @classmethod
-    def getlock(cls, repo):
-        return repo.locked
-
     @property
     def last_db_change(self):
         return self.updated_on
@@ -1309,34 +1257,22 @@ class Repository(Base, BaseDbModel):
                 clone_uri = url_obj.with_password('*****')
         return clone_uri
 
-    def clone_url(self, **override):
+    def clone_url(self, clone_uri_tmpl, with_id=False, username=None):
+        if '{repo}' not in clone_uri_tmpl and '_{repoid}' not in clone_uri_tmpl:
+            log.error("Configured clone_uri_tmpl %r has no '{repo}' or '_{repoid}' and cannot toggle to use repo id URLs", clone_uri_tmpl)
+        elif with_id:
+            clone_uri_tmpl = clone_uri_tmpl.replace('{repo}', '_{repoid}')
+        else:
+            clone_uri_tmpl = clone_uri_tmpl.replace('_{repoid}', '{repo}')
+
         import kallithea.lib.helpers as h
-        qualified_home_url = h.canonical_url('home')
+        prefix_url = h.canonical_url('home')
 
-        uri_tmpl = None
-        if 'with_id' in override:
-            uri_tmpl = self.DEFAULT_CLONE_URI_ID
-            del override['with_id']
-
-        if 'uri_tmpl' in override:
-            uri_tmpl = override['uri_tmpl']
-            del override['uri_tmpl']
-
-        # we didn't override our tmpl from **overrides
-        if not uri_tmpl:
-            uri_tmpl = self.DEFAULT_CLONE_URI
-            try:
-                from tg import tmpl_context as c
-                uri_tmpl = c.clone_uri_tmpl
-            except AttributeError:
-                # in any case if we call this outside of request context,
-                # ie, not having tmpl_context set up
-                pass
-
-        return get_clone_url(uri_tmpl=uri_tmpl,
-                             qualified_home_url=qualified_home_url,
+        return get_clone_url(clone_uri_tmpl=clone_uri_tmpl,
+                             prefix_url=prefix_url,
                              repo_name=self.repo_name,
-                             repo_id=self.repo_id, **override)
+                             repo_id=self.repo_id,
+                             username=username)
 
     def set_state(self, state):
         self.repo_state = state
@@ -1516,7 +1452,6 @@ class RepoGroup(Base, BaseDbModel):
     __table_args__ = (
         _table_args_default_dict,
     )
-    __mapper_args__ = {'order_by': 'group_name'} # TODO: Deprecated as of SQLAlchemy 1.1.
 
     SEP = ' &raquo; '
 
@@ -1524,7 +1459,6 @@ class RepoGroup(Base, BaseDbModel):
     group_name = Column(Unicode(255), nullable=False, unique=True) # full path
     parent_group_id = Column('group_parent_id', Integer(), ForeignKey('groups.group_id'), nullable=True)
     group_description = Column(Unicode(10000), nullable=False)
-    enable_locking = Column(Boolean(), nullable=False, default=False)
     owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
@@ -1557,7 +1491,7 @@ class RepoGroup(Base, BaseDbModel):
     @classmethod
     def _generate_choice(cls, repo_group):
         """Return tuple with group_id and name as html literal"""
-        from webhelpers.html import literal
+        from webhelpers2.html import literal
         if repo_group is None:
             return (-1, u'-- %s --' % _('top level'))
         return repo_group.group_id, literal(cls.SEP.join(repo_group.full_path_splitted))
@@ -1699,7 +1633,7 @@ class Permission(Base, BaseDbModel):
         _table_args_default_dict,
     )
 
-    PERMS = [
+    PERMS = (
         ('hg.admin', _('Kallithea Administrator')),
 
         ('repository.none', _('Default user has no access to new repositories')),
@@ -1738,10 +1672,10 @@ class Permission(Base, BaseDbModel):
 
         ('hg.extern_activate.manual', _('Manual activation of external account')),
         ('hg.extern_activate.auto', _('Automatic activation of external account')),
-    ]
+    )
 
     # definition of system default permissions for DEFAULT user
-    DEFAULT_USER_PERMISSIONS = [
+    DEFAULT_USER_PERMISSIONS = (
         'repository.read',
         'group.read',
         'usergroup.read',
@@ -1750,7 +1684,7 @@ class Permission(Base, BaseDbModel):
         'hg.fork.repository',
         'hg.register.manual_activate',
         'hg.extern_activate.auto',
-    ]
+    )
 
     # defines which permissions are more important higher the more important
     # Weight defines which permissions are more important.
@@ -1781,7 +1715,17 @@ class Permission(Base, BaseDbModel):
         'hg.fork.repository': 1,
 
         'hg.create.none': 0,
-        'hg.create.repository': 1
+        'hg.create.repository': 1,
+
+        'hg.create.write_on_repogroup.false': 0,
+        'hg.create.write_on_repogroup.true': 1,
+
+        'hg.register.none': 0,
+        'hg.register.manual_activate': 1,
+        'hg.register.auto_activate': 2,
+
+        'hg.extern_activate.manual': 0,
+        'hg.extern_activate.auto': 1,
     }
 
     permission_id = Column(Integer(), primary_key=True)
@@ -2133,7 +2077,6 @@ class CacheInvalidation(Base, BaseDbModel):
         Wrapper for generating a unique cache key for this instance and "key".
         key must / will start with a repo_name which will be stored in .cache_args .
         """
-        import kallithea
         prefix = kallithea.CONFIG.get('instance_id', '')
         return "%s%s" % (prefix, key)
 
@@ -2411,6 +2354,7 @@ class PullRequest(Base, BaseDbModel):
         return self.__json__()
 
     def __json__(self):
+        clone_uri_tmpl = kallithea.CONFIG.get('clone_uri_tmpl') or Repository.DEFAULT_CLONE_URI
         return dict(
             pull_request_id=self.pull_request_id,
             url=self.url(),
@@ -2419,7 +2363,7 @@ class PullRequest(Base, BaseDbModel):
             owner=self.owner.username,
             title=self.title,
             description=self.description,
-            org_repo_url=self.org_repo.clone_url(),
+            org_repo_url=self.org_repo.clone_url(clone_uri_tmpl=clone_uri_tmpl),
             org_ref_parts=self.org_ref_parts,
             other_ref_parts=self.other_ref_parts,
             status=self.status,
@@ -2520,7 +2464,6 @@ class Gist(Base, BaseDbModel):
         return cls.query().filter(cls.gist_access_id == gist_access_id).scalar()
 
     def gist_url(self):
-        import kallithea
         alias_url = kallithea.CONFIG.get('gist_alias_url')
         if alias_url:
             return alias_url.replace('{gistid}', self.gist_access_id)
@@ -2570,3 +2513,36 @@ class Gist(Base, BaseDbModel):
         base_path = self.base_path()
         return get_repo(os.path.join(*map(safe_str,
                                           [base_path, self.gist_access_id])))
+
+
+class UserSshKeys(Base, BaseDbModel):
+    __tablename__ = 'user_ssh_keys'
+    __table_args__ = (
+        Index('usk_public_key_idx', 'public_key'),
+        Index('usk_fingerprint_idx', 'fingerprint'),
+        UniqueConstraint('fingerprint'),
+        _table_args_default_dict
+    )
+    __mapper_args__ = {}
+
+    user_ssh_key_id = Column(Integer(), primary_key=True)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    _public_key = Column('public_key', UnicodeText(), nullable=False)
+    description = Column(UnicodeText(), nullable=False)
+    fingerprint = Column(String(255), nullable=False, unique=True)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    last_seen = Column(DateTime(timezone=False), nullable=True)
+
+    user = relationship('User')
+
+    @property
+    def public_key(self):
+        return self._public_key
+
+    @public_key.setter
+    def public_key(self, full_key):
+        # the full public key is too long to be suitable as database key - instead,
+        # use fingerprints similar to 'ssh-keygen -E sha256 -lf ~/.ssh/id_rsa.pub'
+        self._public_key = full_key
+        enc_key = full_key.split(" ")[1]
+        self.fingerprint = hashlib.sha256(enc_key.decode('base64')).digest().encode('base64').replace('\n', '').rstrip('=')

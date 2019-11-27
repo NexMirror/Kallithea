@@ -15,7 +15,8 @@
 kallithea.lib.middleware.wrapper
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-request time measuring app
+Wrap app to measure request and response time ... all the way to the response
+WSGI iterator has been closed.
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -25,10 +26,59 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import time
 import logging
-from kallithea.lib.base import _get_ip_addr, _get_access_path
+import time
+
+from kallithea.lib.base import _get_access_path, _get_ip_addr
 from kallithea.lib.utils2 import safe_unicode
+
+
+log = logging.getLogger(__name__)
+
+
+class Meter:
+
+    def __init__(self, start_response):
+        self._start_response = start_response
+        self._start = time.time()
+        self._size = 0
+
+    def duration(self):
+        return time.time() - self._start
+
+    def start_response(self, status, response_headers, exc_info=None):
+        write = self._start_response(status, response_headers, exc_info)
+        def metered_write(s):
+            self.measure(s)
+            write(s)
+        return metered_write
+
+    def measure(self, chunk):
+        self._size += len(chunk)
+
+    def size(self):
+        return self._size
+
+
+class ResultIter:
+
+    def __init__(self, result, meter, description):
+        self._result_close = getattr(result, 'close', None) or (lambda: None)
+        self._next = iter(result).next
+        self._meter = meter
+        self._description = description
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        chunk = self._next()
+        self._meter.measure(chunk)
+        return chunk
+
+    def close(self):
+        self._result_close()
+        log.info("%s responded after %.3fs with %s bytes", self._description, self._meter.duration(), self._meter.size())
 
 
 class RequestWrapper(object):
@@ -38,12 +88,13 @@ class RequestWrapper(object):
         self.config = config
 
     def __call__(self, environ, start_response):
-        start = time.time()
+        meter = Meter(start_response)
+        description = "Request from %s for %s" % (
+            _get_ip_addr(environ),
+            safe_unicode(_get_access_path(environ)),
+        )
         try:
-            return self.application(environ, start_response)
+            result = self.application(environ, meter.start_response)
         finally:
-            log = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log.info('IP: %s Request to %s time: %.3fs' % (
-                _get_ip_addr(environ),
-                safe_unicode(_get_access_path(environ)), time.time() - start)
-            )
+            log.info("%s responding after %.3fs", description, meter.duration())
+        return ResultIter(result, meter, description)

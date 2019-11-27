@@ -11,12 +11,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os
+import sys
+
 import click
+
 import kallithea
 import kallithea.bin.kallithea_cli_base as cli_base
 
-import os
-import sys
 
 dispath_py_template = '''\
 # Created by Kallithea 'kallithea-cli iis-install'

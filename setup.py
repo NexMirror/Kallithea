@@ -1,11 +1,16 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 import os
-import sys
 import platform
+import sys
+
+import setuptools
+# monkey patch setuptools to use distutils owner/group functionality
+from setuptools.command import sdist
+
 
 if sys.version_info < (2, 6) or sys.version_info >= (3,):
-    raise Exception('Kallithea requires python 2.6 or 2.7')
+    raise Exception('Kallithea requires python 2.7')
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -36,37 +41,35 @@ is_windows = __platform__ in ['Windows']
 
 requirements = [
     "alembic >= 0.8.0, < 1.1",
-    "gearbox < 1",
-    "waitress >= 0.8.8, < 1.2",
-    "WebOb >= 1.7, < 1.8", # turbogears2 2.3.12 requires WebOb<1.8.0
+    "gearbox >= 0.1.0, < 1",
+    "waitress >= 0.8.8, < 1.4",
+    "WebOb >= 1.7, < 1.9",
     "backlash >= 0.1.2, < 1",
-    "TurboGears2 >= 2.3.10, < 2.4",
+    "TurboGears2 >= 2.3.10, < 2.5",
     "tgext.routes >= 0.2.0, < 1",
     "Beaker >= 1.7.0, < 2",
     "WebHelpers >= 1.3, < 1.4",
-    "FormEncode >= 1.2.4, < 1.4",
-    "SQLAlchemy >= 1.1, < 1.3",
+    "WebHelpers2 >= 2.0, < 2.1",
+    "FormEncode >= 1.3.0, < 1.4",
+    "SQLAlchemy >= 1.1, < 1.4",
     "Mako >= 0.9.0, < 1.1",
-    "Pygments >= 2.0, < 2.3",
+    "Pygments >= 2.2.0, < 2.5",
     "Whoosh >= 2.5.0, < 2.8",
-    "celery >= 3.1, < 4.0", # celery 4 doesn't work
-    "Babel >= 1.3, < 2.7",
-    "python-dateutil >= 1.5.0, < 2.8",
-    "Markdown >= 2.2.1, < 2.7",
+    "celery >= 3.1, < 4.0", # TODO: celery 4 doesn't work
+    "Babel >= 1.3, < 2.8",
+    "python-dateutil >= 1.5.0, < 2.9",
+    "Markdown >= 2.2.1, < 3.2",
     "docutils >= 0.11, < 0.15",
     "URLObject >= 2.3.4, < 2.5",
-    "Routes >= 1.13, < 2",
+    "Routes >= 1.13, < 2", # TODO: bumping to 2.0 will make test_file_annotation fail
     "dulwich >= 0.14.1, < 0.20",
-    "mercurial >= 4.1.1, < 4.10",
-    "decorator >= 3.3.2, < 4.4",
+    "mercurial >= 4.5, < 5.3",
+    "decorator >= 3.3.2, < 4.5",
     "Paste >= 2.0.3, < 3.1",
-    "bleach >= 3.0, < 3.1",
+    "bleach >= 3.0, < 3.2",
     "Click >= 7.0, < 8",
+    "ipaddr >= 2.1.10, < 2.3",
 ]
-
-if sys.version_info < (2, 7):
-    requirements.append("importlib == 1.0.1")
-    requirements.append("argparse")
 
 if not is_windows:
     requirements.append("bcrypt >= 3.1.0, < 3.2")
@@ -82,7 +85,6 @@ classifiers = [
     'License :: OSI Approved :: GNU General Public License (GPL)',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
     'Topic :: Software Development :: Version Control',
 ]
@@ -113,10 +115,7 @@ except IOError as err:
     )
     long_description = description
 
-import setuptools
 
-# monkey patch setuptools to use distutils owner/group functionality
-from setuptools.command import sdist
 sdist_org = sdist.sdist
 class sdist_new(sdist_org):
     def initialize_options(self):

@@ -19,8 +19,9 @@ may take precedent over the more generic routes. For more information
 refer to the routes manual at http://routes.groovie.org/docs/
 """
 
-from tg import request
 from routes import Mapper
+from tg import request
+
 
 # prefix for non repository related links needs to be prefixed with `/`
 ADMIN_PREFIX = '/_admin'
@@ -33,28 +34,18 @@ def make_map(config):
     rmap.minimization = False
     rmap.explicit = False
 
-    from kallithea.lib.utils import (is_valid_repo, is_valid_repo_group,
-                                     get_repo_by_id)
+    from kallithea.lib.utils import is_valid_repo, is_valid_repo_group
 
     def check_repo(environ, match_dict):
         """
-        check for valid repository for proper 404 handling
-
-        :param environ:
-        :param match_dict:
+        Check for valid repository for proper 404 handling.
+        Also, a bit of side effect modifying match_dict ...
         """
-        repo_name = match_dict.get('repo_name')
-
         if match_dict.get('f_path'):
             # fix for multiple initial slashes that causes errors
             match_dict['f_path'] = match_dict['f_path'].lstrip('/')
 
-        by_id_match = get_repo_by_id(repo_name)
-        if by_id_match:
-            repo_name = by_id_match
-            match_dict['repo_name'] = repo_name
-
-        return is_valid_repo(repo_name, config['base_path'])
+        return is_valid_repo(match_dict['repo_name'], config['base_path'])
 
     def check_group(environ, match_dict):
         """
@@ -193,6 +184,13 @@ def make_map(config):
         m.connect("edit_user_api_keys_delete", "/users/{id}/edit/api_keys/delete",
                   action="delete_api_key", conditions=dict(method=["POST"]))
 
+        m.connect("edit_user_ssh_keys", "/users/{id}/edit/ssh_keys",
+                  action="edit_ssh_keys", conditions=dict(method=["GET"]))
+        m.connect("edit_user_ssh_keys", "/users/{id}/edit/ssh_keys",
+                  action="ssh_keys_add", conditions=dict(method=["POST"]))
+        m.connect("edit_user_ssh_keys_delete", "/users/{id}/edit/ssh_keys/delete",
+                  action="ssh_keys_delete", conditions=dict(method=["POST"]))
+
         m.connect("edit_user_perms", "/users/{id}/edit/permissions",
                   action="edit_perms", conditions=dict(method=["GET"]))
         m.connect("edit_user_perms_update", "/users/{id}/edit/permissions",
@@ -265,7 +263,7 @@ def make_map(config):
     # ADMIN DEFAULTS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/defaults') as m:
-        m.connect('defaults', 'defaults',
+        m.connect('defaults', '/defaults',
                   action="index")
         m.connect('defaults_update', 'defaults/{id}/update',
                   action="update", conditions=dict(method=["POST"]))
@@ -321,8 +319,6 @@ def make_map(config):
                   action="settings_system", conditions=dict(method=["POST"]))
         m.connect("admin_settings_system", "/settings/system",
                   action="settings_system", conditions=dict(method=["GET"]))
-        m.connect("admin_settings_system_update", "/settings/system/updates",
-                  action="settings_system_update", conditions=dict(method=["GET"]))
 
     # ADMIN MY ACCOUNT
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
@@ -361,6 +357,13 @@ def make_map(config):
         m.connect("my_account_api_keys_delete", "/my_account/api_keys/delete",
                   action="my_account_api_keys_delete", conditions=dict(method=["POST"]))
 
+        m.connect("my_account_ssh_keys", "/my_account/ssh_keys",
+                  action="my_account_ssh_keys", conditions=dict(method=["GET"]))
+        m.connect("my_account_ssh_keys", "/my_account/ssh_keys",
+                  action="my_account_ssh_keys_add", conditions=dict(method=["POST"]))
+        m.connect("my_account_ssh_keys_delete", "/my_account/ssh_keys/delete",
+                  action="my_account_ssh_keys_delete", conditions=dict(method=["POST"]))
+
     # ADMIN GIST
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/gists') as m:
@@ -394,7 +397,7 @@ def make_map(config):
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/admin') as m:
         m.connect('admin_home', '', action='index')
-        m.connect('admin_add_repo', '/add_repo/{new_repo:[a-z0-9\. _-]*}',
+        m.connect('admin_add_repo', '/add_repo/{new_repo:[a-z0-9. _-]*}',
                   action='add_repo')
     #==========================================================================
     # API V2
@@ -443,7 +446,7 @@ def make_map(config):
                  )
 
     # LOGIN/LOGOUT/REGISTER/SIGN IN
-    rmap.connect('authentication_token', '%s/authentication_token' % ADMIN_PREFIX, controller='login', action='authentication_token')
+    rmap.connect('session_csrf_secret_token', '%s/session_csrf_secret_token' % ADMIN_PREFIX, controller='login', action='session_csrf_secret_token')
     rmap.connect('login_home', '%s/login' % ADMIN_PREFIX, controller='login')
     rmap.connect('logout_home', '%s/logout' % ADMIN_PREFIX, controller='login',
                  action='logout')
@@ -531,13 +534,6 @@ def make_map(config):
 
     rmap.connect("edit_repo_advanced", "/{repo_name:.*?}/settings/advanced",
                  controller='admin/repos', action="edit_advanced",
-                 conditions=dict(method=["GET"], function=check_repo))
-
-    rmap.connect("edit_repo_advanced_locking", "/{repo_name:.*?}/settings/advanced/locking",
-                 controller='admin/repos', action="edit_advanced_locking",
-                 conditions=dict(method=["POST"], function=check_repo))
-    rmap.connect('toggle_locking', "/{repo_name:.*?}/settings/advanced/locking_toggle",
-                 controller='admin/repos', action="toggle_locking",
                  conditions=dict(method=["GET"], function=check_repo))
 
     rmap.connect("edit_repo_advanced_journal", "/{repo_name:.*?}/settings/advanced/journal",

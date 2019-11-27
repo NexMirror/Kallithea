@@ -1,14 +1,13 @@
 """
 Module providing backend independent mixin class.
 """
-import os
-import time
 import datetime
+import time
+
 import pytest
 
 from kallithea.lib import vcs
 from kallithea.lib.vcs.nodes import FileNode
-
 from kallithea.tests.vcs.conf import get_new_dir
 
 

@@ -4,6 +4,7 @@ from kallithea.model.db import Setting, Ui
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
+
 fixture = Fixture()
 
 
@@ -38,7 +39,7 @@ class TestAdminSettingsController(TestController):
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_1',
                                             new_hook_ui_value='cd %s' % TESTS_TMP_PATH,
-                                            _authentication_token=self.authentication_token()))
+                                            _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         self.checkSessionFlash(response, 'Added new hook')
         response = response.follow()
@@ -51,7 +52,7 @@ class TestAdminSettingsController(TestController):
                                 params=dict(hook_ui_key='test_hooks_1',
                                             hook_ui_value='old_value_of_hook_1',
                                             hook_ui_value_new='new_value_of_hook_1',
-                                            _authentication_token=self.authentication_token()))
+                                            _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         response = response.follow()
         response.mustcontain('test_hooks_1')
@@ -62,7 +63,7 @@ class TestAdminSettingsController(TestController):
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_1',
                                             new_hook_ui_value='attempted_new_value',
-                                            _authentication_token=self.authentication_token()))
+                                            _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         self.checkSessionFlash(response, 'Hook already exists')
         response = response.follow()
@@ -74,7 +75,7 @@ class TestAdminSettingsController(TestController):
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_2',
                                             new_hook_ui_value='cd %s2' % TESTS_TMP_PATH,
-                                            _authentication_token=self.authentication_token()))
+                                            _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         self.checkSessionFlash(response, 'Added new hook')
         response = response.follow()
@@ -84,7 +85,7 @@ class TestAdminSettingsController(TestController):
         hook_id = Ui.get_by_key('hooks', 'test_hooks_2').ui_id
         ## delete
         self.app.post(url('admin_settings_hooks'),
-                        params=dict(hook_id=hook_id, _authentication_token=self.authentication_token()))
+                        params=dict(hook_id=hook_id, _session_csrf_secret_token=self.session_csrf_secret_token()))
         response = self.app.get(url('admin_settings_hooks'))
         response.mustcontain(no=['test_hooks_2'])
         response.mustcontain(no=['cd %s2' % TESTS_TMP_PATH])
@@ -94,7 +95,7 @@ class TestAdminSettingsController(TestController):
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='changegroup.update',
                                             new_hook_ui_value='attempted_new_value',
-                                            _authentication_token=self.authentication_token()))
+                                            _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         self.checkSessionFlash(response, 'Builtin hooks are read-only')
         response = response.follow()
@@ -120,7 +121,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='',
                                  captcha_public_key='',
-                                 _authentication_token=self.authentication_token(),
+                                 _session_csrf_secret_token=self.session_csrf_secret_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -141,7 +142,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='',
                                  captcha_public_key='',
-                                 _authentication_token=self.authentication_token(),
+                                 _session_csrf_secret_token=self.session_csrf_secret_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -161,7 +162,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='1234567890',
                                  captcha_public_key='1234567890',
-                                 _authentication_token=self.authentication_token(),
+                                 _session_csrf_secret_token=self.session_csrf_secret_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -181,7 +182,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='',
                                  captcha_public_key='1234567890',
-                                 _authentication_token=self.authentication_token(),
+                                 _session_csrf_secret_token=self.session_csrf_secret_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -203,7 +204,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code='',
                                  captcha_private_key='',
                                  captcha_public_key='',
-                                 _authentication_token=self.authentication_token(),
+                                 _session_csrf_secret_token=self.session_csrf_secret_token(),
                                 ))
 
             self.checkSessionFlash(response, 'Updated application settings')

@@ -1,6 +1,5 @@
 from kallithea.lib.vcs.backends.base import BaseWorkdir
 from kallithea.lib.vcs.exceptions import BranchDoesNotExistError
-
 from kallithea.lib.vcs.utils.hgcompat import hg_merge
 
 

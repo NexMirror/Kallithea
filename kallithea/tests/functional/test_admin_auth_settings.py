@@ -1,12 +1,12 @@
-from kallithea.tests.base import *
 from kallithea.model.db import Setting
+from kallithea.tests.base import *
 
 
 class TestAuthSettingsController(TestController):
     def _enable_plugins(self, plugins_list):
         test_url = url(controller='admin/auth_settings',
                        action='auth_settings')
-        params={'auth_plugins': plugins_list, '_authentication_token': self.authentication_token()}
+        params={'auth_plugins': plugins_list, '_session_csrf_secret_token': self.session_csrf_secret_token()}
 
         for plugin in plugins_list.split(','):
             enable = plugin.partition('kallithea.lib.auth_modules.')[-1]

@@ -26,16 +26,16 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-
-from tg.i18n import ugettext as _
 from collections import defaultdict
 
-from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
+from tg.i18n import ugettext as _
+
 from kallithea.lib import helpers as h
-from kallithea.model.db import ChangesetComment, User, \
-    PullRequest, Repository
-from kallithea.model.notification import NotificationModel
+from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
+from kallithea.model.db import ChangesetComment, PullRequest, Repository, User
 from kallithea.model.meta import Session
+from kallithea.model.notification import NotificationModel
+
 
 log = logging.getLogger(__name__)
 
@@ -82,7 +82,7 @@ class ChangesetCommentsModel(object):
                 revision=revision,
                 anchor='comment-%s' % comment.comment_id)
             subj = safe_unicode(
-                h.link_to('Re changeset: %(desc)s %(line)s' % \
+                h.link_to('Re changeset: %(desc)s %(line)s' %
                           {'desc': desc, 'line': line},
                           comment_url)
             )

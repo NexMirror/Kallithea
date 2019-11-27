@@ -26,29 +26,24 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
+import logging
 import os
 import shutil
-import logging
 import traceback
 from datetime import datetime
-from sqlalchemy.orm import subqueryload
 
 import kallithea.lib.utils2
-from kallithea.lib.utils import make_ui, is_valid_repo_uri
-from kallithea.lib.vcs.backends import get_backend
-from kallithea.lib.utils2 import LazyProperty, safe_str, safe_unicode, \
-    remove_prefix, obfuscate_url_pw, get_current_authuser
-from kallithea.lib.caching_query import FromCache
-from kallithea.lib.hooks import log_delete_repository
-
-from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, \
-    UserRepoGroupToPerm, UserGroupRepoGroupToPerm, User, Permission, Session, \
-    Statistics, UserGroup, Ui, RepoGroup, RepositoryField
-
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionLevel
+from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import AttachedForksError
-from kallithea.model.scm import UserGroupList
+from kallithea.lib.hooks import log_delete_repository
+from kallithea.lib.utils import is_valid_repo_uri, make_ui
+from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix, safe_str, safe_unicode
+from kallithea.lib.vcs.backends import get_backend
+from kallithea.model.db import (
+    Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
+
 
 log = logging.getLogger(__name__)
 
@@ -236,7 +231,7 @@ class RepoModel(object):
         defaults['repo_group'] = repo_info.group_id
 
         for strip, k in [(0, 'repo_type'), (1, 'repo_enable_downloads'),
-                         (1, 'repo_description'), (1, 'repo_enable_locking'),
+                         (1, 'repo_description'),
                          (1, 'repo_landing_rev'), (0, 'clone_uri'),
                          (1, 'repo_private'), (1, 'repo_enable_statistics')]:
             attr = k
@@ -284,7 +279,6 @@ class RepoModel(object):
             log.debug('Updating repo %s with params:%s', cur_repo, kwargs)
             for k in ['repo_enable_downloads',
                       'repo_description',
-                      'repo_enable_locking',
                       'repo_landing_rev',
                       'repo_private',
                       'repo_enable_statistics',
@@ -296,7 +290,7 @@ class RepoModel(object):
                 # clone_uri is modified - if given a value, check it is valid
                 if clone_uri != '':
                     # will raise exception on error
-                    is_valid_repo_uri(cur_repo.repo_type, clone_uri, make_ui('db', clear_session=False))
+                    is_valid_repo_uri(cur_repo.repo_type, clone_uri, make_ui(clear_session=False))
                 cur_repo.clone_uri = clone_uri
 
             if 'repo_name' in kwargs:
@@ -332,7 +326,7 @@ class RepoModel(object):
                      private=False, clone_uri=None, repo_group=None,
                      landing_rev='rev:tip', fork_of=None,
                      copy_fork_permissions=False, enable_statistics=False,
-                     enable_locking=False, enable_downloads=False,
+                     enable_downloads=False,
                      copy_group_permissions=False, state=Repository.STATE_PENDING):
         """
         Create repository inside database with PENDING state. This should only be
@@ -366,16 +360,12 @@ class RepoModel(object):
             new_repo.private = private
             if clone_uri:
                 # will raise exception on error
-                is_valid_repo_uri(repo_type, clone_uri, make_ui('db', clear_session=False))
+                is_valid_repo_uri(repo_type, clone_uri, make_ui(clear_session=False))
             new_repo.clone_uri = clone_uri
             new_repo.landing_rev = landing_rev
 
             new_repo.enable_statistics = enable_statistics
-            new_repo.enable_locking = enable_locking
             new_repo.enable_downloads = enable_downloads
-
-            if repo_group:
-                new_repo.enable_locking = repo_group.enable_locking
 
             if fork_of:
                 parent_repo = fork_of
@@ -671,7 +661,7 @@ class RepoModel(object):
         backend = get_backend(repo_type)
 
         if repo_type == 'hg':
-            baseui = make_ui('db', clear_session=False)
+            baseui = make_ui(clear_session=False)
             # patch and reset hooks section of UI config to not run any
             # hooks on creating remote repo
             for k, v in baseui.configitems('hooks'):

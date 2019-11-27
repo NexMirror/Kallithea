@@ -13,9 +13,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import click
-import kallithea.bin.kallithea_cli_base as cli_base
 
 import kallithea
+import kallithea.bin.kallithea_cli_base as cli_base
+
 
 @cli_base.register_command(config_file_initialize_app=True)
 @click.argument('celery_args', nargs=-1)

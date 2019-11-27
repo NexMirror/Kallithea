@@ -31,9 +31,9 @@ import traceback
 
 from sqlalchemy.exc import DatabaseError
 
-from kallithea.model.db import Permission, Session, User, \
-    UserToPerm, UserRepoToPerm, UserRepoGroupToPerm, UserUserGroupToPerm
 from kallithea.lib.utils2 import str2bool
+from kallithea.model.db import Permission, Session, User, UserRepoGroupToPerm, UserRepoToPerm, UserToPerm, UserUserGroupToPerm
+
 
 log = logging.getLogger(__name__)
 

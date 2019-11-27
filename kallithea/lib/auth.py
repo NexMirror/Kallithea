@@ -24,36 +24,29 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-import os
-import logging
-import traceback
 import hashlib
 import itertools
-import collections
+import logging
+import os
 
+import ipaddr
 from decorator import decorator
-
-from tg import request, session
-from tg.i18n import ugettext as _
-from webhelpers.pylonslib import secure_form
-from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.orm import joinedload
-from webob.exc import HTTPFound, HTTPBadRequest, HTTPForbidden, HTTPMethodNotAllowed
+from sqlalchemy.orm.exc import ObjectDeletedError
+from tg import request
+from tg.i18n import ugettext as _
+from webob.exc import HTTPForbidden, HTTPFound
 
-from kallithea import __platform__, is_windows, is_unix
+from kallithea import __platform__, is_unix, is_windows
 from kallithea.config.routing import url
+from kallithea.lib.caching_query import FromCache
+from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
+from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
+from kallithea.model.db import (
+    Permission, RepoGroup, Repository, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
-from kallithea.model.db import User, Repository, Permission, \
-    UserToPerm, UserGroupRepoToPerm, UserGroupToPerm, UserGroupMember, \
-    RepoGroup, UserGroupRepoGroupToPerm, UserIpMap, UserGroupUserGroupToPerm, \
-    UserGroup, UserApiKeys
-
-from kallithea.lib.utils2 import safe_str, safe_unicode, aslist
-from kallithea.lib.utils import get_repo_slug, get_repo_group_slug, \
-    get_user_group_slug, conditional_cache
-from kallithea.lib.caching_query import FromCache
 
 
 log = logging.getLogger(__name__)
@@ -132,8 +125,7 @@ def check_password(password, hashed):
                         % __platform__)
 
 
-def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
-                       explicit):
+def _cached_perms_data(user_id, user_is_admin):
     RK = 'repositories'
     GK = 'repositories_groups'
     UK = 'user_groups'
@@ -141,12 +133,16 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     PERM_WEIGHTS = Permission.PERM_WEIGHTS
     permissions = {RK: {}, GK: {}, UK: {}, GLOBAL: set()}
 
-    def _choose_perm(new_perm, cur_perm):
+    def bump_permission(kind, key, new_perm):
+        """Add a new permission for kind and key.
+        Assuming the permissions are comparable, set the new permission if it
+        has higher weight, else drop it and keep the old permission.
+        """
+        cur_perm = permissions[kind][key]
         new_perm_val = PERM_WEIGHTS[new_perm]
         cur_perm_val = PERM_WEIGHTS[cur_perm]
         if new_perm_val > cur_perm_val:
-            return new_perm
-        return cur_perm
+            permissions[kind][key] = new_perm
 
     #======================================================================
     # fetch default permissions
@@ -200,15 +196,12 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     # defaults for repositories, taken from default user
     for perm in default_repo_perms:
         r_k = perm.UserRepoToPerm.repository.repo_name
-        if perm.Repository.private and not (perm.Repository.owner_id == user_id):
-            # disable defaults for private repos,
-            p = 'repository.none'
-        elif perm.Repository.owner_id == user_id:
-            # set admin if owner
+        if perm.Repository.owner_id == user_id:
             p = 'repository.admin'
+        elif perm.Repository.private:
+            p = 'repository.none'
         else:
             p = perm.Permission.permission_name
-
         permissions[RK][r_k] = p
 
     # defaults for repository groups taken from default user permission
@@ -226,14 +219,8 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         permissions[UK][u_k] = p
 
     #======================================================================
-    # !! OVERRIDE GLOBALS !! with user permissions if any found
+    # !! Augment GLOBALS with user permissions if any found !!
     #======================================================================
-    # those can be configured from groups or users explicitly
-    _configurable = set([
-        'hg.fork.none', 'hg.fork.repository',
-        'hg.create.none', 'hg.create.repository',
-        'hg.usergroup.create.false', 'hg.usergroup.create.true'
-    ])
 
     # USER GROUPS comes first
     # user group global permissions
@@ -253,14 +240,6 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
                 itertools.groupby(user_perms_from_users_groups,
                                   lambda x:x.users_group)]
     for gr, perms in _grouped:
-        # since user can be in multiple groups iterate over them and
-        # select the lowest permissions first (more explicit)
-        # TODO: do this^^
-        if not gr.inherit_default_permissions:
-            # NEED TO IGNORE all configurable permissions and
-            # replace them with explicitly set
-            permissions[GLOBAL] = permissions[GLOBAL] \
-                                            .difference(_configurable)
         for perm in perms:
             permissions[GLOBAL].add(perm.permission.permission_name)
 
@@ -269,14 +248,15 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
             .options(joinedload(UserToPerm.permission)) \
             .filter(UserToPerm.user_id == user_id).all()
 
-    if not user_inherit_default_permissions:
-        # NEED TO IGNORE all configurable permissions and
-        # replace them with explicitly set
-        permissions[GLOBAL] = permissions[GLOBAL] \
-                                        .difference(_configurable)
+    for perm in user_perms:
+        permissions[GLOBAL].add(perm.permission.permission_name)
 
-        for perm in user_perms:
-            permissions[GLOBAL].add(perm.permission.permission_name)
+    # for each kind of global permissions, only keep the one with heighest weight
+    kind_max_perm = {}
+    for perm in sorted(permissions[GLOBAL], key=lambda n: PERM_WEIGHTS[n]):
+        kind = perm.rsplit('.', 1)[0]
+        kind_max_perm[kind] = perm
+    permissions[GLOBAL] = set(kind_max_perm.values())
     ## END GLOBAL PERMISSIONS
 
     #======================================================================
@@ -302,35 +282,17 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         .filter(UserGroupMember.user_id == user_id) \
         .all()
 
-    multiple_counter = collections.defaultdict(int)
     for perm in user_repo_perms_from_users_groups:
-        r_k = perm.UserGroupRepoToPerm.repository.repo_name
-        multiple_counter[r_k] += 1
-        p = perm.Permission.permission_name
-        cur_perm = permissions[RK][r_k]
+        bump_permission(RK,
+            perm.UserGroupRepoToPerm.repository.repo_name,
+            perm.Permission.permission_name)
 
-        if perm.Repository.owner_id == user_id:
-            # set admin if owner
-            p = 'repository.admin'
-        else:
-            if multiple_counter[r_k] > 1:
-                p = _choose_perm(p, cur_perm)
-        permissions[RK][r_k] = p
-
-    # user explicit permissions for repositories, overrides any specified
-    # by the group permission
+    # user permissions for repositories
     user_repo_perms = Permission.get_default_perms(user_id)
     for perm in user_repo_perms:
-        r_k = perm.UserRepoToPerm.repository.repo_name
-        cur_perm = permissions[RK][r_k]
-        # set admin if owner
-        if perm.Repository.owner_id == user_id:
-            p = 'repository.admin'
-        else:
-            p = perm.Permission.permission_name
-            if not explicit:
-                p = _choose_perm(p, cur_perm)
-        permissions[RK][r_k] = p
+        bump_permission(RK,
+            perm.UserRepoToPerm.repository.repo_name,
+            perm.Permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR REPOSITORY GROUPS !!
@@ -353,25 +315,17 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .filter(UserGroupMember.user_id == user_id) \
      .all()
 
-    multiple_counter = collections.defaultdict(int)
     for perm in user_repo_group_perms_from_users_groups:
-        g_k = perm.UserGroupRepoGroupToPerm.group.group_name
-        multiple_counter[g_k] += 1
-        p = perm.Permission.permission_name
-        cur_perm = permissions[GK][g_k]
-        if multiple_counter[g_k] > 1:
-            p = _choose_perm(p, cur_perm)
-        permissions[GK][g_k] = p
+        bump_permission(GK,
+            perm.UserGroupRepoGroupToPerm.group.group_name,
+            perm.Permission.permission_name)
 
     # user explicit permissions for repository groups
     user_repo_groups_perms = Permission.get_default_group_perms(user_id)
     for perm in user_repo_groups_perms:
-        rg_k = perm.UserRepoGroupToPerm.group.group_name
-        p = perm.Permission.permission_name
-        cur_perm = permissions[GK][rg_k]
-        if not explicit:
-            p = _choose_perm(p, cur_perm)
-        permissions[GK][rg_k] = p
+        bump_permission(GK,
+            perm.UserRepoGroupToPerm.group.group_name,
+            perm.Permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR USER GROUPS !!
@@ -391,49 +345,19 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .filter(UserGroup.users_group_active == True) \
      .all()
 
-    multiple_counter = collections.defaultdict(int)
     for perm in user_group_user_groups_perms:
-        g_k = perm.UserGroupUserGroupToPerm.target_user_group.users_group_name
-        multiple_counter[g_k] += 1
-        p = perm.Permission.permission_name
-        cur_perm = permissions[UK][g_k]
-        if multiple_counter[g_k] > 1:
-            p = _choose_perm(p, cur_perm)
-        permissions[UK][g_k] = p
+        bump_permission(UK,
+            perm.UserGroupUserGroupToPerm.target_user_group.users_group_name,
+            perm.Permission.permission_name)
 
     # user explicit permission for user groups
     user_user_groups_perms = Permission.get_default_user_group_perms(user_id)
     for perm in user_user_groups_perms:
-        u_k = perm.UserUserGroupToPerm.user_group.users_group_name
-        p = perm.Permission.permission_name
-        cur_perm = permissions[UK][u_k]
-        if not explicit:
-            p = _choose_perm(p, cur_perm)
-        permissions[UK][u_k] = p
+        bump_permission(UK,
+            perm.UserUserGroupToPerm.user_group.users_group_name,
+            perm.Permission.permission_name)
 
     return permissions
-
-
-def allowed_api_access(controller_name, whitelist=None, api_key=None):
-    """
-    Check if given controller_name is in whitelist API access
-    """
-    if not whitelist:
-        from kallithea import CONFIG
-        whitelist = aslist(CONFIG.get('api_access_controllers_whitelist'),
-                           sep=',')
-        log.debug('whitelist of API access is: %s', whitelist)
-    api_access_valid = controller_name in whitelist
-    if api_access_valid:
-        log.debug('controller:%s is in API whitelist', controller_name)
-    else:
-        msg = 'controller: %s is *NOT* in API whitelist' % (controller_name)
-        if api_key:
-            # if we use API key and don't have access it's a warning
-            log.warning(msg)
-        else:
-            log.debug(msg)
-    return api_access_valid
 
 
 class AuthUser(object):
@@ -448,10 +372,9 @@ class AuthUser(object):
     adding various non-persistent data. If lookup fails but anonymous
     access to Kallithea is enabled, the default user is loaded instead.
 
-    `AuthUser` does not by itself authenticate users and the constructor
-    sets the `is_authenticated` field to False. It's up to other parts
-    of the code to check e.g. if a supplied password is correct, and if
-    so, set `is_authenticated` to True.
+    `AuthUser` does not by itself authenticate users. It's up to other parts of
+    the code to check e.g. if a supplied password is correct, and if so, trust
+    the AuthUser object as an authenticated user.
 
     However, `AuthUser` does refuse to load a user that is not `active`.
 
@@ -468,12 +391,26 @@ class AuthUser(object):
     "default". Use `is_anonymous` to check for both "default" and "no user".
     """
 
-    def __init__(self, user_id=None, dbuser=None, authenticating_api_key=None,
-            is_external_auth=False):
+    @classmethod
+    def make(cls, dbuser=None, is_external_auth=False, ip_addr=None):
+        """Create an AuthUser to be authenticated ... or return None if user for some reason can't be authenticated.
+        Checks that a non-None dbuser is provided, is active, and that the IP address is ok.
+        """
+        assert ip_addr is not None
+        if dbuser is None:
+            log.info('No db user for authentication')
+            return None
+        if not dbuser.active:
+            log.info('Db user %s not active', dbuser.username)
+            return None
+        allowed_ips = AuthUser.get_allowed_ips(dbuser.user_id, cache=True)
+        if not check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
+            log.info('Access for %s from %s forbidden - not in %s', dbuser.username, ip_addr, allowed_ips)
+            return None
+        return cls(dbuser=dbuser, is_external_auth=is_external_auth)
 
-        self.is_authenticated = False
-        self.is_external_auth = is_external_auth
-        self.authenticating_api_key = authenticating_api_key
+    def __init__(self, user_id=None, dbuser=None, is_external_auth=False):
+        self.is_external_auth = is_external_auth # container auth - don't show logout option
 
         # These attributes will be overridden by fill_data, below, unless the
         # requested user cannot be found and the default anonymous user is
@@ -485,49 +422,29 @@ class AuthUser(object):
         self.lastname = ''
         self.email = ''
         self.admin = False
-        self.inherit_default_permissions = False
 
         # Look up database user, if necessary.
         if user_id is not None:
+            assert dbuser is None
             log.debug('Auth User lookup by USER ID %s', user_id)
             dbuser = UserModel().get(user_id)
+            assert dbuser is not None
         else:
-            # Note: dbuser is allowed to be None.
+            assert dbuser is not None
             log.debug('Auth User lookup by database user %s', dbuser)
 
-        is_user_loaded = self._fill_data(dbuser)
-
-        # If user cannot be found, try falling back to anonymous.
-        if is_user_loaded:
-            assert dbuser is not None
-            self.is_default_user = dbuser.is_default_user
-        else:
-            default_user = User.get_default_user(cache=True)
-            is_user_loaded = self._fill_data(default_user)
-            self.is_default_user = is_user_loaded
-
-        self.is_anonymous = not is_user_loaded or self.is_default_user
-
-        if not self.username:
+        log.debug('filling %s data', dbuser)
+        self.is_anonymous = dbuser.is_default_user
+        if dbuser.is_default_user and not dbuser.active:
             self.username = 'None'
-
-        log.debug('Auth User is now %s', self)
-
-    def _fill_data(self, dbuser):
-        """
-        Copies database fields from a `db.User` to this `AuthUser`. Does
-        not copy `api_keys` and `permissions` attributes.
-
-        Checks that `dbuser` is `active` (and not None) before copying;
-        returns True on success.
-        """
-        if dbuser is not None and dbuser.active:
-            log.debug('filling %s data', dbuser)
+            self.is_default_user = False
+        else:
+            # copy non-confidential database fields from a `db.User` to this `AuthUser`.
             for k, v in dbuser.get_dict().iteritems():
                 assert k not in ['api_keys', 'permissions']
                 setattr(self, k, v)
-            return True
-        return False
+            self.is_default_user = dbuser.is_default_user
+        log.debug('Auth User is now %s', self)
 
     @LazyProperty
     def permissions(self):
@@ -573,27 +490,21 @@ class AuthUser(object):
     def api_keys(self):
         return self._get_api_keys()
 
-    def __get_perms(self, user, explicit=True, cache=False):
+    def __get_perms(self, user, cache=False):
         """
         Fills user permission attribute with permissions taken from database
         works for permissions given for repositories, and for permissions that
         are granted to groups
 
         :param user: `AuthUser` instance
-        :param explicit: In case there are permissions both for user and a group
-            that user is part of, explicit flag will define if user will
-            explicitly override permissions from group, if it's False it will
-            compute the decision
         """
         user_id = user.user_id
         user_is_admin = user.is_admin
-        user_inherit_default_permissions = user.inherit_default_permissions
 
         log.debug('Getting PERMISSION tree')
         compute = conditional_cache('short_term', 'cache_desc',
                                     condition=cache, func=_cached_perms_data)
-        return compute(user_id, user_is_admin,
-                       user_inherit_default_permissions, explicit)
+        return compute(user_id, user_is_admin)
 
     def _get_api_keys(self):
         api_keys = [self.api_key]
@@ -631,25 +542,8 @@ class AuthUser(object):
         return [x[0] for x in self.permissions['user_groups'].iteritems()
                 if x[1] == 'usergroup.admin']
 
-    @staticmethod
-    def check_ip_allowed(user, ip_addr):
-        """
-        Check if the given IP address (a `str`) is allowed for the given
-        user (an `AuthUser` or `db.User`).
-        """
-        allowed_ips = AuthUser.get_allowed_ips(user.user_id, cache=True,
-            inherit_from_default=user.inherit_default_permissions)
-        if check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
-            log.debug('IP:%s is in range of %s', ip_addr, allowed_ips)
-            return True
-        else:
-            log.info('Access for IP:%s forbidden, '
-                     'not in %s' % (ip_addr, allowed_ips))
-            return False
-
     def __repr__(self):
-        return "<AuthUser('id:%s[%s] auth:%s')>" \
-            % (self.user_id, self.username, (self.is_authenticated or self.is_default_user))
+        return "<AuthUser('id:%s[%s]')>" % (self.user_id, self.username)
 
     def to_cookie(self):
         """ Serializes this login session to a cookie `dict`. """
@@ -659,43 +553,37 @@ class AuthUser(object):
         }
 
     @staticmethod
-    def from_cookie(cookie):
+    def from_cookie(cookie, ip_addr):
         """
-        Deserializes an `AuthUser` from a cookie `dict`.
+        Deserializes an `AuthUser` from a cookie `dict` ... or return None.
         """
-
-        au = AuthUser(
-            user_id=cookie.get('user_id'),
+        return AuthUser.make(
+            dbuser=UserModel().get(cookie.get('user_id')),
             is_external_auth=cookie.get('is_external_auth', False),
+            ip_addr=ip_addr,
         )
-        au.is_authenticated = True
-        return au
 
     @classmethod
-    def get_allowed_ips(cls, user_id, cache=False, inherit_from_default=False):
+    def get_allowed_ips(cls, user_id, cache=False):
         _set = set()
 
-        if inherit_from_default:
-            default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
-                                            User.get_default_user(cache=True).user_id)
-            if cache:
-                default_ips = default_ips.options(FromCache("sql_cache_short",
-                                                  "get_user_ips_default"))
-
-            # populate from default user
-            for ip in default_ips:
-                try:
-                    _set.add(ip.ip_addr)
-                except ObjectDeletedError:
-                    # since we use heavy caching sometimes it happens that we get
-                    # deleted objects here, we just skip them
-                    pass
+        default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
+                                        User.get_default_user(cache=True).user_id)
+        if cache:
+            default_ips = default_ips.options(FromCache("sql_cache_short",
+                                              "get_user_ips_default"))
+        for ip in default_ips:
+            try:
+                _set.add(ip.ip_addr)
+            except ObjectDeletedError:
+                # since we use heavy caching sometimes it happens that we get
+                # deleted objects here, we just skip them
+                pass
 
         user_ips = UserIpMap.query().filter(UserIpMap.user_id == user_id)
         if cache:
             user_ips = user_ips.options(FromCache("sql_cache_short",
                                                   "get_user_ips_%s" % user_id))
-
         for ip in user_ips:
             try:
                 _set.add(ip.ip_addr)
@@ -748,13 +636,10 @@ class LoginRequired(object):
     If the "default" user is enabled and allow_default_user is true, that is
     considered valid too.
 
-    Also checks that IP address is allowed, and if using API key instead
-    of regular cookie authentication, checks that API key access is allowed
-    (based on `api_access` parameter and the API view whitelist).
+    Also checks that IP address is allowed.
     """
 
-    def __init__(self, api_access=False, allow_default_user=False):
-        self.api_access = api_access
+    def __init__(self, allow_default_user=False):
         self.allow_default_user = allow_default_user
 
     def __call__(self, func):
@@ -766,42 +651,17 @@ class LoginRequired(object):
         loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
         log.debug('Checking access for user %s @ %s', user, loc)
 
-        # Check if we used an API key to authenticate.
-        api_key = user.authenticating_api_key
-        if api_key is not None:
-            # Check that controller is enabled for API key usage.
-            if not self.api_access and not allowed_api_access(loc, api_key=api_key):
-                # controller does not allow API access
-                log.warning('API access to %s is not allowed', loc)
-                raise HTTPForbidden()
-
-            log.info('user %s authenticated with API key ****%s @ %s',
-                     user, api_key[-4:], loc)
-            return func(*fargs, **fkwargs)
-
-        # CSRF protection: Whenever a request has ambient authority (whether
-        # through a session cookie or its origin IP address), it must include
-        # the correct token, unless the HTTP method is GET or HEAD (and thus
-        # guaranteed to be side effect free. In practice, the only situation
-        # where we allow side effects without ambient authority is when the
-        # authority comes from an API key; and that is handled above.
-        if request.method not in ['GET', 'HEAD']:
-            token = request.POST.get(secure_form.token_key)
-            if not token or token != secure_form.authentication_token():
-                log.error('CSRF check failed')
-                raise HTTPForbidden()
-
         # regular user authentication
-        if user.is_authenticated:
-            log.info('user %s authenticated with regular auth @ %s', user, loc)
-            return func(*fargs, **fkwargs)
-        elif user.is_default_user:
+        if user.is_default_user:
             if self.allow_default_user:
                 log.info('default user @ %s', loc)
                 return func(*fargs, **fkwargs)
             log.info('default user is not accepted here @ %s', loc)
-        else:
-            log.warning('user %s NOT authenticated with regular auth @ %s', user, loc)
+        elif user.is_anonymous: # default user is disabled and no proper authentication
+            log.warning('user is anonymous and NOT authenticated with regular auth @ %s', loc)
+        else: # regular authentication
+            log.info('user %s authenticated with regular auth @ %s', user, loc)
+            return func(*fargs, **fkwargs)
         raise _redirect_to_login()
 
 
@@ -933,8 +793,8 @@ class HasPermissionAny(_PermsFunction):
         global_permissions = request.authuser.permissions['global'] # usually very short
         ok = any(p in global_permissions for p in self.required_perms)
 
-        log.debug('Check %s for global %s (%s): %s' %
-            (request.authuser.username, self.required_perms, purpose, ok))
+        log.debug('Check %s for global %s (%s): %s',
+            request.authuser.username, self.required_perms, purpose, ok)
         return ok
 
 
@@ -972,18 +832,17 @@ class HasPermissionAnyMiddleware(object):
     def __init__(self, *perms):
         self.required_perms = set(perms)
 
-    def __call__(self, user, repo_name, purpose=None):
+    def __call__(self, authuser, repo_name, purpose=None):
         # repo_name MUST be unicode, since we handle keys in ok
         # dict by unicode
         repo_name = safe_unicode(repo_name)
-        user = AuthUser(user.user_id)
 
         try:
-            ok = user.permissions['repositories'][repo_name] in self.required_perms
+            ok = authuser.permissions['repositories'][repo_name] in self.required_perms
         except KeyError:
             ok = False
 
-        log.debug('Middleware check %s for %s for repo %s (%s): %s' % (user.username, self.required_perms, repo_name, purpose, ok))
+        log.debug('Middleware check %s for %s for repo %s (%s): %s', authuser.username, self.required_perms, repo_name, purpose, ok)
         return ok
 
 
@@ -994,7 +853,6 @@ def check_ip_access(source_ip, allowed_ips=None):
     :param source_ip:
     :param allowed_ips: list of allowed ips together with mask
     """
-    from kallithea.lib import ipaddr
     source_ip = source_ip.split('%', 1)[0]
     log.debug('checking if ip:%s is subnet of %s', source_ip, allowed_ips)
     if isinstance(allowed_ips, (tuple, list, set)):

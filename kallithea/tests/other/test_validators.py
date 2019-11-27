@@ -2,14 +2,13 @@
 import formencode
 import pytest
 
-from kallithea.tests.base import *
-
 from kallithea.model import validators as v
-from kallithea.model.user_group import UserGroupModel
-
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.user_group import UserGroupModel
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 
@@ -138,13 +137,6 @@ class TestRepoGroups(TestController):
         assert valid_creds == validator.to_python(valid_creds)
         with pytest.raises(formencode.Invalid):
             validator.to_python(invalid_creds)
-
-    def test_ValidAuthToken(self):
-        validator = v.ValidAuthToken()
-        # this is untestable without a threadlocal
-#        self.assertRaises(formencode.Invalid,
-#                          validator.to_python, 'BadToken')
-        validator
 
     def test_ValidRepoName(self):
         validator = v.ValidRepoName()

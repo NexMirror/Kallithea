@@ -23,10 +23,11 @@ Style sheet customization with Less
 
 Kallithea uses `Bootstrap 3`_ and Less_ for its style definitions. If you want
 to make some customizations, we recommend to do so by creating a ``theme.less``
-file. When you create a file named ``theme.less`` in the Kallithea root
-directory, you can use this file to override the default style. For example,
-you can use this to override ``@kallithea-theme-main-color``,
-``@kallithea-logo-url`` or other `Bootstrap variables`_.
+file. When you create a file named ``theme.less`` in directory
+``kallithea/front-end/`` inside the Kallithea installation, you can use this
+file to override the default style. For example, you can use this to override
+``@kallithea-theme-main-color``, ``@kallithea-logo-url`` or other `Bootstrap
+variables`_.
 
 After creating the ``theme.less`` file, you need to regenerate the CSS files, by
 running::

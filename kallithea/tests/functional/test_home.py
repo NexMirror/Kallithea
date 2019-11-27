@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
 
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
 from kallithea.model.meta import Session
-from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()

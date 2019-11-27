@@ -1,5 +1,5 @@
 <div class="flash_msg">
-    <% messages = h.flash.pop_messages() %>
+    <% messages = h.pop_flash_messages() %>
     % if messages:
         <% alert_categories = {'warning': 'alert-warning', 'notice': 'alert-info', 'error': 'alert-danger', 'success': 'alert-success'} %>
         % for message in messages:

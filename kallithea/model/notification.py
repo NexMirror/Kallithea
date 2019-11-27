@@ -28,17 +28,16 @@ Original author and date, and relevant copyright and licensing information is be
 
 import datetime
 import logging
-import traceback
 
-from tg import tmpl_context as c, app_globals
+from tg import app_globals
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from sqlalchemy.orm import joinedload, subqueryload
 
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import User
-from kallithea.model.meta import Session
+
 
 log = logging.getLogger(__name__)
 

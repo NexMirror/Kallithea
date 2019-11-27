@@ -27,31 +27,31 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-import formencode
 
+import formencode
 from formencode import htmlfill
-from tg import request, tmpl_context as c, config, app_globals
-from tg.i18n import ugettext as _
 from sqlalchemy.sql.expression import func
+from tg import app_globals, config, request
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPNotFound
 
 import kallithea
 from kallithea.config.routing import url
-from kallithea.lib.exceptions import DefaultUserException, \
-    UserOwnsReposException, UserCreationError
-from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, \
-    AuthUser
 from kallithea.lib import auth_modules
-from kallithea.lib.base import BaseController, render
-from kallithea.model.api_key import ApiKeyModel
-
-from kallithea.model.db import User, UserEmailMap, UserIpMap, UserToPerm
-from kallithea.model.forms import UserForm, CustomDefaultPermissionsForm
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator, LoginRequired
+from kallithea.lib.base import BaseController, IfSshEnabled, render
+from kallithea.lib.exceptions import DefaultUserException, UserCreationError, UserOwnsReposException
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import datetime_to_time, safe_int, generate_api_key
+from kallithea.lib.utils2 import datetime_to_time, generate_api_key, safe_int
+from kallithea.model.api_key import ApiKeyModel
+from kallithea.model.db import User, UserEmailMap, UserIpMap, UserToPerm
+from kallithea.model.forms import CustomDefaultPermissionsForm, UserForm
+from kallithea.model.meta import Session
+from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
+from kallithea.model.user import UserModel
+
 
 log = logging.getLogger(__name__)
 
@@ -315,8 +315,6 @@ class UsersController(BaseController):
             form = CustomDefaultPermissionsForm()()
             form_result = form.to_python(request.POST)
 
-            inherit_perms = form_result['inherit_default_permissions']
-            user.inherit_default_permissions = inherit_perms
             user_model = UserModel()
 
             defs = UserToPerm.query() \
@@ -391,7 +389,6 @@ class UsersController(BaseController):
         c.user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == c.user).all()
 
-        c.inherit_default_ips = c.user.inherit_default_permissions
         c.default_user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == User.get_default_user()).all()
 
@@ -432,3 +429,45 @@ class UsersController(BaseController):
         if 'default_user' in request.POST:
             raise HTTPFound(location=url('admin_permissions_ips'))
         raise HTTPFound(location=url('edit_user_ips', id=id))
+
+    @IfSshEnabled
+    def edit_ssh_keys(self, id):
+        c.user = self._get_user_or_raise_if_default(id)
+        c.active = 'ssh_keys'
+        c.user_ssh_keys = SshKeyModel().get_ssh_keys(c.user.user_id)
+        defaults = c.user.get_dict()
+        return htmlfill.render(
+            render('admin/users/user_edit.html'),
+            defaults=defaults,
+            encoding="UTF-8",
+            force_defaults=False)
+
+    @IfSshEnabled
+    def ssh_keys_add(self, id):
+        c.user = self._get_user_or_raise_if_default(id)
+
+        description = request.POST.get('description')
+        public_key = request.POST.get('public_key')
+        try:
+            new_ssh_key = SshKeyModel().create(c.user.user_id,
+                                               description, public_key)
+            Session().commit()
+            SshKeyModel().write_authorized_keys()
+            h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
+        except SshKeyModelException as errors:
+            h.flash(errors.message, category='error')
+        raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))
+
+    @IfSshEnabled
+    def ssh_keys_delete(self, id):
+        c.user = self._get_user_or_raise_if_default(id)
+
+        public_key = request.POST.get('del_public_key')
+        try:
+            SshKeyModel().delete(public_key, c.user.user_id)
+            Session().commit()
+            SshKeyModel().write_authorized_keys()
+            h.flash(_("SSH key successfully deleted"), category='success')
+        except SshKeyModelException as errors:
+            h.flash(errors.message, category='error')
+        raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))

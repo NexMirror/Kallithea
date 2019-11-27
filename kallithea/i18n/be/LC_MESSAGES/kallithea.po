@@ -1,128 +1,68 @@
-# Belarusian translations for Kallithea.
 # Copyright (C) 2016 Various authors, licensing as GPLv3
 # This file is distributed under the same license as the Kallithea project.
-# Automatically generated, 2016.
-# #, fuzzy
+
 msgid ""
 msgstr ""
-"Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2019-05-04 21:13+0200\n"
-"PO-Revision-Date: 2017-08-20 10:44+0000\n"
-"Last-Translator: Viktar Vauchkevich <victorenator@gmail.com>\n"
-"Language-Team: Belarusian <https://hosted.weblate.org/projects/kallithea/"
-"kallithea/be/>\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.17-dev\n"
 
-#: kallithea/controllers/changelog.py:67
-#: kallithea/controllers/pullrequests.py:252 kallithea/lib/base.py:605
 msgid "There are no changesets yet"
 msgstr "Яшчэ не было змен"
 
-#: kallithea/controllers/admin/permissions.py:62
-#: kallithea/controllers/admin/permissions.py:66
-#: kallithea/controllers/admin/permissions.py:70
-#: kallithea/controllers/changelog.py:136
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:7
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:88
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:7
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:7
-#: kallithea/templates/base/perms_summary.html:14
 msgid "None"
 msgstr "Нічога"
 
-#: kallithea/controllers/changelog.py:139 kallithea/controllers/files.py:196
 msgid "(closed)"
 msgstr "(зачынена)"
 
-#: kallithea/controllers/changeset.py:83
 msgid "Show whitespace"
 msgstr "Паказваць прабелы"
 
-#: kallithea/controllers/changeset.py:90
-#: kallithea/controllers/changeset.py:97
-#: kallithea/templates/files/diff_2way.html:55
 msgid "Ignore whitespace"
 msgstr "Ігнараваць прабелы"
 
-#: kallithea/controllers/changeset.py:163
-#, python-format
 msgid "Increase diff context to %(num)s lines"
 msgstr "Павялічыць кантэкст да %(num)s радкоў"
 
-#: kallithea/controllers/changeset.py:203
-#, fuzzy
-#| msgid "No permission to change pull request status"
-msgid "No permission to change status"
-msgstr "Няма правоў змяняць статус pull-запыту"
-
-#: kallithea/controllers/changeset.py:214
-#, python-format
 msgid "Successfully deleted pull request %s"
 msgstr "Pull-запыт %s паспяхова выдалены"
 
-#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:96
-#: kallithea/controllers/files.py:116 kallithea/controllers/files.py:726
 msgid "Such revision does not exist for this repository"
 msgstr "Няма такой рэвізіі ў гэтым рэпазітары"
 
-#: kallithea/controllers/compare.py:66
-#, python-format
 msgid "Could not find other repository %s"
 msgstr "Не атрымалася знайсці іншы рэпазітар %s"
 
-#: kallithea/controllers/compare.py:72
 msgid "Cannot compare repositories of different types"
 msgstr "Немагчыма параўноўваць рэпазітары розных тыпаў"
 
-#: kallithea/controllers/compare.py:244
-msgid "Cannot show empty diff"
-msgstr ""
-
-#: kallithea/controllers/compare.py:246
-msgid "No ancestor found for merge diff"
-msgstr ""
-
-#: kallithea/controllers/compare.py:250
-msgid "Multiple merge ancestors found for merge compare"
-msgstr ""
-
-#: kallithea/controllers/compare.py:266
 msgid "Cannot compare repositories without using common ancestor"
 msgstr "Немагчыма параўноўваць рэпазітары без агульнага продка"
 
-#: kallithea/controllers/error.py:70
 msgid "No response"
 msgstr "Няма адказу"
 
-#: kallithea/controllers/error.py:71
 msgid "Unknown error"
 msgstr "Невядомая памылка"
 
-#: kallithea/controllers/error.py:84
 msgid ""
 "The request could not be understood by the server due to malformed syntax."
 msgstr "Запыт не распазнаны серверам з-за няправільнага сінтаксісу."
 
-#: kallithea/controllers/error.py:87
 msgid "Unauthorized access to resource"
 msgstr "Несанкцыянаваны доступ да рэсурсу"
 
-#: kallithea/controllers/error.py:89
 msgid "You don't have permission to view this page"
 msgstr "У вас няма правоў для прагляду гэтай старонкі"
 
-#: kallithea/controllers/error.py:91
 msgid "The resource could not be found"
 msgstr "Рэсурс не знойдзены"
 
-#: kallithea/controllers/error.py:93
 msgid ""
 "The server encountered an unexpected condition which prevented it from "
 "fulfilling the request."
@@ -130,790 +70,404 @@ msgstr ""
 "Сервер не можа выканаць запыт з-за нечаканых умоваў, якія ўзніклі падчас "
 "яго спрацавання."
 
-#: kallithea/controllers/feed.py:63
-#, python-format
 msgid "%s committed on %s"
 msgstr "%s выканаў каміт у %s"
 
-#: kallithea/controllers/feed.py:88
-#: kallithea/templates/changeset/changeset.html:154
-#: kallithea/templates/changeset/changeset.html:173
-#: kallithea/templates/compare/compare_diff.html:81
-#: kallithea/templates/compare/compare_diff.html:95
-#: kallithea/templates/pullrequests/pullrequest_show.html:309
-#: kallithea/templates/pullrequests/pullrequest_show.html:333
 msgid "Changeset was too big and was cut off..."
 msgstr "Змены апынуліся занадта вялікімі і былі скарочаныя..."
 
-#: kallithea/controllers/feed.py:111 kallithea/controllers/feed.py:143
-#, python-format
 msgid "%s %s feed"
 msgstr "Стужка навін %s %s"
 
-#: kallithea/controllers/feed.py:113 kallithea/controllers/feed.py:145
-#, python-format
 msgid "Changes on %s repository"
 msgstr "Змены ў рэпазітары %s"
 
-#: kallithea/controllers/files.py:92
 msgid "Click here to add new file"
 msgstr "Націсніце каб дадаць новы файл"
 
-#: kallithea/controllers/files.py:93
-#, fuzzy
-#| msgid "There are no files yet. %s"
-msgid "There are no files yet."
-msgstr "Няма файлаў. %s"
-
-#: kallithea/controllers/files.py:193
-#, python-format
 msgid "%s at %s"
 msgstr "%s (%s)"
 
-#: kallithea/controllers/files.py:299 kallithea/controllers/files.py:359
-#: kallithea/controllers/files.py:426
-#, python-format
-msgid "This repository has been locked by %s on %s"
-msgstr "Рэпазітар заблакаваў %s у %s"
-
-#: kallithea/controllers/files.py:311
 msgid "You can only delete files with revision being a valid branch"
 msgstr "Вы можаце выдаляць файлы толькі ў рэвізіі, злучанай з існай галінай"
 
-#: kallithea/controllers/files.py:322
-#, python-format
 msgid "Deleted file %s via Kallithea"
 msgstr "Файл %s выдалены з дапамогай Kallithea"
 
-#: kallithea/controllers/files.py:344
-#, python-format
 msgid "Successfully deleted file %s"
 msgstr "Файл %s выдалены"
 
-#: kallithea/controllers/files.py:348 kallithea/controllers/files.py:414
-#: kallithea/controllers/files.py:495
 msgid "Error occurred during commit"
 msgstr "Падчас каміта адбылася памылка"
 
-#: kallithea/controllers/files.py:371
 msgid "You can only edit files with revision being a valid branch"
 msgstr ""
 "Вы можаце рэдагаваць файлы толькі ў рэвізіі, злучанай з існай галінай"
 
-#: kallithea/controllers/files.py:385
-#, python-format
 msgid "Edited file %s via Kallithea"
 msgstr "Файл %s адрэдагаваны з дапамогай Kallithea"
 
-#: kallithea/controllers/files.py:401
 msgid "No changes"
 msgstr "Без змен"
 
-#: kallithea/controllers/files.py:410 kallithea/controllers/files.py:484
-#, python-format
 msgid "Successfully committed to %s"
 msgstr "Змены захаваныя ў %s"
 
-#: kallithea/controllers/files.py:437
 msgid "Added file via Kallithea"
 msgstr "Файл дададзены з дапамогай Kallithea"
 
-#: kallithea/controllers/files.py:458
 msgid "No content"
 msgstr "Пуста"
 
-#: kallithea/controllers/files.py:462
 msgid "No filename"
 msgstr "Безназоўны"
 
-#: kallithea/controllers/files.py:487
 msgid "Location must be relative path and must not contain .. in path"
 msgstr ""
 "Размяшчэнне павінна быць адносным шляхам, і не можа ўтрымліваць \"..\" у "
 "шляхі"
 
-#: kallithea/controllers/files.py:519
 msgid "Downloads disabled"
 msgstr "Магчымасць спампоўваць адключаная"
 
-#: kallithea/controllers/files.py:530
-#, python-format
 msgid "Unknown revision %s"
 msgstr "Невядомая рэвізія %s"
 
-#: kallithea/controllers/files.py:532
 msgid "Empty repository"
 msgstr "Пусты рэпазітар"
 
-#: kallithea/controllers/files.py:534
 msgid "Unknown archive type"
 msgstr "Невядомы тып архіва"
 
-#: kallithea/controllers/files.py:755
-#: kallithea/templates/changeset/changeset_range.html:9
-#: kallithea/templates/email_templates/pull_request.html:64
-#: kallithea/templates/pullrequests/pullrequest.html:84
 msgid "Changesets"
 msgstr "Набор змен"
 
-#: kallithea/controllers/files.py:756
-#: kallithea/controllers/pullrequests.py:184 kallithea/model/scm.py:706
 msgid "Branches"
 msgstr "Галіны"
 
-#: kallithea/controllers/files.py:757
-#: kallithea/controllers/pullrequests.py:185 kallithea/model/scm.py:717
 msgid "Tags"
 msgstr "Тэгі"
 
-#: kallithea/controllers/forks.py:174
-#, python-format
 msgid "An error occurred during repository forking %s"
 msgstr "Памылка падчас стварэння форка рэпазітара %s"
 
-#: kallithea/controllers/home.py:78
 msgid "Groups"
 msgstr "Групы"
 
-#: kallithea/controllers/home.py:88
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:90
-#: kallithea/templates/admin/repos/repo_add.html:12
-#: kallithea/templates/admin/repos/repo_add.html:16
-#: kallithea/templates/admin/repos/repos.html:9
-#: kallithea/templates/admin/users/user_edit_advanced.html:6
-#: kallithea/templates/base/base.html:56
-#: kallithea/templates/base/base.html:73
-#: kallithea/templates/base/base.html:444 kallithea/templates/index.html:5
 msgid "Repositories"
 msgstr "Рэпазітары"
 
-#: kallithea/controllers/home.py:121
-#: kallithea/templates/files/files_add.html:32
-#: kallithea/templates/files/files_delete.html:23
-#: kallithea/templates/files/files_edit.html:32
 msgid "Branch"
 msgstr "Галіна"
 
-#: kallithea/controllers/home.py:127
 msgid "Closed Branches"
 msgstr "Зачыненыя галіны"
 
-#: kallithea/controllers/home.py:133
 msgid "Tag"
 msgstr "Тэгі"
 
-#: kallithea/controllers/home.py:139
 msgid "Bookmark"
 msgstr "Закладкі"
 
-#: kallithea/controllers/journal.py:113 kallithea/controllers/journal.py:155
-#: kallithea/templates/journal/public_journal.html:4
-#: kallithea/templates/journal/public_journal.html:18
 msgid "Public Journal"
 msgstr "Публічны журнал"
 
-#: kallithea/controllers/journal.py:117 kallithea/controllers/journal.py:159
-#: kallithea/templates/base/base.html:297
-#: kallithea/templates/journal/journal.html:5
-#: kallithea/templates/journal/journal.html:13
 msgid "Journal"
 msgstr "Журнал"
 
-#: kallithea/controllers/login.py:139 kallithea/controllers/login.py:184
 msgid "Bad captcha"
 msgstr "Няслушная капча"
 
-#: kallithea/controllers/login.py:145
-#, python-format
 msgid "You have successfully registered with %s"
 msgstr "Рэгістрацыя ў %s прайшла паспяхова"
 
-#: kallithea/controllers/login.py:189
 msgid "A password reset confirmation code has been sent"
 msgstr "Код для скідання пароля адпраўлены"
 
-#: kallithea/controllers/login.py:238
 msgid "Invalid password reset token"
 msgstr "Няслушны код скідання пароля"
 
-#: kallithea/controllers/admin/my_account.py:155
-#: kallithea/controllers/login.py:243
 msgid "Successfully updated password"
 msgstr "Пароль абноўлены"
 
-#: kallithea/controllers/pullrequests.py:71
-#, python-format
 msgid "Invalid reviewer \"%s\" specified"
 msgstr "Няслушны рэцэнзент \"%s\""
 
-#: kallithea/controllers/pullrequests.py:133
-#, python-format
 msgid "%s (closed)"
 msgstr "%s (зачынена)"
 
-#: kallithea/controllers/pullrequests.py:160
-#: kallithea/templates/changeset/changeset.html:12
 msgid "Changeset"
 msgstr "Змены"
 
-#: kallithea/controllers/pullrequests.py:181
 msgid "Special"
 msgstr "Адмысловы"
 
-#: kallithea/controllers/pullrequests.py:182
 msgid "Peer branches"
 msgstr "Галіны ўдзельніка"
 
-#: kallithea/controllers/pullrequests.py:183 kallithea/model/scm.py:712
 msgid "Bookmarks"
 msgstr "Закладкі"
 
-#: kallithea/controllers/pullrequests.py:320
-#, python-format
 msgid "Error creating pull request: %s"
 msgstr "Памылка пры стварэнні pull-запыту: %s"
 
-#: kallithea/controllers/pullrequests.py:347
-#: kallithea/controllers/pullrequests.py:370
 msgid "Error occurred while creating pull request"
 msgstr "Адбылася памылка пры стварэнні pull-запыту"
 
-#: kallithea/controllers/pullrequests.py:352
 msgid "Successfully opened new pull request"
 msgstr "Pull-запыт створаны паспяхова"
 
-#: kallithea/controllers/pullrequests.py:375
-#, fuzzy
-#| msgid "Pull request update created"
-msgid "New pull request iteration created"
-msgstr "Абнаўленне для pull-запыту створана"
-
-#: kallithea/controllers/pullrequests.py:403
-#, python-format
-msgid "Meanwhile, the following reviewers have been added: %s"
-msgstr ""
-
-#: kallithea/controllers/pullrequests.py:407
-#, python-format
-msgid "Meanwhile, the following reviewers have been removed: %s"
-msgstr ""
-
-#: kallithea/controllers/pullrequests.py:423
-#: kallithea/model/pull_request.py:234
 msgid "No description"
 msgstr "Няма апісання"
 
-#: kallithea/controllers/pullrequests.py:432
 msgid "Pull request updated"
 msgstr "Pull-запыт абноўлены"
 
-#: kallithea/controllers/pullrequests.py:445
 msgid "Successfully deleted pull request"
 msgstr "Pull-запыт паспяхова выдалены"
 
-#: kallithea/controllers/pullrequests.py:481
-#, fuzzy, python-format
-#| msgid "Changeset for %s %s not found in %s"
-msgid "Revision %s not found in %s"
-msgstr "Набор змен для %s %s не знойдзены ў %s"
-
-#: kallithea/controllers/pullrequests.py:508
-#, fuzzy, python-format
-#| msgid "No changesets found for updating this pull request."
-msgid "Error: changesets not found when displaying pull request from %s."
-msgstr "Няма змен для абнаўлення гэтага pull-запыту."
-
-#: kallithea/controllers/pullrequests.py:522
-#, python-format
 msgid "This pull request has already been merged to %s."
 msgstr "Гэты pull-запыт ужо прыняты на галіну %s."
 
-#: kallithea/controllers/pullrequests.py:524
 msgid "This pull request has been closed and can not be updated."
 msgstr "Гэты pull-запыт быў зачынены і не можа быць абноўлены."
 
-#: kallithea/controllers/pullrequests.py:543
-#, fuzzy, python-format
-#| msgid "The following changes are available on %s:"
-msgid "The following additional changes are available on %s:"
-msgstr "Гэтыя змены даступныя на %s:"
-
-#: kallithea/controllers/pullrequests.py:545
-#: kallithea/controllers/pullrequests.py:549
-#, fuzzy
-#| msgid "No changesets found for updating this pull request."
-msgid "No additional changesets found for iterating on this pull request."
-msgstr "Няма змен для абнаўлення гэтага pull-запыту."
-
-#: kallithea/controllers/pullrequests.py:557
-#, python-format
 msgid "Note: Branch %s has another head: %s."
 msgstr "Увага: Галіна %s мае яшчэ адну верхавіну: %s."
 
-#: kallithea/controllers/pullrequests.py:564
-#, fuzzy
-#| msgid "Git pull requests don't support updates yet."
-msgid "Git pull requests don't support iterating yet."
-msgstr "Абнаўленне pull-запытаў git яшчэ не падтрымліваецца."
-
-#: kallithea/controllers/pullrequests.py:566
-#, fuzzy, python-format
-#| msgid "No changesets found for updating this pull request."
-msgid ""
-"Error: some changesets not found when displaying pull request from %s."
-msgstr "Няма змен для абнаўлення гэтага pull-запыту."
-
-#: kallithea/controllers/pullrequests.py:590
-msgid "The diff can't be shown - the PR revisions could not be found."
-msgstr ""
-
-#: kallithea/controllers/search.py:136
 msgid "Invalid search query. Try quoting it."
 msgstr "Недапушчальны пошукавы запыт. Паспрабуйце скласці яго ў двукоссі."
 
-#: kallithea/controllers/search.py:140
-msgid "The server has no search index."
-msgstr ""
-
-#: kallithea/controllers/search.py:143
 msgid "An error occurred during search operation."
 msgstr "Памылка пры выкананні гэтага пошуку."
 
-#: kallithea/controllers/summary.py:179
-#: kallithea/templates/summary/summary.html:395
 msgid "No data ready yet"
 msgstr "Няма дадзеных"
 
-#: kallithea/controllers/summary.py:182
-#: kallithea/templates/summary/summary.html:89
 msgid "Statistics are disabled for this repository"
 msgstr "Статыстычныя дадзеныя адключаны для гэтага рэпазітара"
 
-#: kallithea/controllers/admin/auth_settings.py:135
 msgid "Auth settings updated successfully"
 msgstr "Налады аўтарызацыі паспяхова абноўлены"
 
-#: kallithea/controllers/admin/auth_settings.py:146
 msgid "error occurred during update of auth settings"
 msgstr "памылка пры абнаўленні налад аўтарызацыі"
 
-#: kallithea/controllers/admin/defaults.py:75
 msgid "Default settings updated successfully"
 msgstr "Стандартныя налады паспяхова абноўлены"
 
-#: kallithea/controllers/admin/defaults.py:90
 msgid "Error occurred during update of defaults"
 msgstr "Памылка пры абнаўленні стандартных налад"
 
-#: kallithea/controllers/admin/gists.py:58
-#: kallithea/controllers/admin/my_account.py:230
-#: kallithea/controllers/admin/users.py:248
 msgid "Forever"
 msgstr "Назаўжды"
 
-#: kallithea/controllers/admin/gists.py:59
-#: kallithea/controllers/admin/my_account.py:231
-#: kallithea/controllers/admin/users.py:249
 msgid "5 minutes"
 msgstr "5 хвілін"
 
-#: kallithea/controllers/admin/gists.py:60
-#: kallithea/controllers/admin/my_account.py:232
-#: kallithea/controllers/admin/users.py:250
 msgid "1 hour"
 msgstr "1 гадзіна"
 
-#: kallithea/controllers/admin/gists.py:61
-#: kallithea/controllers/admin/my_account.py:233
-#: kallithea/controllers/admin/users.py:251
 msgid "1 day"
 msgstr "1 дзень"
 
-#: kallithea/controllers/admin/gists.py:62
-#: kallithea/controllers/admin/my_account.py:234
-#: kallithea/controllers/admin/users.py:252
 msgid "1 month"
 msgstr "1 месяц"
 
-#: kallithea/controllers/admin/gists.py:66
-#: kallithea/controllers/admin/my_account.py:236
-#: kallithea/controllers/admin/users.py:254
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:65
-#: kallithea/templates/admin/users/user_edit_api_keys.html:65
 msgid "Lifetime"
 msgstr "Тэрмін"
 
-#: kallithea/controllers/admin/gists.py:140
 msgid "Error occurred during gist creation"
 msgstr "Адбылася памылка падчас стварэння gist-запіса"
 
-#: kallithea/controllers/admin/gists.py:156
-#, python-format
 msgid "Deleted gist %s"
 msgstr "Gist-запіс %s выдалены"
 
-#: kallithea/controllers/admin/gists.py:196
 msgid "Unmodified"
 msgstr "Без змен"
 
-#: kallithea/controllers/admin/gists.py:225
 msgid "Successfully updated gist content"
 msgstr "Gist-запіс абноўлены"
 
-#: kallithea/controllers/admin/gists.py:230
 msgid "Successfully updated gist data"
 msgstr "Gist-запіс абноўлены"
 
-#: kallithea/controllers/admin/gists.py:233
-#, python-format
 msgid "Error occurred during update of gist %s"
 msgstr "Памылка пры абнаўленні gist-запісу %s"
 
-#: kallithea/controllers/admin/my_account.py:68 kallithea/model/user.py:214
-#: kallithea/model/user.py:235
 msgid "You can't edit this user since it's crucial for entire application"
 msgstr ""
 "Вы не можаце змяніць дадзеныя гэтага карыстальніка, паколькі ён важны для "
 "працы ўсёй праграмы"
 
-#: kallithea/controllers/admin/my_account.py:117
 msgid "Your account was updated successfully"
 msgstr "Ваш уліковы запіс паспяхова абноўлены"
 
-#: kallithea/controllers/admin/my_account.py:132
-#: kallithea/controllers/admin/users.py:181
-#, python-format
 msgid "Error occurred during update of user %s"
 msgstr "Памылка пры абнаўленні карыстальніка %s"
 
-#: kallithea/controllers/admin/my_account.py:166
 msgid "Error occurred during update of user password"
 msgstr "Памылка пры абнаўленні пароля"
 
-#: kallithea/controllers/admin/my_account.py:207
-#: kallithea/controllers/admin/users.py:369
-#, python-format
 msgid "Added email %s to user"
 msgstr "Карыстальніку дададзены e-mail %s"
 
-#: kallithea/controllers/admin/my_account.py:213
-#: kallithea/controllers/admin/users.py:375
 msgid "An error occurred during email saving"
 msgstr "Памылка пры захаванні e-mail"
 
-#: kallithea/controllers/admin/my_account.py:222
-#: kallithea/controllers/admin/users.py:385
 msgid "Removed email from user"
 msgstr "E-mail карыстальніка выдалены"
 
-#: kallithea/controllers/admin/my_account.py:246
-#: kallithea/controllers/admin/users.py:271
 msgid "API key successfully created"
 msgstr "API-ключ паспяхова створаны"
 
-#: kallithea/controllers/admin/my_account.py:255
-#: kallithea/controllers/admin/users.py:281
 msgid "API key successfully reset"
 msgstr "API-ключ паспяхова скінуты"
 
-#: kallithea/controllers/admin/my_account.py:259
-#: kallithea/controllers/admin/users.py:285
 msgid "API key successfully deleted"
 msgstr "API-ключ паспяхова выдалены"
 
-#: kallithea/controllers/admin/permissions.py:63
-#: kallithea/controllers/admin/permissions.py:67
-#: kallithea/controllers/admin/permissions.py:71
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:8
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:8
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:8
-#: kallithea/templates/base/perms_summary.html:15
 msgid "Read"
 msgstr "Чытанне"
 
-#: kallithea/controllers/admin/permissions.py:64
-#: kallithea/controllers/admin/permissions.py:68
-#: kallithea/controllers/admin/permissions.py:72
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:9
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:9
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:9
-#: kallithea/templates/base/perms_summary.html:16
 msgid "Write"
 msgstr "Запіс"
 
-#: kallithea/controllers/admin/permissions.py:65
-#: kallithea/controllers/admin/permissions.py:69
-#: kallithea/controllers/admin/permissions.py:73
-#: kallithea/templates/admin/auth/auth_settings.html:9
-#: kallithea/templates/admin/defaults/defaults.html:9
-#: kallithea/templates/admin/permissions/permissions.html:9
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:9
-#: kallithea/templates/admin/repo_groups/repo_group_edit.html:9
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:10
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:47
-#: kallithea/templates/admin/repo_groups/repo_groups.html:9
-#: kallithea/templates/admin/repos/repo_add.html:10
-#: kallithea/templates/admin/repos/repo_add.html:14
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:10
-#: kallithea/templates/admin/settings/settings.html:9
-#: kallithea/templates/admin/user_groups/user_group_add.html:8
-#: kallithea/templates/admin/user_groups/user_group_edit.html:9
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:10
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:47
-#: kallithea/templates/admin/user_groups/user_groups.html:9
-#: kallithea/templates/admin/users/user_add.html:8
-#: kallithea/templates/admin/users/user_edit.html:9
-#: kallithea/templates/admin/users/user_edit_profile.html:81
-#: kallithea/templates/admin/users/users.html:9
-#: kallithea/templates/admin/users/users.html:43
-#: kallithea/templates/base/base.html:327
-#: kallithea/templates/base/base.html:328
-#: kallithea/templates/base/base.html:334
-#: kallithea/templates/base/base.html:335
-#: kallithea/templates/base/perms_summary.html:17
 msgid "Admin"
 msgstr "Адміністратар"
 
-#: kallithea/controllers/admin/permissions.py:76
-#: kallithea/controllers/admin/permissions.py:87
-#: kallithea/controllers/admin/permissions.py:92
-#: kallithea/controllers/admin/permissions.py:95
-#: kallithea/controllers/admin/permissions.py:98
-#: kallithea/controllers/admin/permissions.py:101
-#: kallithea/templates/admin/auth/auth_settings.html:42
-#: kallithea/templates/base/root.html:50
 msgid "Disabled"
 msgstr "Адключана"
 
-#: kallithea/controllers/admin/permissions.py:78
 msgid "Allowed with manual account activation"
 msgstr "Дазволена, з ручной актывацыяй уліковага запісу"
 
-#: kallithea/controllers/admin/permissions.py:80
 msgid "Allowed with automatic account activation"
 msgstr "Дазволена, з аўтаматычнай актывацыяй уліковага запісу"
 
-#: kallithea/controllers/admin/permissions.py:83 kallithea/model/db.py:1739
 msgid "Manual activation of external account"
 msgstr "Ручная актывацыя вонкавага ўліковага запісу"
 
-#: kallithea/controllers/admin/permissions.py:84 kallithea/model/db.py:1740
 msgid "Automatic activation of external account"
 msgstr "Аўтаматычная актывацыя вонкавага ўліковага запісу"
 
-#: kallithea/controllers/admin/permissions.py:88
-#: kallithea/controllers/admin/permissions.py:91
-#: kallithea/controllers/admin/permissions.py:96
-#: kallithea/controllers/admin/permissions.py:99
-#: kallithea/controllers/admin/permissions.py:102
-#: kallithea/templates/admin/auth/auth_settings.html:42
-#: kallithea/templates/base/root.html:49
 msgid "Enabled"
 msgstr "Уключана"
 
-#: kallithea/controllers/admin/permissions.py:125
 msgid "Global permissions updated successfully"
 msgstr "Глабальныя прывілеі паспяхова абноўленыя"
 
-#: kallithea/controllers/admin/permissions.py:140
 msgid "Error occurred during update of permissions"
 msgstr "Адбылася памылка падчас абнаўлення прывілеяў"
 
-#: kallithea/controllers/admin/repo_groups.py:174
-#, python-format
 msgid "Error occurred during creation of repository group %s"
 msgstr "Адбылася памылка пры стварэнні групы рэпазітароў %s"
 
-#: kallithea/controllers/admin/repo_groups.py:179
-#, python-format
 msgid "Created repository group %s"
 msgstr "Створаная новая група рэпазітароў %s"
 
-#: kallithea/controllers/admin/repo_groups.py:226
-#, python-format
 msgid "Updated repository group %s"
 msgstr "Група рэпазітароў %s абноўленая"
 
-#: kallithea/controllers/admin/repo_groups.py:242
-#, python-format
 msgid "Error occurred during update of repository group %s"
 msgstr "Адбылася памылка пры абнаўленні групы рэпазітароў %s"
 
-#: kallithea/controllers/admin/repo_groups.py:252
-#, python-format
 msgid "This group contains %s repositories and cannot be deleted"
 msgstr "Група ўтрымлівае %s рэпазітароў і не можа быць выдаленая"
 
-#: kallithea/controllers/admin/repo_groups.py:259
-#, python-format
 msgid "This group contains %s subgroups and cannot be deleted"
 msgstr "Група ўтрымлівае ў сабе %s падгруп і не можа быць выдаленая"
 
-#: kallithea/controllers/admin/repo_groups.py:265
-#, python-format
 msgid "Removed repository group %s"
 msgstr "Група рэпазітароў %s выдаленая"
 
-#: kallithea/controllers/admin/repo_groups.py:270
-#, python-format
 msgid "Error occurred during deletion of repository group %s"
 msgstr "Памылка пры выдаленні групы рэпазітароў %s"
 
-#: kallithea/controllers/admin/repo_groups.py:354
-#: kallithea/controllers/admin/repo_groups.py:384
-#: kallithea/controllers/admin/user_groups.py:299
 msgid "Cannot revoke permission for yourself as admin"
 msgstr "Адміністратар не можа адклікаць свае прывелеі"
 
-#: kallithea/controllers/admin/repo_groups.py:369
 msgid "Repository group permissions updated"
 msgstr "Прывілеі групы рэпазітароў абноўленыя"
 
-#: kallithea/controllers/admin/repo_groups.py:401
-#: kallithea/controllers/admin/repos.py:357
-#: kallithea/controllers/admin/user_groups.py:311
 msgid "An error occurred during revoking of permission"
 msgstr "Памылка пры водгуку прывелея"
 
-#: kallithea/controllers/admin/repos.py:137
-#, python-format
 msgid "Error creating repository %s"
 msgstr "Памылка пры стварэнні рэпазітара %s"
 
-#: kallithea/controllers/admin/repos.py:195
-#, python-format
 msgid "Created repository %s from %s"
 msgstr "Рэпазітар %s створаны з %s"
 
-#: kallithea/controllers/admin/repos.py:204
-#, python-format
 msgid "Forked repository %s as %s"
 msgstr "Зроблены форк рэпазітара %s на %s"
 
-#: kallithea/controllers/admin/repos.py:207
-#, python-format
 msgid "Created repository %s"
 msgstr "Рэпазітар %s створаны"
 
-#: kallithea/controllers/admin/repos.py:236
-#, python-format
 msgid "Repository %s updated successfully"
 msgstr "Рэпазітар %s паспяхова абноўлены"
 
-#: kallithea/controllers/admin/repos.py:256
-#, python-format
 msgid "Error occurred during update of repository %s"
 msgstr "Памылка падчас абнаўлення рэпазітара %s"
 
-#: kallithea/controllers/admin/repos.py:274
-#, python-format
 msgid "Detached %s forks"
 msgstr "Форкі %s адлучаныя"
 
-#: kallithea/controllers/admin/repos.py:277
-#, python-format
 msgid "Deleted %s forks"
 msgstr "Выдаленыя форки рэпазітара %s"
 
-#: kallithea/controllers/admin/repos.py:282
-#, python-format
 msgid "Deleted repository %s"
 msgstr "Рэпазітар %s выдалены"
 
-#: kallithea/controllers/admin/repos.py:285
-#, python-format
 msgid "Cannot delete repository %s which still has forks"
 msgstr "Немагчыма выдаліць %s, ён усё яшчэ мае форкі"
 
-#: kallithea/controllers/admin/repos.py:290
-#, python-format
 msgid "An error occurred during deletion of %s"
 msgstr "Памылка падчас выдалення %s"
 
-#: kallithea/controllers/admin/repos.py:330
 msgid "Repository permissions updated"
 msgstr "Прывілеі рэпазітара абноўленыя"
 
-#: kallithea/controllers/admin/repos.py:387
-#, python-format
-msgid "Field validation error: %s"
-msgstr ""
-
-#: kallithea/controllers/admin/repos.py:390
-#, fuzzy, python-format
-#| msgid "An error occurred during creation of field"
-msgid "An error occurred during creation of field: %r"
-msgstr "Памылка пры стварэнні поля"
-
-#: kallithea/controllers/admin/repos.py:401
 msgid "An error occurred during removal of field"
 msgstr "Памылка пры выдаленні поля"
 
-#: kallithea/controllers/admin/repos.py:415
 msgid "-- Not a fork --"
 msgstr "-- Не форк --"
 
-#: kallithea/controllers/admin/repos.py:446
 msgid "Updated repository visibility in public journal"
 msgstr "Бачнасць рэпазітара ў публічным часопісе абноўлена"
 
-#: kallithea/controllers/admin/repos.py:450
 msgid "An error occurred during setting this repository in public journal"
 msgstr "Памылка пры даданні рэпазітара ў агульнадаступны часопіс"
 
-#: kallithea/controllers/admin/repos.py:466
 msgid "Nothing"
 msgstr "Нічога"
 
-#: kallithea/controllers/admin/repos.py:468
-#, python-format
 msgid "Marked repository %s as fork of %s"
 msgstr "Рэпазітар %s адзначаны як форк %s"
 
-#: kallithea/controllers/admin/repos.py:475
 msgid "An error occurred during this operation"
 msgstr "Памылка пры выкананні аперацыі"
 
-#: kallithea/controllers/admin/repos.py:491
-#: kallithea/controllers/admin/repos.py:512
-msgid "Repository has been locked"
-msgstr "Рэпазітар заблакаваны"
-
-#: kallithea/controllers/admin/repos.py:494
-#: kallithea/controllers/admin/repos.py:509
-msgid "Repository has been unlocked"
-msgstr "Рэпазітар разблакаваны"
-
-#: kallithea/controllers/admin/repos.py:497
-#: kallithea/controllers/admin/repos.py:516
-msgid "An error occurred during unlocking"
-msgstr "Памылка падчас разблакавання"
-
-#: kallithea/controllers/admin/repos.py:528
 msgid "Cache invalidation successful"
 msgstr "Кэш скінуты"
 
-#: kallithea/controllers/admin/repos.py:532
 msgid "An error occurred during cache invalidation"
 msgstr "Памылка пры скіданні кэша"
 
-#: kallithea/controllers/admin/repos.py:545
 msgid "Pulled from remote location"
 msgstr "Занесеныя змены з аддаленага рэпазітара"
 
-#: kallithea/controllers/admin/repos.py:548
 msgid "An error occurred during pull from remote location"
 msgstr "Памылка пры занясенні змен з аддаленага рэпазітара"
 
-#: kallithea/controllers/admin/repos.py:579
 msgid "An error occurred during deletion of repository stats"
 msgstr "Адбылася памылка пры выдаленні статыстыкі рэпазітара"
 
-#: kallithea/controllers/admin/settings.py:135
 msgid "Updated VCS settings"
 msgstr "Абноўлены налады VCS"
 
-#: kallithea/controllers/admin/settings.py:139 kallithea/lib/utils.py:231
 msgid ""
 "Unable to activate hgsubversion support. The \"hgsubversion\" library is "
 "missing"
@@ -921,355 +475,232 @@ msgstr ""
 "Немагчыма ўключыць падтрымку hgsubversion. Бібліятэка hgsubversion "
 "адсутнічае"
 
-#: kallithea/controllers/admin/settings.py:145
-#: kallithea/controllers/admin/settings.py:237
 msgid "Error occurred while updating application settings"
 msgstr "Памылка пры абнаўленні наладаў праграмы"
 
-#: kallithea/controllers/admin/settings.py:180
-#, python-format
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr "Рэпазітары паспяхова перасканаваныя, дададзена: %s, выдалена: %s."
 
-#: kallithea/controllers/admin/settings.py:192
-#, python-format
 msgid "Invalidated %s repositories"
 msgstr "Скінуць кэш для %s рэпазітароў"
 
-#: kallithea/controllers/admin/settings.py:233
 msgid "Updated application settings"
 msgstr "Абноўленыя налады праграмы"
 
-#: kallithea/controllers/admin/settings.py:286
 msgid "Updated visualisation settings"
 msgstr "Налады візуалізацыі абноўленыя"
 
-#: kallithea/controllers/admin/settings.py:291
 msgid "Error occurred during updating visualisation settings"
 msgstr "Адбылася памылка пры абнаўленні наладаў візуалізацыі"
 
-#: kallithea/controllers/admin/settings.py:315
 msgid "Please enter email address"
 msgstr "Калі ласка, увядзіце e-mail-адрас"
 
-#: kallithea/controllers/admin/settings.py:330
 msgid "Send email task created"
 msgstr "Задача адпраўкі e-mail створаная"
 
-#: kallithea/controllers/admin/settings.py:358
-#, fuzzy
-#| msgid "No data ready yet"
-msgid "Hook already exists"
-msgstr "Няма дадзеных"
-
-#: kallithea/controllers/admin/settings.py:360
-msgid "Builtin hooks are read-only. Please use another hook name."
-msgstr ""
-
-#: kallithea/controllers/admin/settings.py:363
 msgid "Added new hook"
 msgstr "Дададзены новы хук"
 
-#: kallithea/controllers/admin/settings.py:379
 msgid "Updated hooks"
 msgstr "Абноўленыя хукі"
 
-#: kallithea/controllers/admin/settings.py:383
 msgid "Error occurred during hook creation"
 msgstr "Памылка пры стварэнні хука"
 
-#: kallithea/controllers/admin/settings.py:407
 msgid "Whoosh reindex task scheduled"
 msgstr "Запланаванае пераіндэксаванне базы Whoosh"
 
-#: kallithea/controllers/admin/user_groups.py:143
-#, python-format
 msgid "Created user group %s"
 msgstr "Створана група карыстальнікаў %s"
 
-#: kallithea/controllers/admin/user_groups.py:156
-#, python-format
 msgid "Error occurred during creation of user group %s"
 msgstr "Памылка пры стварэнні групы карыстальнікаў %s"
 
-#: kallithea/controllers/admin/user_groups.py:184
-#, python-format
 msgid "Updated user group %s"
 msgstr "Група карыстальнікаў %s абноўленая"
 
-#: kallithea/controllers/admin/user_groups.py:206
-#, python-format
 msgid "Error occurred during update of user group %s"
 msgstr "Памылка пры абнаўленні групы карыстальнікаў %s"
 
-#: kallithea/controllers/admin/user_groups.py:217
 msgid "Successfully deleted user group"
 msgstr "Група карыстальнікаў паспяхова выдаленая"
 
-#: kallithea/controllers/admin/user_groups.py:222
 msgid "An error occurred during deletion of user group"
 msgstr "Памылка пры выдаленні групы карыстальнікаў"
 
-#: kallithea/controllers/admin/user_groups.py:278
 msgid "Target group cannot be the same"
 msgstr "Мэтавая група не можа быць той жа самай"
 
-#: kallithea/controllers/admin/user_groups.py:284
 msgid "User group permissions updated"
 msgstr "Прывілеі групы карыстальнікаў абноўленыя"
 
-#: kallithea/controllers/admin/user_groups.py:395
-#: kallithea/controllers/admin/users.py:340
 msgid "Updated permissions"
 msgstr "Абноўленыя прывілеі"
 
-#: kallithea/controllers/admin/user_groups.py:399
-#: kallithea/controllers/admin/users.py:344
 msgid "An error occurred during permissions saving"
 msgstr "Памылка пры захаванні прывілеяў"
 
-#: kallithea/controllers/admin/users.py:123
-#, python-format
 msgid "Created user %s"
 msgstr "Карыстальнік %s створаны"
 
-#: kallithea/controllers/admin/users.py:138
-#, python-format
 msgid "Error occurred during creation of user %s"
 msgstr "Памылка пры стварэнні карыстальніка %s"
 
-#: kallithea/controllers/admin/users.py:162
 msgid "User updated successfully"
 msgstr "Карыстальнік паспяхова абноўлены"
 
-#: kallithea/controllers/admin/users.py:190
 msgid "Successfully deleted user"
 msgstr "Карыстальнік паспяхова выдалены"
 
-#: kallithea/controllers/admin/users.py:195
 msgid "An error occurred during deletion of user"
 msgstr "Памылка пры выдаленні карыстальніка"
 
-#: kallithea/controllers/admin/users.py:203
-msgid "The default user cannot be edited"
-msgstr ""
-
-#: kallithea/controllers/admin/users.py:412
-#, python-format
 msgid "Added IP address %s to user whitelist"
 msgstr "Дададзены IP %s у белы спіс карыстальніка"
 
-#: kallithea/controllers/admin/users.py:418
 msgid "An error occurred while adding IP address"
 msgstr "Адбылася памылка пры захаванні IP"
 
-#: kallithea/controllers/admin/users.py:430
 msgid "Removed IP address from user whitelist"
 msgstr "Выдалены IP %s з белага спісу карыстальніка"
 
-#: kallithea/lib/auth.py:824
 msgid "You need to be a registered user to perform this action"
 msgstr ""
 "Вы павінны быць зарэгістраваным карыстальнікам, каб выканаць гэта дзеянне"
 
-#: kallithea/lib/auth.py:852
 msgid "You need to be signed in to view this page"
 msgstr "Старонка даступная толькі аўтарызаваным карыстальнікам"
 
-#: kallithea/lib/base.py:444
-msgid "Invalid API key"
-msgstr "Няслушны API-ключ"
-
-#: kallithea/lib/base.py:495
-msgid ""
-"CSRF token leak has been detected - all form tokens have been expired"
-msgstr ""
-
-#: kallithea/lib/base.py:583
 msgid "Repository not found in the filesystem"
 msgstr "Рэпазітар не знойдзены на файлавай сістэме"
 
-#: kallithea/lib/base.py:608
-#, python-format
 msgid "Changeset for %s %s not found in %s"
 msgstr "Набор змен для %s %s не знойдзены ў %s"
 
-#: kallithea/lib/diffs.py:193
 msgid "Binary file"
 msgstr "Двайковы файл"
 
-#: kallithea/lib/diffs.py:213
 msgid ""
 "Changeset was too big and was cut off, use diff menu to display this diff"
 msgstr ""
 "Набор змены апынуўся занадта вялікімі і быў падрэзаны, выкарыстоўвайце "
 "меню параўнання для паказу выніку параўнання"
 
-#: kallithea/lib/diffs.py:223
 msgid "No changes detected"
 msgstr "Змен не выяўлена"
 
-#: kallithea/lib/helpers.py:612
-#, python-format
 msgid "Deleted branch: %s"
 msgstr "Выдаленая галіна: %s"
 
-#: kallithea/lib/helpers.py:614
-#, python-format
 msgid "Created tag: %s"
 msgstr "Створаны тэг: %s"
 
-#: kallithea/lib/helpers.py:625
-#, python-format
 msgid "Changeset %s not found"
 msgstr "Набор змен %s не знойдзены"
 
-#: kallithea/lib/helpers.py:674
-#, python-format
 msgid "Show all combined changesets %s->%s"
 msgstr "Паказаць адрозненні разам %s->%s"
 
-#: kallithea/lib/helpers.py:680
 msgid "Compare view"
 msgstr "Параўнанне"
 
-#: kallithea/lib/helpers.py:699
 msgid "and"
 msgstr "і"
 
-#: kallithea/lib/helpers.py:700
-#, python-format
 msgid "%s more"
 msgstr "на %s больш"
 
-#: kallithea/lib/helpers.py:701
-#: kallithea/templates/changelog/changelog.html:43
 msgid "revisions"
 msgstr "версіі"
 
-#: kallithea/lib/helpers.py:725
-#, python-format
 msgid "Fork name %s"
 msgstr "Імя форка %s"
 
-#: kallithea/lib/helpers.py:746
-#, python-format
 msgid "Pull request %s"
 msgstr "Pull-запыт %s"
 
-#: kallithea/lib/helpers.py:756
 msgid "[deleted] repository"
 msgstr "[выдалены] рэпазітар"
 
-#: kallithea/lib/helpers.py:758 kallithea/lib/helpers.py:770
 msgid "[created] repository"
 msgstr "[створаны] рэпазітар"
 
-#: kallithea/lib/helpers.py:760
 msgid "[created] repository as fork"
 msgstr "[створаны] рэпазітар як форк"
 
-#: kallithea/lib/helpers.py:762 kallithea/lib/helpers.py:772
 msgid "[forked] repository"
 msgstr "[форкнуты] рэпазітар"
 
-#: kallithea/lib/helpers.py:764 kallithea/lib/helpers.py:774
 msgid "[updated] repository"
 msgstr "[абноўлены] рэпазітар"
 
-#: kallithea/lib/helpers.py:766
 msgid "[downloaded] archive from repository"
 msgstr "[загружаны] архіў з рэпазітара"
 
-#: kallithea/lib/helpers.py:768
 msgid "[delete] repository"
 msgstr "[выдалены] рэпазітар"
 
-#: kallithea/lib/helpers.py:776
 msgid "[created] user"
 msgstr "[створаны] карыстальнік"
 
-#: kallithea/lib/helpers.py:778
 msgid "[updated] user"
 msgstr "[абноўлены] карыстальнік"
 
-#: kallithea/lib/helpers.py:780
 msgid "[created] user group"
 msgstr "[створана] група карыстальнікаў"
 
-#: kallithea/lib/helpers.py:782
 msgid "[updated] user group"
 msgstr "[абноўлена] група карыстальнікаў"
 
-#: kallithea/lib/helpers.py:784
 msgid "[commented] on revision in repository"
 msgstr "[каментар] да рэвізіі ў рэпазітары"
 
-#: kallithea/lib/helpers.py:786
 msgid "[commented] on pull request for"
 msgstr "[каментар] у pull-запыце для"
 
-#: kallithea/lib/helpers.py:788
 msgid "[closed] pull request for"
 msgstr "[зачынены] pull-запыт для"
 
-#: kallithea/lib/helpers.py:790
 msgid "[pushed] into"
 msgstr "[адпраўлена] у"
 
-#: kallithea/lib/helpers.py:792
 msgid "[committed via Kallithea] into repository"
 msgstr "[каміт праз Kallithea] у рэпазітары"
 
-#: kallithea/lib/helpers.py:794
 msgid "[pulled from remote] into repository"
 msgstr "[занесены з аддаленага рэпазітара] у рэпазітар"
 
-#: kallithea/lib/helpers.py:796
 msgid "[pulled] from"
 msgstr "[занесены] з"
 
-#: kallithea/lib/helpers.py:798
 msgid "[started following] repository"
 msgstr "[дададзены ў назіранні] рэпазітар"
 
-#: kallithea/lib/helpers.py:800
 msgid "[stopped following] repository"
 msgstr "[выдалены з назірання] рэпазітар"
 
-#: kallithea/lib/helpers.py:928
-#, python-format
 msgid " and %s more"
 msgstr " і на %s больш"
 
-#: kallithea/lib/helpers.py:932
-#: kallithea/templates/compare/compare_diff.html:69
-#: kallithea/templates/pullrequests/pullrequest_show.html:297
 msgid "No files"
 msgstr "Няма файлаў"
 
-#: kallithea/lib/helpers.py:957
 msgid "new file"
 msgstr "новы файл"
 
-#: kallithea/lib/helpers.py:960
 msgid "mod"
 msgstr "зменены"
 
-#: kallithea/lib/helpers.py:963
 msgid "del"
 msgstr "выдалены"
 
-#: kallithea/lib/helpers.py:966
 msgid "rename"
 msgstr "пераназваны"
 
-#: kallithea/lib/helpers.py:971
 msgid "chmod"
 msgstr "chmod"
 
-#: kallithea/lib/helpers.py:1264
-#, python-format
 msgid ""
 "%s repository is not mapped to db perhaps it was created or renamed from "
 "the filesystem please run the application again in order to rescan "
@@ -1279,348 +710,146 @@ msgstr ""
 "пераназваны з файлавай сістэмы. Калі ласка, перазапусціце прыкладанне для "
 "сканавання рэпазітароў"
 
-#: kallithea/lib/utils2.py:333
-#, python-format
 msgid "%d year"
 msgid_plural "%d years"
 msgstr[0] "%d год"
 msgstr[1] "%d гады"
 msgstr[2] "%d гадоў"
 
-#: kallithea/lib/utils2.py:334
-#, python-format
 msgid "%d month"
 msgid_plural "%d months"
 msgstr[0] "%d месяц"
 msgstr[1] "%d месяцы"
 msgstr[2] "%d месяцаў"
 
-#: kallithea/lib/utils2.py:335
-#, python-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d дзень"
 msgstr[1] "%d дні"
 msgstr[2] "%d дзён"
 
-#: kallithea/lib/utils2.py:336
-#, python-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d гадзіна"
 msgstr[1] "%d гадзіны"
 msgstr[2] "%d гадзін"
 
-#: kallithea/lib/utils2.py:337
-#, python-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d хвіліна"
 msgstr[1] "%d хвіліны"
 msgstr[2] "%d хвілін"
 
-#: kallithea/lib/utils2.py:338
-#, python-format
 msgid "%d second"
 msgid_plural "%d seconds"
 msgstr[0] "%d секунда"
 msgstr[1] "%d секунды"
 msgstr[2] "%d секунд"
 
-#: kallithea/lib/utils2.py:354
-#, python-format
 msgid "in %s"
 msgstr "у %s"
 
-#: kallithea/lib/utils2.py:356
-#, python-format
 msgid "%s ago"
 msgstr "%s назад"
 
-#: kallithea/lib/utils2.py:358
-#, python-format
 msgid "in %s and %s"
 msgstr "у %s і %s"
 
-#: kallithea/lib/utils2.py:361
-#, python-format
 msgid "%s and %s ago"
 msgstr "%s і %s назад"
 
-#: kallithea/lib/utils2.py:364
 msgid "just now"
 msgstr "цяпер"
 
-#: kallithea/model/comment.py:68
-#, python-format
 msgid "on line %s"
 msgstr "на радку %s"
 
-#: kallithea/model/comment.py:221 kallithea/model/pull_request.py:117
 msgid "[Mention]"
 msgstr "[Згадванне]"
 
-#: kallithea/model/db.py:1562
 msgid "top level"
 msgstr "верхні ўзровень"
 
-#: kallithea/model/db.py:1703
 msgid "Kallithea Administrator"
 msgstr "Адміністратар Kallithea"
 
-#: kallithea/model/db.py:1705
-msgid "Default user has no access to new repositories"
-msgstr ""
-
-#: kallithea/model/db.py:1706
-#, fuzzy
-msgid "Default user has read access to new repositories"
-msgstr "Несанкцыянаваны доступ да рэсурсу"
-
-#: kallithea/model/db.py:1707
-#, fuzzy
-msgid "Default user has write access to new repositories"
-msgstr "Несанкцыянаваны доступ да рэсурсу"
-
-#: kallithea/model/db.py:1708
-msgid "Default user has admin access to new repositories"
-msgstr ""
-
-#: kallithea/model/db.py:1710
-msgid "Default user has no access to new repository groups"
-msgstr ""
-
-#: kallithea/model/db.py:1711
-msgid "Default user has read access to new repository groups"
-msgstr ""
-
-#: kallithea/model/db.py:1712
-msgid "Default user has write access to new repository groups"
-msgstr ""
-
-#: kallithea/model/db.py:1713
-msgid "Default user has admin access to new repository groups"
-msgstr ""
-
-#: kallithea/model/db.py:1715
-msgid "Default user has no access to new user groups"
-msgstr ""
-
-#: kallithea/model/db.py:1716
-msgid "Default user has read access to new user groups"
-msgstr ""
-
-#: kallithea/model/db.py:1717
-msgid "Default user has write access to new user groups"
-msgstr ""
-
-#: kallithea/model/db.py:1718
-msgid "Default user has admin access to new user groups"
-msgstr ""
-
-#: kallithea/model/db.py:1720
 msgid "Only admins can create repository groups"
 msgstr "Толькі адміністратары могуць ствараць групы репазітароў"
 
-#: kallithea/model/db.py:1721
 msgid "Non-admins can create repository groups"
 msgstr "Неадміністратары могуць ствараць групы репазітароў"
 
-#: kallithea/model/db.py:1723
 msgid "Only admins can create user groups"
 msgstr "Толькі адміністратары могуць ствараць групы карыстальнікаў"
 
-#: kallithea/model/db.py:1724
 msgid "Non-admins can create user groups"
 msgstr "Неадміністратары могуць ствараць групы карыстальнікаў"
 
-#: kallithea/model/db.py:1726
 msgid "Only admins can create top level repositories"
 msgstr "Толькі адміністратары могуць ствараць рэпазітары верхняга ўзроўню"
 
-#: kallithea/model/db.py:1727
 msgid "Non-admins can create top level repositories"
 msgstr "Неадміністратары могуць ствараць рэпазітары верхняга ўзроўню"
 
-#: kallithea/model/db.py:1729
-msgid ""
-"Repository creation enabled with write permission to a repository group"
-msgstr ""
-
-#: kallithea/model/db.py:1730
-msgid ""
-"Repository creation disabled with write permission to a repository group"
-msgstr ""
-
-#: kallithea/model/db.py:1732
 msgid "Only admins can fork repositories"
 msgstr "Месцазнаходжанне рэпазітароў"
 
-#: kallithea/model/db.py:1733
-msgid "Non-admins can fork repositories"
-msgstr ""
-
-#: kallithea/model/db.py:1735
 msgid "Registration disabled"
 msgstr "Рэгістрацыя адключаная"
 
-#: kallithea/model/db.py:1736
 msgid "User registration with manual account activation"
 msgstr "Рэгістрацыя карыстальніка з ручной актывацыяй уліковага запісу"
 
-#: kallithea/model/db.py:1737
 msgid "User registration with automatic account activation"
 msgstr "Рэгістрацыя карыстальніка з аўтаматычнай актывацыяй"
 
-#: kallithea/model/db.py:2263
 msgid "Not reviewed"
 msgstr "Не прагледжана"
 
-#: kallithea/model/db.py:2264
 msgid "Under review"
 msgstr "На разглядзе"
 
-#: kallithea/model/db.py:2265
-#, fuzzy
-#| msgid "Approved"
-msgid "Not approved"
-msgstr "Ухвалена"
-
-#: kallithea/model/db.py:2266
 msgid "Approved"
 msgstr "Ухвалена"
 
-#: kallithea/model/forms.py:58
 msgid "Please enter a login"
 msgstr "Калі ласка, увядзіце лагін"
 
-#: kallithea/model/forms.py:59
-#, python-format
 msgid "Enter a value %(min)i characters long or more"
 msgstr "Увядзіце значэнне даўжынёй не меней %(min)i знакаў"
 
-#: kallithea/model/forms.py:67
 msgid "Please enter a password"
 msgstr "Калі ласка, увядзіце пароль"
 
-#: kallithea/model/forms.py:68
-#, python-format
 msgid "Enter %(min)i characters or more"
 msgstr "Увядзіце не меней %(min)i знакаў"
 
-#: kallithea/model/forms.py:170
 msgid "Name must not contain only digits"
 msgstr "Імя не можа ўтрымліваць толькі лічбы"
 
-#: kallithea/model/notification.py:165
-#, fuzzy, python-format
-#| msgid "[Comment] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
-msgid ""
-"[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
-"%(branch)s"
-msgstr "[пракаментавана] у запыце на занясенне змен для"
-
-#: kallithea/model/notification.py:168
-#, python-format
 msgid "New user %(new_username)s registered"
 msgstr "Новы карыстальнік \"%(new_username)s\" зарэгістраваны"
 
-#: kallithea/model/notification.py:170
-#, python-format
-msgid ""
-"[Review] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
-#: kallithea/model/notification.py:171
-#, python-format
-msgid ""
-"[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
-#: kallithea/model/notification.py:184
 msgid "Closing"
 msgstr "Зачынены"
 
-#: kallithea/model/pull_request.py:76
-#, python-format
 msgid ""
 "%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s"
 msgstr ""
 "%(user)s просіць вас разгледзець pull request %(pr_nice_id)s: %(pr_title)s"
 
-#: kallithea/model/pull_request.py:211
-#, fuzzy
-#| msgid "Error creating pull request: %s"
-msgid "Cannot create empty pull request"
-msgstr "Памылка пры стварэнні pull-запыту: %s"
-
-#: kallithea/model/pull_request.py:219
-#, python-format
-msgid ""
-"Cannot create pull request - criss cross merge detected, please merge a "
-"later %s revision to %s"
-msgstr ""
-
-#: kallithea/model/pull_request.py:247 kallithea/model/pull_request.py:382
-#, fuzzy
-#| msgid "Confirm to delete this pull request"
-msgid "You are not authorized to create the pull request"
-msgstr "Пацвердзіце выдаленне гэтага pull-request'а"
-
-#: kallithea/model/pull_request.py:341
-#, fuzzy
-#| msgid "Missing changesets since the previous pull request:"
-msgid "Missing changesets since the previous iteration:"
-msgstr "Адсутныя рэвізіі адносна папярэдняга pull-запыту:"
-
-#: kallithea/model/pull_request.py:348
-#, fuzzy, python-format
-#| msgid "New changesets on %s %s since the previous pull request:"
-msgid "New changesets on %s %s since the previous iteration:"
-msgstr "Новыя рэвізіі на %s %s адносна папярэдняга pull-запыту:"
-
-#: kallithea/model/pull_request.py:355
-msgid "Ancestor didn't change - diff since previous iteration:"
-msgstr ""
-
-#: kallithea/model/pull_request.py:362
-#, fuzzy, python-format
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
-msgstr ""
-"Гэты pull-запыт заснаваны на іншай рэвізіі %s, просты diff немагчымы."
-
-#: kallithea/model/pull_request.py:364
-#, fuzzy, python-format
-#| msgid "No changes found on %s %s since previous version."
-msgid "No changes found on %s %s since previous iteration."
-msgstr "Няма змен на %s %s адносна папярэдняй версіі."
-
-#: kallithea/model/pull_request.py:390
-#, python-format
-msgid "Closed, next iteration: %s ."
-msgstr ""
-
-#: kallithea/model/scm.py:698
 msgid "latest tip"
 msgstr "апошняя версія"
 
-#: kallithea/model/user.py:189
 msgid "New user registration"
 msgstr "Рэгістрацыя новага карыстальніка"
 
-#: kallithea/model/user.py:253
 msgid ""
 "You can't remove this user since it is crucial for the entire application"
 msgstr ""
 "Вы не можаце выдаліць карыстальніка, паколькі гэта крытычна для працы "
 "ўсёй праграмы"
 
-#: kallithea/model/user.py:258
-#, python-format
 msgid ""
 "User \"%s\" still owns %s repositories and cannot be removed. Switch "
 "owners or remove those repositories: %s"
@@ -1629,8 +858,6 @@ msgstr ""
 "таму не можа быць выдалены. Змяніце ўладальніка ці выдаліце гэтыя "
 "рэпазітары: %s"
 
-#: kallithea/model/user.py:263
-#, python-format
 msgid ""
 "User \"%s\" still owns %s repository groups and cannot be removed. Switch "
 "owners or remove those repository groups: %s"
@@ -1639,8 +866,6 @@ msgstr ""
 "і таму не можа быць выдалены. Змяніце ўладальніка ці выдаліце гэтая "
 "групы: %s"
 
-#: kallithea/model/user.py:270
-#, python-format
 msgid ""
 "User \"%s\" still owns %s user groups and cannot be removed. Switch "
 "owners or remove those user groups: %s"
@@ -1649,36 +874,21 @@ msgstr ""
 "карыстальнікаў і таму не можа быць выдалены. Змяніце ўладальніка ці "
 "выдаліце гэтыя групы: %s"
 
-#: kallithea/model/user.py:364
 msgid "Password reset link"
 msgstr "Спасылка скіду пароля"
 
-#: kallithea/model/user.py:413
 msgid "Password reset notification"
 msgstr "Паведамленне пра скіданне пароля"
 
-#: kallithea/model/user.py:414
-#, python-format
-msgid ""
-"The password to your account %s has been changed using password reset "
-"form."
-msgstr ""
-
-#: kallithea/model/validators.py:54 kallithea/model/validators.py:55
 msgid "Value cannot be an empty list"
 msgstr "Значэнне не можа быць пустым спісам"
 
-#: kallithea/model/validators.py:74
-#, python-format
 msgid "Username \"%(username)s\" already exists"
 msgstr "Карыстальнік з імем \"%(username)s\" ужо існуе"
 
-#: kallithea/model/validators.py:76
-#, python-format
 msgid "Username \"%(username)s\" cannot be used"
 msgstr "Імя \"%(username)s\" недапушчальнае"
 
-#: kallithea/model/validators.py:78
 msgid ""
 "Username may only contain alphanumeric characters underscores, periods or "
 "dashes and must begin with an alphanumeric character or underscore"
@@ -1687,25 +897,15 @@ msgstr ""
 "падкрэслення, кропкі і працяжнік; а гэтак жа павінна пачынацца з літары, "
 "лічбы або са знака падкрэслення"
 
-#: kallithea/model/validators.py:105
-msgid "The input is not valid"
-msgstr ""
-
-#: kallithea/model/validators.py:112
-#, python-format
 msgid "Username %(username)s is not valid"
 msgstr "Імя \"%(username)s\" недапушчальнае"
 
-#: kallithea/model/validators.py:133
 msgid "Invalid user group name"
 msgstr "Няслушнае імя групы карыстальнікаў"
 
-#: kallithea/model/validators.py:134
-#, python-format
 msgid "User group \"%(usergroup)s\" already exists"
 msgstr "Група карыстальнікаў \"%(usergroup)s\" ужо існуе"
 
-#: kallithea/model/validators.py:136
 msgid ""
 "user group name may only contain alphanumeric characters underscores, "
 "periods or dashes and must begin with alphanumeric character"
@@ -1714,65 +914,42 @@ msgstr ""
 "падкрэслення, кропкі і працяжнік; а гэтак жа павінна пачынацца з літары "
 "ці лічбы"
 
-#: kallithea/model/validators.py:176
 msgid "Cannot assign this group as parent"
 msgstr "Немагчыма выкарыстоўваць гэту групу як бацькоўскую"
 
-#: kallithea/model/validators.py:177
-#, python-format
 msgid "Group \"%(group_name)s\" already exists"
 msgstr "Група \"%(group_name)s\" ужо існуе"
 
-#: kallithea/model/validators.py:179
-#, python-format
 msgid "Repository with name \"%(group_name)s\" already exists"
 msgstr "Рэпазітар з  імем \"%(group_name)s\" ужо існуе"
 
-#: kallithea/model/validators.py:235
 msgid "Invalid characters (non-ascii) in password"
 msgstr "Недапушчальныя знакі (не ascii) у паролі"
 
-#: kallithea/model/validators.py:250
 msgid "Invalid old password"
 msgstr "Няслушна зададзены стары пароль"
 
-#: kallithea/model/validators.py:266
 msgid "Passwords do not match"
 msgstr "Паролі не супадаюць"
 
-#: kallithea/model/validators.py:281
 msgid "Invalid username or password"
 msgstr "Няслушнае імя ці пароль"
 
-#: kallithea/model/validators.py:312
-msgid "Token mismatch"
-msgstr "Несупадзенне токенаў"
-
-#: kallithea/model/validators.py:328
-#, python-format
 msgid "Repository name %(repo)s is not allowed"
 msgstr "Імя рэпазітара %(repo)s забароненае"
 
-#: kallithea/model/validators.py:330
-#, python-format
 msgid "Repository named %(repo)s already exists"
 msgstr "Рэпазітар %(repo)s ужо існуе"
 
-#: kallithea/model/validators.py:331
-#, python-format
 msgid "Repository \"%(repo)s\" already exists in group \"%(group)s\""
 msgstr "Рэпазітар \"%(repo)s\" ужо існуе ў групе \"%(group)s\""
 
-#: kallithea/model/validators.py:333
-#, python-format
 msgid "Repository group with name \"%(repo)s\" already exists"
 msgstr "Група рэпазітароў \"%(repo)s\" ужо існуе"
 
-#: kallithea/model/validators.py:419
 msgid "Invalid repository URL"
 msgstr "Няслушны URL рэпазітара"
 
-#: kallithea/model/validators.py:420
 msgid ""
 "Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
 "svn+https URL"
@@ -1780,40 +957,30 @@ msgstr ""
 "Няслушны URL рэпазітара. Ён мусіць быць карэктным URL http, https, ssh, "
 "svn+http ці svn+https"
 
-#: kallithea/model/validators.py:445
 msgid "Fork has to be the same type as parent"
 msgstr "Тып форка будзе супадаць з бацькоўскім"
 
-#: kallithea/model/validators.py:460
 msgid "You don't have permissions to create repository in this group"
 msgstr "У вас недастаткова правоў для стварэння рэпазітароў у гэтай групе"
 
-#: kallithea/model/validators.py:462
 msgid "no permission to create repository in root location"
 msgstr "недастаткова правоў для стварэння рэпазітара ў каранёвым каталогу"
 
-#: kallithea/model/validators.py:512
 msgid "You don't have permissions to create a group in this location"
 msgstr "У Вас недастаткова прывілеяў для стварэння групы ў гэтым месцы"
 
-#: kallithea/model/validators.py:552
 msgid "This username or user group name is not valid"
 msgstr "Дадзенае імя карыстальніка ці групы карыстальнікаў недапушчальна"
 
-#: kallithea/model/validators.py:645
 msgid "This is not a valid path"
 msgstr "Гэты шлях хібны"
 
-#: kallithea/model/validators.py:662
 msgid "This email address is already in use"
 msgstr "Гэты e-mail ужо ўжываецца"
 
-#: kallithea/model/validators.py:682
-#, python-format
 msgid "Email address \"%(email)s\" not found"
 msgstr "Email-адрас \"%(email)s\" не знойдзены"
 
-#: kallithea/model/validators.py:719
 msgid ""
 "The LDAP Login attribute of the CN must be specified - this is the name "
 "of the attribute that is equivalent to \"username\""
@@ -1821,190 +988,93 @@ msgstr ""
 "Для ўваходу па LDAP павінна быць паказана значэнне атрыбута CN - гэта "
 "эквівалент імя карыстальніка"
 
-#: kallithea/model/validators.py:731
 msgid "Please enter a valid IPv4 or IPv6 address"
 msgstr "Калі ласка, увядзіце існы IPv4 ці IPv6 адрас"
 
-#: kallithea/model/validators.py:732
-#, python-format
 msgid ""
 "The network size (bits) must be within the range of 0-32 (not %(bits)r)"
 msgstr ""
 "Значэнне маскі падсеткі павінна быць у межах ад 0 да 32 (%(bits)r - "
 "няслушна)"
 
-#: kallithea/model/validators.py:765
 msgid "Key name can only consist of letters, underscore, dash or numbers"
 msgstr ""
 "Ключавое імя можа толькі складацца з літар, знака падкрэслення, працяжнік "
 "ці лікаў"
 
-#: kallithea/model/validators.py:779
 msgid "Filename cannot be inside a directory"
 msgstr "Файла няма ў каталогу"
 
-#: kallithea/model/validators.py:795
-#, python-format
-msgid "Plugins %(loaded)s and %(next_to_load)s both export the same name"
-msgstr ""
-
-#: kallithea/templates/about.html:4 kallithea/templates/about.html:13
 msgid "About"
 msgstr "Пра праграму"
 
-#: kallithea/templates/admin/repos/repo_add.html:5
-#: kallithea/templates/admin/repos/repo_add.html:19
-#: kallithea/templates/admin/repos/repos.html:23
-#: kallithea/templates/index_base.html:25
-#: kallithea/templates/index_base.html:30
 msgid "Add Repository"
 msgstr "Дадаць рэпазітар"
 
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:5
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:13
-#: kallithea/templates/admin/repo_groups/repo_groups.html:25
-#: kallithea/templates/index_base.html:27
-#: kallithea/templates/index_base.html:32
 msgid "Add Repository Group"
 msgstr "Дадаць групу рэпазітароў"
 
-#: kallithea/templates/index_base.html:37
 msgid "You have admin right to this group, and can edit it"
 msgstr ""
 "Вы маеце адміністратарскія правы на гэту групу і можаце рэдагаваць яе"
 
-#: kallithea/templates/index_base.html:37
 msgid "Edit Repository Group"
 msgstr "Змяніць групу рэпазітароў"
 
-#: kallithea/templates/admin/admin_log.html:7
-#: kallithea/templates/admin/permissions/permissions_globals.html:14
-#: kallithea/templates/index_base.html:53
 msgid "Repository"
 msgstr "Рэпазітар"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:59
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:61
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:35
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:12
-#: kallithea/templates/admin/repo_groups/repo_groups.html:40
-#: kallithea/templates/admin/repos/repo_add_base.html:21
-#: kallithea/templates/admin/repos/repo_edit_settings.html:49
-#: kallithea/templates/admin/repos/repos.html:39
-#: kallithea/templates/admin/user_groups/user_group_add.html:33
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:10
-#: kallithea/templates/admin/user_groups/user_groups.html:39
-#: kallithea/templates/admin/users/user_edit_api_keys.html:59
-#: kallithea/templates/admin/users/user_edit_api_keys.html:61
-#: kallithea/templates/email_templates/pull_request.html:37
-#: kallithea/templates/forks/fork.html:34
-#: kallithea/templates/index_base.html:58
-#: kallithea/templates/pullrequests/pullrequest.html:33
-#: kallithea/templates/pullrequests/pullrequest_show.html:38
-#: kallithea/templates/pullrequests/pullrequest_show.html:59
-#: kallithea/templates/summary/summary.html:79
 msgid "Description"
 msgstr "Апісанне"
 
-#: kallithea/templates/index_base.html:60
 msgid "Last Change"
 msgstr "Апошняя змена"
 
-#: kallithea/templates/admin/my_account/my_account_repos.html:15
-#: kallithea/templates/admin/my_account/my_account_watched.html:15
-#: kallithea/templates/admin/repos/repos.html:41
-#: kallithea/templates/index_base.html:62
 msgid "Tip"
 msgstr "Стан"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:10
-#: kallithea/templates/admin/repo_groups/repo_groups.html:42
-#: kallithea/templates/admin/repos/repo_edit_settings.html:42
-#: kallithea/templates/admin/repos/repos.html:42
-#: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:8
-#: kallithea/templates/admin/user_groups/user_groups.html:42
-#: kallithea/templates/index_base.html:63
-#: kallithea/templates/pullrequests/pullrequest_data.html:16
-#: kallithea/templates/pullrequests/pullrequest_show.html:124
-#: kallithea/templates/pullrequests/pullrequest_show.html:219
-#: kallithea/templates/summary/summary.html:124
 msgid "Owner"
 msgstr "Уладальнік"
 
-#: kallithea/templates/base/base.html:387 kallithea/templates/login.html:5
-#: kallithea/templates/login.html:19
 msgid "Log In"
 msgstr "Увайсці"
 
-#: kallithea/templates/login.html:17
-#, python-format
 msgid "Log In to %s"
 msgstr "Увайсці ў %s"
 
-#: kallithea/templates/admin/admin_log.html:5
-#: kallithea/templates/admin/my_account/my_account_profile.html:18
-#: kallithea/templates/admin/users/user_add.html:27
-#: kallithea/templates/admin/users/user_edit_profile.html:18
-#: kallithea/templates/admin/users/users.html:37
-#: kallithea/templates/base/base.html:371
-#: kallithea/templates/email_templates/registration.html:11
-#: kallithea/templates/login.html:28 kallithea/templates/register.html:31
 msgid "Username"
 msgstr "Імя карыстальніка"
 
-#: kallithea/templates/admin/my_account/my_account.html:27
-#: kallithea/templates/admin/users/user_add.html:34
-#: kallithea/templates/base/base.html:375 kallithea/templates/login.html:34
-#: kallithea/templates/register.html:38
 msgid "Password"
 msgstr "Пароль"
 
-#: kallithea/templates/login.html:44
-msgid "Stay logged in after browser restart"
-msgstr ""
-
-#: kallithea/templates/login.html:52
 msgid "Forgot your password ?"
 msgstr "Забыліся на пароль?"
 
-#: kallithea/templates/login.html:55
 msgid "Don't have an account ?"
 msgstr "Няма акаўнта?"
 
-#: kallithea/templates/login.html:62
 msgid "Sign In"
 msgstr "Увайсці"
 
-#: kallithea/templates/password_reset.html:5
 msgid "Password Reset"
 msgstr "Скінуць пароль"
 
-#: kallithea/templates/password_reset.html:21
-#: kallithea/templates/password_reset_confirmation.html:16
-#, python-format
 msgid "Reset Your Password to %s"
 msgstr "Забыліся на пароль для %s?"
 
-#: kallithea/templates/password_reset.html:23
-#: kallithea/templates/password_reset_confirmation.html:5
-#: kallithea/templates/password_reset_confirmation.html:18
 msgid "Reset Your Password"
 msgstr "Скінуць Ваш пароль"
 
-#: kallithea/templates/password_reset.html:30
 msgid "Email Address"
 msgstr "Паштовы адрас"
 
-#: kallithea/templates/password_reset.html:38
-#: kallithea/templates/register.html:74
 msgid "Captcha"
 msgstr "Капча"
 
-#: kallithea/templates/password_reset.html:47
 msgid "Send Password Reset Email"
 msgstr "Паслаць спасылку для скідання пароля"
 
-#: kallithea/templates/password_reset.html:52
 msgid ""
 "A password reset link will be sent to the specified email address if it "
 "is registered in the system."
@@ -2012,146 +1082,73 @@ msgstr ""
 "Спасылка для скіду пароля будзе адпраўленая на адпаведны email-адрас, "
 "калі ён зарэгістраваны ў сістэме."
 
-#: kallithea/templates/password_reset_confirmation.html:23
-#, python-format
-msgid "You are about to set a new password for the email address %s."
-msgstr ""
-
-#: kallithea/templates/password_reset_confirmation.html:24
-msgid ""
-"Note that you must use the same browser session for this as the one used "
-"to request the password reset."
-msgstr ""
-
-#: kallithea/templates/password_reset_confirmation.html:29
-msgid "Code you received in the email"
-msgstr ""
-
-#: kallithea/templates/password_reset_confirmation.html:36
 msgid "New Password"
 msgstr "Новы пароль"
 
-#: kallithea/templates/password_reset_confirmation.html:43
 msgid "Confirm New Password"
 msgstr "Пацвердзіце новы пароль"
 
-#: kallithea/templates/password_reset_confirmation.html:51
-msgid "Confirm"
-msgstr ""
-
-#: kallithea/templates/register.html:5 kallithea/templates/register.html:24
-#: kallithea/templates/register.html:83
 msgid "Sign Up"
 msgstr "Рэгістрацыя"
 
-#: kallithea/templates/register.html:22
-#, python-format
 msgid "Sign Up to %s"
 msgstr "Рэгістрацыя на %s"
 
-#: kallithea/templates/register.html:45
 msgid "Re-enter password"
 msgstr "Паўтарыце пароль"
 
-#: kallithea/templates/admin/my_account/my_account_profile.html:25
-#: kallithea/templates/admin/users/user_add.html:48
-#: kallithea/templates/admin/users/user_edit_profile.html:60
-#: kallithea/templates/admin/users/users.html:38
-#: kallithea/templates/register.html:52
 msgid "First Name"
 msgstr "Імя"
 
-#: kallithea/templates/admin/my_account/my_account_profile.html:32
-#: kallithea/templates/admin/users/user_add.html:55
-#: kallithea/templates/admin/users/user_edit_profile.html:67
-#: kallithea/templates/admin/users/users.html:39
-#: kallithea/templates/register.html:59
 msgid "Last Name"
 msgstr "Прозвішча"
 
-#: kallithea/templates/admin/my_account/my_account_profile.html:39
-#: kallithea/templates/admin/settings/settings.html:31
-#: kallithea/templates/admin/users/user_add.html:62
-#: kallithea/templates/admin/users/user_edit_profile.html:25
-#: kallithea/templates/email_templates/registration.html:33
-#: kallithea/templates/register.html:66
 msgid "Email"
 msgstr "E-mail"
 
-#: kallithea/templates/register.html:85
-msgid "Registered accounts are ready to use and need no further action."
-msgstr ""
-
-#: kallithea/templates/register.html:87
 msgid "Please wait for an administrator to activate your account."
 msgstr ""
 "Калі ласка, пачакайце, пакуль адміністратар пацвердзіць Вашу рэгістрацыю."
 
-#: kallithea/templates/admin/admin.html:5
-#: kallithea/templates/admin/admin.html:13
-#: kallithea/templates/base/base.html:55
 msgid "Admin Journal"
 msgstr "Журнал адміністратара"
 
-#: kallithea/templates/admin/admin.html:10
-#: kallithea/templates/journal/journal.html:10
 msgid "journal filter..."
 msgstr "Фільтр журнала..."
 
-#: kallithea/templates/admin/admin.html:12
-#: kallithea/templates/journal/journal.html:12
 msgid "Filter"
 msgstr "Адфільтраваць"
 
-#: kallithea/templates/admin/admin.html:13
-#: kallithea/templates/journal/journal.html:13
-#, python-format
 msgid "%s Entry"
 msgid_plural "%s Entries"
 msgstr[0] "%s запіс"
 msgstr[1] "%s запісаў"
 msgstr[2] "%s запісы"
 
-#: kallithea/templates/admin/admin_log.html:6
-#: kallithea/templates/admin/my_account/my_account_repos.html:16
-#: kallithea/templates/admin/repo_groups/repo_groups.html:43
-#: kallithea/templates/admin/repos/repo_edit_fields.html:9
-#: kallithea/templates/admin/repos/repos.html:44
-#: kallithea/templates/admin/user_groups/user_groups.html:43
-#: kallithea/templates/admin/users/users.html:45
 msgid "Action"
 msgstr "Дзеянне"
 
-#: kallithea/templates/admin/admin_log.html:8
 msgid "Date"
 msgstr "Дата"
 
-#: kallithea/templates/admin/admin_log.html:9
 msgid "From IP"
 msgstr "З IP"
 
-#: kallithea/templates/admin/admin_log.html:61
 msgid "No actions yet"
 msgstr "Няма інфармацыі"
 
-#: kallithea/templates/admin/auth/auth_settings.html:5
 msgid "Authentication Settings"
 msgstr "Налады аўтэнтыфікацыі"
 
-#: kallithea/templates/admin/auth/auth_settings.html:11
-#: kallithea/templates/base/base.html:61
 msgid "Authentication"
 msgstr "Аўтэнтыфікацыя"
 
-#: kallithea/templates/admin/auth/auth_settings.html:27
 msgid "Authentication Plugins"
 msgstr "Плагіны аўтэнтыфікацыі"
 
-#: kallithea/templates/admin/auth/auth_settings.html:29
 msgid "Enabled Plugins"
 msgstr "Уключаныя плагіны"
 
-#: kallithea/templates/admin/auth/auth_settings.html:32
 msgid ""
 "Comma-separated list of plugins; Kallithea will try user authentication "
 "in plugin order"
@@ -2159,532 +1156,197 @@ msgstr ""
 "Спіс плагінаў, падзеленых коскамі. Kallithea будзе спрабаваць "
 "аўтэнтыфікаваць карыстальніка ў парадку ўказання плагінаў"
 
-#: kallithea/templates/admin/auth/auth_settings.html:36
 msgid "Available built-in plugins"
 msgstr "Даступныя ўбудаваныя плагіны"
 
-#: kallithea/templates/admin/auth/auth_settings.html:53
 msgid "Plugin"
 msgstr "Плагін"
 
-#: kallithea/templates/admin/auth/auth_settings.html:101
-#: kallithea/templates/admin/defaults/defaults.html:67
-#: kallithea/templates/admin/my_account/my_account_password.html:30
-#: kallithea/templates/admin/my_account/my_account_profile.html:47
-#: kallithea/templates/admin/permissions/permissions_globals.html:95
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:58
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:98
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:35
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:84
-#: kallithea/templates/admin/repos/repo_edit_settings.html:101
-#: kallithea/templates/admin/settings/settings_hooks.html:46
-#: kallithea/templates/admin/user_groups/user_group_add.html:48
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:88
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:46
-#: kallithea/templates/admin/users/user_add.html:80
-#: kallithea/templates/admin/users/user_edit_profile.html:89
-#: kallithea/templates/base/default_perms_box.html:56
 msgid "Save"
 msgstr "Захаваць"
 
-#: kallithea/templates/admin/defaults/defaults.html:5
-#: kallithea/templates/admin/defaults/defaults.html:11
-#: kallithea/templates/base/base.html:62
 msgid "Repository Defaults"
 msgstr "Значэнні па змоўчанні"
 
-#: kallithea/templates/admin/defaults/defaults.html:27
-#: kallithea/templates/admin/repos/repo_add_base.html:42
-#: kallithea/templates/admin/repos/repo_edit_fields.html:8
 msgid "Type"
 msgstr "Тып"
 
-#: kallithea/templates/admin/defaults/defaults.html:34
-#: kallithea/templates/admin/repos/repo_add_base.html:56
-#: kallithea/templates/admin/repos/repo_edit_settings.html:57
-#: kallithea/templates/data_table/_dt_elements.html:21
 msgid "Private repository"
 msgstr "Прыватны рэпазітар"
 
-#: kallithea/templates/admin/defaults/defaults.html:37
-#: kallithea/templates/admin/repos/repo_add_base.html:59
-#: kallithea/templates/admin/repos/repo_edit_settings.html:60
-#: kallithea/templates/forks/fork.html:61
 msgid ""
 "Private repositories are only visible to people explicitly added as "
 "collaborators."
 msgstr "Прыватныя рэпазітары бачныя толькі іх удзельнікам."
 
-#: kallithea/templates/admin/defaults/defaults.html:42
-#: kallithea/templates/admin/repos/repo_edit_settings.html:64
 msgid "Enable statistics"
 msgstr "Уключыць статыстыку"
 
-#: kallithea/templates/admin/defaults/defaults.html:45
-#: kallithea/templates/admin/repos/repo_edit_settings.html:67
 msgid "Enable statistics window on summary page."
 msgstr "Уключыць акно статыстыкі на старонцы «Агульныя звесткі»."
 
-#: kallithea/templates/admin/defaults/defaults.html:50
-#: kallithea/templates/admin/repos/repo_edit_settings.html:71
 msgid "Enable downloads"
 msgstr "Уключыць спампоўку"
 
-#: kallithea/templates/admin/defaults/defaults.html:53
-#: kallithea/templates/admin/repos/repo_edit_settings.html:74
 msgid "Enable download menu on summary page."
 msgstr "Уключыць меню спампоўкі на старонцы «Агульныя звесткі»."
 
-#: kallithea/templates/admin/defaults/defaults.html:58
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:26
-#: kallithea/templates/admin/repos/repo_edit_settings.html:78
-msgid "Enable locking"
-msgstr "Уключыць блакаванне"
-
-#: kallithea/templates/admin/defaults/defaults.html:61
-#: kallithea/templates/admin/repos/repo_edit_settings.html:81
-msgid "Enable lock-by-pulling on repository."
-msgstr "Уключыць аўтаблакаванне для рэпазітара."
-
-#: kallithea/templates/admin/gists/edit.html:5
-#: kallithea/templates/admin/gists/edit.html:18
 msgid "Edit Gist"
 msgstr "Правіць gist-запіс"
 
-#: kallithea/templates/admin/gists/edit.html:35
-#, python-format
-msgid ""
-"Gist was updated since you started editing. Copy your changes and click "
-"%(here)s to reload new version."
-msgstr ""
-
-#: kallithea/templates/admin/gists/edit.html:36
-msgid "here"
-msgstr ""
-
-#: kallithea/templates/admin/gists/edit.html:51
-#: kallithea/templates/admin/gists/new.html:35
 msgid "Gist description ..."
 msgstr "Апісанне..."
 
-#: kallithea/templates/admin/gists/edit.html:54
-#: kallithea/templates/admin/gists/new.html:38
-msgid "Gist lifetime"
-msgstr ""
-
-#: kallithea/templates/admin/gists/edit.html:59
-#: kallithea/templates/admin/gists/edit.html:61
-#: kallithea/templates/admin/gists/index.html:54
-#: kallithea/templates/admin/gists/index.html:56
-#: kallithea/templates/admin/gists/show.html:45
-#: kallithea/templates/admin/gists/show.html:47
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:7
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:26
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:31
-#: kallithea/templates/admin/users/user_edit_api_keys.html:7
-#: kallithea/templates/admin/users/user_edit_api_keys.html:26
-#: kallithea/templates/admin/users/user_edit_api_keys.html:31
 msgid "Expires"
 msgstr "Мінае"
 
-#: kallithea/templates/admin/gists/edit.html:59
-#: kallithea/templates/admin/gists/index.html:54
-#: kallithea/templates/admin/gists/show.html:45
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:7
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:26
-#: kallithea/templates/admin/users/user_edit_api_keys.html:7
-#: kallithea/templates/admin/users/user_edit_api_keys.html:26
 msgid "Never"
 msgstr "Ніколі"
 
-#: kallithea/templates/admin/gists/edit.html:145
 msgid "Update Gist"
 msgstr "Абнавіць"
 
-#: kallithea/templates/admin/gists/edit.html:146
-#: kallithea/templates/base/root.html:27
-#: kallithea/templates/changeset/changeset_file_comment.html:130
 msgid "Cancel"
 msgstr "Адмена"
 
-#: kallithea/templates/admin/gists/index.html:6
-#: kallithea/templates/admin/gists/index.html:16
-#, python-format
 msgid "Private Gists for User %s"
 msgstr "Прыватны gist-запіс для карыстальніка %s"
 
-#: kallithea/templates/admin/gists/index.html:8
-#: kallithea/templates/admin/gists/index.html:18
-#, python-format
 msgid "Public Gists for User %s"
 msgstr "Публічны gist-запіс для карыстальніка %s"
 
-#: kallithea/templates/admin/gists/index.html:10
-#: kallithea/templates/admin/gists/index.html:20
 msgid "Public Gists"
 msgstr "Публічныя gist-запісы"
 
-#: kallithea/templates/admin/gists/index.html:37
-#: kallithea/templates/admin/gists/show.html:25
-#: kallithea/templates/base/base.html:312
 msgid "Create New Gist"
 msgstr "Стварыць новы gist-запіс"
 
-#: kallithea/templates/admin/gists/index.html:51
-#: kallithea/templates/data_table/_dt_elements.html:78
 msgid "Created"
 msgstr "Створаны"
 
-#: kallithea/templates/admin/gists/index.html:66
 msgid "There are no gists yet"
 msgstr "Gist-запісы адсутнічаюць"
 
-#: kallithea/templates/admin/gists/new.html:5
-#: kallithea/templates/admin/gists/new.html:18
 msgid "New Gist"
 msgstr "Новы gist-запіс"
 
-#: kallithea/templates/admin/gists/new.html:45
-msgid "Name this gist ..."
-msgstr ""
-
-#: kallithea/templates/admin/gists/new.html:53
-msgid "Create Private Gist"
-msgstr ""
-
-#: kallithea/templates/admin/gists/new.html:54
-msgid "Create Public Gist"
-msgstr ""
-
-#: kallithea/templates/admin/gists/new.html:55
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:14
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:73
-#: kallithea/templates/admin/my_account/my_account_emails.html:47
-#: kallithea/templates/admin/my_account/my_account_password.html:31
-#: kallithea/templates/admin/my_account/my_account_profile.html:48
-#: kallithea/templates/admin/permissions/permissions_globals.html:96
-#: kallithea/templates/admin/permissions/permissions_ips.html:34
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:99
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:36
-#: kallithea/templates/admin/repos/repo_edit_fields.html:54
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:85
-#: kallithea/templates/admin/repos/repo_edit_settings.html:102
-#: kallithea/templates/admin/settings/settings_global.html:50
-#: kallithea/templates/admin/settings/settings_vcs.html:78
-#: kallithea/templates/admin/settings/settings_visual.html:116
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:89
-#: kallithea/templates/admin/users/user_edit_api_keys.html:14
-#: kallithea/templates/admin/users/user_edit_api_keys.html:73
-#: kallithea/templates/admin/users/user_edit_emails.html:47
-#: kallithea/templates/admin/users/user_edit_ips.html:45
-#: kallithea/templates/admin/users/user_edit_profile.html:90
-#: kallithea/templates/base/default_perms_box.html:57
-#: kallithea/templates/files/files_add.html:69
-#: kallithea/templates/files/files_delete.html:41
-#: kallithea/templates/files/files_edit.html:72
-#: kallithea/templates/pullrequests/pullrequest.html:78
 msgid "Reset"
 msgstr "Скінуць"
 
-#: kallithea/templates/admin/gists/show.html:5
-#: kallithea/templates/admin/gists/show.html:9
-msgid "Gist"
-msgstr ""
-
-#: kallithea/templates/admin/gists/show.html:10
 msgid "URL"
 msgstr "URL"
 
-#: kallithea/templates/admin/gists/show.html:35
-msgid "Public Gist"
-msgstr ""
-
-#: kallithea/templates/admin/gists/show.html:37
-msgid "Private Gist"
-msgstr ""
-
-#: kallithea/templates/admin/gists/show.html:54
-#: kallithea/templates/admin/my_account/my_account_emails.html:23
-#: kallithea/templates/admin/permissions/permissions_ips.html:11
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:68
-#: kallithea/templates/admin/repos/repo_edit_fields.html:19
-#: kallithea/templates/admin/settings/settings_hooks.html:30
-#: kallithea/templates/admin/users/user_edit_emails.html:23
-#: kallithea/templates/admin/users/user_edit_ips.html:21
-#: kallithea/templates/changeset/changeset_file_comment.html:30
-#: kallithea/templates/changeset/changeset_file_comment.html:121
-#: kallithea/templates/data_table/_dt_elements.html:69
-#: kallithea/templates/data_table/_dt_elements.html:89
-#: kallithea/templates/data_table/_dt_elements.html:91
-#: kallithea/templates/data_table/_dt_elements.html:101
-#: kallithea/templates/data_table/_dt_elements.html:103
-#: kallithea/templates/data_table/_dt_elements.html:120
-#: kallithea/templates/data_table/_dt_elements.html:122
-#: kallithea/templates/files/files_source.html:35
-#: kallithea/templates/files/files_source.html:38
-#: kallithea/templates/files/files_source.html:41
-#: kallithea/templates/pullrequests/pullrequest_data.html:20
 msgid "Delete"
 msgstr "Выдаліць"
 
-#: kallithea/templates/admin/gists/show.html:54
 msgid "Confirm to delete this Gist"
 msgstr "Пацвердзіце выдаленне гэтага gist-запісу"
 
-#: kallithea/templates/admin/gists/show.html:61
-#: kallithea/templates/base/perms_summary.html:44
-#: kallithea/templates/base/perms_summary.html:81
-#: kallithea/templates/base/perms_summary.html:83
-#: kallithea/templates/data_table/_dt_elements.html:63
-#: kallithea/templates/data_table/_dt_elements.html:64
-#: kallithea/templates/data_table/_dt_elements.html:85
-#: kallithea/templates/data_table/_dt_elements.html:86
-#: kallithea/templates/data_table/_dt_elements.html:97
-#: kallithea/templates/data_table/_dt_elements.html:98
-#: kallithea/templates/data_table/_dt_elements.html:116
-#: kallithea/templates/data_table/_dt_elements.html:117
-#: kallithea/templates/files/diff_2way.html:56
-#: kallithea/templates/files/files_source.html:37
-#: kallithea/templates/files/files_source.html:40
-#: kallithea/templates/pullrequests/pullrequest_show.html:41
 msgid "Edit"
 msgstr "Рэдагаваць"
 
-#: kallithea/templates/admin/gists/show.html:63
-#: kallithea/templates/files/files_edit.html:52
-#: kallithea/templates/files/files_source.html:30
 msgid "Show as Raw"
 msgstr "Паказаць толькі тэкст"
 
-#: kallithea/templates/admin/gists/show.html:69
 msgid "created"
 msgstr "створана"
 
-#: kallithea/templates/admin/gists/show.html:82
 msgid "Show as raw"
 msgstr "Паказаць толькі тэкст"
 
-#: kallithea/templates/admin/my_account/my_account.html:5
-#: kallithea/templates/admin/my_account/my_account.html:9
-#: kallithea/templates/base/base.html:397
 msgid "My Account"
 msgstr "Мой Акаўнт"
 
-#: kallithea/templates/admin/my_account/my_account.html:25
-#: kallithea/templates/admin/users/user_edit.html:29
 msgid "Profile"
 msgstr "Профіль"
 
-#: kallithea/templates/admin/my_account/my_account.html:26
 msgid "Email Addresses"
 msgstr "E-mail адрэсы"
 
-#: kallithea/templates/admin/my_account/my_account.html:28
-#: kallithea/templates/admin/users/user_edit.html:31
 msgid "API Keys"
 msgstr "API-ключы"
 
-#: kallithea/templates/admin/my_account/my_account.html:29
 msgid "Owned Repositories"
 msgstr "Мае рэпазітары"
 
-#: kallithea/templates/admin/my_account/my_account.html:30
-#: kallithea/templates/journal/journal.html:33
-#, fuzzy
-msgid "Watched Repositories"
-msgstr "Стварыць рэпазітары"
-
-#: kallithea/templates/admin/my_account/my_account.html:31
-#: kallithea/templates/admin/permissions/permissions.html:30
-#: kallithea/templates/admin/user_groups/user_group_edit.html:32
-#: kallithea/templates/admin/users/user_edit.html:34
 msgid "Show Permissions"
 msgstr "Паказаць прывілеі"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:5
-#: kallithea/templates/admin/users/user_edit_api_keys.html:5
 msgid "Built-in"
 msgstr "Убудаваны"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:13
-#: kallithea/templates/admin/users/user_edit_api_keys.html:13
-#, python-format
 msgid "Confirm to reset this API key: %s"
 msgstr "Пацвердзіць скіданне гэтага API-ключа: %s"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:29
-#: kallithea/templates/admin/users/user_edit_api_keys.html:29
 msgid "Expired"
 msgstr "Ануляваны"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:39
-#: kallithea/templates/admin/users/user_edit_api_keys.html:39
-#, python-format
 msgid "Confirm to remove this API key: %s"
 msgstr "Пацвердзіце выдаленне гэтага API-ключа: %s"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:41
-#: kallithea/templates/admin/users/user_edit_api_keys.html:41
 msgid "Remove"
 msgstr "Выдаліць"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:48
-#: kallithea/templates/admin/users/user_edit_api_keys.html:48
 msgid "No additional API keys specified"
 msgstr "Дадатковыя API-ключы не пазначаныя"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:56
-#: kallithea/templates/admin/users/user_edit_api_keys.html:56
 msgid "New API key"
 msgstr "Новы API-ключ"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:72
-#: kallithea/templates/admin/my_account/my_account_emails.html:46
-#: kallithea/templates/admin/permissions/permissions_ips.html:33
-#: kallithea/templates/admin/repos/repo_add_base.html:64
-#: kallithea/templates/admin/repos/repo_edit_fields.html:53
-#: kallithea/templates/admin/users/user_edit_api_keys.html:72
-#: kallithea/templates/admin/users/user_edit_emails.html:46
-#: kallithea/templates/admin/users/user_edit_ips.html:44
 msgid "Add"
 msgstr "Дадаць"
 
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:81
-#, python-format
-msgid ""
-"\n"
-"API keys are used to let scripts or services access %s using your\n"
-"account, as if you had provided the script or service with your actual\n"
-"password.\n"
-msgstr ""
-
-#: kallithea/templates/admin/my_account/my_account_api_keys.html:86
-msgid ""
-"\n"
-"Like passwords, API keys should therefore never be shared with others,\n"
-"nor passed to untrusted scripts or services. If such sharing should\n"
-"happen anyway, reset the API key on this page to prevent further use.\n"
-msgstr ""
-
-#: kallithea/templates/admin/my_account/my_account_emails.html:9
-#: kallithea/templates/admin/users/user_edit_emails.html:9
 msgid "Primary"
 msgstr "Асноўны"
 
-#: kallithea/templates/admin/my_account/my_account_emails.html:24
-#: kallithea/templates/admin/users/user_edit_emails.html:24
-#, python-format
 msgid "Confirm to delete this email: %s"
 msgstr "Пацвердзіце выдаленне e-mail: %s"
 
-#: kallithea/templates/admin/my_account/my_account_emails.html:30
-#: kallithea/templates/admin/users/user_edit_emails.html:30
 msgid "No additional emails specified."
 msgstr "Дадатковыя адрасы e-mail не пазначаны."
 
-#: kallithea/templates/admin/my_account/my_account_emails.html:39
-#: kallithea/templates/admin/users/user_edit_emails.html:39
 msgid "New email address"
 msgstr "Новы e-mail"
 
-#: kallithea/templates/admin/my_account/my_account_password.html:1
 msgid "Change Your Account Password"
 msgstr "Змена пароля"
 
-#: kallithea/templates/admin/my_account/my_account_password.html:8
 msgid "Current password"
 msgstr "Цяперашні пароль"
 
-#: kallithea/templates/admin/my_account/my_account_password.html:15
-#: kallithea/templates/admin/users/user_edit_profile.html:46
 msgid "New password"
 msgstr "Новы пароль"
 
-#: kallithea/templates/admin/my_account/my_account_password.html:22
 msgid "Confirm new password"
 msgstr "Пацвердзіце новы пароль"
 
-#: kallithea/templates/admin/my_account/my_account_password.html:39
-#, python-format
-msgid ""
-"This account is managed with %s and the password cannot be changed here"
-msgstr ""
-
-#: kallithea/templates/admin/my_account/my_account_perms.html:3
 msgid "Current IP"
 msgstr "Цяперашні IP-адрас"
 
-#: kallithea/templates/admin/my_account/my_account_profile.html:4
-#: kallithea/templates/admin/users/user_edit_profile.html:4
-msgid "Gravatar"
-msgstr ""
-
-#: kallithea/templates/admin/my_account/my_account_profile.html:10
-#: kallithea/templates/admin/users/user_edit_profile.html:10
-#, fuzzy, python-format
-#| msgid "Change your avatar at"
-msgid "Change %s avatar at"
-msgstr "Змяніць аватар можна праз"
-
-#: kallithea/templates/admin/my_account/my_account_profile.html:12
-#: kallithea/templates/admin/users/user_edit_profile.html:12
 msgid "Avatars are disabled"
 msgstr "Аватары адключаныя"
 
-#: kallithea/templates/admin/my_account/my_account_repos.html:1
 msgid "Repositories You Own"
 msgstr "Рэпазітары, дзе Вы — уладальнік"
 
-#: kallithea/templates/admin/my_account/my_account_repos.html:13
-#: kallithea/templates/admin/my_account/my_account_watched.html:13
-#: kallithea/templates/admin/repo_groups/repo_groups.html:39
-#: kallithea/templates/admin/repos/repo_add_base.html:6
-#: kallithea/templates/admin/repos/repo_edit_settings.html:4
-#: kallithea/templates/admin/repos/repos.html:38
-#: kallithea/templates/admin/user_groups/user_groups.html:38
-#: kallithea/templates/base/perms_summary.html:54
-#: kallithea/templates/files/files_browser.html:54
 msgid "Name"
 msgstr "Імя"
 
-#: kallithea/templates/admin/my_account/my_account_watched.html:1
 msgid "Repositories You are Watching"
 msgstr "Рэпазітары, за якімі Вы назіраеце"
 
-#: kallithea/templates/admin/permissions/permissions.html:5
-#: kallithea/templates/admin/permissions/permissions.html:11
-#: kallithea/templates/base/base.html:60
 msgid "Default Permissions"
 msgstr "Стандартныя прывілеі"
 
-#: kallithea/templates/admin/permissions/permissions.html:28
-#: kallithea/templates/admin/settings/settings.html:29
 msgid "Global"
 msgstr "Глабальныя"
 
-#: kallithea/templates/admin/permissions/permissions.html:29
-#: kallithea/templates/admin/users/user_edit.html:32
 msgid "IP Whitelist"
 msgstr "Белы спіс IP"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:4
 msgid "Anonymous access"
 msgstr "Ананімны доступ"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:8
-#, fuzzy
-#| msgid "Anonymous access"
-msgid "Allow anonymous access"
-msgstr "Ананімны доступ"
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:10
-#, python-format
-msgid ""
-"Allow access to Kallithea without needing to log in. Anonymous users use "
-"%s user permissions."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:19
 msgid ""
 "All default permissions on each repository will be reset to chosen "
 "permission, note that all custom default permission on repositories will "
@@ -2693,24 +1355,9 @@ msgstr ""
 "Выбраныя прывілеі будуць усталяваныя па змоўчанні для кожнага рэпазітара. "
 "Улічыце, што раней усталяваныя прывілеі па змоўчанні будуць скінутыя"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:20
-#, fuzzy
-msgid "Apply to all existing repositories"
-msgstr "Імпартаваць існы рэпазітар?"
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:23
-msgid "Permissions for the Default user on new repositories."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:27
-#: kallithea/templates/admin/repos/repo_add_base.html:28
-#: kallithea/templates/admin/repos/repo_edit_settings.html:28
-#: kallithea/templates/data_table/_dt_elements.html:134
-#: kallithea/templates/forks/fork.html:42
 msgid "Repository group"
 msgstr "Група рэпазітароў"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:32
 msgid ""
 "All default permissions on each repository group will be reset to chosen "
 "permission, note that all custom default permission on repository groups "
@@ -2720,21 +1367,9 @@ msgstr ""
 "рэпазітароў. Улічыце, што раней усталяваныя прывілеі па змоўчанні для "
 "груп рэпазітароў будуць скінутыя"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:33
-#, fuzzy
-msgid "Apply to all existing repository groups"
-msgstr "Імпартаваць існы рэпазітар?"
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:36
-msgid "Permissions for the Default user on new repository groups."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:40
-#: kallithea/templates/data_table/_dt_elements.html:141
 msgid "User group"
 msgstr "Група карыстальнікаў"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:45
 msgid ""
 "All default permissions on each user group will be reset to chosen "
 "permission, note that all custom default permission on user groups will "
@@ -2744,391 +1379,150 @@ msgstr ""
 "карыстальнікаў. Улічыце, што раней усталяваныя прывілеі па змоўчанні для "
 "груп карыстальнікаў будуць скінутыя"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:46
-msgid "Apply to all existing user groups"
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:49
-msgid "Permissions for the Default user on new user groups."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:53
-#, fuzzy
-msgid "Top level repository creation"
-msgstr "Стварэнне рэпазітара"
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:56
-msgid ""
-"Enable this to allow non-admins to create repositories at the top level."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:57
-msgid ""
-"Note: This will also give all users API access to create repositories "
-"everywhere. That might change in future versions."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:61
-msgid "Repository creation with group write access"
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:64
-msgid ""
-"With this, write permission to a repository group allows creating "
-"repositories inside that group. Without this, group write permissions "
-"mean nothing."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:68
 msgid "User group creation"
 msgstr "Стварэнне груп карыстальнікаў"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:71
-msgid "Enable this to allow non-admins to create user groups."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:75
 msgid "Repository forking"
 msgstr "Стварэнне форка рэпазітара"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:78
-msgid "Enable this to allow non-admins to fork repositories."
-msgstr ""
-
-#: kallithea/templates/admin/permissions/permissions_globals.html:82
 msgid "Registration"
 msgstr "Рэгістрацыя"
 
-#: kallithea/templates/admin/permissions/permissions_globals.html:88
 msgid "External auth account activation"
 msgstr "Актывацыя іншага ўліковага запісу"
 
-#: kallithea/templates/admin/permissions/permissions_ips.html:12
-#: kallithea/templates/admin/users/user_edit_ips.html:22
-#, python-format
 msgid "Confirm to delete this IP address: %s"
 msgstr "Пацвердзіце выдаленне IP %s"
 
-#: kallithea/templates/admin/permissions/permissions_ips.html:18
-#: kallithea/templates/admin/users/user_edit_ips.html:29
 msgid "All IP addresses are allowed."
 msgstr "Дазволены любыя IP-адрасы."
 
-#: kallithea/templates/admin/permissions/permissions_ips.html:25
-#: kallithea/templates/admin/users/user_edit_ips.html:37
 msgid "New IP address"
 msgstr "Новы IP-адрас"
 
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:11
-#: kallithea/templates/admin/repo_groups/repo_group_edit.html:11
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:89
-#: kallithea/templates/admin/repo_groups/repo_groups.html:9
-#: kallithea/templates/base/base.html:57
-#: kallithea/templates/base/base.html:76
 msgid "Repository Groups"
 msgstr "Групы рэпазітароў"
 
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:28
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:5
-#: kallithea/templates/admin/user_groups/user_group_add.html:27
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:4
 msgid "Group name"
 msgstr "Імя групы"
 
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:42
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:19
 msgid "Group parent"
 msgstr "Бацькоўская група"
 
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:49
-#: kallithea/templates/admin/repos/repo_add_base.html:35
-msgid "Copy parent group permissions"
-msgstr ""
-
-#: kallithea/templates/admin/repo_groups/repo_group_add.html:52
-#: kallithea/templates/admin/repos/repo_add_base.html:38
-msgid "Copy permission set from parent repository group."
-msgstr ""
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit.html:5
-#, python-format
 msgid "%s Repository Group Settings"
 msgstr "Налады групы рэпазітароў %s"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit.html:29
 msgid "Add Child Group"
 msgstr "Дадаць падгрупу"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit.html:36
-#: kallithea/templates/admin/repos/repo_edit.html:12
-#: kallithea/templates/admin/repos/repo_edit.html:25
-#: kallithea/templates/admin/settings/settings.html:11
-#: kallithea/templates/admin/user_groups/user_group_edit.html:29
-#: kallithea/templates/base/base.html:63
-#: kallithea/templates/base/base.html:152
 msgid "Settings"
 msgstr "Налады"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit.html:37
-#: kallithea/templates/admin/repos/repo_edit.html:31
-#: kallithea/templates/admin/user_groups/user_group_edit.html:30
-#: kallithea/templates/admin/users/user_edit.html:33
 msgid "Advanced"
 msgstr "Дадаткова"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit.html:38
-#: kallithea/templates/admin/repos/repo_edit.html:28
-#: kallithea/templates/admin/user_groups/user_group_edit.html:31
 msgid "Permissions"
 msgstr "Прывілеі"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:1
-#, python-format
 msgid "Repository Group: %s"
 msgstr "Група рэпазітароў: %s"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:6
 msgid "Top level repositories"
 msgstr "Рэпазітары верхняга ўзроўню"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:7
-msgid "Total repositories"
-msgstr ""
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:8
-msgid "Children groups"
-msgstr ""
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:9
-#: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:7
-#: kallithea/templates/admin/users/user_edit_advanced.html:8
-#: kallithea/templates/pullrequests/pullrequest_show.html:118
 msgid "Created on"
 msgstr "Створана"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:21
-#: kallithea/templates/data_table/_dt_elements.html:121
-#, python-format
 msgid "Confirm to delete this group: %s with %s repository"
 msgid_plural "Confirm to delete this group: %s with %s repositories"
 msgstr[0] "Пацвердзіце выдаленне групы %s, утрымоўвалай %s рэпазітар"
 msgstr[1] "Пацвердзіце выдаленне групы %s, утрымоўвалай %s рэпазітара"
 msgstr[2] "Пацвердзіце выдаленне групы %s, утрымоўвалай %s рэпазітароў"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:25
 msgid "Delete this repository group"
 msgstr "Выдаліць гэту групу рэпазітароў"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:7
-msgid "Not visible"
-msgstr ""
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:8
-#, fuzzy
-#| msgid "disabled"
-msgid "Visible"
-msgstr "адключана"
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:9
-#, fuzzy
-#| msgid "Add Repository"
-msgid "Add repos"
-msgstr "Дадаць рэпазітар"
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:10
-#, fuzzy
-#| msgid "Add user group"
-msgid "Add/Edit groups"
-msgstr "Дадаць групу карыстальнікаў"
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:11
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:11
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:11
 msgid "User/User Group"
 msgstr "Карыстальнік/група карыстальнікаў"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:28
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:45
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:23
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:36
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:28
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:45
 msgid "Default"
 msgstr "Па змоўчанні"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:34
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:71
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:42
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:67
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:34
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:71
 msgid "Revoke"
 msgstr "Адклікаць"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:81
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:77
-#: kallithea/templates/admin/user_groups/user_group_edit_perms.html:81
 msgid "Add new"
 msgstr "Дадаць новы"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:87
-#, fuzzy
-msgid "Apply to children"
-msgstr "дастасаваць да даччыным"
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:91
 msgid "Both"
 msgstr "Абедзьве"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:92
-msgid ""
-"Set or revoke permission to all children of that group, including non-"
-"private repositories and other groups if selected."
-msgstr ""
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:29
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"Уключыць аўтаблакоўку для групы. Гэта опцыя будзе ўжыта да ўсіх даччыных "
-"груп і рэпазітарам"
-
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:46
 msgid "Remove this group"
 msgstr "Выдаліць гэту групу"
 
-#: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:46
 msgid "Confirm to delete this group"
 msgstr "Пацвердзіце выдаленне гэтай групы карыстальнікаў"
 
-#: kallithea/templates/admin/repo_groups/repo_group_show.html:4
-#, fuzzy, python-format
-#| msgid "Repository Group: %s"
-msgid "Repository group %s"
-msgstr "Група рэпазітароў: %s"
-
-#: kallithea/templates/admin/repo_groups/repo_groups.html:5
 msgid "Repository Groups Administration"
 msgstr "Адміністраванне груп рэпазітароў"
 
-#: kallithea/templates/admin/repo_groups/repo_groups.html:41
 msgid "Number of Top-level Repositories"
 msgstr "Лік рэпазітароў верхняга ўзроўня"
 
-#: kallithea/templates/admin/repos/repo_add_base.html:12
-#, fuzzy
-msgid "Clone remote repository"
-msgstr "[створаны] рэпазітар"
-
-#: kallithea/templates/admin/repos/repo_add_base.html:16
-msgid ""
-"Optional: URL of a remote repository. If set, the repository will be "
-"created as a clone from this URL."
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_add_base.html:24
-#: kallithea/templates/admin/repos/repo_edit_settings.html:52
-#: kallithea/templates/forks/fork.html:37
 msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
 msgstr ""
 "Кароткае і асэнсаванае. Для разгорнутага апісання выкарыстоўвайце файл "
 "README."
 
-#: kallithea/templates/admin/repos/repo_add_base.html:31
-#: kallithea/templates/admin/repos/repo_edit_settings.html:31
-#: kallithea/templates/forks/fork.html:45
 msgid "Optionally select a group to put this repository into."
 msgstr "Апцыянальна абраць групу, у якую змясціць дадзены рэпазітар."
 
-#: kallithea/templates/admin/repos/repo_add_base.html:45
 msgid "Type of repository to create."
 msgstr "Тып стваранага рэпазітара."
 
-#: kallithea/templates/admin/repos/repo_add_base.html:49
-#: kallithea/templates/admin/repos/repo_edit_settings.html:35
-#: kallithea/templates/forks/fork.html:50
 msgid "Landing revision"
 msgstr "Рэвізія для выгрузкі"
 
-#: kallithea/templates/admin/repos/repo_add_base.html:52
-msgid ""
-"Default revision for files page, downloads, full text search index and "
-"readme generation"
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_creating.html:9
-#, python-format
 msgid "%s Creating Repository"
 msgstr "Стварэнне рэпазітара %s"
 
-#: kallithea/templates/admin/repos/repo_creating.html:13
 msgid "Creating repository"
 msgstr "Стварэнне рэпазітара"
 
-#: kallithea/templates/admin/repos/repo_creating.html:27
-#, python-format
-msgid ""
-"Repository \"%(repo_name)s\" is being created, you will be redirected "
-"when this process is finished.repo_name"
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_creating.html:39
-msgid ""
-"We're sorry but error occurred during this operation. Please check your "
-"Kallithea server logs, or contact administrator."
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit.html:8
-#, python-format
 msgid "%s Repository Settings"
 msgstr "Налады рэпазітара %s"
 
-#: kallithea/templates/admin/repos/repo_edit.html:34
 msgid "Extra Fields"
 msgstr "Дадатковыя палі"
 
-#: kallithea/templates/admin/repos/repo_edit.html:37
 msgid "Caches"
 msgstr "Кэшы"
 
-#: kallithea/templates/admin/repos/repo_edit.html:40
 msgid "Remote"
 msgstr "Выдалены"
 
-#: kallithea/templates/admin/repos/repo_edit.html:43
-#: kallithea/templates/summary/statistics.html:8
-#: kallithea/templates/summary/summary.html:161
-#: kallithea/templates/summary/summary.html:162
 msgid "Statistics"
 msgstr "Статыстыка"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:1
 msgid "Parent"
 msgstr "Бацькоўская група"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:5
 msgid "Set"
 msgstr "Набор"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:7
 msgid "Manually set this repository as a fork of another from the list."
 msgstr "Уручную зрабіць гэты рэпазітар форкам выбранага са спісу."
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:20
 msgid "Public Journal Visibility"
 msgstr "Доступ да публічнага журналу"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:27
 msgid "Remove from public journal"
 msgstr "Выдаліць з агульнадаступнага журналу"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:32
 msgid "Add to Public Journal"
 msgstr "Дадаць у публічны журнал"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:37
 msgid ""
 "All actions done in this repository will be visible to everyone in the "
 "public journal."
@@ -3136,496 +1530,183 @@ msgstr ""
 "Усе выконваемыя з гэтым рэпазітаром дзеянні будуць адлюстроўвацца ў "
 "публічным журнал."
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:42
-msgid "Change Locking"
-msgstr "Уключыць блакаванне"
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:48
-msgid "Confirm to unlock repository."
-msgstr "Пацвердзіце разблакаванне рэпазітара."
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:50
-msgid "Unlock Repository"
-msgstr "Разблакаваць рэпазітар"
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:52
-#, python-format
-msgid "Locked by %s on %s"
-msgstr "Заблакавана %s %s"
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:56
-msgid "Confirm to lock repository."
-msgstr "Пацвердзіце блакаванне рэпазітара."
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:58
-msgid "Lock Repository"
-msgstr "Заблакаваць рэпазітар"
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:60
-msgid "Repository is not locked"
-msgstr "Рэпазітар не заблакаваны"
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:63
-msgid ""
-"Force locking on the repository. Works only when anonymous access is "
-"disabled. Triggering a pull locks the repository.  The user who is "
-"pulling locks the repository; only the user who pulled and locked it can "
-"unlock it by doing a push."
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:72
-#: kallithea/templates/data_table/_dt_elements.html:68
-#, python-format
 msgid "Confirm to delete this repository: %s"
 msgstr "Пацвердзіце выдаленне гэтага рэпазітара: %s"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:74
 msgid "Delete this Repository"
 msgstr "Выдаліць гэты рэпазітар"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:77
-#, python-format
 msgid "This repository has %s fork"
 msgid_plural "This repository has %s forks"
 msgstr[0] "Дадзены рэпазітар мае %s копію"
 msgstr[1] "Дадзены рэпазітар мае %s копіі"
 msgstr[2] "Дадзены рэпазітар мае %s копій"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:80
 msgid "Detach forks"
 msgstr "Адлучыць форкі"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:84
 msgid "Delete forks"
 msgstr "Выдаліць форкі"
 
-#: kallithea/templates/admin/repos/repo_edit_advanced.html:88
-msgid ""
-"The deleted repository will be moved away and hidden until the "
-"administrator expires it. The administrator can both permanently delete "
-"it or restore it."
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_caches.html:4
 msgid "Invalidate Repository Cache"
 msgstr "Скінуць кэш рэпазітара"
 
-#: kallithea/templates/admin/repos/repo_edit_caches.html:6
 msgid ""
 "Manually invalidate cache for this repository. On first access, the "
 "repository will be cached again."
 msgstr "Ручное скіданне кэша рэпазітара. Пры першым доступе кэш адновіцца."
 
-#: kallithea/templates/admin/repos/repo_edit_caches.html:9
 msgid "List of Cached Values"
 msgstr "Спіс кэшаваных значэнняў"
 
-#: kallithea/templates/admin/repos/repo_edit_caches.html:12
 msgid "Prefix"
 msgstr "Прэфікс"
 
-#: kallithea/templates/admin/repos/repo_edit_caches.html:13
-#: kallithea/templates/admin/repos/repo_edit_fields.html:7
 msgid "Key"
 msgstr "Ключ"
 
-#: kallithea/templates/admin/repos/repo_edit_caches.html:14
-#: kallithea/templates/admin/user_groups/user_group_add.html:40
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:17
-#: kallithea/templates/admin/user_groups/user_groups.html:41
-#: kallithea/templates/admin/users/user_add.html:69
-#: kallithea/templates/admin/users/user_edit_profile.html:74
-#: kallithea/templates/admin/users/users.html:42
 msgid "Active"
 msgstr "Актыўны"
 
-#: kallithea/templates/admin/repos/repo_edit_fields.html:6
-msgid "Label"
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_fields.html:20
-#, python-format
 msgid "Confirm to delete this field: %s"
 msgstr "Пацвердзіце выдаленне гэтага поля: %s"
 
-#: kallithea/templates/admin/repos/repo_edit_fields.html:31
 msgid "New field key"
 msgstr "Ключ"
 
-#: kallithea/templates/admin/repos/repo_edit_fields.html:38
 msgid "New field label"
 msgstr "Імя поля"
 
-#: kallithea/templates/admin/repos/repo_edit_fields.html:40
 msgid "Enter short label"
 msgstr "Увядзіце кароткае імя поля"
 
-#: kallithea/templates/admin/repos/repo_edit_fields.html:45
 msgid "New field description"
 msgstr "Апісанне поля"
 
-#: kallithea/templates/admin/repos/repo_edit_fields.html:47
 msgid "Enter description of a field"
 msgstr "Увядзіце апісанне поля"
 
-#: kallithea/templates/admin/repos/repo_edit_fields.html:61
 msgid "Extra fields are disabled."
 msgstr "Дадатковыя палі адключаныя."
 
-#: kallithea/templates/admin/repos/repo_edit_permissions.html:20
 msgid "Private Repository"
 msgstr "Прыватны рэпазітар"
 
-#: kallithea/templates/admin/repos/repo_edit_remote.html:4
-#, fuzzy
-#| msgid "[forked] repository"
-msgid "Fork of repository"
-msgstr "[форкнуты] рэпазітар"
-
-#: kallithea/templates/admin/repos/repo_edit_remote.html:7
 msgid "Remote repository URL"
 msgstr "URL аддаленага рэпазітара"
 
-#: kallithea/templates/admin/repos/repo_edit_remote.html:15
 msgid "Pull Changes from Remote Repository"
 msgstr "Занесці змены з аддаленага рэпазітара"
 
-#: kallithea/templates/admin/repos/repo_edit_remote.html:17
 msgid "Confirm to pull changes from remote repository."
 msgstr "Пацвердзіце спампоўку змен з аддаленага рэпазітара."
 
-#: kallithea/templates/admin/repos/repo_edit_remote.html:23
-msgid "This repository does not have a remote repository URL."
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_settings.html:7
-msgid "Permanent Repository ID"
-msgstr "Пастаяннае ШВ рэпазітара"
-
-#: kallithea/templates/admin/repos/repo_edit_settings.html:7
-msgid "What is that?"
-msgstr "Што гэта?"
-
-#: kallithea/templates/admin/repos/repo_edit_settings.html:9
-msgid "URL by id"
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_settings.html:10
-msgid ""
-"In case this repository is renamed or moved into another group the "
-"repository URL changes.\n"
-"                               Using the above permanent URL guarantees "
-"that this repository always will be accessible on that URL.\n"
-"                               This is useful for CI systems, or any "
-"other cases that you need to hardcode the URL into a 3rd party service."
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_settings.html:16
 msgid "Remote repository"
 msgstr "Аддалены рэпазітар"
 
-#: kallithea/templates/admin/repos/repo_edit_settings.html:19
 msgid "Repository URL"
 msgstr "URL рэпазітара"
 
-#: kallithea/templates/admin/repos/repo_edit_settings.html:23
-msgid ""
-"Optional: URL of a remote repository. If set, the repository can be "
-"pulled from this URL."
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_settings.html:38
 msgid "Default revision for files page, downloads, whoosh and readme"
 msgstr ""
 "Рэвізія па змоўчанні, з якой будзе рабіцца выгрузка файлаў пры спампоўцы"
 
-#: kallithea/templates/admin/repos/repo_edit_settings.html:44
-#: kallithea/templates/pullrequests/pullrequest_show.html:131
-msgid "Type name of user"
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_settings.html:45
 msgid "Change owner of this repository."
 msgstr "Змяніць уладальніка рэпазітара."
 
-#: kallithea/templates/admin/repos/repo_edit_statistics.html:5
-msgid "Processed commits"
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_statistics.html:6
-msgid "Processed progress"
-msgstr ""
-
-#: kallithea/templates/admin/repos/repo_edit_statistics.html:10
 msgid "Reset Statistics"
 msgstr "Скід статыстыкі"
 
-#: kallithea/templates/admin/repos/repo_edit_statistics.html:10
 msgid "Confirm to remove current statistics."
 msgstr "Пацвердзіце скіданне статыстыкі."
 
-#: kallithea/templates/admin/repos/repos.html:5
 msgid "Repositories Administration"
 msgstr "Адміністраванне рэпазітароў"
 
-#: kallithea/templates/admin/repos/repos.html:43
 msgid "State"
 msgstr "Стан"
 
-#: kallithea/templates/admin/settings/settings.html:5
 msgid "Settings Administration"
 msgstr "Адміністраванне налад"
 
-#: kallithea/templates/admin/settings/settings.html:27
-msgid "VCS"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings.html:28
-msgid "Remap and Rescan"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings.html:30
-msgid "Visual"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings.html:32
-#: kallithea/templates/admin/settings/settings_vcs.html:4
 msgid "Hooks"
 msgstr "Хукі"
 
-#: kallithea/templates/admin/settings/settings.html:33
 msgid "Full Text Search"
 msgstr "Паўнатэкставы пошук"
 
-#: kallithea/templates/admin/settings/settings.html:34
 msgid "System Info"
 msgstr "Інфармацыя пра сістэму"
 
-#: kallithea/templates/admin/settings/settings_email.html:4
 msgid "Send test email to"
 msgstr "Адаслаць тэставае паведамленне на"
 
-#: kallithea/templates/admin/settings/settings_email.html:12
 msgid "Send"
 msgstr "Адправіць"
 
-#: kallithea/templates/admin/settings/settings_global.html:4
 msgid "Site branding"
 msgstr "Брэндынг сайта"
 
-#: kallithea/templates/admin/settings/settings_global.html:7
-msgid "Set a custom title for your Kallithea Service."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_global.html:12
 msgid "HTTP authentication realm"
 msgstr "Прывітанне для HTTP-аўтэнтыфікацыі"
 
-#: kallithea/templates/admin/settings/settings_global.html:19
-msgid "HTML/JavaScript/CSS customization block"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_global.html:22
-msgid ""
-"HTML (possibly with                         JavaScript and/or CSS) that "
-"will be added to the bottom                         of every page. This "
-"can be used for web analytics                         systems, but also "
-"to                         perform instance-specific customizations like "
-"adding a                         project banner at the top of every page."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_global.html:32
-msgid "ReCaptcha public key"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_global.html:35
-msgid "Public key for reCaptcha system."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_global.html:40
-msgid "ReCaptcha private key"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_global.html:43
-msgid ""
-"Private key for reCaptcha system. Setting this value will enable captcha "
-"on registration."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_global.html:49
-#: kallithea/templates/admin/settings/settings_vcs.html:77
-#: kallithea/templates/admin/settings/settings_visual.html:115
 msgid "Save Settings"
 msgstr "Захаваць налады"
 
-#: kallithea/templates/admin/settings/settings_hooks.html:3
-msgid "Built-in Mercurial Hooks (Read-Only)"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_hooks.html:17
 msgid "Custom Hooks"
 msgstr "Карыстальніцкія хукі"
 
-#: kallithea/templates/admin/settings/settings_hooks.html:18
-msgid ""
-"Hooks can be used to trigger actions on certain events such as push / "
-"pull. They can trigger Python functions or external applications."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_hooks.html:60
 msgid "Failed to remove hook"
 msgstr "Не атрымалася выдаліць хук"
 
-#: kallithea/templates/admin/settings/settings_mapping.html:4
-#, fuzzy
-#| msgid "Rescan option"
-msgid "Rescan options"
-msgstr "Опцыі перасканіравання"
-
-#: kallithea/templates/admin/settings/settings_mapping.html:9
 msgid "Delete records of missing repositories"
 msgstr "Сцерці запісы пра выдаленыя рэпазітары"
 
-#: kallithea/templates/admin/settings/settings_mapping.html:12
-msgid ""
-"Check this option to remove all comments, pull requests and other records "
-"related to repositories that no longer exist in the filesystem."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_mapping.html:17
 msgid "Invalidate cache for all repositories"
 msgstr "Скінуць кэш для ўсіх рэпазітароў"
 
-#: kallithea/templates/admin/settings/settings_mapping.html:20
 msgid "Check this to reload data and clear cache keys for all repositories."
 msgstr "Скінуць кэш для ўсіх рэпазітароў."
 
-#: kallithea/templates/admin/settings/settings_mapping.html:25
-msgid "Install Git hooks"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_mapping.html:28
-msgid ""
-"Verify if Kallithea's Git hooks are installed for each repository. "
-"Current hooks will be updated to the latest version."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_mapping.html:32
-msgid "Overwrite existing Git hooks"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_mapping.html:35
-msgid ""
-"If installing Git hooks, overwrite any existing hooks, even if they do "
-"not seem to come from Kallithea. WARNING: This operation will destroy any "
-"custom git hooks you may have deployed by hand!"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_mapping.html:41
-msgid "Rescan Repositories"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_search.html:4
 msgid "Index build option"
 msgstr "Опцыі стварэння індэксу"
 
-#: kallithea/templates/admin/settings/settings_search.html:9
 msgid "Build from scratch"
 msgstr "Зборка з нуля"
 
-#: kallithea/templates/admin/settings/settings_search.html:12
-msgid ""
-"This option completely reindexeses all of the repositories for proper "
-"fulltext search capabilities."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_search.html:18
 msgid "Reindex"
 msgstr "Перабудаваць індэкс"
 
-#: kallithea/templates/admin/settings/settings_system.html:2
 msgid "Checking for updates..."
 msgstr "Праверка абнаўленняў..."
 
-#: kallithea/templates/admin/settings/settings_system.html:7
 msgid "Kallithea version"
 msgstr "Версія Kallithea"
 
-#: kallithea/templates/admin/settings/settings_system.html:7
-msgid "Check for updates"
-msgstr "Праверыць наяўнасць абнаўленняў"
-
-#: kallithea/templates/admin/settings/settings_system.html:8
-msgid "Kallithea configuration file"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_system.html:9
-msgid "Python version"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_system.html:10
 msgid "Platform"
 msgstr "Платформа"
 
-#: kallithea/templates/admin/settings/settings_system.html:11
 msgid "Git version"
 msgstr "Версія Git"
 
-#: kallithea/templates/admin/settings/settings_system.html:12
-msgid "Git path"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_system.html:13
-msgid "Upgrade info endpoint"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_system.html:13
-msgid "Note: please make sure this server can access this URL"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_system.html:23
-msgid "Python Packages"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_vcs.html:9
 msgid "Show repository size after push"
 msgstr "Паказваць памер рэпазітара пасля адпраўкі"
 
-#: kallithea/templates/admin/settings/settings_vcs.html:15
-msgid "Log user push commands"
-msgstr "Лагаваць карыстацкія каманды адпраўкі"
-
-#: kallithea/templates/admin/settings/settings_vcs.html:21
-msgid "Log user pull commands"
-msgstr "Лагаваць карыстацкія каманды атрымання"
-
-#: kallithea/templates/admin/settings/settings_vcs.html:27
 msgid "Update repository after push (hg update)"
 msgstr "Абнаўляць рэпазітар пасля адпраўкі (hg update)"
 
-#: kallithea/templates/admin/settings/settings_vcs.html:33
 msgid "Mercurial extensions"
 msgstr "Пашырэнні Mercurial"
 
-#: kallithea/templates/admin/settings/settings_vcs.html:38
 msgid "Enable largefiles extension"
 msgstr "Уключыць падтрымку вялікіх файлаў"
 
-#: kallithea/templates/admin/settings/settings_vcs.html:44
 msgid "Enable hgsubversion extension"
 msgstr "Уключыць падтрымку hgsubversion"
 
-#: kallithea/templates/admin/settings/settings_vcs.html:47
-msgid ""
-"Requires hgsubversion library to be installed. Enables cloning of remote "
-"Subversion repositories while converting them to Mercurial."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_vcs.html:59
 msgid "Location of repositories"
 msgstr "Месцазнаходжанне рэпазітароў"
 
-#: kallithea/templates/admin/settings/settings_vcs.html:64
 msgid ""
 "Click to unlock. You must restart Kallithea in order to make this setting "
 "take effect."
@@ -3633,719 +1714,345 @@ msgstr ""
 "Націсніце для разблакавання. Змены набудуць моц пасля перазагрузкі "
 "Kallithea."
 
-#: kallithea/templates/admin/settings/settings_vcs.html:68
-msgid ""
-"Filesystem location where repositories are stored. After changing this "
-"value, a restart and rescan of the repository folder are both required."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_visual.html:4
 msgid "General"
 msgstr "Галоўнае"
 
-#: kallithea/templates/admin/settings/settings_visual.html:9
 msgid "Use repository extra fields"
 msgstr "Выкарыстоўваць дадатковыя палі ў рэпазітарах"
 
-#: kallithea/templates/admin/settings/settings_visual.html:12
 msgid "Allows storing additional customized fields per repository."
 msgstr "Дазваляе захоўваць дадатковыя палі ў рэпазітарах."
 
-#: kallithea/templates/admin/settings/settings_visual.html:17
 msgid "Show Kallithea version"
 msgstr "Адлюстроўваць версію Kallithea"
 
-#: kallithea/templates/admin/settings/settings_visual.html:20
 msgid ""
 "Shows or hides a version number of Kallithea displayed in the footer."
 msgstr "Паказвае або хавае нумар версіі Kallithea ў ніжняй частцы старонкі."
 
-#: kallithea/templates/admin/settings/settings_visual.html:25
-msgid "Show user Gravatars"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_visual.html:29
-msgid ""
-"Gravatar URL allows you to use another avatar server application.\n"
-"                                                        The following "
-"variables of the URL will be replaced accordingly.\n"
-"                                                        {scheme}    "
-"'http' or 'https' sent from running Kallithea server,\n"
-"                                                        {email}     user "
-"email,\n"
-"                                                        {md5email}  md5 "
-"hash of the user email (like at gravatar.com),\n"
-"                                                        {size}      size "
-"of the image that is expected from the server application,\n"
-"                                                        {netloc}    "
-"network location/server host of running Kallithea server"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_visual.html:40
-#: kallithea/templates/summary/summary.html:63
-msgid "Clone URL"
-msgstr "URL для кланавання"
-
-#: kallithea/templates/admin/settings/settings_visual.html:43
-msgid ""
-"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/"
-"{repo}'.\n"
-"                                                    The following "
-"variables are available:\n"
-"                                                    {scheme} 'http' or "
-"'https' sent from running Kallithea server,\n"
-"                                                    {user}   current user "
-"username,\n"
-"                                                    {netloc} network "
-"location/server host of running Kallithea server,\n"
-"                                                    {repo}   full "
-"repository name,\n"
-"                                                    {repoid} ID of "
-"repository, can be used to construct clone-by-id"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_visual.html:54
-#, fuzzy
-#| msgid "Repository Size"
-msgid "Repository page size"
-msgstr "Памер рэпазітара"
-
-#: kallithea/templates/admin/settings/settings_visual.html:57
-#, fuzzy
-msgid ""
-"Number of items displayed in the repository pages before pagination is "
-"shown."
-msgstr ""
-"Колькасць элементаў, што паказваюцца на галоўнай старонцы панэлі "
-"кіравання перад паказам нумарацыі старонак."
-
-#: kallithea/templates/admin/settings/settings_visual.html:62
-msgid "Admin page size"
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_visual.html:65
-msgid ""
-"Number of items displayed in the admin pages grids before pagination is "
-"shown."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_visual.html:70
 msgid "Icons"
 msgstr "Абразкі"
 
-#: kallithea/templates/admin/settings/settings_visual.html:75
 msgid "Show public repository icon on repositories"
 msgstr "Паказваць абразкі публічных рэпазітароў"
 
-#: kallithea/templates/admin/settings/settings_visual.html:81
 msgid "Show private repository icon on repositories"
 msgstr "Паказваць абразкі прыватных рэпазітароў"
 
-#: kallithea/templates/admin/settings/settings_visual.html:84
 msgid "Show public/private icons next to repository names."
 msgstr "Паказваць абразкі публічных рэпазітароў."
 
-#: kallithea/templates/admin/settings/settings_visual.html:89
 msgid "Meta Tagging"
 msgstr "Метатэгаванне"
 
-#: kallithea/templates/admin/settings/settings_visual.html:94
-msgid ""
-"Parses meta tags from the repository description field and turns them "
-"into colored tags."
-msgstr ""
-
-#: kallithea/templates/admin/settings/settings_visual.html:98
-msgid "Stylify recognised meta tags:"
-msgstr ""
-
-#: kallithea/templates/admin/user_groups/user_group_add.html:5
 msgid "Add user group"
 msgstr "Дадаць групу карыстальнікаў"
 
-#: kallithea/templates/admin/user_groups/user_group_add.html:10
-#: kallithea/templates/admin/user_groups/user_group_edit.html:11
-#: kallithea/templates/admin/user_groups/user_groups.html:9
-#: kallithea/templates/base/base.html:59
-#: kallithea/templates/base/base.html:79
 msgid "User Groups"
 msgstr "Групы карыстальнікаў"
 
-#: kallithea/templates/admin/user_groups/user_group_add.html:12
-#: kallithea/templates/admin/user_groups/user_groups.html:24
 msgid "Add User Group"
 msgstr "Дадаць групу карыстальнікаў"
 
-#: kallithea/templates/admin/user_groups/user_group_add.html:36
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:13
 msgid "Short, optional description for this user group."
 msgstr "Кароткае дадатковае апісанне для гэтай групы карыстальнікаў."
 
-#: kallithea/templates/admin/user_groups/user_group_edit.html:5
-#, python-format
-msgid "%s user group settings"
-msgstr ""
-
-#: kallithea/templates/admin/user_groups/user_group_edit.html:33
 msgid "Show Members"
 msgstr "Паказаць удзельнікаў"
 
-#: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:1
-#, python-format
-msgid "User Group: %s"
-msgstr ""
-
-#: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:6
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:23
-#: kallithea/templates/admin/user_groups/user_groups.html:40
 msgid "Members"
 msgstr "Удзельнікі"
 
-#: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:19
-#: kallithea/templates/data_table/_dt_elements.html:102
-#, python-format
 msgid "Confirm to delete this user group: %s"
 msgstr "Пацвердзіце выдаленне наступнай групы карыстальнікаў: %s"
 
-#: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:21
 msgid "Delete this user group"
 msgstr "Выдаліць гэтую групу карыстальнікаў"
 
-#: kallithea/templates/admin/user_groups/user_group_edit_members.html:11
 msgid "No members yet"
 msgstr "Няма ўдзельнікаў"
 
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:26
 msgid "Chosen group members"
 msgstr "Абраныя ўдзельнікі групы"
 
-#: kallithea/templates/admin/user_groups/user_group_edit_settings.html:39
 msgid "Available members"
 msgstr "Даступныя ўдзельнікі"
 
-#: kallithea/templates/admin/user_groups/user_groups.html:5
 msgid "User Groups Administration"
 msgstr "Адміністраванне груп карыстальнікаў"
 
-#: kallithea/templates/admin/users/user_add.html:5
 msgid "Add user"
 msgstr "Дадаць карыстальніка"
 
-#: kallithea/templates/admin/users/user_add.html:10
-#: kallithea/templates/admin/users/user_edit.html:11
-#: kallithea/templates/admin/users/users.html:9
-#: kallithea/templates/base/base.html:58
 msgid "Users"
 msgstr "Карыстальнікі"
 
-#: kallithea/templates/admin/users/user_add.html:12
-#: kallithea/templates/admin/users/users.html:23
 msgid "Add User"
 msgstr "Дадаць карыстальніка"
 
-#: kallithea/templates/admin/users/user_add.html:41
 msgid "Password confirmation"
 msgstr "Пацверджанне пароля"
 
-#: kallithea/templates/admin/users/user_edit.html:5
-#, python-format
-msgid "%s user settings"
-msgstr ""
-
-#: kallithea/templates/admin/users/user_edit.html:30
-msgid "Emails"
-msgstr ""
-
-#: kallithea/templates/admin/users/user_edit_advanced.html:1
-#, python-format
 msgid "User: %s"
 msgstr "Карыстальнік: %s"
 
-#: kallithea/templates/admin/users/user_edit_advanced.html:7
-#: kallithea/templates/admin/users/user_edit_profile.html:32
-msgid "Source of Record"
-msgstr ""
-
-#: kallithea/templates/admin/users/user_edit_advanced.html:9
-#: kallithea/templates/admin/users/users.html:41
 msgid "Last Login"
 msgstr "Апошні ўваход"
 
-#: kallithea/templates/admin/users/user_edit_advanced.html:10
-msgid "Member of User Groups"
-msgstr ""
-
-#: kallithea/templates/admin/users/user_edit_advanced.html:21
-#: kallithea/templates/data_table/_dt_elements.html:90
-#, python-format
 msgid "Confirm to delete this user: %s"
 msgstr "Пацвердзіце выдаленне карыстальніка %s"
 
-#: kallithea/templates/admin/users/user_edit_advanced.html:23
 msgid "Delete this user"
 msgstr "Выдаліць гэтага карыстальніка"
 
-#: kallithea/templates/admin/users/user_edit_ips.html:7
-#, python-format
-msgid "Inherited from %s"
-msgstr ""
-
-#: kallithea/templates/admin/users/user_edit_profile.html:39
-msgid "Name in Source of Record"
-msgstr ""
-
-#: kallithea/templates/admin/users/user_edit_profile.html:53
 msgid "New password confirmation"
 msgstr "Пацвердзіце новы пароль"
 
-#: kallithea/templates/admin/users/users.html:5
 msgid "Users Administration"
 msgstr "Адміністраванне карыстальнікаў"
 
-#: kallithea/templates/admin/users/users.html:44
-msgid "Auth Type"
-msgstr ""
-
-#: kallithea/templates/base/base.html:16
-#, python-format
 msgid "Server instance: %s"
 msgstr "Асобнік сервера: %s"
 
-#: kallithea/templates/base/base.html:28
 msgid "Support"
 msgstr "Падтрымка"
 
-#: kallithea/templates/base/base.html:86
-#: kallithea/templates/base/base.html:424
 msgid "Mercurial repository"
 msgstr "Рэпазітар Mercurial"
 
-#: kallithea/templates/base/base.html:89
-#: kallithea/templates/base/base.html:427
 msgid "Git repository"
 msgstr "Git рэпазітар"
 
-#: kallithea/templates/base/base.html:115
 msgid "Create Fork"
 msgstr "Стварыць форк"
 
-#: kallithea/templates/base/base.html:127
-#: kallithea/templates/summary/summary.html:9
 msgid "Summary"
 msgstr "Агульныя звесткі"
 
-#: kallithea/templates/base/base.html:129
-#: kallithea/templates/base/base.html:131
-#: kallithea/templates/changelog/changelog.html:16
 msgid "Changelog"
 msgstr "Гісторыя змен"
 
-#: kallithea/templates/base/base.html:133
-#: kallithea/templates/files/files.html:11
 msgid "Files"
 msgstr "Файлы"
 
-#: kallithea/templates/base/base.html:135
-#, python-format
 msgid "Show Pull Requests for %s"
 msgstr "Паказаць pull-запыты для %s"
 
-#: kallithea/templates/base/base.html:135
 msgid "Pull Requests"
 msgstr "Pull-запыты"
 
-#: kallithea/templates/base/base.html:146
-#: kallithea/templates/base/base.html:148
 msgid "Options"
 msgstr "Опцыі"
 
-#: kallithea/templates/base/base.html:156
-#: kallithea/templates/forks/forks_data.html:18
 msgid "Compare Fork"
 msgstr "Параўнаць форк"
 
-#: kallithea/templates/base/base.html:158
 msgid "Compare"
 msgstr "Параўнаць"
 
-#: kallithea/templates/base/base.html:160
-#: kallithea/templates/base/base.html:322
-#: kallithea/templates/search/search.html:14
-#: kallithea/templates/search/search.html:67
 msgid "Search"
 msgstr "Пошук"
 
-#: kallithea/templates/base/base.html:164
-msgid "Unlock"
-msgstr "Разблакаваць"
-
-#: kallithea/templates/base/base.html:166
-msgid "Lock"
-msgstr "Заблакаваць"
-
-#: kallithea/templates/base/base.html:174
 msgid "Follow"
 msgstr "Назіраць"
 
-#: kallithea/templates/base/base.html:175
 msgid "Unfollow"
 msgstr "Не назіраць"
 
-#: kallithea/templates/base/base.html:178
-#: kallithea/templates/forks/fork.html:9
 msgid "Fork"
 msgstr "Форк"
 
-#: kallithea/templates/base/base.html:179
-#: kallithea/templates/pullrequests/pullrequest.html:77
 msgid "Create Pull Request"
 msgstr "Стварыць pull-запыт"
 
-#: kallithea/templates/base/base.html:191
 msgid "Switch To"
 msgstr "Пераключыцца на"
 
-#: kallithea/templates/base/base.html:203
-#: kallithea/templates/base/base.html:452
 msgid "No matches found"
 msgstr "Супадзенняў не знойдзена"
 
-#: kallithea/templates/base/base.html:296
 msgid "Show recent activity"
 msgstr "Паказаць апошнюю актыўнасць"
 
-#: kallithea/templates/base/base.html:302
-#: kallithea/templates/base/base.html:303
 msgid "Public journal"
 msgstr "Агульнадаступны журнал"
 
-#: kallithea/templates/base/base.html:308
 msgid "Show public gists"
 msgstr "Паказаць публічныя запісы"
 
-#: kallithea/templates/base/base.html:309
 msgid "Gists"
 msgstr "Gist"
 
-#: kallithea/templates/base/base.html:313
 msgid "All Public Gists"
 msgstr "Усе публічныя Gist-запісы"
 
-#: kallithea/templates/base/base.html:315
 msgid "My Public Gists"
 msgstr "Мае публічныя Gist-запісы"
 
-#: kallithea/templates/base/base.html:316
 msgid "My Private Gists"
 msgstr "Мае прыватныя Gist-запісы"
 
-#: kallithea/templates/base/base.html:321
 msgid "Search in repositories"
 msgstr "Пошук па рэпазітарах"
 
-#: kallithea/templates/base/base.html:344
-#: kallithea/templates/base/base.html:345
-#: kallithea/templates/pullrequests/pullrequest_show_my.html:6
-#: kallithea/templates/pullrequests/pullrequest_show_my.html:10
 msgid "My Pull Requests"
 msgstr "Мае pull-запыты"
 
-#: kallithea/templates/base/base.html:360
 msgid "Not Logged In"
 msgstr "Не аўтарызаваны"
 
-#: kallithea/templates/base/base.html:369
 msgid "Login to Your Account"
 msgstr "Аўтарызавацца"
 
-#: kallithea/templates/base/base.html:379
-#, fuzzy
-#| msgid "Forgot password ?"
-msgid "Forgot password?"
-msgstr "Забыліся на пароль?"
-
-#: kallithea/templates/base/base.html:383
-#, fuzzy
-#| msgid "Don't have an account ?"
-msgid "Don't have an account?"
-msgstr "Няма акаўнта?"
-
-#: kallithea/templates/base/base.html:400
 msgid "Log Out"
 msgstr "Выйсці"
 
-#: kallithea/templates/base/base.html:524
-msgid "Parent rev."
-msgstr ""
-
-#: kallithea/templates/base/base.html:533
-msgid "Child rev."
-msgstr ""
-
-#: kallithea/templates/base/default_perms_box.html:11
-msgid "Inherit defaults"
-msgstr "Ужываць значэнні па змоўчанні"
-
-#: kallithea/templates/base/default_perms_box.html:15
-#, python-format
-msgid ""
-"Select to inherit global settings, IP whitelist and permissions from the "
-"%s."
-msgstr ""
-
-#: kallithea/templates/base/default_perms_box.html:16
-#, fuzzy
-#| msgid "Default permissions"
-msgid "default permissions"
-msgstr "Стандартныя прывілеі"
-
-#: kallithea/templates/base/default_perms_box.html:23
 msgid "Create repositories"
 msgstr "Стварыць рэпазітары"
 
-#: kallithea/templates/base/default_perms_box.html:27
 msgid "Select this option to allow repository creation for this user"
 msgstr "Опцыя дазваляе карыстальніку ствараць рэпазітары"
 
-#: kallithea/templates/base/default_perms_box.html:33
 msgid "Create user groups"
 msgstr "Ствараць групы карыстальнікаў"
 
-#: kallithea/templates/base/default_perms_box.html:37
 msgid "Select this option to allow user group creation for this user"
 msgstr "Опцыя дазваляе карыстальніку ствараць групы карыстальнікаў"
 
-#: kallithea/templates/base/default_perms_box.html:43
 msgid "Fork repositories"
 msgstr "Ствараць fork ад рэпазітароў"
 
-#: kallithea/templates/base/default_perms_box.html:47
 msgid "Select this option to allow repository forking for this user"
 msgstr ""
 "Абярыце гэту опцыю каб дазволіць дадзенаму карыстальніку ствараць форкі "
 "рэпазітароў"
 
-#: kallithea/templates/base/perms_summary.html:13
-#: kallithea/templates/changelog/changelog.html:41
 msgid "Show"
 msgstr "Паказаць"
 
-#: kallithea/templates/base/perms_summary.html:22
 msgid "No permissions defined yet"
 msgstr "Прывілеі яшчэ не прызначаныя"
 
-#: kallithea/templates/base/perms_summary.html:30
-#: kallithea/templates/base/perms_summary.html:55
 msgid "Permission"
 msgstr "Прывілей"
 
-#: kallithea/templates/base/perms_summary.html:32
-#: kallithea/templates/base/perms_summary.html:57
 msgid "Edit Permission"
 msgstr "Змяніць прывілеі"
 
-#: kallithea/templates/base/perms_summary.html:92
-msgid "No permission defined"
-msgstr ""
-
-#: kallithea/templates/base/root.html:28
-msgid "Retry"
-msgstr ""
-
-#: kallithea/templates/base/root.html:29
-#: kallithea/templates/changeset/changeset_file_comment.html:65
 msgid "Submitting ..."
 msgstr "Адпраўка..."
 
-#: kallithea/templates/base/root.html:30
-#, fuzzy
-#| msgid "Enable downloads"
-msgid "Unable to post"
-msgstr "Уключыць спампоўку"
-
-#: kallithea/templates/base/root.html:31
 msgid "Add Another Comment"
 msgstr "Дадаць яшчэ адзін каментар"
 
-#: kallithea/templates/base/root.html:32
 msgid "Stop following this repository"
 msgstr "Адмяніць назіранне за рэпазітаром"
 
-#: kallithea/templates/base/root.html:33
 msgid "Start following this repository"
 msgstr "Назіраць за рэпазітаром"
 
-#: kallithea/templates/base/root.html:34
 msgid "Group"
 msgstr "Група"
 
-#: kallithea/templates/base/root.html:35
 msgid "Loading ..."
 msgstr "Загрузка..."
 
-#: kallithea/templates/base/root.html:36
 msgid "loading ..."
 msgstr "загрузка..."
 
-#: kallithea/templates/base/root.html:37
 msgid "Search truncated"
 msgstr "Пошук усечаны"
 
-#: kallithea/templates/base/root.html:38
 msgid "No matching files"
 msgstr "Няма супадзенняў"
 
-#: kallithea/templates/base/root.html:39
 msgid "Open New Pull Request from {0}"
 msgstr "Стварыць новы pull-запыт з {0}"
 
-#: kallithea/templates/base/root.html:40
 msgid "Open New Pull Request for {0} &rarr; {1}"
 msgstr "Стварыць новы pull-запыт для {0} &rarr; {1}"
 
-#: kallithea/templates/base/root.html:41
 msgid "Show Selected Changesets {0} &rarr; {1}"
 msgstr "Паказаць выбраныя наборы змен: {0} &rarr; {1}"
 
-#: kallithea/templates/base/root.html:42
 msgid "Selection Link"
 msgstr "Спасылка выбару"
 
-#: kallithea/templates/base/root.html:43
-#: kallithea/templates/changeset/diff_block.html:7
 msgid "Collapse Diff"
 msgstr "Згарнуць параўнанне"
 
-#: kallithea/templates/base/root.html:44
 msgid "Expand Diff"
 msgstr "Разгарнуць параўнанне"
 
-#: kallithea/templates/base/root.html:45
 msgid "No revisions"
 msgstr "Няма рэвізій"
 
-#: kallithea/templates/base/root.html:46
-msgid "Type name of user or member to grant permission"
-msgstr ""
-
-#: kallithea/templates/base/root.html:47
 msgid "Failed to revoke permission"
 msgstr "Не атрымалася адклікаць прывілеі"
 
-#: kallithea/templates/base/root.html:48
 msgid "Confirm to revoke permission for {0}: {1} ?"
 msgstr "Пацвердзіце выдаленне прывілею для {0}: {1} ?"
 
-#: kallithea/templates/base/root.html:51
-#: kallithea/templates/compare/compare_diff.html:108
 msgid "Select changeset"
 msgstr "Выбраць набор змен"
 
-#: kallithea/templates/base/root.html:52
 msgid "Specify changeset"
 msgstr "Выбраць набор змен"
 
-#: kallithea/templates/base/root.html:53
 msgid "Click to sort ascending"
 msgstr "Па ўзрастанні"
 
-#: kallithea/templates/base/root.html:54
 msgid "Click to sort descending"
 msgstr "Па змяншэнні"
 
-#: kallithea/templates/base/root.html:55
 msgid "No records found."
 msgstr "Запісы не знойдзеныя."
 
-#: kallithea/templates/base/root.html:56
 msgid "Data error."
 msgstr "Памылка дадзеных."
 
-#: kallithea/templates/base/root.html:57
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: kallithea/templates/changelog/changelog.html:8
-#, python-format
 msgid "%s Changelog"
 msgstr "Логі змен %s"
 
-#: kallithea/templates/changelog/changelog.html:23
-#, python-format
 msgid "showing %d out of %d revision"
 msgid_plural "showing %d out of %d revisions"
 msgstr[0] "Паказана %d з %d рэвізій"
 msgstr[1] "Паказаны %d з %d рэвізій"
 msgstr[2] "Паказаны %d з %d рэвізій"
 
-#: kallithea/templates/changelog/changelog.html:47
 msgid "Clear selection"
 msgstr "Ачысціць выбар"
 
-#: kallithea/templates/changelog/changelog.html:54
 msgid "Go to tip of repository"
 msgstr "Перайсці на верхавіну рэпазітара"
 
-#: kallithea/templates/changelog/changelog.html:59
-#: kallithea/templates/forks/forks_data.html:16
-#, python-format
 msgid "Compare fork with %s"
 msgstr "Параўнаць fork з %s"
 
-#: kallithea/templates/changelog/changelog.html:61
-#, python-format
 msgid "Compare fork with parent repository (%s)"
 msgstr "Параўнаць форк з бацькоўскім рэпазітаром (%s)"
 
-#: kallithea/templates/changelog/changelog.html:65
-#: kallithea/templates/files/files.html:29
 msgid "Branch filter:"
 msgstr "Адфільтраваць галіну:"
 
-#: kallithea/templates/changelog/changelog.html:221
 msgid "There are no changes yet"
 msgstr "Змен яшчэ няма"
 
-#: kallithea/templates/changelog/changelog_details.html:4
-#: kallithea/templates/changeset/changeset.html:77
 msgid "Removed"
 msgstr "Выдалена"
 
-#: kallithea/templates/changelog/changelog_details.html:5
-#: kallithea/templates/changeset/changeset.html:78
 msgid "Changed"
 msgstr "Зменена"
 
-#: kallithea/templates/changelog/changelog_details.html:6
-#: kallithea/templates/changeset/changeset.html:79
-#: kallithea/templates/changeset/diff_block.html:38
 msgid "Added"
 msgstr "Дададзена"
 
-#: kallithea/templates/changelog/changelog_details.html:8
-#: kallithea/templates/changelog/changelog_details.html:9
-#: kallithea/templates/changelog/changelog_details.html:10
-#: kallithea/templates/changeset/changeset.html:81
-#: kallithea/templates/changeset/changeset.html:82
-#: kallithea/templates/changeset/changeset.html:83
-#, python-format
 msgid "Affected %s files"
 msgstr "Закранае %s файлаў"
 
-#: kallithea/templates/changelog/changelog_table.html:20
-msgid "First (oldest) changeset in this list"
-msgstr ""
-
-#: kallithea/templates/changelog/changelog_table.html:22
-msgid "Last (most recent) changeset in this list"
-msgstr ""
-
-#: kallithea/templates/changelog/changelog_table.html:24
-msgid "Position in this list of changesets"
-msgstr ""
-
-#: kallithea/templates/changelog/changelog_table.html:35
-#, python-format
 msgid ""
 "Changeset status: %s by %s\n"
 "Click to open associated pull request %s"
@@ -4353,1828 +2060,559 @@ msgstr ""
 "Статус набору змен: %s ад %s\n"
 "Клікніце, каб адкрыць адпаведны pull-запыт %s"
 
-#: kallithea/templates/changelog/changelog_table.html:41
-#, python-format
 msgid "Changeset status: %s by %s"
 msgstr "Статус набору змен: %s ад %s"
 
-#: kallithea/templates/changelog/changelog_table.html:60
 msgid "Expand commit message"
 msgstr "Разгарнуць паведамленне"
 
-#: kallithea/templates/changelog/changelog_table.html:76
-#, fuzzy, python-format
-#| msgid "%d comment"
-#| msgid_plural "%d comments"
-msgid "%s comments"
-msgstr "%d каментар"
-
-#: kallithea/templates/changelog/changelog_table.html:80
-#: kallithea/templates/changeset/changeset.html:63
-#: kallithea/templates/changeset/changeset_range.html:84
-#, python-format
 msgid "Bookmark %s"
 msgstr "Закладка %s"
 
-#: kallithea/templates/changelog/changelog_table.html:83
-#: kallithea/templates/changeset/changeset.html:67
-#: kallithea/templates/changeset/changeset_range.html:90
-#: kallithea/templates/pullrequests/pullrequest_show.html:165
-#, python-format
 msgid "Tag %s"
 msgstr "Тэг %s"
 
-#: kallithea/templates/changelog/changelog_table.html:102
-#: kallithea/templates/changeset/changeset.html:71
-#: kallithea/templates/changeset/changeset_range.html:94
-#, python-format
 msgid "Branch %s"
 msgstr "Галіна %s"
 
-#: kallithea/templates/changeset/changeset.html:8
-#, python-format
 msgid "%s Changeset"
 msgstr "%s Змены"
 
-#: kallithea/templates/changeset/changeset.html:34
 msgid "Changeset status"
 msgstr "Статус змен"
 
-#: kallithea/templates/changeset/changeset.html:43
-#: kallithea/templates/changeset/diff_block.html:64
-#: kallithea/templates/files/diff_2way.html:51
 msgid "Raw diff"
 msgstr "Адлюстраваць у фармаце diff"
 
-#: kallithea/templates/changeset/changeset.html:46
 msgid "Patch diff"
 msgstr "Patch diff"
 
-#: kallithea/templates/changeset/changeset.html:49
-#: kallithea/templates/changeset/diff_block.html:66
-#: kallithea/templates/files/diff_2way.html:54
 msgid "Download diff"
 msgstr "Спампаваць diff"
 
-#: kallithea/templates/changeset/changeset.html:59
-#: kallithea/templates/changeset/changeset_range.html:80
-#, fuzzy
-msgid "Merge"
-msgstr "звесці"
-
-#: kallithea/templates/changeset/changeset.html:96
 msgid "Grafted from:"
 msgstr "Перанесена з:"
 
-#: kallithea/templates/changeset/changeset.html:102
-msgid "Transplanted from:"
-msgstr ""
-
-#: kallithea/templates/changeset/changeset.html:108
 msgid "Replaced by:"
 msgstr "Заменена:"
 
-#: kallithea/templates/changeset/changeset.html:122
 msgid "Preceded by:"
 msgstr "Замяняе:"
 
-#: kallithea/templates/changeset/changeset.html:139
-#: kallithea/templates/compare/compare_diff.html:59
-#: kallithea/templates/pullrequests/pullrequest_show.html:290
-#, python-format
 msgid "%s file changed"
 msgid_plural "%s files changed"
 msgstr[0] "%s файл зменены"
 msgstr[1] "%s файлы зменена"
 msgstr[2] "%s файлаў зменена"
 
-#: kallithea/templates/changeset/changeset.html:141
-#: kallithea/templates/compare/compare_diff.html:61
-#: kallithea/templates/pullrequests/pullrequest_show.html:292
-#, python-format
 msgid "%s file changed with %s insertions and %s deletions"
 msgid_plural "%s files changed with %s insertions and %s deletions"
 msgstr[0] "%s файл зменены: %s даданне, %s выдаленне"
 msgstr[1] "%s файлы зменена: %s даданні, %s выдаленні"
 msgstr[2] "%s файлаў зменена: %s даданняў, %s выдаленняў"
 
-#: kallithea/templates/changeset/changeset.html:154
-#: kallithea/templates/changeset/changeset.html:173
-#: kallithea/templates/compare/compare_diff.html:81
-#: kallithea/templates/pullrequests/pullrequest_show.html:309
-#: kallithea/templates/pullrequests/pullrequest_show.html:333
 msgid "Show full diff anyway"
 msgstr "Паказаць поўны diff"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:20
-#, fuzzy
-#| msgid "Comment"
-msgid "comment"
-msgstr "Каментаваць"
-
-#: kallithea/templates/changeset/changeset_file_comment.html:21
 msgid "on pull request"
 msgstr "у pull-запыце"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:22
 msgid "No title"
 msgstr "Няма загалоўка"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:24
 msgid "on this changeset"
 msgstr "на змене"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:30
 msgid "Delete comment?"
 msgstr "Выдаліць каментар?"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:38
-#: kallithea/templates/changeset/changeset_file_comment.html:71
 msgid "Status change"
 msgstr "Змена статусу"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:87
-#, fuzzy
-msgid "Comments are in plain text. Use @username to notify another user."
-msgstr ""
-"Выкарыстоўвайце @імя_карыстальніка ў тэксце, каб адправіць паведамленне "
-"пэўнаму карыстальніку"
-
-#: kallithea/templates/changeset/changeset_file_comment.html:93
 msgid "Set changeset status"
 msgstr "Змяніць статус рэвізіі"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:95
-msgid "Vote for pull request status"
-msgstr ""
-
-#: kallithea/templates/changeset/changeset_file_comment.html:101
-#: kallithea/templates/changeset/diff_block.html:46
 msgid "No change"
 msgstr "Без змен"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:114
 msgid "Finish pull request"
 msgstr "Завяршыць pull-запыт"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:117
 msgid "Close"
 msgstr "Закрыць"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:129
 msgid "Comment"
 msgstr "Каментаваць"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:137
 msgid "You need to be logged in to comment."
 msgstr "Вам неабходна аўтарызавацца, каб пакідаць каментары."
 
-#: kallithea/templates/changeset/changeset_file_comment.html:137
 msgid "Login now"
 msgstr "Аўтарызавацца зараз"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:141
 msgid "Hide"
 msgstr "Схаваць"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:153
-#, python-format
 msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] "%d каментар"
 msgstr[1] "%d каментары"
 msgstr[2] "%d каментароў"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:154
-#, python-format
-msgid "%d inline"
-msgid_plural "%d inline"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: kallithea/templates/changeset/changeset_file_comment.html:155
-#, python-format
-msgid "%d general"
-msgid_plural "%d general"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: kallithea/templates/changeset/changeset_range.html:5
-#, python-format
 msgid "%s Changesets"
 msgstr "%s Змены"
 
-#: kallithea/templates/changeset/changeset_range.html:43
-#, python-format
 msgid "Changeset status: %s"
 msgstr "Статус набору змен: %s"
 
-#: kallithea/templates/changeset/changeset_range.html:50
 msgid "Files affected"
 msgstr "Закранутыя файлы"
 
-#: kallithea/templates/changeset/diff_block.html:30
-msgid "No file before"
-msgstr ""
-
-#: kallithea/templates/changeset/diff_block.html:33
-#, fuzzy
-#| msgid "file removed"
-msgid "File before"
-msgstr "файл выдалены"
-
-#: kallithea/templates/changeset/diff_block.html:40
-#, fuzzy
-#| msgid "Unmodified"
-msgid "Modified"
-msgstr "Без змен"
-
-#: kallithea/templates/changeset/diff_block.html:42
 msgid "Deleted"
 msgstr "Выдалены"
 
-#: kallithea/templates/changeset/diff_block.html:44
 msgid "Renamed"
 msgstr "Пераназваны"
 
-#: kallithea/templates/changeset/diff_block.html:48
-#, fuzzy, python-format
-#| msgid "Unknown revision %s"
-msgid "Unknown operation: %r"
-msgstr "Невядомая рэвізія %s"
-
-#: kallithea/templates/changeset/diff_block.html:52
-#, fuzzy
-#| msgid "No filename"
-msgid "No file after"
-msgstr "Безназоўны"
-
-#: kallithea/templates/changeset/diff_block.html:55
-#, fuzzy
-#| msgid "file added"
-msgid "File after"
-msgstr "файл выдалены"
-
-#: kallithea/templates/changeset/diff_block.html:60
-#: kallithea/templates/files/diff_2way.html:43
 msgid "Show full diff for this file"
 msgstr "Паказаць поўны diff для гэтага файла"
 
-#: kallithea/templates/changeset/diff_block.html:62
-#: kallithea/templates/files/diff_2way.html:47
 msgid "Show full side-by-side diff for this file"
 msgstr "Паказаць поўны diff для гэтага файла"
 
-#: kallithea/templates/changeset/diff_block.html:72
 msgid "Show inline comments"
 msgstr "Паказаць каментары ў радках"
 
-#: kallithea/templates/compare/compare_cs.html:5
 msgid "No changesets"
 msgstr "Няма змен"
 
-#: kallithea/templates/compare/compare_cs.html:12
-msgid "Criss cross merge situation with multiple merge ancestors detected!"
-msgstr ""
-
-#: kallithea/templates/compare/compare_cs.html:15
-msgid ""
-"Please merge the target branch to your branch before creating a pull "
-"request."
-msgstr ""
-
-#: kallithea/templates/compare/compare_cs.html:19
-#, fuzzy
-#| msgid "Common ancestor"
-msgid "Merge Ancestor"
-msgstr "Агульны продак"
-
-#: kallithea/templates/compare/compare_cs.html:40
 msgid "Show merge diff"
 msgstr "Паказаць merge diff"
 
-#: kallithea/templates/compare/compare_cs.html:54
 msgid "is"
 msgstr "адстае на"
 
-#: kallithea/templates/compare/compare_cs.html:55
-#, python-format
 msgid "%s changesets"
 msgstr "%s змен"
 
-#: kallithea/templates/compare/compare_cs.html:56
 msgid "behind"
 msgstr "ад"
 
-#: kallithea/templates/compare/compare_diff.html:6
-#: kallithea/templates/compare/compare_diff.html:8
-#, python-format
 msgid "%s Compare"
 msgstr "%s Параўнаць"
 
-#: kallithea/templates/compare/compare_diff.html:13
-#: kallithea/templates/compare/compare_diff.html:41
 msgid "Compare Revisions"
 msgstr "Параўнаць рэвізіі"
 
-#: kallithea/templates/compare/compare_diff.html:39
-msgid "Swap"
-msgstr ""
-
-#: kallithea/templates/compare/compare_diff.html:48
-msgid "Compare revisions, branches, bookmarks, or tags."
-msgstr ""
-
-#: kallithea/templates/compare/compare_diff.html:53
-#: kallithea/templates/pullrequests/pullrequest_show.html:278
-#, python-format
 msgid "Showing %s commit"
 msgid_plural "Showing %s commits"
 msgstr[0] "Паказаць %s commit"
 msgstr[1] "Паказаць %s commit'ы"
 msgstr[2] "Паказаць %s commit'аў"
 
-#: kallithea/templates/compare/compare_diff.html:95
 msgid "Show full diff"
 msgstr "Паказаць поўны diff"
 
-#: kallithea/templates/data_table/_dt_elements.html:23
 msgid "Public repository"
 msgstr "Публічны рэпазітар"
 
-#: kallithea/templates/data_table/_dt_elements.html:29
-msgid "Repository creation in progress..."
-msgstr ""
-
-#: kallithea/templates/data_table/_dt_elements.html:42
 msgid "No changesets yet"
 msgstr "Змен яшчэ не было"
 
-#: kallithea/templates/data_table/_dt_elements.html:48
-#: kallithea/templates/data_table/_dt_elements.html:50
-#, python-format
 msgid "Subscribe to %s rss feed"
 msgstr "Падпісацца на стужку RSS %s"
 
-#: kallithea/templates/data_table/_dt_elements.html:56
-#: kallithea/templates/data_table/_dt_elements.html:58
-#, python-format
 msgid "Subscribe to %s atom feed"
 msgstr "Падпісацца на стужку Atom %s"
 
-#: kallithea/templates/data_table/_dt_elements.html:76
 msgid "Creating"
 msgstr "Ствараецца"
 
-#: kallithea/templates/email_templates/changeset_comment.html:4
-#, fuzzy, python-format
-#| msgid "%(user)s commented on changeset %(age)s"
-msgid "Mention in Comment on Changeset \"%s\""
-msgstr "%(user)s пакінуў каментар да набору змен %(age)s"
-
-#: kallithea/templates/email_templates/changeset_comment.html:4
-#, fuzzy, python-format
-#| msgid "Comment from %s on %s changeset %s"
-msgid "Comment on Changeset \"%s\""
-msgstr "Каментар ад %s да набору змен %s %s"
-
-#: kallithea/templates/email_templates/changeset_comment.html:20
-#, fuzzy
-#| msgid "Changeset flow"
-msgid "Changeset on"
-msgstr "Струмень змен"
-
-#: kallithea/templates/email_templates/changeset_comment.html:23
-#: kallithea/templates/email_templates/pull_request.html:22
-#: kallithea/templates/email_templates/pull_request.html:28
-#: kallithea/templates/email_templates/pull_request_comment.html:30
-#: kallithea/templates/email_templates/pull_request_comment.html:36
-#, fuzzy
-#| msgid "Branch"
-msgid "branch"
-msgstr "Галіна"
-
-#: kallithea/templates/email_templates/changeset_comment.html:29
-#: kallithea/templates/email_templates/pull_request.html:15
-#: kallithea/templates/email_templates/pull_request_comment.html:23
-msgid "by"
-msgstr ""
-
-#: kallithea/templates/email_templates/comment.html:27
-#, fuzzy
-#| msgid "Status change"
-msgid "Status change:"
-msgstr "Змена статусу"
-
-#: kallithea/templates/email_templates/comment.html:33
-#, fuzzy
-#| msgid "This pull request has been closed and can not be updated."
-msgid "The pull request has been closed."
-msgstr "Гэты pull-запыт быў зачынены і не можа быць абноўлены."
-
-#: kallithea/templates/email_templates/password_reset.html:9
-#, python-format
 msgid "Hello %s"
 msgstr "Добры дзень, %s"
 
-#: kallithea/templates/email_templates/password_reset.html:16
 msgid "We have received a request to reset the password for your account."
 msgstr "Мы атрымалі запыт на скіданне пароля для вашага акаўнта."
 
-#: kallithea/templates/email_templates/password_reset.html:25
-msgid ""
-"This account is however managed outside this system and the password "
-"cannot be changed here."
-msgstr ""
-
-#: kallithea/templates/email_templates/password_reset.html:28
-msgid "To set a new password, click the following link"
-msgstr ""
-
-#: kallithea/templates/email_templates/password_reset.html:33
-msgid ""
-"Should you not be able to use the link above, please type the following "
-"code into the password reset form"
-msgstr ""
-
-#: kallithea/templates/email_templates/password_reset.html:44
-msgid ""
-"If it weren't you who requested the password reset, just disregard this "
-"message."
-msgstr ""
-
-#: kallithea/templates/email_templates/pull_request.html:4
-#, fuzzy, python-format
-#| msgid "%s mentioned you on %s pull request \"%s\""
-msgid "Mention on Pull Request %s \"%s\" by %s"
-msgstr "%s згадаў Вас у каментары да pull-запыту %s \"%s\""
-
-#: kallithea/templates/email_templates/pull_request.html:4
-#, fuzzy, python-format
-#| msgid "%s requested your review of %s pull request \"%s\""
-msgid "Added as Reviewer of Pull Request %s \"%s\" by %s"
-msgstr "%s запытаў рэцэнзаванне pull-запыту %s \"%s\""
-
-#: kallithea/templates/email_templates/pull_request.html:12
-#: kallithea/templates/email_templates/pull_request_comment.html:20
-#, fuzzy
-#| msgid "Pull request %s"
-msgid "Pull request"
-msgstr "Pull-запыт %s"
-
-#: kallithea/templates/email_templates/pull_request.html:19
-#: kallithea/templates/email_templates/pull_request_comment.html:27
-msgid "from"
-msgstr ""
-
-#: kallithea/templates/email_templates/pull_request.html:25
-#: kallithea/templates/email_templates/pull_request_comment.html:33
-msgid "to"
-msgstr ""
-
-#: kallithea/templates/email_templates/pull_request_comment.html:4
-#, fuzzy, python-format
-#| msgid "%s mentioned you on %s pull request \"%s\""
-msgid "Mention in Comment on Pull Request %s \"%s\""
-msgstr "%s згадаў Вас у каментары да pull-запыту %s \"%s\""
-
-#: kallithea/templates/email_templates/pull_request_comment.html:4
-#, fuzzy, python-format
-#| msgid "Pull request %s from %s#%s"
-msgid "Pull Request %s \"%s\" Closed"
-msgstr "Pull-запыт %s ад %s#%s"
-
-#: kallithea/templates/email_templates/pull_request_comment.html:4
-#, fuzzy, python-format
-#| msgid "[commented] on pull request for"
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "[каментар] у pull-запыце для"
-
-#: kallithea/templates/email_templates/registration.html:22
-#, fuzzy
-#| msgid "Group name"
-msgid "Full Name"
-msgstr "Імя групы"
-
-#: kallithea/templates/files/diff_2way.html:15
-#, python-format
-msgid "%s File side-by-side diff"
-msgstr ""
-
-#: kallithea/templates/files/diff_2way.html:19
-#: kallithea/templates/files/file_diff.html:8
 msgid "File diff"
 msgstr "Параўнанне файлаў"
 
-#: kallithea/templates/files/file_diff.html:4
-#, python-format
 msgid "%s File Diff"
 msgstr "Параўнанне файла %s"
 
-#: kallithea/templates/files/files.html:4
-#: kallithea/templates/files/files.html:77
-#, python-format
 msgid "%s Files"
 msgstr "%s Файлы"
 
-#: kallithea/templates/files/files_add.html:4
-#, python-format
 msgid "%s Files Add"
 msgstr "%s Файлаў дададзена"
 
-#: kallithea/templates/files/files_add.html:21
-#: kallithea/templates/files/files_ypjax.html:9
-#: kallithea/templates/summary/summary.html:191
 msgid "Add New File"
 msgstr "Дадаць новы файл"
 
-#: kallithea/templates/files/files_add.html:39
-#: kallithea/templates/files/files_edit.html:39
-#: kallithea/templates/files/files_ypjax.html:3
 msgid "Location"
 msgstr "Размяшчэнне"
 
-#: kallithea/templates/files/files_add.html:41
 msgid "Enter filename..."
 msgstr "Увядзіце імя файла..."
 
-#: kallithea/templates/files/files_add.html:43
-#: kallithea/templates/files/files_add.html:47
 msgid "or"
 msgstr "ці"
 
-#: kallithea/templates/files/files_add.html:43
 msgid "Upload File"
 msgstr "Адаслаць файл"
 
-#: kallithea/templates/files/files_add.html:47
 msgid "Create New File"
 msgstr "Стварыць новы файл"
 
-#: kallithea/templates/files/files_add.html:53
 msgid "New file type"
 msgstr "Тып новага файла"
 
-#: kallithea/templates/files/files_add.html:64
-#: kallithea/templates/files/files_delete.html:34
-#: kallithea/templates/files/files_edit.html:67
-msgid "Commit Message"
-msgstr ""
-
-#: kallithea/templates/files/files_add.html:68
-#: kallithea/templates/files/files_delete.html:40
-#: kallithea/templates/files/files_edit.html:71
 msgid "Commit Changes"
 msgstr "Захаваць змены"
 
-#: kallithea/templates/files/files_browser.html:40
-msgid "Search File List"
-msgstr ""
-
-#: kallithea/templates/files/files_browser.html:45
 msgid "Loading file list..."
 msgstr "Загружаецца спіс файлаў..."
 
-#: kallithea/templates/files/files_browser.html:55
-#: kallithea/templates/summary/summary.html:145
 msgid "Size"
 msgstr "Памер"
 
-#: kallithea/templates/files/files_browser.html:56
 msgid "Last Revision"
 msgstr "Апошняя версія"
 
-#: kallithea/templates/files/files_browser.html:57
 msgid "Last Modified"
 msgstr "Апошняя змена"
 
-#: kallithea/templates/files/files_browser.html:58
 msgid "Last Committer"
 msgstr "Аўтар апошняй рэвізіі"
 
-#: kallithea/templates/files/files_delete.html:4
-#, python-format
-msgid "%s Files Delete"
-msgstr ""
-
-#: kallithea/templates/files/files_delete.html:12
-#: kallithea/templates/files/files_delete.html:30
 msgid "Delete file"
 msgstr "Выдаліць файл"
 
-#: kallithea/templates/files/files_edit.html:4
-#, python-format
-msgid "%s File Edit"
-msgstr ""
-
-#: kallithea/templates/files/files_edit.html:21
 msgid "Edit file"
 msgstr "Рэдагаваць файл"
 
-#: kallithea/templates/files/files_edit.html:51
-#: kallithea/templates/files/files_source.html:28
-msgid "Show Annotation"
-msgstr ""
-
-#: kallithea/templates/files/files_edit.html:53
-#: kallithea/templates/files/files_source.html:31
-msgid "Download as Raw"
-msgstr ""
-
-#: kallithea/templates/files/files_edit.html:56
 msgid "Source"
 msgstr "Зыходны код"
 
-#: kallithea/templates/files/files_history_box.html:2
-#, python-format
 msgid "%s author"
 msgid_plural "%s authors"
 msgstr[0] "%s аўтар"
 msgstr[1] "%s аўтараў"
 msgstr[2] "%s аўтара"
 
-#: kallithea/templates/files/files_source.html:6
-msgid "Diff to Revision"
-msgstr ""
-
-#: kallithea/templates/files/files_source.html:7
-msgid "Show at Revision"
-msgstr ""
-
-#: kallithea/templates/files/files_source.html:9
 msgid "Show Full History"
 msgstr "Паказаць ўсю гісторыю"
 
-#: kallithea/templates/files/files_source.html:10
 msgid "Show Authors"
 msgstr "Паказаць аўтараў"
 
-#: kallithea/templates/files/files_source.html:26
-msgid "Show Source"
-msgstr ""
-
-#: kallithea/templates/files/files_source.html:34
-#, fuzzy, python-format
-#| msgid "Deleted branch: %s"
-msgid "Edit on Branch: %s"
-msgstr "Выдаленая галіна: %s"
-
-#: kallithea/templates/files/files_source.html:37
 msgid "Editing binary files not allowed"
 msgstr "Рэдагаванне бінарных файлаў забароненае"
 
-#: kallithea/templates/files/files_source.html:40
 msgid "Editing files allowed only when on branch head revision"
 msgstr "Рэдагаванне файлаў дазволенае толькі ў HEAD-рэвізіі дадзенай галіны"
 
-#: kallithea/templates/files/files_source.html:41
-msgid "Deleting files allowed only when on branch head revision"
-msgstr ""
-
-#: kallithea/templates/files/files_source.html:58
-#, python-format
 msgid "Binary file (%s)"
 msgstr "Бінарны файл (%s)"
 
-#: kallithea/templates/files/files_source.html:69
 msgid "File is too big to display."
 msgstr "Файл занадта вялікі для адлюстравання."
 
-#: kallithea/templates/files/files_source.html:71
 msgid "Show full annotation anyway."
 msgstr "Паказаць поўныя анатацыі."
 
-#: kallithea/templates/files/files_source.html:73
 msgid "Show as raw."
 msgstr "Паказаць сырым."
 
-#: kallithea/templates/files/files_ypjax.html:5
 msgid "annotation"
 msgstr "анатацыя"
 
-#: kallithea/templates/files/files_ypjax.html:23
 msgid "Go Back"
 msgstr "Вярнуцца"
 
-#: kallithea/templates/files/files_ypjax.html:24
 msgid "No files at given path"
 msgstr "Па зададзеным шляху файлы адсутнічаюць"
 
-#: kallithea/templates/followers/followers.html:5
-#, python-format
 msgid "%s Followers"
 msgstr "%s Назіральнікі"
 
-#: kallithea/templates/followers/followers.html:9
-#: kallithea/templates/summary/summary.html:130
-#: kallithea/templates/summary/summary.html:131
 msgid "Followers"
 msgstr "Назіральнікі"
 
-#: kallithea/templates/followers/followers_data.html:9
 msgid "Started following -"
 msgstr "Назіраць за рэпазітаром"
 
-#: kallithea/templates/forks/fork.html:5
-#, python-format
-msgid "Fork repository %s"
-msgstr ""
-
-#: kallithea/templates/forks/fork.html:25
 msgid "Fork name"
 msgstr "Імя форка"
 
-#: kallithea/templates/forks/fork.html:53
 msgid "Default revision for files page, downloads, whoosh, and readme."
 msgstr ""
 "Рэвізія па змаўчанні, з якой будзе вырабляцца выгрузка файлаў пры "
 "спампоўцы."
 
-#: kallithea/templates/forks/fork.html:58
 msgid "Private"
 msgstr "Прыватны"
 
-#: kallithea/templates/forks/fork.html:66
 msgid "Copy permissions"
 msgstr "Скапіяваць прывілеі"
 
-#: kallithea/templates/forks/fork.html:69
 msgid "Copy permissions from forked repository"
 msgstr "Скапіяваць прывілеі з форкнутага рэпазітара"
 
-#: kallithea/templates/forks/fork.html:75
 msgid "Update after clone"
 msgstr "Абнаўляць пасля кланавання"
 
-#: kallithea/templates/forks/fork.html:78
 msgid "Checkout source after making a clone"
 msgstr "Спампоўваць зыходнікі пасля стварэння клона"
 
-#: kallithea/templates/forks/fork.html:85
-msgid "Fork this Repository"
-msgstr ""
-
-#: kallithea/templates/forks/forks.html:5
-#, python-format
 msgid "%s Forks"
 msgstr "Форкі %s"
 
-#: kallithea/templates/forks/forks.html:9
-#: kallithea/templates/summary/summary.html:136
-#: kallithea/templates/summary/summary.html:137
 msgid "Forks"
 msgstr "Адгалінаванні"
 
-#: kallithea/templates/forks/forks_data.html:14
 msgid "Forked"
 msgstr "Форкнута"
 
-#: kallithea/templates/forks/forks_data.html:24
 msgid "There are no forks yet"
 msgstr "Форкі яшчэ не створаныя"
 
-#: kallithea/templates/journal/journal.html:22
 msgid "ATOM journal feed"
 msgstr "Стужка часопіса Atom"
 
-#: kallithea/templates/journal/journal.html:23
 msgid "RSS journal feed"
 msgstr "Стужка часопіса RSS"
 
-#: kallithea/templates/journal/journal.html:34
 msgid "My Repositories"
 msgstr "Мае рэпазітары"
 
-#: kallithea/templates/journal/journal_data.html:42
 msgid "No entries yet"
 msgstr "Запісы адсутнічаюць"
 
-#: kallithea/templates/journal/public_journal.html:10
 msgid "ATOM public journal feed"
 msgstr "Агульная стужка часопіса Atom"
 
-#: kallithea/templates/journal/public_journal.html:11
 msgid "RSS public journal feed"
 msgstr "Агульная стужка часопіса RSS"
 
-#: kallithea/templates/pullrequests/pullrequest.html:4
-#: kallithea/templates/pullrequests/pullrequest.html:8
 msgid "New Pull Request"
 msgstr "Новы pull-запыт"
 
-#: kallithea/templates/pullrequests/pullrequest.html:26
-#: kallithea/templates/pullrequests/pullrequest_data.html:15
-#: kallithea/templates/pullrequests/pullrequest_show.html:29
-#: kallithea/templates/pullrequests/pullrequest_show.html:52
 msgid "Title"
 msgstr "Загаловак"
 
-#: kallithea/templates/pullrequests/pullrequest.html:28
-msgid "Summarize the changes - or leave empty"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest.html:35
-#: kallithea/templates/pullrequests/pullrequest_show.html:61
 msgid "Write a short description on this pull request"
 msgstr "Напісаць кароткае пісанне па гэтым запыце"
 
-#: kallithea/templates/pullrequests/pullrequest.html:40
 msgid "Changeset flow"
 msgstr "Струмень змен"
 
-#: kallithea/templates/pullrequests/pullrequest.html:46
 msgid "Origin repository"
 msgstr "Першапачатковы рэпазітар"
 
-#: kallithea/templates/pullrequests/pullrequest.html:52
-#: kallithea/templates/pullrequests/pullrequest.html:68
 msgid "Revision"
 msgstr "Рэвізія"
 
-#: kallithea/templates/pullrequests/pullrequest.html:62
 msgid "Destination repository"
 msgstr "Рэпазітар прызначэння"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:6
 msgid "No entries"
 msgstr "Запісы отсуствуют"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:14
 msgid "Vote"
 msgstr "Галасаваць"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:17
 msgid "Age"
 msgstr "Узрост"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:18
 msgid "From"
 msgstr "Ад"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:19
 msgid "To"
 msgstr "Да"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:28
-#, python-format
 msgid "You voted: %s"
 msgstr "Вы прагаласавалі: %s"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:30
 msgid "You didn't vote"
 msgstr "Вы не галасавалі"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:35
 msgid "(no title)"
 msgstr "(няма загалоўка)"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:37
-#: kallithea/templates/pullrequests/pullrequest_show.html:31
-#: kallithea/templates/pullrequests/pullrequest_show.html:73
 msgid "Closed"
 msgstr "Зачынена"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:67
 msgid "Delete Pull Request"
 msgstr "Выдаліць pull-запыт"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:68
 msgid "Confirm to delete this pull request"
 msgstr "Пацвердзіце выдаленне гэтага pull-request'а"
 
-#: kallithea/templates/pullrequests/pullrequest_data.html:70
-#, python-format
 msgid "Confirm again to delete this pull request with %s comments"
 msgstr "Пацвердзіце выдаленне гэтага pull-запыту з %s каментарамі"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:6
-#, python-format
 msgid "%s Pull Request %s"
 msgstr "%s зull-запыт %s"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:10
-#, python-format
 msgid "Pull request %s from %s#%s"
 msgstr "Pull-запыт %s ад %s#%s"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:54
-msgid "Summarize the changes"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:67
-msgid "Voting Result"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:70
-#: kallithea/templates/pullrequests/pullrequest_show.html:71
-msgid "Pull request status calculated from votes"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:81
-msgid "Origin"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:86
 msgid "on"
 msgstr "на"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:92
 msgid "Target"
 msgstr "Цэль"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:95
-msgid ""
-"This is just a range of changesets and doesn't have a target or a real "
-"merge ancestor."
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:103
 msgid "Pull changes"
 msgstr "Прыняць змены"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:136
-#, fuzzy
-#| msgid "Registration"
-msgid "Next iteration"
-msgstr "Рэгістрацыя"
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:153
-msgid "Current revision - no change"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:177
-msgid ""
-"Pull request iterations do not change content once created. Select a "
-"revision to create a new iteration."
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:187
 msgid "Save Changes"
 msgstr "Захаваць змены"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:188
-msgid "Create New Iteration with Changes"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:189
 msgid "Cancel Changes"
 msgstr "Адмяніць змены"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:197
-#, fuzzy
-#| msgid "reviewer"
-msgid "Reviewers"
-msgstr "рэцэнзент"
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:223
 msgid "Remove reviewer"
 msgstr "Выдаліць рэцэнзента"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:234
-msgid "Type name of reviewer to add"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:240
 msgid "Potential Reviewers"
 msgstr "Патэнцыйныя рэцэнзенты"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:243
-msgid "Click to add the repository owner as reviewer:"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:268
-msgid "Pull Request Content"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:283
 msgid "Common ancestor"
 msgstr "Агульны продак"
 
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:6
-#, python-format
 msgid "%s Pull Requests"
 msgstr "%s pull-запыты"
 
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:11
-#, python-format
 msgid "Pull Requests from '%s'"
 msgstr "Pull-запыты ад '%s'"
 
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:13
-#, python-format
 msgid "Pull Requests to '%s'"
 msgstr "Pull-запыты да '%s'"
 
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:31
 msgid "Open New Pull Request"
 msgstr "Стварыць новы pull-запыт"
 
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:34
-#, python-format
 msgid "Show Pull Requests to %s"
 msgstr "Паказаць pull-запыты да %s"
 
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:36
-#, python-format
 msgid "Show Pull Requests from '%s'"
 msgstr "Паказаць pull-запыты ад %s"
 
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:44
-#: kallithea/templates/pullrequests/pullrequest_show_my.html:28
-msgid "Hide closed pull requests (only show open pull requests)"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show_all.html:46
-#: kallithea/templates/pullrequests/pullrequest_show_my.html:30
-msgid "Show closed pull requests (in addition to open pull requests)"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show_my.html:34
-msgid "Pull Requests Created by Me"
-msgstr ""
-
-#: kallithea/templates/pullrequests/pullrequest_show_my.html:37
-#, fuzzy
-#| msgid "Pull Request Reviewers"
-msgid "Pull Requests Needing My Review"
-msgstr "Рэцэнзенты pull-запытаў"
-
-#: kallithea/templates/pullrequests/pullrequest_show_my.html:40
-msgid "Pull Requests I Participate In"
-msgstr ""
-
-#: kallithea/templates/search/search.html:6
-#, python-format
-msgid "%s Search"
-msgstr ""
-
-#: kallithea/templates/search/search.html:8
-#: kallithea/templates/search/search.html:16
 msgid "Search in All Repositories"
 msgstr "Пошук па ўсіх рэпазітарах"
 
-#: kallithea/templates/search/search.html:47
 msgid "Search term"
 msgstr "Фраза для пошуку"
 
-#: kallithea/templates/search/search.html:54
 msgid "Search in"
 msgstr "Крытэр пошуку"
 
-#: kallithea/templates/search/search.html:56
 msgid "File contents"
 msgstr "Змест файлаў"
 
-#: kallithea/templates/search/search.html:57
 msgid "Commit messages"
 msgstr "Паведамленні камітаў"
 
-#: kallithea/templates/search/search.html:58
 msgid "File names"
 msgstr "Імя файла"
 
-#: kallithea/templates/search/search_commit.html:29
-#: kallithea/templates/search/search_content.html:17
-#: kallithea/templates/search/search_path.html:14
 msgid "Permission denied"
 msgstr "Недастаткова правоў"
 
-#: kallithea/templates/summary/statistics.html:4
-#, python-format
-msgid "%s Statistics"
-msgstr ""
-
-#: kallithea/templates/summary/statistics.html:16
-#: kallithea/templates/summary/summary.html:36
-#, python-format
 msgid "%s ATOM feed"
 msgstr "Atom стужка рэпазітара %s"
 
-#: kallithea/templates/summary/statistics.html:17
-#: kallithea/templates/summary/summary.html:37
-#, python-format
 msgid "%s RSS feed"
 msgstr "RSS стужка рэпазітара %s"
 
-#: kallithea/templates/summary/statistics.html:35
-#: kallithea/templates/summary/summary.html:91
-#: kallithea/templates/summary/summary.html:105
 msgid "Enable"
 msgstr "Уключана"
 
-#: kallithea/templates/summary/statistics.html:38
 msgid "Stats gathered: "
 msgstr "Атрыманая статыстыка: "
 
-#: kallithea/templates/summary/statistics.html:87
-#: kallithea/templates/summary/summary.html:354
 msgid "files"
 msgstr "файлы"
 
-#: kallithea/templates/summary/statistics.html:111
-#: kallithea/templates/summary/summary.html:384
 msgid "Show more"
 msgstr "Паказаць яшчэ"
 
-#: kallithea/templates/summary/statistics.html:405
 msgid "commits"
 msgstr "commit'ы"
 
-#: kallithea/templates/summary/statistics.html:406
 msgid "files added"
 msgstr "файлы дададзены"
 
-#: kallithea/templates/summary/statistics.html:407
 msgid "files changed"
 msgstr "файлы зменены"
 
-#: kallithea/templates/summary/statistics.html:408
 msgid "files removed"
 msgstr "файлы выдалены"
 
-#: kallithea/templates/summary/statistics.html:410
 msgid "commit"
 msgstr "commit"
 
-#: kallithea/templates/summary/statistics.html:411
 msgid "file added"
 msgstr "файл выдалены"
 
-#: kallithea/templates/summary/statistics.html:412
 msgid "file changed"
 msgstr "файл зменены"
 
-#: kallithea/templates/summary/statistics.html:413
 msgid "file removed"
 msgstr "файл выдалены"
 
-#: kallithea/templates/summary/summary.html:5
-#, python-format
 msgid "%s Summary"
 msgstr "%s агульныя звесткі"
 
-#: kallithea/templates/summary/summary.html:14
-#, python-format
-msgid "Repository locked by %s"
-msgstr "Рэпазітар заблакаваны %s"
-
-#: kallithea/templates/summary/summary.html:16
-msgid "Repository unlocked"
-msgstr "Рэпазітар разблакаваны"
-
-#: kallithea/templates/summary/summary.html:22
 msgid "Fork of"
 msgstr "Форк ад"
 
-#: kallithea/templates/summary/summary.html:27
 msgid "Clone from"
 msgstr "Кланаваць з"
 
-#: kallithea/templates/summary/summary.html:68
-msgid "Show by ID"
-msgstr "Паводле ID"
+msgid "Clone URL"
+msgstr "URL для кланавання"
 
-#: kallithea/templates/summary/summary.html:73
-msgid "Show by Name"
-msgstr "Паводле імя"
-
-#: kallithea/templates/summary/summary.html:84
 msgid "Trending files"
 msgstr "Папулярныя файлы"
 
-#: kallithea/templates/summary/summary.html:98
 msgid "Download"
 msgstr "Спампаваць"
 
-#: kallithea/templates/summary/summary.html:101
 msgid "There are no downloads yet"
 msgstr "Спамповак яшчэ няма"
 
-#: kallithea/templates/summary/summary.html:103
 msgid "Downloads are disabled for this repository"
 msgstr "Спампоўванне адключанае ў гэтым рэпазітары"
 
-#: kallithea/templates/summary/summary.html:109
 msgid "Download as zip"
 msgstr "Спампаваць у zip"
 
-#: kallithea/templates/summary/summary.html:113
 msgid "Check this to download archive with subrepos"
 msgstr "Адзначце для спампоўкі архіва з даччынымі рэпазітарамі"
 
-#: kallithea/templates/summary/summary.html:115
 msgid "With subrepos"
 msgstr "З даччынымі рэпазітарамі"
 
-#: kallithea/templates/summary/summary.html:153
-#: kallithea/templates/summary/summary.html:155
 msgid "Feed"
 msgstr "Стужка навін"
 
-#: kallithea/templates/summary/summary.html:175
 msgid "Latest Changes"
 msgstr "Апошнія змены"
 
-#: kallithea/templates/summary/summary.html:177
 msgid "Quick Start"
 msgstr "Хуткі старт"
 
-#: kallithea/templates/summary/summary.html:188
 msgid "Add or upload files directly via Kallithea"
 msgstr "Дадаць ці загрузіць файлы праз Kallithea"
 
-#: kallithea/templates/summary/summary.html:196
 msgid "Push new repository"
 msgstr "Адправіць новы рэпазітар"
 
-#: kallithea/templates/summary/summary.html:204
 msgid "Existing repository?"
 msgstr "Існы рэпазітар?"
 
-#: kallithea/templates/summary/summary.html:222
-#, python-format
-msgid "Readme file from revision %s:%s"
-msgstr ""
-
-#: kallithea/templates/summary/summary.html:298
-#, python-format
 msgid "Download %s as %s"
 msgstr "Спампаваць %s як %s"
-
-#~ msgid "There is no index to search in. Please run whoosh indexer"
-#~ msgstr "Індэксы адсутнічаюць. Калі ласка, запусціце індэксатар Whoosh"
-
-#~ msgid "IP %s not allowed"
-#~ msgstr "IP %s заблакаваны"
-
-#~ msgid "%(user)s commented on changeset %(age)s"
-#~ msgstr "%(user)s пакінуў каментар да набору змен %(age)s"
-
-#~ msgid "%(user)s sent message %(age)s"
-#~ msgstr "%(user)s адправіў паведамленне %(age)s"
-
-#~ msgid "%(user)s mentioned you %(age)s"
-#~ msgstr "%(user)s згадаў вас %(age)s"
-
-#~ msgid "%(user)s registered in Kallithea %(age)s"
-#~ msgstr "%(user)s зарэгістраваўся ў Kallithea %(age)s"
-
-#~ msgid "%(user)s opened new pull request %(age)s"
-#~ msgstr "%(user)s адкрыў новы pull-запыт %(age)s"
-
-#~ msgid "%(user)s commented on pull request %(age)s"
-#~ msgstr "%(user)s пакінуў каментар да pull-запыту %(age)s"
-
-#~ msgid "%(user)s commented on changeset at %(when)s"
-#~ msgstr "%(user)s пакінуў каментар да набору змен %(when)s"
-
-#~ msgid "%(user)s sent message at %(when)s"
-#~ msgstr "%(user)s адправіў паведамленне %(when)s"
-
-#~ msgid "%(user)s mentioned you at %(when)s"
-#~ msgstr "%(user)s згадаў вас %(when)s"
-
-#~ msgid "%(user)s registered in Kallithea at %(when)s"
-#~ msgstr "%(user)s зарэгістраваўся ў Kallithea %(when)s"
-
-#~ msgid "%(user)s opened new pull request at %(when)s"
-#~ msgstr "%(user)s адкрыў новы pull-запыт %(when)s"
-
-#~ msgid "%(user)s commented on pull request at %(when)s"
-#~ msgstr "%(user)s пакінуў каментар да pull-запыту %(when)s"
-
-#, fuzzy
-#~| msgid "Repository group"
-#~ msgid "Repository Group"
-#~ msgstr "Група рэпазітароў"
-
-#~ msgid "My Notifications"
-#~ msgstr "Мае апавяшчэнні"
-
-#~ msgid "All"
-#~ msgstr "Усе"
-
-#~ msgid "Comments"
-#~ msgstr "Каментары"
-
-#~ msgid "Mark All Read"
-#~ msgstr "Адзначыць усе як прачытаныя"
-
-#, fuzzy
-#~| msgid "Mark All Read"
-#~ msgid "Mark as read"
-#~ msgstr "Адзначыць усе як прачытаныя"
-
-#~ msgid "No notifications here yet"
-#~ msgstr "Апавяшчэнняў няма"
-
-#~ msgid "Show Notification"
-#~ msgstr "Паказаць апавяшчэнне"
-
-#~ msgid "Notifications"
-#~ msgstr "Апавяшчэнні"
-
-#~ msgid "Home"
-#~ msgstr "Дамоў"
-
-#~ msgid "with"
-#~ msgstr "з"
-
-#~ msgid "members"
-#~ msgstr "удзельнікі"
-
-#~ msgid "Changeset has comments"
-#~ msgstr "Каментары адсутнічаюць"
-
-#~ msgid "Author"
-#~ msgstr "Аўтар"
-
-#~ msgid "Refs"
-#~ msgstr "Спасылкі"
-
-#~ msgid "Commenting on line."
-#~ msgstr "Каментар да радка."
-
-#, fuzzy
-#~| msgid "on pull request"
-#~ msgid "Pull request from"
-#~ msgstr "у pull-запыце"
-
-#, fuzzy
-#~| msgid "Date"
-#~ msgid "at"
-#~ msgstr "Дата"
-
-#~ msgid "Previous revision"
-#~ msgstr "Папярэдняя рэвізія"
-
-#~ msgid "Next revision"
-#~ msgstr "Наступная рэвізія"
-
-#~ msgid "Follow current branch"
-#~ msgstr "Адсочваць дадзеную галіну"
-
-#~ msgid "Still not reviewed by"
-#~ msgstr "Яшчэ не разгледжаны"
-
-#~ msgid "%d reviewer"
-#~ msgid_plural "%d reviewers"
-#~ msgstr[0] "%d рэцэнзент"
-#~ msgstr[1] "%d рэцэнзенты"
-#~ msgstr[2] "%d рэцэнзентаў"
-
-#~ msgid "Pull request was reviewed by all reviewers"
-#~ msgstr "Запыт на занясенне змен быў разгледжаны ўсімі рэцэнзентамі"
-
-#~ msgid "There are no reviewers"
-#~ msgstr "Няма рэцэнзентаў"
-
-#~ msgid "Pull Request Reviewers"
-#~ msgstr "Рэцэнзенты pull-запытаў"
-
-#~ msgid "Dashboard"
-#~ msgstr "Панэль кіравання"
-
-#~ msgid "Group Name"
-#~ msgstr "Імя групы"
-
-#~ msgid "Remember me"
-#~ msgstr "Запомніць"
-
-#~ msgid "Change your avatar at"
-#~ msgstr "Змяніць аватар можна праз"
-
-#~ msgid "Using"
-#~ msgstr "Выкарыстоўваецца"
-
-#~ msgid "Missing email, please update your user email address."
-#~ msgstr "Няма email адрэсы, калі ласка, абнавіце ваш email."
-
-#~ msgid "Rescan option"
-#~ msgstr "Опцыі перасканіравання"
-
-#~ msgid "Web"
-#~ msgstr "Вэб"
-
-#~ msgid "Require SSL for vcs operations"
-#~ msgstr "Запытваць SSL для аперацый з VCS"
-
-#~ msgid "Use Gravatars in Kallithea"
-#~ msgstr "Выкарыстоўваць Gravatars у Kallithea"
-
-#~ msgid "Dashboard items"
-#~ msgstr "Элементы панэлі"
-
-#~ msgid ""
-#~ "Number of items displayed in the main page dashboard before pagination "
-#~ "is shown."
-#~ msgstr ""
-#~ "Колькасць элементаў, што паказваюцца на галоўнай старонцы панэлі "
-#~ "кіравання перад паказам нумарацыі старонак."
-
-#~ msgid "quick filter..."
-#~ msgstr "фільтр..."
-
-#~ msgid "Missing email, please update this user email address."
-#~ msgstr "Не паказаны email. Калі ласка, абнавіце email карыстальніка."
-
-#~ msgid "Keyboard shortcuts"
-#~ msgstr "Гарачыя клавішы"
-
-#~ msgid "Forgot password ?"
-#~ msgstr "Забыліся на пароль?"
-
-#~ msgid "Ancestor"
-#~ msgstr "Продак"
-
-#~ msgid "Comment from %s on %s changeset %s"
-#~ msgstr "Каментар ад %s да набору змен %s %s"
-
-#~ msgid "The changeset status was changed to"
-#~ msgstr "Статус набору змен зменены на"
-
-#~ msgid "This is an automatic notification. Don't reply to this mail."
-#~ msgstr ""
-#~ "Гэта аўтаматычнае апавяшчэнне. Не адказвайце на гэтае паведамленне."
-
-#~ msgid "%s mentioned you on %s pull request \"%s\""
-#~ msgstr "%s згадаў Вас у каментары да pull-запыту %s \"%s\""
-
-#~ msgid "%s requested your review of %s pull request \"%s\""
-#~ msgstr "%s запытаў рэцэнзаванне pull-запыту %s \"%s\""
-
-#~ msgid "The comment closed the pull request with status"
-#~ msgstr "Каментар зачыніў pull-запыт са статусам"
-
-#~ msgid "The comment was made with status"
-#~ msgstr "Каментар пакінуты са статусам"
-
-#~ msgid "View this user here"
-#~ msgstr "Падрабязней пра карыстальніка"
-
-#~ msgid "Repository Size"
-#~ msgstr "Памер рэпазітара"
-
-#~ msgid "No comments."
-#~ msgstr "Няма каментароў."
-
-#~ msgid "public journal"
-#~ msgstr "агульнадаступны часопіс"
-
-#~ msgid "journal"
-#~ msgstr "часопіс"
-
-#~ msgid "Locked repository"
-#~ msgstr "Зачынены рэпазітар"
-
-#~ msgid "Unlocked repository"
-#~ msgstr "Адкрыты рэпазітар"
-
-#~ msgid "Unlocked"
-#~ msgstr "Разблакавана"
-
-#~ msgid "Locked"
-#~ msgstr "Заблакавана"
-
-#~ msgid "Repository has been %s"
-#~ msgstr "Рэпазітар %s"
-
-#~ msgid "You can't edit this user"
-#~ msgstr "Вы не можаце рэдагаваць дадзенага карыстальніка"
-
-#~ msgid "No Files"
-#~ msgstr "Файлаў няма"
-
-#~ msgid "Username \"%(username)s\" is forbidden"
-#~ msgstr "Імя \"%(username)s\" адхілена"
-
-#~ msgid "invalid user name"
-#~ msgstr "няслушнае імя карыстальніка"
-
-#~ msgid "Your account is disabled"
-#~ msgstr "Ваш акаўнт выключаны"
-
-#~ msgid "invalid clone URL"
-#~ msgstr "няслушны URL для кланавання"
-
-#~ msgid "Defaults"
-#~ msgstr "Значэнні па змаўчанні"
-
-#~ msgid "My Emails"
-#~ msgstr "Мае адрасы E-mail"
-
-#~ msgid "Watched"
-#~ msgstr "Прагледжана"
-
-#~ msgid "My Permissions"
-#~ msgstr "Мае прывілеі"
-
-#~ msgid "reset"
-#~ msgstr "cкінуць"
-
-#~ msgid "delete"
-#~ msgstr "выдаліць"
-
-#~ msgid "Permissions Administration"
-#~ msgstr "Кіраванне прывілеямі"
-
-#~ msgid "Overview"
-#~ msgstr "Агляд"
-
-#~ msgid "Overwrite existing settings"
-#~ msgstr "Перазапісаць існыя налады"
-
-#~ msgid "Default IP Whitelist for All Users"
-#~ msgstr "Белы спіс IP для ўсіх карыстальнікаў"
-
-#~ msgid "Default User Permissions Overview"
-#~ msgstr "Агляд мае рацыю карыстальнікаў па змаўчанні"
-
-#~ msgid "none"
-#~ msgstr "нічога"
-
-#~ msgid "read"
-#~ msgstr "чытаць"
-
-#~ msgid "write"
-#~ msgstr "запісваць"
-
-#~ msgid "admin"
-#~ msgstr "адміністратар"
-
-#~ msgid "Optional URL from which repository should be cloned."
-#~ msgstr "Апцыянальны URL, з якога патрабуецца скланаваць рэпазітар."
-
-#~ msgid "Remote URL"
-#~ msgstr "Спасылка для кланавання"
-
-#~ msgid "Pull Changes from Remote Location"
-#~ msgstr "Атрымаць змены з выдаленага боку"
-
-#~ msgid "Non-changeable id"
-#~ msgstr "Нязменлівы id"
-
-#~ msgid "edit"
-#~ msgstr "рэдагаваць"
-
-#~ msgid "new value"
-#~ msgstr "новае значэнне"
-
-#~ msgid "SMTP server"
-#~ msgstr "SMTP-сервер"
-
-#~ msgid "Destroy old data"
-#~ msgstr "Знішчыць усе дадзеныя"
-
-#~ msgid "show"
-#~ msgstr "паказа́ць"
-
-#~ msgid "Status change from pull request"
-#~ msgstr "Змена статусу"
-
-#~ msgid "revision"
-#~ msgstr "рэвізія"
-
-#~ msgid "Mimetype"
-#~ msgstr "Тып файла"
-
-#~ msgid "My Repos"
-#~ msgstr "Мае рэпазітары"
-
-#~ msgid "Latest vote: %s"
-#~ msgstr "Апошняя адзнака: %s"
-
-#~ msgid "Nobody voted"
-#~ msgstr "Ніхто не галасаваў"
-
-#~ msgid "owner"
-#~ msgstr "уладальнік"
-
-#~ msgid "Your new password"
-#~ msgstr "Ваш новы пароль"
-
-#~ msgid "Your new Kallithea password:%s"
-#~ msgstr "Ваш новы пароль ад Kallithea: %s"
-
-#~ msgid "Open New Pull Request for Selected Changesets"
-#~ msgstr "Адкрыць новы pull-request для абраных набораў змен"
-
-#~ msgid "Show Selected Changeset __S"
-#~ msgstr "Паказаць абраны набор змен: __S"
-
-#~ msgid "You can generate it by clicking following URL"
-#~ msgstr ""
-#~ "Вы можаце нанова згенераваць яго, пяройдучы па наступнай спасылцы"
-
-#~ msgid "Created by"
-#~ msgstr "Створана"
-
-#~ msgid "Closed, replaced by %s ."
-#~ msgstr "Зачынены, заменены %s."
-
-#~ msgid "Closing."
-#~ msgstr "Зачынены."
-
-#~ msgid "Changeset not found"
-#~ msgstr "Набор змен не знойдзены"
-
-#~ msgid "Repository no access"
-#~ msgstr "Рэпазітар - няма доступу"
-
-#~ msgid "Repository read access"
-#~ msgstr "Рэпазітар - доступ на чытанне"
-
-#~ msgid "Repository write access"
-#~ msgstr "Рэпазітар - доступ на запіс"
-
-#~ msgid "Repository admin access"
-#~ msgstr "Рэпазітар - адміністраванне"
-
-#~ msgid "Repository Group no access"
-#~ msgstr "Група Рэпазітароў - няма доступу"
-
-#~ msgid "Repository Group read access"
-#~ msgstr "Група Рэпазітароў - доступ на чытанне"
-
-#~ msgid "Repository Group write access"
-#~ msgstr "Група Рэпазітароў - доступ на запіс"
-
-#~ msgid "Repository Group admin access"
-#~ msgstr "Група Рэпазітароў - адміністраванне"
-
-#~ msgid "Repository creation disabled"
-#~ msgstr "Стварэнне рэпазітароў адключанае"
-
-#~ msgid "Repository creation enabled"
-#~ msgstr "Стварэнне рэпазітароў уключанае"
-
-#~ msgid "Repository forking disabled"
-#~ msgstr "Магчымасць ствараць форк рэпазітара адключаная"
-
-#~ msgid "Repository forking enabled"
-#~ msgstr "Магчымасць ствараць форк рэпазітара ўключаная"
-
-#~ msgid "Register disabled"
-#~ msgstr "Рэгістрацыя адключаная"
-
-#~ msgid "Register new user with Kallithea with manual activation"
-#~ msgstr "Рэгістрацыя новага карыстальніка ў Kallithea з ручной актывацыяй"
-
-#~ msgid "Register new user with Kallithea with auto activation"
-#~ msgstr ""
-#~ "Рэгістрацыя новага карыстальніка ў Kallithea з аўтаматычнай актывацыяй"
-
-#~ msgid "Not Reviewed"
-#~ msgstr "Не прагледжана"
-
-#~ msgid "Rejected"
-#~ msgstr "Адхілена"
-
-#~ msgid "Under Review"
-#~ msgstr "На разглядзе"
-
-#~ msgid "Repository group no access"
-#~ msgstr "Група Рэпазітароў - няма доступу"
-
-#~ msgid "Repository group read access"
-#~ msgstr "Група рэпазітароў - доступ на чытанне"
-
-#~ msgid "Repository group write access"
-#~ msgstr "Група рэпазітароў - доступ на запіс"
-
-#~ msgid "Repository group admin access"
-#~ msgstr "Група рэпазітароў - адміністраванне"
-
-#~ msgid "User group no access"
-#~ msgstr "Група карыстальнікаў - няма доступу"
-
-#~ msgid "User group read access"
-#~ msgstr "Група карыстальнікаў - доступ на чытанне"
-
-#~ msgid "User group write access"
-#~ msgstr "Група карыстальнікаў - доступ на запіс"
-
-#~ msgid "User group admin access"
-#~ msgstr "Група карыстальнікаў - адміністраванне"
-
-#~ msgid "Repository Group creation disabled"
-#~ msgstr "Стварэнне груп рэпазітароў адключанае"
-
-#~ msgid "Repository Group creation enabled"
-#~ msgstr "Стварэнне груп рэпазітароў уключанае"
-
-#~ msgid "User Group creation disabled"
-#~ msgstr "Стварэнне груп карыстальнікаў адключанае"
-
-#~ msgid "User Group creation enabled"
-#~ msgstr "Стварэнне груп карыстальнікаў уключанае"
-
-#~ msgid "User Registration with manual account activation"
-#~ msgstr "Рэгістрацыя карыстальніка з ручной актывацыяй уліковага запісу"
-
-#~ msgid "User Registration with automatic account activation"
-#~ msgstr "Рэгістрацыя карыстальніка з аўтаматычнай актывацыяй"
-
-#~ msgid "[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
-#~ msgstr ""
-#~ "%(user)s просіць вас разгледзець pull request %(pr_nice_id)s: "
-#~ "%(pr_title)s"
-
-#~ msgid "repositories"
-#~ msgstr "рэпазітары"
-
-#~ msgid "No repositories found."
-#~ msgstr "Рэпазітары не знойдзеныя."
-
-#~ msgid "There are no branches yet"
-#~ msgstr "Галіны яшчэ не створаныя"
-
-#~ msgid "There are no tags yet"
-#~ msgstr "Пазнакі адсутнічаюць"
-
-#~ msgid "There are no bookmarks yet"
-#~ msgstr "Закладак яшчэ няма"
-
-#~ msgid "enabled"
-#~ msgstr "уключана"
-
-#~ msgid "%s Bookmarks"
-#~ msgstr "Закладкі %s"
-
-#~ msgid "Compare Bookmarks"
-#~ msgstr "Параўнаць закладкі"
-
-#~ msgid "%s Branches"
-#~ msgstr "%s Галіны"
-
-#~ msgid "Compare Branches"
-#~ msgstr "Параўнаць галіны"
-
-#~ msgid "Editing file"
-#~ msgstr "Рэдагаванне файла"
-
-#~ msgid "Update"
-#~ msgstr "Абнавіць"
-
-#~ msgid "Save Updates as New Pull Request"
-#~ msgstr "Захаваць абнаўленні як новы pull-запыт"
-
-#~ msgid "%s Tags"
-#~ msgstr "%s Тэгаў"
-
-#~ msgid "Compare Tags"
-#~ msgstr "Параўнаць тэгі"
-
-#~ msgid ""
-#~ "Changing status on a changeset associated with a closed pull request "
-#~ "is not allowed"
-#~ msgstr ""
-#~ "Нельга рэдагаваць статус змен, злучаных з зачыненымі pull-request'ами"
-
-#~ msgid "You have successfully registered into Kallithea"
-#~ msgstr "Рэгістрацыя ў Kallithea прайшла паспяхова"
-
-#~ msgid "This pull request can be updated with changes on %s:"
-#~ msgstr "Гэты pull-запыт можа быць абноўлены з %s:"
-
-#~ msgid "Confirm to invalidate repository cache."
-#~ msgstr "Пацвердзіце скід кэша."
-
-#~ msgid ""
-#~ "Changeset status: %s\n"
-#~ "Click to open associated pull request %s"
-#~ msgstr ""
-#~ "Статут набору змен: %s?\n"
-#~ "Клікніце, каб перайсці да адпаведнага pull-request'у #%s"
-
-#~ msgid "Commenting on line {1}."
-#~ msgstr "Каментар да радка {1}."
-
-#~ msgid "Comments parsed using %s syntax with %s support."
-#~ msgstr ""
-#~ "Парсінг каментароў выкананы з выкарыстаннем сінтаксісу %s з падтрымкай "
-#~ "%s."
-
-#~ msgid "Use @username inside this text to notify another user"
-#~ msgstr ""
-#~ "Выкарыстоўвайце @імя_карыстача ў тэксце, каб адправіць абвестку "
-#~ "пэўнаму карыстачу"
-
-#~ msgid "Comment preview"
-#~ msgstr "Папярэдні прагляд каментара"
-
-#~ msgid "Preview"
-#~ msgstr "Прадпрагляд"
-
-#~ msgid "Use @username inside this text to notify another user."
-#~ msgstr ""
-#~ "Выкарыстоўвайце @імя_карыстача ў тэксце, каб адправіць абвестку "
-#~ "пэўнаму карыстачу"
-
-#~ msgid "New file mode"
-#~ msgstr "Рэжым новага файла"
-
-#~ msgid "File is too big to display"
-#~ msgstr "Файл занадта вялікай для адлюстравання"

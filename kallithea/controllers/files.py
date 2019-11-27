@@ -25,43 +25,36 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import logging
 import os
 import posixpath
-import logging
-import traceback
-import tempfile
 import shutil
+import tempfile
+import traceback
+from collections import OrderedDict
 
-from tg import request, response, tmpl_context as c
+from tg import request, response
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPFound
+from webob.exc import HTTPFound, HTTPNotFound
 
 from kallithea.config.routing import url
-from kallithea.lib.utils import action_logger
+from kallithea.controllers.changeset import _context_url, _ignorews_url, anchor_url, get_ignore_ws, get_line_ctx
 from kallithea.lib import diffs
 from kallithea.lib import helpers as h
-
-from kallithea.lib.compat import OrderedDict
-from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str, \
-    str2bool, safe_int
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
-from kallithea.lib.base import BaseRepoController, render, jsonify
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseRepoController, jsonify, render
+from kallithea.lib.exceptions import NonRelativePathError
+from kallithea.lib.utils import action_logger
+from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_str, str2bool
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import RepositoryError, \
-    ChangesetDoesNotExistError, EmptyRepositoryError, \
-    ImproperArchiveTypeError, VCSError, NodeAlreadyExistsError, \
-    NodeDoesNotExistError, ChangesetError, NodeError
+from kallithea.lib.vcs.exceptions import (
+    ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, ImproperArchiveTypeError, NodeAlreadyExistsError, NodeDoesNotExistError, NodeError, RepositoryError, VCSError)
 from kallithea.lib.vcs.nodes import FileNode
-
+from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
-from kallithea.model.db import Repository
-
-from kallithea.controllers.changeset import anchor_url, _ignorews_url, \
-    _context_url, get_line_ctx, get_ignore_ws
-from webob.exc import HTTPNotFound
-from kallithea.lib.exceptions import NonRelativePathError
 
 
 log = logging.getLogger(__name__)
@@ -295,14 +288,6 @@ class FilesController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('write')
     def delete(self, repo_name, revision, f_path):
         repo = c.db_repo
-        if repo.enable_locking and repo.locked[0]:
-            h.flash(_('This repository has been locked by %s on %s')
-                % (h.person_by_id(repo.locked[0]),
-                   h.fmt_date(h.time_to_datetime(repo.locked[1]))),
-                'warning')
-            raise HTTPFound(location=h.url('files_home',
-                                  repo_name=repo_name, revision='tip'))
-
         # check if revision is a branch identifier- basically we cannot
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
@@ -334,7 +319,9 @@ class FilesController(BaseRepoController):
                     }
                 }
                 self.scm_model.delete_nodes(
-                    user=request.authuser.user_id, repo=c.db_repo,
+                    user=request.authuser.user_id,
+                    ip_addr=request.ip_addr,
+                    repo=c.db_repo,
                     message=message,
                     nodes=nodes,
                     parent_cs=c.cs,
@@ -355,14 +342,6 @@ class FilesController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('write')
     def edit(self, repo_name, revision, f_path):
         repo = c.db_repo
-        if repo.enable_locking and repo.locked[0]:
-            h.flash(_('This repository has been locked by %s on %s')
-                % (h.person_by_id(repo.locked[0]),
-                   h.fmt_date(h.time_to_datetime(repo.locked[1]))),
-                'warning')
-            raise HTTPFound(location=h.url('files_home',
-                                  repo_name=repo_name, revision='tip'))
-
         # check if revision is a branch identifier- basically we cannot
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
@@ -405,6 +384,7 @@ class FilesController(BaseRepoController):
                 self.scm_model.commit_change(repo=c.db_repo_scm_instance,
                                              repo_name=repo_name, cs=c.cs,
                                              user=request.authuser.user_id,
+                                             ip_addr=request.ip_addr,
                                              author=author, message=message,
                                              content=content, f_path=f_path)
                 h.flash(_('Successfully committed to %s') % f_path,
@@ -422,14 +402,6 @@ class FilesController(BaseRepoController):
     def add(self, repo_name, revision, f_path):
 
         repo = c.db_repo
-        if repo.enable_locking and repo.locked[0]:
-            h.flash(_('This repository has been locked by %s on %s')
-                % (h.person_by_id(repo.locked[0]),
-                   h.fmt_date(h.time_to_datetime(repo.locked[1]))),
-                  'warning')
-            raise HTTPFound(location=h.url('files_home',
-                                  repo_name=repo_name, revision='tip'))
-
         r_post = request.POST
         c.cs = self.__get_cs(revision, silent_empty=True)
         if c.cs is None:
@@ -474,7 +446,9 @@ class FilesController(BaseRepoController):
                     }
                 }
                 self.scm_model.create_nodes(
-                    user=request.authuser.user_id, repo=c.db_repo,
+                    user=request.authuser.user_id,
+                    ip_addr=request.ip_addr,
+                    repo=c.db_repo,
                     message=message,
                     nodes=nodes,
                     parent_cs=c.cs,

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Validate the specified commits against test suite and other checks.
 
 if [ -n "$VIRTUAL_ENV" ]; then
@@ -37,9 +37,7 @@ for rev in $(hg log -r "$1" -T '{node}\n'); do
     virtualenv -p "$(command -v python2)" "$venv"
     source "$venv/bin/activate"
     pip install --upgrade pip setuptools
-    pip install -e .
-    pip install -r dev_requirements.txt
-    pip install python-ldap python-pam
+    pip install -e . -r dev_requirements.txt python-ldap python-pam
 
     # run-all-cleanup
     scripts/run-all-cleanup

@@ -28,19 +28,19 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from tg import response, tmpl_context as c
+from beaker.cache import cache_region
+from tg import response
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-
-from beaker.cache import cache_region, region_invalidate
 from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from kallithea import CONFIG
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController
 from kallithea.lib.diffs import DiffProcessor
-from kallithea.model.db import CacheInvalidation
-from kallithea.lib.utils2 import safe_int, str2bool, safe_unicode
+from kallithea.lib.utils2 import safe_int, safe_unicode, str2bool
+
 
 log = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ ttl = "5"
 
 class FeedController(BaseRepoController):
 
-    @LoginRequired(api_access=True, allow_default_user=True)
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def _before(self, *args, **kwargs):
         super(FeedController, self)._before(*args, **kwargs)
@@ -106,7 +106,7 @@ class FeedController(BaseRepoController):
         """Produce an atom-1.0 feed via feedgenerator module"""
 
         @cache_region('long_term', '_get_feed_from_cache')
-        def _get_feed_from_cache(key, kind):
+        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             feed = Atom1Feed(
                 title=_('%s %s feed') % (c.site_name, repo_name),
                 link=h.canonical_url('summary_home', repo_name=repo_name),
@@ -129,16 +129,13 @@ class FeedController(BaseRepoController):
             return feed.writeString('utf-8')
 
         kind = 'ATOM'
-        valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
-        if not valid:
-            region_invalidate(_get_feed_from_cache, None, '_get_feed_from_cache', repo_name, kind)
-        return _get_feed_from_cache(repo_name, kind)
+        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
 
     def rss(self, repo_name):
         """Produce an rss2 feed via feedgenerator module"""
 
         @cache_region('long_term', '_get_feed_from_cache')
-        def _get_feed_from_cache(key, kind):
+        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             feed = Rss201rev2Feed(
                 title=_('%s %s feed') % (c.site_name, repo_name),
                 link=h.canonical_url('summary_home', repo_name=repo_name),
@@ -161,7 +158,4 @@ class FeedController(BaseRepoController):
             return feed.writeString('utf-8')
 
         kind = 'RSS'
-        valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
-        if not valid:
-            region_invalidate(_get_feed_from_cache, None, '_get_feed_from_cache', repo_name, kind)
-        return _get_feed_from_cache(repo_name, kind)
+        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))

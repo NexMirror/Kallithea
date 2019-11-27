@@ -29,37 +29,33 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import datetime
-import decorator
 import logging
 import time
 import traceback
 import warnings
 
-import webob.exc
-import paste.httpexceptions
+import decorator
 import paste.auth.basic
+import paste.httpexceptions
 import paste.httpheaders
-from webhelpers.pylonslib import secure_form
-
-from tg import config, tmpl_context as c, request, response, session, render_template
-from tg import TGController
+import webob.exc
+from tg import TGController, config, render_template, request, response, session
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 
-from kallithea import __version__, BACKENDS
-
+from kallithea import BACKENDS, __version__
 from kallithea.config.routing import url
-from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
-    safe_str, safe_int
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.compat import json
-from kallithea.lib.utils import get_repo_slug
 from kallithea.lib.exceptions import UserCreationError
-from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
+from kallithea.lib.utils import get_repo_slug, is_valid_repo
+from kallithea.lib.utils2 import AttributeDict, safe_int, safe_str, safe_unicode, set_hook_environment, str2bool
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model import meta
-
-from kallithea.model.db import PullRequest, Repository, Ui, User, Setting
+from kallithea.model.db import PullRequest, Repository, Setting, User
 from kallithea.model.scm import ScmModel
+
 
 log = logging.getLogger(__name__)
 
@@ -102,14 +98,14 @@ def _get_ip_addr(environ):
 
 
 def _get_access_path(environ):
-    path = environ.get('PATH_INFO')
+    """Return PATH_INFO from environ ... using tg.original_request if available."""
     org_req = environ.get('tg.original_request')
-    if org_req:
-        path = org_req.environ.get('PATH_INFO')
-    return path
+    if org_req is not None:
+        environ = org_req.environ
+    return environ.get('PATH_INFO')
 
 
-def log_in_user(user, remember, is_external_auth):
+def log_in_user(user, remember, is_external_auth, ip_addr):
     """
     Log a `User` in and update session and cookies. If `remember` is True,
     the session cookie is set to expire in a year; otherwise, it expires at
@@ -117,14 +113,15 @@ def log_in_user(user, remember, is_external_auth):
 
     Returns populated `AuthUser` object.
     """
+    # It should not be possible to explicitly log in as the default user.
+    assert not user.is_default_user, user
+
+    auth_user = AuthUser.make(dbuser=user, is_external_auth=is_external_auth, ip_addr=ip_addr)
+    if auth_user is None:
+        return None
+
     user.update_lastlogin()
     meta.Session().commit()
-
-    auth_user = AuthUser(dbuser=user,
-                         is_external_auth=is_external_auth)
-    # It should not be possible to explicitly log in as the default user.
-    assert not auth_user.is_default_user
-    auth_user.is_authenticated = True
 
     # Start new session to prevent session fixation attacks.
     session.invalidate()
@@ -145,42 +142,6 @@ def log_in_user(user, remember, is_external_auth):
     session._update_cookie_out()
 
     return auth_user
-
-
-def check_locking_state(action, repo_name, user):
-    """
-    Checks locking on this repository, if locking is enabled, and if lock
-    is present. Returns a tuple of make_lock, locked, locked_by. make_lock
-    can have 3 states: None (do nothing), True (make lock), and False
-    (release lock). This value is later propagated to hooks, telling them
-    what to do.
-    """
-    locked = False  # defines that locked error should be thrown to user
-    make_lock = None
-    repo = Repository.get_by_repo_name(repo_name)
-    locked_by = repo.locked
-    if repo and repo.enable_locking:
-        if action == 'push':
-            # Check if repo already is locked !, if it is compare users
-            user_id, _date = locked_by
-            if user.user_id == user_id:
-                log.debug('Got push from user %s, now unlocking', user)
-                # Unlock if we have push from the user who locked
-                make_lock = False
-            else:
-                # Another used tried to push - deny access with something like 423 Locked!
-                locked = True
-        if action == 'pull':
-            if repo.locked[0] and repo.locked[1]:
-                locked = True
-            else:
-                log.debug('Setting lock on repo %s by %s', repo, user)
-                make_lock = True
-    else:
-        log.debug('Repository %s does not have locking enabled', repo)
-    log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s',
-              make_lock, locked, locked_by)
-    return make_lock, locked, locked_by
 
 
 class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
@@ -227,6 +188,8 @@ class BaseVCSController(object):
     (coming from a VCS client, and not a browser).
     """
 
+    scm_alias = None # 'hg' / 'git'
+
     def __init__(self, application, config):
         self.application = application
         self.config = config
@@ -236,7 +199,14 @@ class BaseVCSController(object):
         self.authenticate = BasicAuth('', auth_modules.authenticate,
                                       config.get('auth_ret_code'))
 
-    def _authorize(self, environ, start_response, action, repo_name, ip_addr):
+    @classmethod
+    def parse_request(cls, environ):
+        """If request is parsed as a request for this VCS, return a namespace with the parsed request.
+        If the request is unknown, return None.
+        """
+        raise NotImplementedError()
+
+    def _authorize(self, environ, action, repo_name, ip_addr):
         """Authenticate and authorize user.
 
         Since we're dealing with a VCS client and not a browser, we only
@@ -247,18 +217,15 @@ class BaseVCSController(object):
         Returns (user, None) on successful authentication and authorization.
         Returns (None, wsgi_app) to send the wsgi_app response to the client.
         """
-        # Check if anonymous access is allowed.
+        # Use anonymous access if allowed for action on repo.
         default_user = User.get_default_user(cache=True)
-        is_default_user_allowed = (default_user.active and
-            self._check_permission(action, default_user, repo_name, ip_addr))
-        if is_default_user_allowed:
-            return default_user, None
-
-        if not default_user.active:
-            log.debug('Anonymous access is disabled')
+        default_authuser = AuthUser.make(dbuser=default_user, ip_addr=ip_addr)
+        if default_authuser is None:
+            log.debug('No anonymous access at all') # move on to proper user auth
         else:
-            log.debug('Not authorized to access this '
-                      'repository as anonymous user')
+            if self._check_permission(action, default_authuser, repo_name):
+                return default_authuser, None
+            log.debug('Not authorized to access this repository as anonymous user')
 
         username = None
         #==============================================================
@@ -289,15 +256,14 @@ class BaseVCSController(object):
         #==============================================================
         try:
             user = User.get_by_username_or_email(username)
-            if user is None or not user.active:
-                return None, webob.exc.HTTPForbidden()
         except Exception:
             log.error(traceback.format_exc())
             return None, webob.exc.HTTPInternalServerError()
 
-        # check permissions for this repository
-        perm = self._check_permission(action, user, repo_name, ip_addr)
-        if not perm:
+        authuser = AuthUser.make(dbuser=user, ip_addr=ip_addr)
+        if authuser is None:
+            return None, webob.exc.HTTPForbidden()
+        if not self._check_permission(action, authuser, repo_name):
             return None, webob.exc.HTTPForbidden()
 
         return user, None
@@ -305,24 +271,7 @@ class BaseVCSController(object):
     def _handle_request(self, environ, start_response):
         raise NotImplementedError()
 
-    def _get_by_id(self, repo_name):
-        """
-        Gets a special pattern _<ID> from clone url and tries to replace it
-        with a repository_name for support of _<ID> permanent URLs
-
-        :param repo_name:
-        """
-
-        data = repo_name.split('/')
-        if len(data) >= 2:
-            from kallithea.lib.utils import get_repo_by_id
-            by_id_match = get_repo_by_id(repo_name)
-            if by_id_match:
-                data[1] = safe_str(by_id_match)
-
-        return '/'.join(data)
-
-    def _check_permission(self, action, user, repo_name, ip_addr=None):
+    def _check_permission(self, action, authuser, repo_name):
         """
         Checks permissions using action (push/pull) user and repository
         name
@@ -331,16 +280,9 @@ class BaseVCSController(object):
         :param user: `User` instance
         :param repo_name: repository name
         """
-        # check IP
-        ip_allowed = AuthUser.check_ip_allowed(user, ip_addr)
-        if ip_allowed:
-            log.info('Access for IP:%s allowed', ip_addr)
-        else:
-            return False
-
         if action == 'push':
             if not HasPermissionAnyMiddleware('repository.write',
-                                              'repository.admin')(user,
+                                              'repository.admin')(authuser,
                                                                   repo_name):
                 return False
 
@@ -348,7 +290,7 @@ class BaseVCSController(object):
             #any other action need at least read permission
             if not HasPermissionAnyMiddleware('repository.read',
                                               'repository.write',
-                                              'repository.admin')(user,
+                                              'repository.admin')(authuser,
                                                                   repo_name):
                 return False
 
@@ -360,10 +302,50 @@ class BaseVCSController(object):
     def __call__(self, environ, start_response):
         start = time.time()
         try:
-            return self._handle_request(environ, start_response)
+            # try parsing a request for this VCS - if it fails, call the wrapped app
+            parsed_request = self.parse_request(environ)
+            if parsed_request is None:
+                return self.application(environ, start_response)
+
+            # skip passing error to error controller
+            environ['pylons.status_code_redirect'] = True
+
+            # quick check if repo exists...
+            if not is_valid_repo(parsed_request.repo_name, self.basepath, self.scm_alias):
+                raise webob.exc.HTTPNotFound()
+
+            if parsed_request.action is None:
+                # Note: the client doesn't get the helpful error message
+                raise webob.exc.HTTPBadRequest('Unable to detect pull/push action for %r! Are you using a nonstandard command or client?' % parsed_request.repo_name)
+
+            #======================================================================
+            # CHECK PERMISSIONS
+            #======================================================================
+            ip_addr = self._get_ip_addr(environ)
+            user, response_app = self._authorize(environ, parsed_request.action, parsed_request.repo_name, ip_addr)
+            if response_app is not None:
+                return response_app(environ, start_response)
+
+            #======================================================================
+            # REQUEST HANDLING
+            #======================================================================
+            set_hook_environment(user.username, ip_addr,
+                parsed_request.repo_name, self.scm_alias, parsed_request.action)
+
+            try:
+                log.info('%s action on %s repo "%s" by "%s" from %s',
+                         parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
+                app = self._make_app(parsed_request)
+                return app(environ, start_response)
+            except Exception:
+                log.error(traceback.format_exc())
+                raise webob.exc.HTTPInternalServerError()
+
+        except webob.exc.HTTPException as e:
+            return e(environ, start_response)
         finally:
-            log = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log.debug('Request time: %.3fs', time.time() - start)
+            log_ = logging.getLogger('kallithea.' + self.__class__.__name__)
+            log_.debug('Request time: %.3fs', time.time() - start)
             meta.Session.remove()
 
 
@@ -373,6 +355,19 @@ class BaseController(TGController):
         """
         _before is called before controller methods and after __call__
         """
+        if request.needs_csrf_check:
+            # CSRF protection: Whenever a request has ambient authority (whether
+            # through a session cookie or its origin IP address), it must include
+            # the correct token, unless the HTTP method is GET or HEAD (and thus
+            # guaranteed to be side effect free. In practice, the only situation
+            # where we allow side effects without ambient authority is when the
+            # authority comes from an API key; and that is handled above.
+            from kallithea.lib import helpers as h
+            token = request.POST.get(h.session_csrf_secret_name)
+            if not token or token != h.session_csrf_secret_token():
+                log.error('CSRF check failed')
+                raise webob.exc.HTTPForbidden()
+
         c.kallithea_version = __version__
         rc_config = Setting.get_app_settings()
 
@@ -405,11 +400,13 @@ class BaseController(TGController):
                     })();
             </script>''' % c.ga_code
         c.site_name = rc_config.get('title')
-        c.clone_uri_tmpl = rc_config.get('clone_uri_tmpl')
+        c.clone_uri_tmpl = rc_config.get('clone_uri_tmpl') or Repository.DEFAULT_CLONE_URI
+        c.clone_ssh_tmpl = rc_config.get('clone_ssh_tmpl') or Repository.DEFAULT_CLONE_SSH
 
         ## INI stored
         c.visual.allow_repo_location_change = str2bool(config.get('allow_repo_location_change', True))
         c.visual.allow_custom_hooks_settings = str2bool(config.get('allow_custom_hooks_settings', True))
+        c.ssh_enabled = str2bool(config.get('ssh_enabled', False))
 
         c.instance_id = config.get('instance_id')
         c.issues_url = config.get('bugtracker', url('issues_url'))
@@ -425,24 +422,12 @@ class BaseController(TGController):
         self.scm_model = ScmModel()
 
     @staticmethod
-    def _determine_auth_user(api_key, bearer_token, session_authuser):
+    def _determine_auth_user(session_authuser, ip_addr):
         """
         Create an `AuthUser` object given the API key/bearer token
         (if any) and the value of the authuser session cookie.
+        Returns None if no valid user is found (like not active or no access for IP).
         """
-
-        # Authenticate by bearer token
-        if bearer_token is not None:
-            api_key = bearer_token
-
-        # Authenticate by API key
-        if api_key is not None:
-            au = AuthUser(dbuser=User.get_by_api_key(api_key),
-                authenticating_api_key=api_key, is_external_auth=True)
-            if au.is_anonymous:
-                log.warning('API key ****%s is NOT valid', api_key[-4:])
-                raise webob.exc.HTTPForbidden(_('Invalid API key'))
-            return au
 
         # Authenticate by session cookie
         # In ancient login sessions, 'authuser' may not be a dict.
@@ -450,7 +435,7 @@ class BaseController(TGController):
         # v0.3 and earlier included an 'is_authenticated' key; if present,
         # this must be True.
         if isinstance(session_authuser, dict) and session_authuser.get('is_authenticated', True):
-            return AuthUser.from_cookie(session_authuser)
+            return AuthUser.from_cookie(session_authuser, ip_addr=ip_addr)
 
         # Authenticate by auth_container plugin (if enabled)
         if any(
@@ -466,11 +451,14 @@ class BaseController(TGController):
                 if user_info is not None:
                     username = user_info['username']
                     user = User.get_by_username(username, case_insensitive=True)
-                    return log_in_user(user, remember=False,
-                                       is_external_auth=True)
+                    return log_in_user(user, remember=False, is_external_auth=True, ip_addr=ip_addr)
 
-        # User is anonymous
-        return AuthUser()
+        # User is default user (if active) or anonymous
+        default_user = User.get_default_user(cache=True)
+        authuser = AuthUser.make(dbuser=default_user, ip_addr=ip_addr)
+        if authuser is None: # fall back to anonymous
+            authuser = AuthUser(dbuser=default_user) # TODO: somehow use .make?
+        return authuser
 
     @staticmethod
     def _basic_security_checks():
@@ -487,11 +475,11 @@ class BaseController(TGController):
             raise webob.exc.HTTPMethodNotAllowed()
 
         # Make sure CSRF token never appears in the URL. If so, invalidate it.
-        if secure_form.token_key in request.GET:
+        from kallithea.lib import helpers as h
+        if h.session_csrf_secret_name in request.GET:
             log.error('CSRF key leak detected')
-            session.pop(secure_form.token_key, None)
+            session.pop(h.session_csrf_secret_name, None)
             session.save()
-            from kallithea.lib import helpers as h
             h.flash(_('CSRF token leak has been detected - all form tokens have been expired'),
                     category='error')
 
@@ -504,14 +492,10 @@ class BaseController(TGController):
 
     def __call__(self, environ, context):
         try:
-            request.ip_addr = _get_ip_addr(environ)
-            # make sure that we update permissions each time we call controller
-
+            ip_addr = _get_ip_addr(environ)
             self._basic_security_checks()
 
-            # set globals for auth user
-
-            bearer_token = None
+            api_key = request.GET.get('api_key')
             try:
                 # Request.authorization may raise ValueError on invalid input
                 type, params = request.authorization
@@ -519,18 +503,31 @@ class BaseController(TGController):
                 pass
             else:
                 if type.lower() == 'bearer':
-                    bearer_token = params
+                    api_key = params # bearer token is an api key too
 
-            authuser = self._determine_auth_user(
-                request.GET.get('api_key'),
-                bearer_token,
-                session.get('authuser'),
-            )
+            if api_key is None:
+                authuser = self._determine_auth_user(
+                    session.get('authuser'),
+                    ip_addr=ip_addr,
+                )
+                needs_csrf_check = request.method not in ['GET', 'HEAD']
 
-            if not AuthUser.check_ip_allowed(authuser, request.ip_addr):
+            else:
+                dbuser = User.get_by_api_key(api_key)
+                if dbuser is None:
+                    log.info('No db user found for authentication with API key ****%s from %s',
+                             api_key[-4:], ip_addr)
+                authuser = AuthUser.make(dbuser=dbuser, is_external_auth=True, ip_addr=ip_addr)
+                needs_csrf_check = False # API key provides CSRF protection
+
+            if authuser is None:
+                log.info('No valid user found')
                 raise webob.exc.HTTPForbidden()
 
+            # set globals for auth user
             request.authuser = authuser
+            request.ip_addr = ip_addr
+            request.needs_csrf_check = needs_csrf_check
 
             log.info('IP: %s User: %s accessed %s',
                 request.ip_addr, request.authuser,
@@ -638,3 +635,15 @@ def jsonify(func, *args, **kwargs):
         log.warning(msg)
     log.debug("Returning JSON wrapped action output")
     return json.dumps(data, encoding='utf-8')
+
+@decorator.decorator
+def IfSshEnabled(func, *args, **kwargs):
+    """Decorator for functions that can only be called if SSH access is enabled.
+
+    If SSH access is disabled in the configuration file, HTTPNotFound is raised.
+    """
+    if not c.ssh_enabled:
+        from kallithea.lib import helpers as h
+        h.flash(_("SSH access is disabled."), category='warning')
+        raise webob.exc.HTTPNotFound()
+    return func(*args, **kwargs)

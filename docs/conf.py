@@ -11,8 +11,11 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import sys
+
+from kallithea import __version__
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -44,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Kallithea'
-copyright = u'2010-2016 by various authors, licensed as GPLv3.'
+copyright = u'2010-2019 by various authors, licensed as GPLv3.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -53,7 +56,6 @@ copyright = u'2010-2016 by various authors, licensed as GPLv3.'
 # The short X.Y version.
 root = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(root)
-from kallithea import __version__
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__

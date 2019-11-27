@@ -3,15 +3,14 @@ Utilities aimed to help achieve mostly basic tasks.
 """
 from __future__ import division
 
-import re
-import os
-import time
 import datetime
-from subprocess import Popen, PIPE
+import os
+import re
+import time
 
-from kallithea.lib.vcs.exceptions import VCSError
-from kallithea.lib.vcs.exceptions import RepositoryError
+from kallithea.lib.vcs.exceptions import RepositoryError, VCSError
 from kallithea.lib.vcs.utils.paths import abspath
+
 
 ALIASES = ['hg', 'git']
 
@@ -52,7 +51,7 @@ def get_scm(path, search_up=False, explicit_alias=None):
         raise VCSError('More than one [%s] scm found at given path %s'
                        % (', '.join((x[0] for x in found_scms)), path))
 
-    if len(found_scms) is 0:
+    if len(found_scms) == 0:
         raise VCSError('No scm found at given path %s' % path)
 
     return found_scms[0]
@@ -221,15 +220,3 @@ def get_dict_for_attrs(obj, attrs):
     for attr in attrs:
         data[attr] = getattr(obj, attr)
     return data
-
-
-def get_total_seconds(timedelta):
-    """
-    Backported for Python 2.5.
-
-    See http://docs.python.org/library/datetime.html.
-    """
-    return ((timedelta.microseconds + (
-            timedelta.seconds +
-            timedelta.days * 24 * 60 * 60
-        ) * 10**6) / 10**6)

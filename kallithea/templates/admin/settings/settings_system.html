@@ -4,13 +4,12 @@
 
 <%
  elems = [
-    (_('Kallithea version'), h.literal('%s <b><span id="check_for_update" style="display:none">%s</span></b>') % (c.kallithea_version, _('Check for updates')), ''),
+    (_('Kallithea version'), c.kallithea_version, ''),
     (_('Kallithea configuration file'), c.ini['__file__'], ''),
     (_('Python version'), c.py_version, ''),
     (_('Platform'), c.platform, ''),
     (_('Git version'), c.git_version, ''),
     (_('Git path'), c.ini.get('git_path'), ''),
-    (_('Upgrade info endpoint'), h.literal('%s <br/><span class="text-muted">%s.</span>') % (c.update_url, _('Note: please make sure this server can access this URL')), ''),
  ]
 %>
 <dl class="dl-horizontal">
@@ -31,11 +30,3 @@
       %endfor
   </tbody>
 </table>
-
-<script>
-    $('#check_for_update').click(function(e){
-        var $update_notice = $('#update_notice');
-        $update_notice.show();
-        asynchtml(${h.js(h.url('admin_settings_system_update'))}, $update_notice);
-    });
-</script>

@@ -1,6 +1,6 @@
-from kallithea.tests.base import *
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetStatus as CS
+from kallithea.tests.base import *
 
 
 class CSM(object): # ChangesetStatusMock

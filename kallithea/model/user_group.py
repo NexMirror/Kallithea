@@ -27,11 +27,10 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from kallithea.model.db import Session, UserGroupMember, UserGroup, \
-    UserGroupRepoToPerm, Permission, UserGroupToPerm, User, UserUserGroupToPerm, \
-    UserGroupUserGroupToPerm
-from kallithea.lib.exceptions import UserGroupsAssignedException, \
-    RepoGroupAssignmentError
+from kallithea.lib.exceptions import RepoGroupAssignmentError, UserGroupsAssignedException
+from kallithea.model.db import (
+    Permission, Session, User, UserGroup, UserGroupMember, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserUserGroupToPerm)
+
 
 log = logging.getLogger(__name__)
 
@@ -89,14 +88,14 @@ class UserGroupModel(object):
                         target_user_group=user_group, user_group=member, perm=perm
                     )
 
-    def get(self, user_group_id, cache=False):
+    def get(self, user_group_id):
         return UserGroup.get(user_group_id)
 
     def get_group(self, user_group):
         return UserGroup.guess_instance(user_group)
 
     def get_by_name(self, name, cache=False, case_insensitive=False):
-        return UserGroup.get_by_group_name(name, cache, case_insensitive)
+        return UserGroup.get_by_group_name(name, cache=cache, case_insensitive=case_insensitive)
 
     def create(self, name, description, owner, active=True, group_data=None):
         try:
@@ -167,6 +166,7 @@ class UserGroupModel(object):
             raise
 
     def add_user_to_group(self, user_group, user):
+        """Return True if user already is in the group - else return the new UserGroupMember"""
         user_group = UserGroup.guess_instance(user_group)
         user = User.guess_instance(user)
 

@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import urllib
-import unittest
 
+from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.model.db import Repository, User
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.user import UserModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
-from kallithea.lib.utils2 import safe_str, safe_unicode
-from kallithea.model.db import Repository
-from kallithea.model.repo import RepoModel
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
 
 fixture = Fixture()
 
@@ -27,12 +26,12 @@ class _BaseTestCase(TestController):
     def setup_method(self, method):
         self.username = u'forkuser'
         self.password = u'qweqwe'
-        self.u1 = fixture.create_user(self.username, password=self.password,
-                                      email=u'fork_king@example.com')
+        u1 = fixture.create_user(self.username, password=self.password, email=u'fork_king@example.com')
+        self.u1_id = u1.user_id
         Session().commit()
 
     def teardown_method(self, method):
-        Session().delete(self.u1)
+        fixture.destroy_user(self.u1_id)
         Session().commit()
 
     def test_index(self):
@@ -44,18 +43,22 @@ class _BaseTestCase(TestController):
         response.mustcontain("""There are no forks yet""")
 
     def test_no_permissions_to_fork(self):
-        usr = self.log_user(TEST_USER_REGULAR_LOGIN,
-                            TEST_USER_REGULAR_PASS)['user_id']
-        user_model = UserModel()
-        user_model.revoke_perm(usr, 'hg.fork.repository')
-        user_model.grant_perm(usr, 'hg.fork.none')
-        u = UserModel().get(usr)
-        u.inherit_default_permissions = False
-        Session().commit()
-        # try create a fork
-        repo_name = self.REPO
-        self.app.post(url(controller='forks', action='fork_create',
-                          repo_name=repo_name), {'_authentication_token': self.authentication_token()}, status=403)
+        self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)['user_id']
+        try:
+            user_model = UserModel()
+            usr = User.get_default_user()
+            user_model.revoke_perm(usr, 'hg.fork.repository')
+            user_model.grant_perm(usr, 'hg.fork.none')
+            Session().commit()
+            # try create a fork
+            repo_name = self.REPO
+            self.app.post(url(controller='forks', action='fork_create',
+                              repo_name=repo_name), {'_session_csrf_secret_token': self.session_csrf_secret_token()}, status=403)
+        finally:
+            usr = User.get_default_user()
+            user_model.revoke_perm(usr, 'hg.fork.none')
+            user_model.grant_perm(usr, 'hg.fork.repository')
+            Session().commit()
 
     def test_index_with_fork(self):
         self.log_user()
@@ -73,7 +76,7 @@ class _BaseTestCase(TestController):
             'description': description,
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
 
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
@@ -87,7 +90,7 @@ class _BaseTestCase(TestController):
 
         # remove this fork
         response = self.app.post(url('delete_repo', repo_name=fork_name),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_fork_create_into_group(self):
         self.log_user()
@@ -106,7 +109,7 @@ class _BaseTestCase(TestController):
             'description': description,
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         repo = Repository.get_by_repo_name(fork_name_full)
@@ -150,7 +153,7 @@ class _BaseTestCase(TestController):
             'description': 'unicode repo 1',
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         response = self.app.get(url(controller='forks', action='forks',
@@ -171,7 +174,7 @@ class _BaseTestCase(TestController):
             'description': 'unicode repo 2',
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=fork_name), creation_args)
         response = self.app.get(url(controller='forks', action='forks',
@@ -182,9 +185,9 @@ class _BaseTestCase(TestController):
 
         # remove these forks
         response = self.app.post(url('delete_repo', repo_name=fork_name_2),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         response = self.app.post(url('delete_repo', repo_name=fork_name),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_fork_create_and_permissions(self):
         self.log_user()
@@ -200,7 +203,7 @@ class _BaseTestCase(TestController):
             'description': description,
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         repo = Repository.get_by_repo_name(self.REPO_FORK)
@@ -245,9 +248,12 @@ class _BaseTestCase(TestController):
         response.mustcontain('<div>fork of vcs test</div>')
 
         # remove permissions
+        default_user = User.get_default_user()
         try:
             RepoModel().grant_user_permission(repo=forks[0],
                                               user=usr, perm='repository.none')
+            RepoModel().grant_user_permission(repo=forks[0],
+                                              user=default_user, perm='repository.none')
             Session().commit()
 
             # fork shouldn't be visible
@@ -258,6 +264,8 @@ class _BaseTestCase(TestController):
         finally:
             RepoModel().grant_user_permission(repo=forks[0],
                                               user=usr, perm='repository.read')
+            RepoModel().grant_user_permission(repo=forks[0],
+                                              user=default_user, perm='repository.read')
             RepoModel().delete(repo=forks[0])
 
 

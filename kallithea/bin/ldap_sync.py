@@ -25,13 +25,15 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import ldap
+from __future__ import print_function
+
 import urllib2
 import uuid
+from ConfigParser import ConfigParser
 
+import ldap
 from kallithea.lib.compat import json
 
-from ConfigParser import ConfigParser
 
 config = ConfigParser()
 config.read('ldap_sync.conf')
@@ -150,7 +152,7 @@ class LdapClient(object):
         self.client.simple_bind(user, key)
         self.base_dn = base_dn
 
-    def __del__(self):
+    def close(self):
         self.client.unbind()
 
     def get_groups(self):
@@ -238,10 +240,13 @@ class LdapSync(object):
                 # TODO: handle somehow maybe..
                 pass
 
+    def close(self):
+        self.ldap_client.close()
+
 
 if __name__ == '__main__':
     sync = LdapSync()
-    print sync.update_groups_from_ldap()
+    print(sync.update_groups_from_ldap())
 
     for gr in sync.ldap_client.get_groups():
         # TODO: exception when user does not exist during add membership...
@@ -250,3 +255,5 @@ if __name__ == '__main__':
         # we need to find a way to recognize the right exception (we always get
         # ResponseError with no error code so maybe by return msg (?)
         sync.update_memberships_from_ldap(gr)
+
+    sync.close()

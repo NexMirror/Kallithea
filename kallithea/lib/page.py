@@ -17,9 +17,12 @@ Custom paging classes
 import logging
 import math
 import re
-from kallithea.config.routing import url
-from webhelpers.html import literal, HTML
+
+from webhelpers2.html import HTML, literal
 from webhelpers.paginate import Page as _Page
+
+from kallithea.config.routing import url
+
 
 log = logging.getLogger(__name__)
 
@@ -123,7 +126,8 @@ class Page(_Page):
         symbol_previous='<', symbol_next='>',
         link_attr=None,
         curpage_attr=None,
-        dotdot_attr=None, **kwargs):
+        dotdot_attr=None, **kwargs
+    ):
         self.curpage_attr = curpage_attr or {'class': 'active'}
         self.separator = separator
         self.pager_kwargs = kwargs
@@ -151,16 +155,16 @@ class Page(_Page):
             'first_item': self.first_item,
             'last_item': self.last_item,
             'item_count': self.item_count,
-            'link_first': self.page > self.first_page and \
+            'link_first': self.page > self.first_page and
                     self._pagerlink(self.first_page, symbol_first) or '',
-            'link_last': self.page < self.last_page and \
+            'link_last': self.page < self.last_page and
                     self._pagerlink(self.last_page, symbol_last) or '',
-            'link_previous': HTML.li(self.previous_page and \
-                    self._pagerlink(self.previous_page, symbol_previous) \
+            'link_previous': HTML.li(self.previous_page and
+                    self._pagerlink(self.previous_page, symbol_previous)
                     or HTML.a(symbol_previous)),
-            'link_next': HTML.li(self.next_page and \
-                    self._pagerlink(self.next_page, symbol_next) \
-                    or HTML.a(symbol_next))
+            'link_next': HTML.li(self.next_page and
+                    self._pagerlink(self.next_page, symbol_next)
+                    or HTML.a(symbol_next)),
         })
 
         return literal(result)
@@ -190,7 +194,7 @@ class RepoPage(Page):
         try:
             self.page = int(page)  # make it int() if we get it as a string
         except (ValueError, TypeError):
-            log.error("Invalid page value: %r" % page)
+            log.error("Invalid page value: %r", page)
             self.page = 1
 
         self.items_per_page = items_per_page

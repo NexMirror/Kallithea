@@ -27,28 +27,30 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-import formencode
 
+import formencode
 from formencode import htmlfill
-from tg import request, tmpl_context as c, config
+from tg import config, request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
+from kallithea.lib.auth import HasPermissionAnyDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.celerylib import tasks
 from kallithea.lib.exceptions import HgsubversionImportError
 from kallithea.lib.utils import repo2db_mapper, set_app_settings
+from kallithea.lib.utils2 import safe_unicode
 from kallithea.lib.vcs import VCSError
-from kallithea.model.db import Ui, Repository, Setting
-from kallithea.model.forms import ApplicationSettingsForm, \
-    ApplicationUiSettingsForm, ApplicationVisualisationForm
-from kallithea.model.scm import ScmModel
-from kallithea.model.notification import EmailNotificationModel
+from kallithea.model.db import Repository, Setting, Ui
+from kallithea.model.forms import ApplicationSettingsForm, ApplicationUiSettingsForm, ApplicationVisualisationForm
 from kallithea.model.meta import Session
-from kallithea.lib.utils2 import str2bool, safe_unicode
+from kallithea.model.notification import EmailNotificationModel
+from kallithea.model.scm import ScmModel
+
+
 log = logging.getLogger(__name__)
 
 
@@ -108,12 +110,6 @@ class SettingsController(BaseController):
 
                 sett = Ui.get_by_key('hooks', Ui.HOOK_REPO_SIZE)
                 sett.ui_active = form_result['hooks_changegroup_repo_size']
-
-                sett = Ui.get_by_key('hooks', Ui.HOOK_PUSH_LOG)
-                sett.ui_active = form_result['hooks_changegroup_push_logger']
-
-                sett = Ui.get_by_key('hooks', Ui.HOOK_PULL_LOG)
-                sett.ui_active = form_result['hooks_outgoing_pull_logger']
 
                 ## EXTENSIONS
                 sett = Ui.get_or_create('extensions', 'largefiles')
@@ -277,6 +273,7 @@ class SettingsController(BaseController):
                     ('use_gravatar', 'use_gravatar', 'bool'),
                     ('gravatar_url', 'gravatar_url', 'unicode'),
                     ('clone_uri_tmpl', 'clone_uri_tmpl', 'unicode'),
+                    ('clone_ssh_tmpl', 'clone_ssh_tmpl', 'unicode'),
                 ]
                 for setting, form_key, type_ in settings:
                     Setting.create_or_update(setting, form_result[form_key], type_)
@@ -425,7 +422,6 @@ class SettingsController(BaseController):
 
         import kallithea
         c.ini = kallithea.CONFIG
-        c.update_url = defaults.get('update_url')
         server_info = Setting.get_server_info()
         for key, val in server_info.iteritems():
             setattr(c, key, val)
@@ -435,46 +431,3 @@ class SettingsController(BaseController):
             defaults=defaults,
             encoding="UTF-8",
             force_defaults=False)
-
-    @HasPermissionAnyDecorator('hg.admin')
-    def settings_system_update(self):
-        import json
-        import urllib2
-        from kallithea.lib.verlib import NormalizedVersion
-        from kallithea import __version__
-
-        defaults = Setting.get_app_settings()
-        defaults.update(self._get_hg_ui_settings())
-        _update_url = defaults.get('update_url', '')
-        _update_url = "" # FIXME: disabled
-
-        _err = lambda s: '<div class="alert alert-danger">%s</div>' % (s)
-        try:
-            import kallithea
-            ver = kallithea.__version__
-            log.debug('Checking for upgrade on `%s` server', _update_url)
-            opener = urllib2.build_opener()
-            opener.addheaders = [('User-agent', 'Kallithea-SCM/%s' % ver)]
-            response = opener.open(_update_url)
-            response_data = response.read()
-            data = json.loads(response_data)
-        except urllib2.URLError as e:
-            log.error(traceback.format_exc())
-            return _err('Failed to contact upgrade server: %r' % e)
-        except ValueError as e:
-            log.error(traceback.format_exc())
-            return _err('Bad data sent from update server')
-
-        latest = data['versions'][0]
-
-        c.update_url = _update_url
-        c.latest_data = latest
-        c.latest_ver = latest['version']
-        c.cur_ver = __version__
-        c.should_upgrade = False
-
-        if NormalizedVersion(c.latest_ver) > NormalizedVersion(c.cur_ver):
-            c.should_upgrade = True
-        c.important_notices = latest['general']
-
-        return render('admin/settings/settings_system_update.html'),

@@ -11,6 +11,9 @@ hook will use.
 import os
 import sys
 
+import kallithea.lib.hooks
+
+
 # Set output mode on windows to binary for stderr.
 # This prevents python (or the windows console) from replacing \n with \r\n.
 # Git doesn't display remote output lines that contain \r,
@@ -22,7 +25,6 @@ if sys.platform == "win32":
 
 KALLITHEA_HOOK_VER = '_TMPL_'
 os.environ['KALLITHEA_HOOK_VER'] = KALLITHEA_HOOK_VER
-import kallithea.lib.hooks
 
 
 def main():

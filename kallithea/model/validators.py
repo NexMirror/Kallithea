@@ -15,28 +15,26 @@
 Set of generic validators
 """
 
+import logging
 import os
 import re
-import formencode
-import logging
 from collections import defaultdict
-from tg.i18n import ugettext as _
-from sqlalchemy import func
-from webhelpers.pylonslib.secure_form import authentication_token
-import sqlalchemy
 
-from formencode.validators import (
-    UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set,
-    NotEmpty, IPAddress, CIDR, String, FancyValidator
-)
-from kallithea.lib.compat import OrderedSet
-from kallithea.lib import ipaddr
-from kallithea.lib.utils import is_valid_repo_uri
-from kallithea.lib.utils2 import str2bool, aslist, repo_name_slug
-from kallithea.model.db import RepoGroup, Repository, UserGroup, User
-from kallithea.lib.exceptions import LdapImportError
+import formencode
+import ipaddr
+import sqlalchemy
+from formencode.validators import CIDR, Bool, Email, FancyValidator, Int, IPAddress, NotEmpty, Number, OneOf, Regex, Set, String, StringBoolean, UnicodeString
+from sqlalchemy import func
+from tg.i18n import ugettext as _
+
 from kallithea.config.routing import ADMIN_PREFIX
-from kallithea.lib.auth import HasRepoGroupPermissionLevel, HasPermissionAny
+from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel
+from kallithea.lib.compat import OrderedSet
+from kallithea.lib.exceptions import LdapImportError
+from kallithea.lib.utils import is_valid_repo_uri
+from kallithea.lib.utils2 import aslist, repo_name_slug, str2bool
+from kallithea.model.db import RepoGroup, Repository, User, UserGroup
+
 
 # silence warnings and pylint
 UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set, \
@@ -55,7 +53,7 @@ def UniqueListFromString():
             missing_value=_('Value cannot be an empty list'),
         )
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             value = aslist(value, ',')
             seen = set()
             return [c for c in value if not (c in seen or seen.add(c))]
@@ -80,7 +78,7 @@ def ValidUsername(edit=False, old_data=None):
                   'alphanumeric character or underscore')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if value in ['default', 'new_user']:
                 msg = self.message('system_invalid_username', state, username=value)
                 raise formencode.Invalid(msg, value, state)
@@ -112,7 +110,7 @@ def ValidRepoUser():
             'invalid_username': _('Username %(username)s is not valid')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             try:
                 User.query().filter(User.active == True) \
                     .filter(User.username == value).one()
@@ -138,7 +136,7 @@ def ValidUserGroup(edit=False, old_data=None):
                   'with alphanumeric character')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if value in ['default']:
                 msg = self.message('invalid_group', state)
                 raise formencode.Invalid(msg, value, state,
@@ -179,7 +177,7 @@ def ValidRepoGroup(edit=False, old_data=None):
                 _('Repository with name "%(group_name)s" already exists')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             # TODO WRITE VALIDATIONS
             group_name = value.get('group_name')
             parent_group_id = value.get('parent_group_id')
@@ -235,7 +233,7 @@ def ValidPassword():
                 _('Invalid characters (non-ascii) in password')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             try:
                 (value or '').decode('ascii')
             except UnicodeError:
@@ -250,7 +248,7 @@ def ValidOldPassword(username):
             'invalid_password': _('Invalid old password')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             from kallithea.lib import auth_modules
             if auth_modules.authenticate(username, value, '') is None:
                 msg = self.message('invalid_password', state)
@@ -266,11 +264,11 @@ def ValidPasswordsMatch(password_field, password_confirmation_field):
             'password_mismatch': _('Passwords do not match'),
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if value.get(password_field) != value[password_confirmation_field]:
                 msg = self.message('password_mismatch', state)
                 raise formencode.Invalid(msg, value, state,
-                     error_dict={password_field:msg, password_confirmation_field: msg}
+                     error_dict={password_field: msg, password_confirmation_field: msg}
                 )
     return _validator
 
@@ -281,7 +279,7 @@ def ValidAuth():
             'invalid_auth': _(u'Invalid username or password'),
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             from kallithea.lib import auth_modules
 
             password = value['password']
@@ -306,19 +304,6 @@ def ValidAuth():
     return _validator
 
 
-def ValidAuthToken():
-    class _validator(formencode.validators.FancyValidator):
-        messages = {
-            'invalid_token': _('Token mismatch')
-        }
-
-        def validate_python(self, value, state):
-            if value != authentication_token():
-                msg = self.message('invalid_token', state)
-                raise formencode.Invalid(msg, value, state)
-    return _validator
-
-
 def ValidRepoName(edit=False, old_data=None):
     old_data = old_data or {}
 
@@ -334,7 +319,7 @@ def ValidRepoName(edit=False, old_data=None):
                                    'already exists')
         }
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             repo_name = repo_name_slug(value.get('repo_name', ''))
             repo_group = value.get('repo_group')
             if repo_group:
@@ -355,7 +340,7 @@ def ValidRepoName(edit=False, old_data=None):
             value['group_name'] = group_name
             return value
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             repo_name = value.get('repo_name')
             repo_name_full = value.get('repo_name_full')
             group_path = value.get('group_path')
@@ -380,17 +365,17 @@ def ValidRepoName(edit=False, old_data=None):
                             error_dict=dict(repo_name=msg)
                         )
                 elif repo_group is not None:
-                        msg = self.message('same_group_exists', state,
-                                repo=repo_name)
-                        raise formencode.Invalid(msg, value, state,
-                            error_dict=dict(repo_name=msg)
-                        )
+                    msg = self.message('same_group_exists', state,
+                            repo=repo_name)
+                    raise formencode.Invalid(msg, value, state,
+                        error_dict=dict(repo_name=msg)
+                    )
                 elif repo is not None:
-                        msg = self.message('repository_exists', state,
-                                repo=repo.repo_name)
-                        raise formencode.Invalid(msg, value, state,
-                            error_dict=dict(repo_name=msg)
-                        )
+                    msg = self.message('repository_exists', state,
+                            repo=repo.repo_name)
+                    raise formencode.Invalid(msg, value, state,
+                        error_dict=dict(repo_name=msg)
+                    )
             return value
     return _validator
 
@@ -402,10 +387,10 @@ def ValidForkName(*args, **kwargs):
 def SlugifyName():
     class _validator(formencode.validators.FancyValidator):
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             return repo_name_slug(value)
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             pass
 
     return _validator
@@ -421,13 +406,13 @@ def ValidCloneUri():
                                    'valid http, https, ssh, svn+http or svn+https URL'),
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             repo_type = value.get('repo_type')
             url = value.get('clone_uri')
 
             if url and url != value.get('clone_uri_hidden'):
                 try:
-                    is_valid_repo_uri(repo_type, url, make_ui('db', clear_session=False))
+                    is_valid_repo_uri(repo_type, url, make_ui(clear_session=False))
                 except Exception:
                     log.exception('URL validation failed')
                     msg = self.message('clone_uri', state)
@@ -445,7 +430,7 @@ def ValidForkType(old_data=None):
             'invalid_fork_type': _('Fork has to be the same type as parent')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if old_data['repo_type'] != value:
                 msg = self.message('invalid_fork_type', state)
                 raise formencode.Invalid(msg, value, state,
@@ -463,13 +448,13 @@ def CanWriteGroup(old_data=None):
                                         "in root location")
         }
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             # root location
             if value == -1:
                 return None
             return value
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             gr = RepoGroup.get(value)
             gr_name = gr.group_name if gr is not None else None # None means ROOT location
 
@@ -519,7 +504,7 @@ def CanCreateGroup(can_create_in_root=False):
                 return None
             return value
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             gr = RepoGroup.get(value)
             gr_name = gr.group_name if gr is not None else None # None means ROOT location
 
@@ -598,11 +583,11 @@ def ValidPerms(type_='repo'):
             # update permissions
             for k, v, t in perms_new:
                 try:
-                    if t is 'user':
+                    if t == 'user':
                         self.user_db = User.query() \
                             .filter(User.active == True) \
                             .filter(User.username == k).one()
-                    if t is 'users_group':
+                    if t == 'users_group':
                         self.user_db = UserGroup.query() \
                             .filter(UserGroup.users_group_active == True) \
                             .filter(UserGroup.users_group_name == k).one()
@@ -619,13 +604,13 @@ def ValidPerms(type_='repo'):
 
 def ValidSettings():
     class _validator(formencode.validators.FancyValidator):
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             # settings  form for users that are not admin
             # can't edit certain parameters, it's extra backup if they mangle
             # with forms
 
             forbidden_params = [
-                'user', 'repo_type', 'repo_enable_locking',
+                'user', 'repo_type',
                 'repo_enable_downloads', 'repo_enable_statistics'
             ]
 
@@ -634,7 +619,7 @@ def ValidSettings():
                     del value[param]
             return value
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             pass
     return _validator
 
@@ -645,7 +630,7 @@ def ValidPath():
             'invalid_path': _('This is not a valid path')
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if not os.path.isdir(value):
                 msg = self.message('invalid_path', state)
                 raise formencode.Invalid(msg, value, state,
@@ -662,10 +647,10 @@ def UniqSystemEmail(old_data=None):
             'email_taken': _('This email address is already in use')
         }
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             return value.lower()
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if (old_data.get('email') or '').lower() != value:
                 user = User.get_by_email(value)
                 if user is not None:
@@ -682,10 +667,10 @@ def ValidSystemEmail():
             'non_existing_email': _('Email address "%(email)s" not found')
         }
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             return value.lower()
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             user = User.get_by_email(value)
             if user is None:
                 msg = self.message('non_existing_email', state, email=value)
@@ -702,7 +687,7 @@ def LdapLibValidator():
 
         }
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             try:
                 import ldap
                 ldap  # pyflakes silence !
@@ -747,7 +732,7 @@ def ValidIp():
                     v += '/128'
             return v
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             try:
                 addr = value.strip()
                 # this raises an ValueError if address is not IPv4 or IPv6
@@ -766,7 +751,7 @@ def FieldKey():
                         'underscore, dash or numbers')
         )
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if not re.match('[a-zA-Z0-9_-]+$', value):
                 raise formencode.Invalid(self.message('badFormat', state),
                                          value, state)
@@ -779,10 +764,10 @@ def BasePath():
             badPath=_('Filename cannot be inside a directory')
         )
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             return value
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             if value != os.path.basename(value):
                 raise formencode.Invalid(self.message('badPath', state),
                                          value, state)
@@ -795,11 +780,11 @@ def ValidAuthPlugins():
             import_duplicate=_('Plugins %(loaded)s and %(next_to_load)s both export the same name')
         )
 
-        def _to_python(self, value, state):
+        def _convert_to_python(self, value, state):
             # filter empty values
             return filter(lambda s: s not in [None, ''], value)
 
-        def validate_python(self, value, state):
+        def _validate_python(self, value, state):
             from kallithea.lib import auth_modules
             module_list = value
             unique_names = {}

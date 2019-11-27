@@ -1,11 +1,12 @@
 import pytest
-from kallithea.tests.base import *
 
-from kallithea.model.meta import Session
-from kallithea.tests.fixture import Fixture
-from kallithea.model.repo import RepoModel
-from kallithea.model.db import Repository
 from kallithea.lib.exceptions import AttachedForksError
+from kallithea.model.db import Repository
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 

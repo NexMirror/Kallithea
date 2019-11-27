@@ -25,42 +25,32 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import time
-import traceback
 import logging
-
+import traceback
 from datetime import datetime
-from sqlalchemy import or_
 
 from tg import request
 
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
-    PasswordGenerator, AuthUser, HasPermissionAnyDecorator,
-    HasPermissionAnyDecorator, HasPermissionAny, HasRepoPermissionLevel,
-    HasRepoGroupPermissionLevel, HasUserGroupPermissionLevel)
-from kallithea.lib.utils import map_groups, repo2db_mapper
-from kallithea.lib.utils2 import (
-    str2bool, time_to_datetime, safe_int, Optional, OAttr)
-from kallithea.model.meta import Session
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.scm import ScmModel, UserGroupList
-from kallithea.model.repo import RepoModel
-from kallithea.model.user import UserModel
-from kallithea.model.user_group import UserGroupModel
-from kallithea.model.gist import GistModel
+    AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel)
+from kallithea.lib.exceptions import DefaultUserException, UserGroupsAssignedException
+from kallithea.lib.utils import action_logger, repo2db_mapper
+from kallithea.lib.utils2 import OAttr, Optional
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.exceptions import EmptyRepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.db import ChangesetStatus, Gist, Permission, PullRequest, RepoGroup, Repository, Setting, User, UserGroup, UserIpMap
+from kallithea.model.gist import GistModel
+from kallithea.model.meta import Session
 from kallithea.model.pull_request import PullRequestModel
-from kallithea.model.db import (
-    Repository, Setting, UserIpMap, Permission, User, Gist,
-    RepoGroup, UserGroup, PullRequest, ChangesetStatus)
-from kallithea.lib.compat import json
-from kallithea.lib.exceptions import (
-    DefaultUserException, UserGroupsAssignedException)
-from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.utils import action_logger
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.scm import ScmModel, UserGroupList
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
+
 
 log = logging.getLogger(__name__)
 
@@ -206,6 +196,7 @@ class ApiController(JSONRPCController):
         try:
             ScmModel().pull_changes(repo.repo_name,
                                     request.authuser.username,
+                                    request.ip_addr,
                                     clone_uri=Optional.extract(clone_uri))
             return dict(
                 msg='Pulled from `%s`' % repo.repo_name,
@@ -302,168 +293,6 @@ class ApiController(JSONRPCController):
             raise JSONRPCError(
                 'Error occurred during cache invalidation action'
             )
-
-    # permission check inside
-    def lock(self, repoid, locked=Optional(None),
-             userid=Optional(OAttr('apiuser'))):
-        """
-        Set locking state on given repository by given user. If userid param
-        is skipped, then it is set to id of user who is calling this method.
-        If locked param is skipped then function shows current lock state of
-        given repo. This command can be executed only using api_key belonging
-        to user with admin rights or regular user that have admin or write
-        access to repository.
-
-        :param repoid: repository name or repository id
-        :type repoid: str or int
-        :param locked: lock state to be set
-        :type locked: Optional(bool)
-        :param userid: set lock as user
-        :type userid: Optional(str or int)
-
-        OUTPUT::
-
-          id : <id_given_in_input>
-          result : {
-            'repo': '<reponame>',
-            'locked': <bool: lock state>,
-            'locked_since': <int: lock timestamp>,
-            'locked_by': <username of person who made the lock>,
-            'lock_state_changed': <bool: True if lock state has been changed in this request>,
-            'msg': 'Repo `<reponame>` locked by `<username>` on <timestamp>.'
-            or
-            'msg': 'Repo `<repository name>` not locked.'
-            or
-            'msg': 'User `<user name>` set lock state for repo `<repository name>` to `<new lock state>`'
-          }
-          error :  null
-
-        ERROR OUTPUT::
-
-          id : <id_given_in_input>
-          result : null
-          error :  {
-            'Error occurred locking repository `<reponame>`
-          }
-
-        """
-        repo = get_repo_or_error(repoid)
-        if HasPermissionAny('hg.admin')():
-            pass
-        elif HasRepoPermissionLevel('write')(repo.repo_name):
-            # make sure normal user does not pass someone else userid,
-            # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != request.authuser.user_id:
-                raise JSONRPCError(
-                    'userid is not the same as your user'
-                )
-        else:
-            raise JSONRPCError('repository `%s` does not exist' % (repoid,))
-
-        if isinstance(userid, Optional):
-            userid = request.authuser.user_id
-
-        user = get_user_or_error(userid)
-
-        if isinstance(locked, Optional):
-            lockobj = Repository.getlock(repo)
-
-            if lockobj[0] is None:
-                _d = {
-                    'repo': repo.repo_name,
-                    'locked': False,
-                    'locked_since': None,
-                    'locked_by': None,
-                    'lock_state_changed': False,
-                    'msg': 'Repo `%s` not locked.' % repo.repo_name
-                }
-                return _d
-            else:
-                userid, time_ = lockobj
-                lock_user = get_user_or_error(userid)
-                _d = {
-                    'repo': repo.repo_name,
-                    'locked': True,
-                    'locked_since': time_,
-                    'locked_by': lock_user.username,
-                    'lock_state_changed': False,
-                    'msg': ('Repo `%s` locked by `%s` on `%s`.'
-                            % (repo.repo_name, lock_user.username,
-                               json.dumps(time_to_datetime(time_))))
-                }
-                return _d
-
-        # force locked state through a flag
-        else:
-            locked = str2bool(locked)
-            try:
-                if locked:
-                    lock_time = time.time()
-                    Repository.lock(repo, user.user_id, lock_time)
-                else:
-                    lock_time = None
-                    Repository.unlock(repo)
-                _d = {
-                    'repo': repo.repo_name,
-                    'locked': locked,
-                    'locked_since': lock_time,
-                    'locked_by': user.username,
-                    'lock_state_changed': True,
-                    'msg': ('User `%s` set lock state for repo `%s` to `%s`'
-                            % (user.username, repo.repo_name, locked))
-                }
-                return _d
-            except Exception:
-                log.error(traceback.format_exc())
-                raise JSONRPCError(
-                    'Error occurred locking repository `%s`' % repo.repo_name
-                )
-
-    def get_locks(self, userid=Optional(OAttr('apiuser'))):
-        """
-        Get all repositories with locks for given userid, if
-        this command is run by non-admin account userid is set to user
-        who is calling this method, thus returning locks for himself.
-
-        :param userid: User to get locks for
-        :type userid: Optional(str or int)
-
-        OUTPUT::
-
-          id : <id_given_in_input>
-          result : {
-            [repo_object, repo_object,...]
-          }
-          error :  null
-        """
-
-        if not HasPermissionAny('hg.admin')():
-            # make sure normal user does not pass someone else userid,
-            # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != request.authuser.user_id:
-                raise JSONRPCError(
-                    'userid is not the same as your user'
-                )
-
-        ret = []
-        if isinstance(userid, Optional):
-            user = None
-        else:
-            user = get_user_or_error(userid)
-
-        # show all locks
-        for r in Repository.query():
-            userid, time_ = r.locked
-            if time_:
-                _api_data = r.get_api_data()
-                # if we use userfilter just show the locks for this user
-                if user is not None:
-                    if safe_int(userid) == user.user_id:
-                        ret.append(_api_data)
-                else:
-                    ret.append(_api_data)
-
-        return ret
 
     @HasPermissionAnyDecorator('hg.admin')
     def get_ip(self, userid=Optional(OAttr('apiuser'))):
@@ -1069,7 +898,7 @@ class ApiController(JSONRPCController):
 
         try:
             ugm = UserGroupModel().add_user_to_group(user_group, user)
-            success = True if ugm != True else False
+            success = True if ugm is not True else False
             msg = 'added member `%s` to user group `%s`' % (
                 user.username, user_group.users_group_name
             )
@@ -1155,7 +984,6 @@ class ApiController(JSONRPCController):
                 "repo_type" :        "<repo_type>",
                 "clone_uri" :        "<clone_uri>",
                 "enable_downloads":  "<bool>",
-                "enable_locking":    "<bool>",
                 "enable_statistics": "<bool>",
                 "private":           "<bool>",
                 "created_on" :       "<date_time_created>",
@@ -1266,7 +1094,6 @@ class ApiController(JSONRPCController):
                         "owner":             "<repo_owner>",
                         "fork_of":           "<name_of_fork_parent>",
                         "enable_downloads":  "<bool>",
-                        "enable_locking":    "<bool>",
                         "enable_statistics": "<bool>",
                       },
                       …
@@ -1346,7 +1173,6 @@ class ApiController(JSONRPCController):
                     private=Optional(False), clone_uri=Optional(None),
                     landing_rev=Optional('rev:tip'),
                     enable_statistics=Optional(False),
-                    enable_locking=Optional(False),
                     enable_downloads=Optional(False),
                     copy_permissions=Optional(False)):
         """
@@ -1371,8 +1197,6 @@ class ApiController(JSONRPCController):
         :type clone_uri: str
         :param landing_rev: <rev_type>:<rev>
         :type landing_rev: str
-        :param enable_locking:
-        :type enable_locking: bool
         :param enable_downloads:
         :type enable_downloads: bool
         :param enable_statistics:
@@ -1421,8 +1245,6 @@ class ApiController(JSONRPCController):
             repo_type = defs.get('repo_type')
         if isinstance(enable_statistics, Optional):
             enable_statistics = defs.get('repo_enable_statistics')
-        if isinstance(enable_locking, Optional):
-            enable_locking = defs.get('repo_enable_locking')
         if isinstance(enable_downloads, Optional):
             enable_downloads = defs.get('repo_enable_downloads')
 
@@ -1450,7 +1272,6 @@ class ApiController(JSONRPCController):
                 repo_group=repo_group,
                 repo_landing_rev=landing_rev,
                 enable_statistics=enable_statistics,
-                enable_locking=enable_locking,
                 enable_downloads=enable_downloads,
                 repo_copy_permissions=copy_permissions,
             )
@@ -1476,7 +1297,6 @@ class ApiController(JSONRPCController):
                     description=Optional(''), private=Optional(False),
                     clone_uri=Optional(None), landing_rev=Optional('rev:tip'),
                     enable_statistics=Optional(False),
-                    enable_locking=Optional(False),
                     enable_downloads=Optional(False)):
 
         """
@@ -1492,7 +1312,6 @@ class ApiController(JSONRPCController):
         :param clone_uri:
         :param landing_rev:
         :param enable_statistics:
-        :param enable_locking:
         :param enable_downloads:
         """
         repo = get_repo_or_error(repoid)
@@ -1502,7 +1321,7 @@ class ApiController(JSONRPCController):
 
             if (name != repo.repo_name and
                 not HasPermissionAny('hg.create.repository')()
-                ):
+            ):
                 raise JSONRPCError('no permission to create (or move) repositories')
 
             if not isinstance(owner, Optional):
@@ -1525,7 +1344,6 @@ class ApiController(JSONRPCController):
             store_update(updates, clone_uri, 'clone_uri')
             store_update(updates, landing_rev, 'repo_landing_rev')
             store_update(updates, enable_statistics, 'repo_enable_statistics')
-            store_update(updates, enable_locking, 'repo_enable_locking')
             store_update(updates, enable_downloads, 'repo_enable_downloads')
 
             RepoModel().update(repo, **updates)
@@ -2020,7 +1838,7 @@ class ApiController(JSONRPCController):
     def update_repo_group(self, repogroupid, group_name=Optional(''),
                           description=Optional(''),
                           owner=Optional(OAttr('apiuser')),
-                          parent=Optional(None), enable_locking=Optional(False)):
+                          parent=Optional(None)):
         repo_group = get_repo_group_or_error(repogroupid)
 
         updates = {}
@@ -2029,7 +1847,6 @@ class ApiController(JSONRPCController):
             store_update(updates, description, 'group_description')
             store_update(updates, owner, 'owner')
             store_update(updates, parent, 'parent_group')
-            store_update(updates, enable_locking, 'enable_locking')
             repo_group = RepoGroupModel().update(repo_group, updates)
             Session().commit()
             return dict(
@@ -2443,6 +2260,7 @@ class ApiController(JSONRPCController):
 
             gist = GistModel().create(description=description,
                                       owner=owner,
+                                      ip_addr=request.ip_addr,
                                       gist_mapping=files,
                                       gist_type=gist_type,
                                       lifetime=lifetime)
@@ -2536,9 +2354,9 @@ class ApiController(JSONRPCController):
 
         with_reviews = Optional.extract(with_reviews)
         if with_reviews:
-                reviews = ChangesetStatusModel().get_statuses(
-                                    repo.repo_name, raw_id)
-                info["reviews"] = reviews
+            reviews = ChangesetStatusModel().get_statuses(
+                                repo.repo_name, raw_id)
+            info["reviews"] = reviews
 
         return info
 

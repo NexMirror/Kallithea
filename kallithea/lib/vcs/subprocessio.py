@@ -22,9 +22,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with git_http_backend.py Project.
 If not, see <http://www.gnu.org/licenses/>.
 """
+import collections
 import os
 import subprocess
-import collections
 import threading
 
 
@@ -205,9 +205,6 @@ class BufferedGenerator(object):
         except (GeneratorExit, StopIteration):
             pass
 
-    def __del__(self):
-        self.close()
-
     ####################
     # Threaded reader's infrastructure.
     ####################
@@ -367,13 +364,15 @@ class SubprocessIOChunker(object):
         # Else, we are happy.
         returncode = _p.poll()
         if (returncode is not None # process has terminated
-            and returncode != 0): # and it failed
+            and returncode != 0
+        ): # and it failed
             bg_out.stop()
             out = ''.join(bg_out)
             bg_err.stop()
             err = ''.join(bg_err)
             if (err.strip() == 'fatal: The remote end hung up unexpectedly' and
-                out.startswith('0034shallow ')):
+                out.startswith('0034shallow ')
+            ):
                 # hack inspired by https://github.com/schacon/grack/pull/7
                 bg_out = iter([out])
                 _p = None
@@ -395,7 +394,8 @@ class SubprocessIOChunker(object):
         if self.process:
             returncode = self.process.poll()
             if (returncode is not None # process has terminated
-                and returncode != 0): # and it failed
+                and returncode != 0
+            ): # and it failed
                 self.output.stop()
                 self.error.stop()
                 err = ''.join(self.error)
@@ -423,6 +423,3 @@ class SubprocessIOChunker(object):
             os.close(self.inputstream)
         except:
             pass
-
-    def __del__(self):
-        self.close()

@@ -24,22 +24,24 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-import formencode.htmlfill
 import traceback
 
-from tg import request, tmpl_context as c
+import formencode.htmlfill
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
 from kallithea.config.routing import url
-from kallithea.lib import helpers as h
-from kallithea.lib.compat import formatted_json
-from kallithea.lib.base import BaseController, render
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib import auth_modules
-from kallithea.model.forms import AuthSettingsForm
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import HasPermissionAnyDecorator, LoginRequired
+from kallithea.lib.base import BaseController, render
+from kallithea.lib.compat import formatted_json
 from kallithea.model.db import Setting
+from kallithea.model.forms import AuthSettingsForm
 from kallithea.model.meta import Session
+
 
 log = logging.getLogger(__name__)
 
