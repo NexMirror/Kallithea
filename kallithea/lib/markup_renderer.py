@@ -150,6 +150,10 @@ class MarkupRenderer(object):
 
     @classmethod
     def plain(cls, source, universal_newline=True):
+        """
+        >>> MarkupRenderer.plain('https://example.com/')
+        '<br /><a href="https://example.com/">https://example.com/</a>'
+        """
         source = safe_str(source)
         if universal_newline:
             newline = '\n'

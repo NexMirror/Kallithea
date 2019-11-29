@@ -1062,6 +1062,8 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     URLs links to what they say.
     Issues are linked to given issue-server.
     If link_ is provided, all text not already linking somewhere will link there.
+    >>> urlify_text("Urlify http://example.com/ and 'https://example.com' *and* <b>markup/b>")
+    literal('Urlify <a href="http://example.com/">http://example.com/</a> and &#39;<a href="https://example.com&apos">https://example.com&apos</a>; <b>*and*</b> &lt;b&gt;markup/b&gt;')
     """
 
     def _replace(match_obj):
