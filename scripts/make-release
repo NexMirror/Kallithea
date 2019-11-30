@@ -19,7 +19,7 @@ virtualenv -p python2 "$venv"
 . "$venv/bin/activate"
 
 echo "Install/verify tools needed for building and uploading stuff"
-pip install --upgrade -e . -r dev_requirements.txt twine
+pip install --upgrade -e . -r dev_requirements.txt twine python-ldap python-pam
 
 echo "Cleanup and update copyrights ... and clean checkout"
 scripts/run-all-cleanup
