@@ -673,7 +673,7 @@ def make_map(config):
                 controller='changelog', conditions=dict(function=check_repo))
 
     rmap.connect('changelog_file_home', '/{repo_name:.*?}/changelog/{revision}/{f_path:.*}',
-                controller='changelog', f_path=None,
+                controller='changelog',
                 conditions=dict(function=check_repo))
 
     rmap.connect('changelog_details', '/{repo_name:.*?}/changelog_details/{cs}',
