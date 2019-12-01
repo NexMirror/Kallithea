@@ -86,7 +86,7 @@ def make_map(config):
     #==========================================================================
 
     # MAIN PAGE
-    rmap.connect('home', '/', controller='home', action='index')
+    rmap.connect('home', '/', controller='home')
     rmap.connect('about', '/about', controller='home', action='about')
     rmap.redirect('/favicon.ico', '/images/favicon.ico')
     rmap.connect('repo_switcher_data', '/_repos', controller='home',
@@ -106,7 +106,7 @@ def make_map(config):
         m.connect("repos", "/repos",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("repos", "/repos",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_repo", "/create_repository",
                   action="create_repository", conditions=dict(method=["GET"]))
         m.connect("update_repo", "/repos/{repo_name:.*?}",
@@ -121,7 +121,7 @@ def make_map(config):
         m.connect("repos_groups", "/repo_groups",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("repos_groups", "/repo_groups",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_repos_group", "/repo_groups/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_repos_group", "/repo_groups/{group_name:.*?}",
@@ -161,9 +161,9 @@ def make_map(config):
         m.connect("new_user", "/users/new",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("users", "/users",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("formatted_users", "/users.{format}",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_user", "/users/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_user", "/users/{id}",
@@ -216,7 +216,7 @@ def make_map(config):
         m.connect("users_groups", "/user_groups",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("users_groups", "/user_groups",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_users_group", "/user_groups/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_users_group", "/user_groups/{id}",
@@ -263,8 +263,7 @@ def make_map(config):
     # ADMIN DEFAULTS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/defaults') as m:
-        m.connect('defaults', '/defaults',
-                  action="index")
+        m.connect('defaults', '/defaults')
         m.connect('defaults_update', 'defaults/{id}/update',
                   action="update", conditions=dict(method=["POST"]))
 
@@ -370,7 +369,7 @@ def make_map(config):
         m.connect("gists", "/gists",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("gists", "/gists",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_gist", "/gists/new",
                   action="new", conditions=dict(method=["GET"]))
 
@@ -396,7 +395,7 @@ def make_map(config):
     # ADMIN MAIN PAGES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/admin') as m:
-        m.connect('admin_home', '', action='index')
+        m.connect('admin_home', '')
         m.connect('admin_add_repo', '/add_repo/{new_repo:[a-z0-9. _-]*}',
                   action='add_repo')
     #==========================================================================
@@ -408,7 +407,7 @@ def make_map(config):
 
     # USER JOURNAL
     rmap.connect('journal', '%s/journal' % ADMIN_PREFIX,
-                 controller='journal', action='index')
+                 controller='journal')
     rmap.connect('journal_rss', '%s/journal/rss' % ADMIN_PREFIX,
                  controller='journal', action='journal_rss')
     rmap.connect('journal_atom', '%s/journal/atom' % ADMIN_PREFIX,
@@ -602,7 +601,7 @@ def make_map(config):
 
     rmap.connect('compare_home',
                  '/{repo_name:.*?}/compare',
-                 controller='compare', action='index',
+                 controller='compare',
                  conditions=dict(function=check_repo))
 
     rmap.connect('compare_url',
@@ -616,7 +615,7 @@ def make_map(config):
 
     rmap.connect('pullrequest_home',
                  '/{repo_name:.*?}/pull-request/new', controller='pullrequests',
-                 action='index', conditions=dict(function=check_repo,
+                 conditions=dict(function=check_repo,
                                                  method=["GET"]))
 
     rmap.connect('pullrequest_repo_info',
@@ -719,7 +718,7 @@ def make_map(config):
 
     rmap.connect('files_annotate_home',
                  '/{repo_name:.*?}/annotate/{revision}/{f_path:.*}',
-                 controller='files', action='index', revision='tip',
+                 controller='files', revision='tip',
                  f_path='', annotate=True, conditions=dict(function=check_repo))
 
     rmap.connect('files_edit_home',
