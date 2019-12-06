@@ -66,6 +66,11 @@ def parse_pub_key(ssh_key):
     >>> parse_pub_key(''' ssh-rsa  AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ== and a comment
     ... ''')
     ('ssh-rsa', '\x00\x00\x00\x07ssh-rsa\x00\x00\x00\x0bThis is fake!', 'and a comment\n')
+    >>> # FIXME below test shows incorrect behavior -- to be fixed in a subsequent commit
+    >>> parse_pub_key('''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1NA2kBQIKe74afUXmIWD9ByDYQJqUwW44Y4gJOBRuo''')
+    Traceback (most recent call last):
+    ...
+    SshKeyParseError: Incorrect SSH key - base64 part is not 'ssh-ed25519' as claimed but 'ssh-ed25519'
     """
     if not ssh_key:
         raise SshKeyParseError(_("SSH key is missing"))
