@@ -120,7 +120,8 @@ class FeedController(BaseRepoController):
                 feed.add_item(title=self._get_title(cs),
                               link=h.canonical_url('changeset_home', repo_name=repo_name,
                                        revision=cs.raw_id),
-                              author_name=cs.author,
+                              author_email=cs.author_email,
+                              author_name=cs.author_name,
                               description=''.join(self.__get_desc(cs)),
                               pubdate=cs.date,
                               )
