@@ -134,7 +134,7 @@ class JournalController(BaseController):
                           pubdate=entry.action_date,
                           link=_url or h.canonical_url(''),
                           author_email=user.email,
-                          author_name=user.full_contact,
+                          author_name=user.full_name_or_username,
                           description=action_extra())
 
         response.content_type = feed.mime_type
