@@ -25,6 +25,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import binascii
 import logging
 import traceback
 from collections import OrderedDict, defaultdict
@@ -395,6 +396,8 @@ class ChangesetController(BaseRepoController):
             c.changeset = c.cs_ranges[0]
             c.parent_tmpl = ''.join(['# Parent  %s\n' % x.raw_id
                                      for x in c.changeset.parents])
+            c.changeset_graft_source_hash = c.changeset.extra.get(b'source', b'')
+            c.changeset_transplant_source_hash = binascii.hexlify(c.changeset.extra.get(b'transplant_source', b''))
         if method == 'download':
             response.content_type = 'text/plain'
             response.content_disposition = 'attachment; filename=%s.diff' \

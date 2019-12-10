@@ -90,16 +90,14 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                          <span><b>${h.person(c.changeset.author,'full_name_and_username')}</b> - ${h.age(c.changeset.date,True)} ${h.fmt_date(c.changeset.date)}</span><br/>
                          <span>${h.email_or_none(c.changeset.author)}</span><br/>
                      </div>
-                     <% rev = c.changeset.extra.get('source') %>
-                     %if rev:
+                     %if c.changeset_graft_source_hash:
                      <div>
-                       ${_('Grafted from:')} ${h.link_to(h.short_id(rev),h.url('changeset_home',repo_name=c.repo_name,revision=rev), class_="changeset_hash")}
+                       ${_('Grafted from:')} ${h.link_to(h.short_id(c.changeset_graft_source_hash),h.url('changeset_home',repo_name=c.repo_name,revision=c.changeset_graft_source_hash), class_="changeset_hash")}
                      </div>
                      %endif
-                     <% rev = c.changeset.extra.get('transplant_source', '').encode('hex') %>
-                     %if rev:
+                     %if c.changeset_transplant_source_hash:
                      <div>
-                       ${_('Transplanted from:')} ${h.link_to(h.short_id(rev),h.url('changeset_home',repo_name=c.repo_name,revision=rev), class_="changeset_hash")}
+                       ${_('Transplanted from:')} ${h.link_to(h.short_id(c.changeset_transplant_source_hash),h.url('changeset_home',repo_name=c.repo_name,revision=c.changeset_transplant_source_hash), class_="changeset_hash")}
                      </div>
                      %endif
 
