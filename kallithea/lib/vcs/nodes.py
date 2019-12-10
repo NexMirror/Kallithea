@@ -9,6 +9,7 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
+import functools
 import mimetypes
 import posixpath
 import stat
@@ -86,6 +87,7 @@ class RemovedFileNodesGenerator(NodeGeneratorBase):
             yield RemovedFileNode(path=p)
 
 
+@functools.total_ordering
 class Node(object):
     """
     Simplest class representing file or directory on repository.  SCM backends
@@ -141,32 +143,35 @@ class Node(object):
 
     kind = property(_get_kind, _set_kind)
 
-    def __cmp__(self, other):
-        """
-        Comparator using name of the node, needed for quick list sorting.
-        """
-        kind_cmp = cmp(self.kind, other.kind)
-        if kind_cmp:
-            return kind_cmp
-        return cmp(self.name, other.name)
-
     def __eq__(self, other):
-        for attr in ['name', 'path', 'kind']:
-            if getattr(self, attr) != getattr(other, attr):
-                return False
+        if self._kind != other._kind:
+            return False
+        if self.path != other.path:
+            return False
         if self.is_file():
-            if self.content != other.content:
-                return False
+            return self.content == other.content
         else:
             # For DirNode's check without entering each dir
             self_nodes_paths = list(sorted(n.path for n in self.nodes))
             other_nodes_paths = list(sorted(n.path for n in self.nodes))
-            if self_nodes_paths != other_nodes_paths:
-                return False
-        return True
+            return self_nodes_paths == other_nodes_paths
 
-    def __nq__(self, other):
-        return not self.__eq__(other)
+    def __lt__(self, other):
+        if self._kind < other._kind:
+            return True
+        if self._kind > other._kind:
+            return False
+        if self.path < other.path:
+            return True
+        if self.path > other.path:
+            return False
+        if self.is_file():
+            return self.content < other.content
+        else:
+            # For DirNode's check without entering each dir
+            self_nodes_paths = list(sorted(n.path for n in self.nodes))
+            other_nodes_paths = list(sorted(n.path for n in self.nodes))
+            return self_nodes_paths < other_nodes_paths
 
     def __repr__(self):
         return '<%s %r>' % (self.__class__.__name__, self.path)
