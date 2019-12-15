@@ -106,8 +106,7 @@ def safe_str(s):
     if isinstance(s, str):
         return s
 
-    if not isinstance(s, unicode):
-        return str(s)
+    assert isinstance(s, unicode), s  # don't use safe_str to coerce non-strings
 
     from kallithea.lib.vcs.conf import settings
     for enc in settings.DEFAULT_ENCODINGS:

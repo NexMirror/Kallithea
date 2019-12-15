@@ -67,7 +67,7 @@ class ChangelogController(BaseRepoController):
             h.flash(_('There are no changesets yet'), category='error')
         except RepositoryError as e:
             log.error(traceback.format_exc())
-            h.flash(safe_str(e), category='error')
+            h.flash(unicode(e), category='error')
         raise HTTPBadRequest()
 
     @LoginRequired(allow_default_user=True)
@@ -111,7 +111,7 @@ class ChangelogController(BaseRepoController):
                         cs = self.__get_cs(revision, repo_name)
                         collection = cs.get_file_history(f_path)
                     except RepositoryError as e:
-                        h.flash(safe_str(e), category='warning')
+                        h.flash(unicode(e), category='warning')
                         raise HTTPFound(location=h.url('changelog_home', repo_name=repo_name))
             else:
                 collection = c.db_repo_scm_instance.get_changesets(start=0, end=revision,
@@ -125,11 +125,11 @@ class ChangelogController(BaseRepoController):
             c.cs_comments = c.db_repo.get_comments(page_revisions)
             c.cs_statuses = c.db_repo.statuses(page_revisions)
         except EmptyRepositoryError as e:
-            h.flash(safe_str(e), category='warning')
+            h.flash(unicode(e), category='warning')
             raise HTTPFound(location=url('summary_home', repo_name=c.repo_name))
         except (RepositoryError, ChangesetDoesNotExistError, Exception) as e:
             log.error(traceback.format_exc())
-            h.flash(safe_str(e), category='error')
+            h.flash(unicode(e), category='error')
             raise HTTPFound(location=url('changelog_home', repo_name=c.repo_name))
 
         c.branch_name = branch_name

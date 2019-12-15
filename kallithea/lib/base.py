@@ -603,7 +603,7 @@ class BaseRepoController(BaseController):
             raise webob.exc.HTTPNotFound()
         except RepositoryError as e:
             log.error(traceback.format_exc())
-            h.flash(safe_str(e), category='error')
+            h.flash(unicode(e), category='error')
             raise webob.exc.HTTPBadRequest()
 
 

@@ -90,7 +90,7 @@ class FilesController(BaseRepoController):
             h.flash(msg, category='error')
             raise HTTPNotFound()
         except RepositoryError as e:
-            h.flash(safe_str(e), category='error')
+            h.flash(unicode(e), category='error')
             raise HTTPNotFound()
 
     def __get_filenode(self, cs, path):
@@ -110,7 +110,7 @@ class FilesController(BaseRepoController):
             h.flash(msg, category='error')
             raise HTTPNotFound()
         except RepositoryError as e:
-            h.flash(safe_str(e), category='error')
+            h.flash(unicode(e), category='error')
             raise HTTPNotFound()
 
         return file_node
@@ -175,7 +175,7 @@ class FilesController(BaseRepoController):
             else:
                 c.authors = c.file_history = []
         except RepositoryError as e:
-            h.flash(safe_str(e), category='error')
+            h.flash(unicode(e), category='error')
             raise HTTPNotFound()
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):

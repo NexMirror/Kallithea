@@ -226,12 +226,12 @@ class JSONRPCController(TGController):
             if isinstance(raw_response, HTTPError):
                 self._error = str(raw_response)
         except JSONRPCError as e:
-            self._error = safe_str(e)
+            self._error = unicode(e)
         except Exception as e:
             log.error('Encountered unhandled exception: %s',
                       traceback.format_exc(),)
             json_exc = JSONRPCError('Internal server error')
-            self._error = safe_str(json_exc)
+            self._error = unicode(json_exc)
 
         if self._error is not None:
             raw_response = None
