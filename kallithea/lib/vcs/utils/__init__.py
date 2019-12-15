@@ -76,7 +76,7 @@ def safe_unicode(s):
     if isinstance(s, unicode):
         return s
 
-    if not isinstance(s, str):  # use __str__ / __unicode__ and don't expect UnicodeDecodeError
+    if not isinstance(s, bytes):  # use __str__ / __unicode__ and don't expect UnicodeDecodeError
         return unicode(s)
 
     from kallithea.lib.vcs.conf import settings
@@ -97,16 +97,16 @@ def safe_unicode(s):
     return unicode(s, settings.DEFAULT_ENCODINGS[0], 'replace')
 
 
-def safe_str(s):
+def safe_bytes(s):
     """
-    Safe str function. Use a few tricks to turn s into bytes string:
+    Safe bytes function. Use a few tricks to turn s into bytes string:
     In case of UnicodeEncodeError with configured default encodings, fall back
     to first configured encoding with errors replaced.
     """
-    if isinstance(s, str):
+    if isinstance(s, bytes):
         return s
 
-    assert isinstance(s, unicode), s  # don't use safe_str to coerce non-strings
+    assert isinstance(s, unicode), repr(s)  # bytes cannot coerse with __str__ or handle None or int
 
     from kallithea.lib.vcs.conf import settings
     for enc in settings.DEFAULT_ENCODINGS:
@@ -116,6 +116,9 @@ def safe_str(s):
             pass
 
     return s.encode(settings.DEFAULT_ENCODINGS[0], 'replace')
+
+
+safe_str = safe_bytes  # safe_str is deprecated - it will be redefined when changing to py3
 
 
 # Regex taken from http://www.regular-expressions.info/email.html
