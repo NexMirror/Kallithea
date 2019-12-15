@@ -28,6 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import base64
 import datetime
 import logging
 import traceback
@@ -171,7 +172,7 @@ class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
         (authmeth, auth) = authorization.split(' ', 1)
         if 'basic' != authmeth.lower():
             return self.build_authentication(environ)
-        auth = auth.strip().decode('base64')
+        auth = base64.b64decode(auth.strip())
         _parts = auth.split(':', 1)
         if len(_parts) == 2:
             username, password = _parts

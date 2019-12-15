@@ -25,6 +25,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import base64
 import collections
 import datetime
 import functools
@@ -2544,4 +2545,4 @@ class UserSshKeys(Base, BaseDbModel):
         # use fingerprints similar to 'ssh-keygen -E sha256 -lf ~/.ssh/id_rsa.pub'
         self._public_key = full_key
         enc_key = full_key.split(" ")[1]
-        self.fingerprint = hashlib.sha256(enc_key.decode('base64')).digest().encode('base64').replace('\n', '').rstrip('=')
+        self.fingerprint = base64.b64encode(hashlib.sha256(base64.b64decode(enc_key)).digest()).replace(b'\n', b'').rstrip(b'=').decode()

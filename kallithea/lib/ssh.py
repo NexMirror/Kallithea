@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import binascii
+import base64
 import logging
 import re
 
@@ -84,8 +84,8 @@ def parse_pub_key(ssh_key):
         raise SshKeyParseError(_("Incorrect SSH key - unexpected characters in base64 part %r") % keyvalue)
 
     try:
-        decoded = keyvalue.decode('base64')
-    except binascii.Error:
+        decoded = base64.b64decode(keyvalue)
+    except TypeError:
         raise SshKeyParseError(_("Incorrect SSH key - failed to decode base64 part %r") % keyvalue)
 
     if not decoded.startswith('\x00\x00\x00' + chr(len(keytype)) + str(keytype) + '\x00'):
