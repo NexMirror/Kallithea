@@ -29,7 +29,7 @@ from tg import config
 from tg.i18n import ugettext as _
 
 from kallithea.lib import ssh
-from kallithea.lib.utils2 import safe_str, str2bool
+from kallithea.lib.utils2 import str2bool
 from kallithea.model.db import User, UserSshKeys
 from kallithea.model.meta import Session
 
@@ -53,7 +53,7 @@ class SshKeyModel(object):
         try:
             keytype, pub, comment = ssh.parse_pub_key(public_key)
         except ssh.SshKeyParseError as e:
-            raise SshKeyModelException(_('SSH key %r is invalid: %s') % (safe_str(public_key), e.message))
+            raise SshKeyModelException(_('SSH key %r is invalid: %s') % (public_key, e.message))
         if not description.strip():
             description = comment.strip()
 
@@ -86,7 +86,7 @@ class SshKeyModel(object):
 
         ssh_key = ssh_key.scalar()
         if ssh_key is None:
-            raise SshKeyModelException(_('SSH key %r not found') % safe_str(public_key))
+            raise SshKeyModelException(_('SSH key %r not found') % public_key)
         Session().delete(ssh_key)
 
     def get_ssh_keys(self, user):

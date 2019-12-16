@@ -136,8 +136,10 @@ class BaseDbModel(object):
             return None
         if isinstance(value, cls):
             return value
-        if isinstance(value, (int, long)) or safe_str(value).isdigit():
+        if isinstance(value, (int, long)):
             return cls.get(value)
+        if isinstance(value, basestring) and value.isdigit():
+            return cls.get(int(value))
         if callback is not None:
             return callback(value)
 

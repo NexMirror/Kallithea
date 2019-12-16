@@ -942,7 +942,7 @@ def gravatar_url(email_address, size=30, default=''):
                .replace('{md5email}', hashlib.md5(safe_str(email_address).lower()).hexdigest()) \
                .replace('{netloc}', parsed_url.netloc) \
                .replace('{scheme}', parsed_url.scheme) \
-               .replace('{size}', safe_str(size))
+               .replace('{size}', str(size))
     return url
 
 

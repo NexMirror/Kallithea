@@ -139,9 +139,11 @@ class ScmModel(object):
         cls = Repository
         if isinstance(instance, cls):
             return instance
-        elif isinstance(instance, int) or safe_str(instance).isdigit():
+        elif isinstance(instance, int):
             return cls.get(instance)
         elif isinstance(instance, basestring):
+            if instance.isdigit():
+                return cls.get(int(instance))
             return cls.get_by_repo_name(instance)
         elif instance is not None:
             raise Exception('given object must be int, basestr or Instance'
