@@ -24,7 +24,7 @@ from sqlalchemy.orm.interfaces import MapperOption
 from sqlalchemy.orm.query import Query
 from sqlalchemy.sql import visitors
 
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import safe_str, safe_unicode
 
 
 class CachingQuery(Query):
@@ -138,10 +138,10 @@ def _get_cache_parameters(query):
 
     if cache_key is None:
         # cache key - the value arguments from this query's parameters.
-        args = [safe_str(x) for x in _params_from_query(query)]
-        args.extend([k for k in [str(query._limit), str(query._offset)] if k not in ['None', None, u'None']])
-
-        cache_key = " ".join(args)
+        args = _params_from_query(query)
+        args.append(query._limit)
+        args.append(query._offset)
+        cache_key = " ".join(safe_unicode(x) for x in args)
 
     if cache_key is None:
         raise Exception('Cache key cannot be None')
