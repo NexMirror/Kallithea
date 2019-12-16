@@ -173,7 +173,7 @@ class PullrequestsController(BaseRepoController):
                 if 'master' in repo.branches:
                     selected = 'branch:master:%s' % repo.branches['master']
                 else:
-                    k, v = repo.branches.items()[0]
+                    k, v = list(repo.branches.items())[0]
                     selected = 'branch:%s:%s' % (k, v)
 
         groups = [(specials, _("Special")),

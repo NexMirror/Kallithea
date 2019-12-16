@@ -69,7 +69,7 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
         assert foobar_tip.branch == 'foobar'
         assert foobar_tip.branches == ['foobar']
         # 'foobar' should be the only branch that contains the new commit
-        branch_tips = self.repo.branches.values()
+        branch_tips = list(self.repo.branches.values())
         assert branch_tips.count(str(foobar_tip.raw_id)) == 1
 
     def test_new_head_in_default_branch(self):

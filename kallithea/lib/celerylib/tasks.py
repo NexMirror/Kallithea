@@ -489,7 +489,7 @@ def __get_codes_stats(repo_name):
     for _topnode, _dirnodes, filenodes in tip.walk('/'):
         for filenode in filenodes:
             ext = filenode.extension.lower()
-            if ext in LANGUAGES_EXTENSIONS_MAP.keys() and not filenode.is_binary:
+            if ext in LANGUAGES_EXTENSIONS_MAP and not filenode.is_binary:
                 if ext in code_stats:
                     code_stats[ext] += 1
                 else:

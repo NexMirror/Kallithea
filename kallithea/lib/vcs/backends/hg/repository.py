@@ -136,11 +136,11 @@ class MercurialRepository(BaseRepository):
         if self._empty:
             return {}
 
-        sortkey = lambda ctx: ctx[0]  # sort by name
-        _tags = [(safe_unicode(n), hex(h),) for n, h in
-                 self._repo.tags().items()]
-
-        return OrderedDict(sorted(_tags, key=sortkey, reverse=True))
+        return OrderedDict(sorted(
+            ((safe_unicode(n), hex(h)) for n, h in self._repo.tags().items()),
+            reverse=True,
+            key=lambda x: x[0],  # sort by name
+        ))
 
     def tag(self, name, user, revision=None, message=None, date=None,
             **kwargs):
@@ -214,10 +214,11 @@ class MercurialRepository(BaseRepository):
         if self._empty:
             return {}
 
-        sortkey = lambda ctx: ctx[0]  # sort by name
-        _bookmarks = [(safe_unicode(n), hex(h),) for n, h in
-                 self._repo._bookmarks.items()]
-        return OrderedDict(sorted(_bookmarks, key=sortkey, reverse=True))
+        return OrderedDict(sorted(
+            ((safe_unicode(n), hex(h)) for n, h in self._repo._bookmarks.items()),
+            reverse=True,
+            key=lambda x: x[0],  # sort by name
+        ))
 
     def _get_all_revisions(self):
 
@@ -525,7 +526,7 @@ class MercurialRepository(BaseRepository):
             raise RepositoryError("Start revision '%s' cannot be "
                                   "after end revision '%s'" % (start, end))
 
-        if branch_name and branch_name not in self.allbranches.keys():
+        if branch_name and branch_name not in self.allbranches:
             msg = ("Branch %s not found in %s" % (branch_name, self))
             raise BranchDoesNotExistError(msg)
         if end_pos is not None:

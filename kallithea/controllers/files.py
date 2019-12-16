@@ -163,7 +163,7 @@ class FilesController(BaseRepoController):
                 c.load_full_history = False
                 # determine if we're on branch head
                 _branches = c.db_repo_scm_instance.branches
-                c.on_branch_head = revision in _branches.keys() + _branches.values()
+                c.on_branch_head = revision in _branches or revision in _branches.values()
                 _hist = []
                 c.file_history = []
                 if c.load_full_history:
@@ -292,7 +292,7 @@ class FilesController(BaseRepoController):
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
         # check if revision is a branch name or branch hash
-        if revision not in _branches.keys() + _branches.values():
+        if revision not in _branches and revision not in _branches.values():
             h.flash(_('You can only delete files with revision '
                       'being a valid branch'), category='warning')
             raise HTTPFound(location=h.url('files_home',
@@ -346,7 +346,7 @@ class FilesController(BaseRepoController):
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
         # check if revision is a branch name or branch hash
-        if revision not in _branches.keys() + _branches.values():
+        if revision not in _branches and revision not in _branches.values():
             h.flash(_('You can only edit files with revision '
                       'being a valid branch'), category='warning')
             raise HTTPFound(location=h.url('files_home',

@@ -238,7 +238,7 @@ def PasswordResetConfirmationForm():
     return _PasswordResetConfirmationForm
 
 
-def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS,
              repo_groups=None, landing_revs=None):
     old_data = old_data or {}
     repo_groups = repo_groups or []
@@ -315,7 +315,7 @@ def RepoFieldForm():
     return _RepoFieldForm
 
 
-def RepoForkForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+def RepoForkForm(edit=False, old_data=None, supported_backends=BACKENDS,
                  repo_groups=None, landing_revs=None):
     old_data = old_data or {}
     repo_groups = repo_groups or []
@@ -435,7 +435,7 @@ def CustomDefaultPermissionsForm():
     return _CustomDefaultPermissionsForm
 
 
-def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS.keys()):
+def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS):
     class _DefaultsForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True

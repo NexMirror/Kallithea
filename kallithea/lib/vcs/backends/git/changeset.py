@@ -355,10 +355,10 @@ class GitChangeset(BaseChangeset):
         :raise ImproperArchiveTypeError: If given kind is wrong.
         :raise VcsError: If given stream is None
         """
-        allowed_kinds = settings.ARCHIVE_SPECS.keys()
+        allowed_kinds = settings.ARCHIVE_SPECS
         if kind not in allowed_kinds:
             raise ImproperArchiveTypeError('Archive kind not supported use one'
-                'of %s' % allowed_kinds)
+                'of %s' % ' '.join(allowed_kinds))
 
         if stream is None:
             raise VCSError('You need to pass in a valid stream for filling'

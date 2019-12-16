@@ -35,7 +35,7 @@ LANGUAGES_EXTENSIONS_MAP = pygmentsutils.get_extension_descriptions()
 # Whoosh index targets
 
 # Extensions we want to index content of using whoosh
-INDEX_EXTENSIONS = LANGUAGES_EXTENSIONS_MAP.keys()
+INDEX_EXTENSIONS = list(LANGUAGES_EXTENSIONS_MAP)
 
 # Filenames we want to index content of using whoosh
 INDEX_FILENAMES = pygmentsutils.get_index_filenames()

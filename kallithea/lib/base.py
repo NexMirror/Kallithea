@@ -408,7 +408,7 @@ class BaseController(TGController):
         # END CONFIG VARS
 
         c.repo_name = get_repo_slug(request)  # can be empty
-        c.backends = BACKENDS.keys()
+        c.backends = list(BACKENDS)
 
         self.cut_off_limit = safe_int(config.get('cut_off_limit'))
 

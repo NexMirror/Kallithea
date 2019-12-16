@@ -556,8 +556,8 @@ def ValidPerms(type_='repo'):
                         new_perms_group[pos][_key] = v
 
             # fill new permissions in order of how they were added
-            for k in sorted(map(int, new_perms_group.keys())):
-                perm_dict = new_perms_group[str(k)]
+            for k in sorted(new_perms_group, key=lambda k: int(k)):
+                perm_dict = new_perms_group[k]
                 new_member = perm_dict.get('name')
                 new_perm = perm_dict.get('perm')
                 new_type = perm_dict.get('type')

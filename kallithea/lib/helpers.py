@@ -1164,7 +1164,7 @@ def urlify_issues(newtext, repo_name):
         tmp_urlify_issues_f = lambda s: s
 
         issue_pat_re = re.compile(r'issue_pat(.*)')
-        for k in CONFIG.keys():
+        for k in CONFIG:
             # Find all issue_pat* settings that also have corresponding server_link and prefix configuration
             m = issue_pat_re.match(k)
             if m is None:

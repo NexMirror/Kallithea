@@ -233,7 +233,7 @@ class Setting(Base, BaseDbModel):
     def app_settings_type(self, val):
         if val not in self.SETTINGS_TYPES:
             raise Exception('type must be one of %s got %s'
-                            % (self.SETTINGS_TYPES.keys(), val))
+                            % (list(self.SETTINGS_TYPES), val))
         self._app_settings_type = val
 
     def __unicode__(self):

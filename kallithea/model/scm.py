@@ -186,10 +186,10 @@ class ScmModel(object):
 
                     klass = get_backend(path[0])
 
-                    if path[0] == 'hg' and path[0] in BACKENDS.keys():
+                    if path[0] == 'hg' and path[0] in BACKENDS:
                         repos[name] = klass(safe_str(path[1]), baseui=baseui)
 
-                    if path[0] == 'git' and path[0] in BACKENDS.keys():
+                    if path[0] == 'git' and path[0] in BACKENDS:
                         repos[name] = klass(path[1])
             except OSError:
                 continue
