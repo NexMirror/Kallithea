@@ -43,6 +43,7 @@ from tg.i18n import ungettext
 from webhelpers2.text import collapse, remove_formatting, strip_tags
 
 from kallithea.lib.compat import json
+from kallithea.lib.vcs.utils import safe_str, safe_unicode  # re-export
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -160,95 +161,6 @@ def safe_int(val, default=None):
         val = default
 
     return val
-
-
-def safe_unicode(str_, from_encoding=None):
-    """
-    safe unicode function. Does few trick to turn str_ into unicode
-
-    In case of UnicodeDecode error we try to return it with encoding detected
-    by chardet library if it fails fallback to unicode with errors replaced
-
-    :param str_: string to decode
-    :rtype: unicode
-    :returns: unicode object
-    """
-    if isinstance(str_, unicode):
-        return str_
-
-    if not from_encoding:
-        import kallithea
-        DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf-8'), sep=',')
-        from_encoding = DEFAULT_ENCODINGS
-
-    if not isinstance(from_encoding, (list, tuple)):
-        from_encoding = [from_encoding]
-
-    try:
-        return unicode(str_)
-    except UnicodeDecodeError:
-        pass
-
-    for enc in from_encoding:
-        try:
-            return unicode(str_, enc)
-        except UnicodeDecodeError:
-            pass
-
-    try:
-        import chardet
-        encoding = chardet.detect(str_)['encoding']
-        if encoding is None:
-            raise Exception()
-        return str_.decode(encoding)
-    except (ImportError, UnicodeDecodeError, Exception):
-        return unicode(str_, from_encoding[0], 'replace')
-
-
-def safe_str(unicode_, to_encoding=None):
-    """
-    safe str function. Does few trick to turn unicode_ into string
-
-    In case of UnicodeEncodeError we try to return it with encoding detected
-    by chardet library if it fails fallback to string with errors replaced
-
-    :param unicode_: unicode to encode
-    :rtype: str
-    :returns: str object
-    """
-
-    # if it's not basestr cast to str
-    if not isinstance(unicode_, basestring):
-        return str(unicode_)
-
-    if isinstance(unicode_, str):
-        return unicode_
-
-    if not to_encoding:
-        import kallithea
-        DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf-8'), sep=',')
-        to_encoding = DEFAULT_ENCODINGS
-
-    if not isinstance(to_encoding, (list, tuple)):
-        to_encoding = [to_encoding]
-
-    for enc in to_encoding:
-        try:
-            return unicode_.encode(enc)
-        except UnicodeEncodeError:
-            pass
-
-    try:
-        import chardet
-        encoding = chardet.detect(unicode_)['encoding']
-        if encoding is None:
-            raise UnicodeEncodeError()
-
-        return unicode_.encode(encoding)
-    except (ImportError, UnicodeEncodeError):
-        return unicode_.encode(to_encoding[0], 'replace')
 
 
 def remove_suffix(s, suffix):
