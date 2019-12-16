@@ -418,22 +418,22 @@ class DiffProcessor(object):
             for chunk in diff_data['chunks']:
                 lineiter = iter(chunk)
                 try:
-                    peekline = lineiter.next()
+                    peekline = next(lineiter)
                     while True:
                         # find a first del line
                         while peekline['action'] != 'del':
-                            peekline = lineiter.next()
+                            peekline = next(lineiter)
                         delline = peekline
-                        peekline = lineiter.next()
+                        peekline = next(lineiter)
                         # if not followed by add, eat all following del lines
                         if peekline['action'] != 'add':
                             while peekline['action'] == 'del':
-                                peekline = lineiter.next()
+                                peekline = next(lineiter)
                             continue
                         # found an add - make sure it is the only one
                         addline = peekline
                         try:
-                            peekline = lineiter.next()
+                            peekline = next(lineiter)
                         except StopIteration:
                             # add was last line - ok
                             _highlight_inline_diff(delline, addline)
@@ -560,7 +560,7 @@ def _parse_lines(diff_lines):
 
     chunks = []
     try:
-        line = diff_lines.next()
+        line = next(diff_lines)
 
         while True:
             lines = []
@@ -591,7 +591,7 @@ def _parse_lines(diff_lines):
                         'line':       line,
                     })
 
-            line = diff_lines.next()
+            line = next(diff_lines)
 
             while old_line < old_end or new_line < new_end:
                 if not line:
@@ -624,7 +624,7 @@ def _parse_lines(diff_lines):
                         'line':         line[1:],
                     })
 
-                line = diff_lines.next()
+                line = next(diff_lines)
 
                 if _newline_marker.match(line):
                     # we need to append to lines, since this is not
@@ -635,7 +635,7 @@ def _parse_lines(diff_lines):
                         'action':       'context',
                         'line':         line,
                     })
-                    line = diff_lines.next()
+                    line = next(diff_lines)
             if old_line > old_end:
                 raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
             if new_line > new_end:

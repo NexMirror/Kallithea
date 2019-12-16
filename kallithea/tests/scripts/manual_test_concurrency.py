@@ -202,7 +202,7 @@ if __name__ == '__main__':
             backend = 'hg'
 
         if METHOD == 'pull':
-            seq = tempfile._RandomNameSequence().next()
+            seq = next(tempfile._RandomNameSequence())
             test_clone_with_credentials(repo=sys.argv[1], method='clone',
                                         backend=backend)
         s = time.time()

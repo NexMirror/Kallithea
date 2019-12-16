@@ -63,14 +63,14 @@ class ResultIter:
 
     def __init__(self, result, meter, description):
         self._result_close = getattr(result, 'close', None) or (lambda: None)
-        self._next = iter(result).next
+        self._next = iter(result).__next__
         self._meter = meter
         self._description = description
 
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         chunk = self._next()
         self._meter.measure(chunk)
         return chunk

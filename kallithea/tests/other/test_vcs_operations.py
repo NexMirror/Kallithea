@@ -178,7 +178,7 @@ def _add_files(vcs, dest_dir, files_no=3):
     :param vcs:
     :param dest_dir:
     """
-    added_file = '%ssetup.py' % _RandomNameSequence().next()
+    added_file = '%ssetup.py' % next(_RandomNameSequence())
     open(os.path.join(dest_dir, added_file), 'a').close()
     Command(dest_dir).execute(vcs, 'add', added_file)
 
@@ -263,9 +263,9 @@ class TestVCSOperations(base.TestController):
     @pytest.fixture(scope="module")
     def testfork(self):
         # create fork so the repo stays untouched
-        git_fork_name = u'%s_fork%s' % (base.GIT_REPO, _RandomNameSequence().next())
+        git_fork_name = u'%s_fork%s' % (base.GIT_REPO, next(_RandomNameSequence()))
         fixture.create_fork(base.GIT_REPO, git_fork_name)
-        hg_fork_name = u'%s_fork%s' % (base.HG_REPO, _RandomNameSequence().next())
+        hg_fork_name = u'%s_fork%s' % (base.HG_REPO, next(_RandomNameSequence()))
         fixture.create_fork(base.HG_REPO, hg_fork_name)
         return {'git': git_fork_name, 'hg': hg_fork_name}
 
@@ -319,7 +319,7 @@ class TestVCSOperations(base.TestController):
         Session().commit()
 
         # Create an empty server repo using the API
-        repo_name = u'new_%s_%s' % (vt.repo_type, _RandomNameSequence().next())
+        repo_name = u'new_%s_%s' % (vt.repo_type, next(_RandomNameSequence()))
         usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         params = {
             "id": 7,

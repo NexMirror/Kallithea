@@ -178,7 +178,7 @@ class BufferedGenerator(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         while not len(self.data) and not self.worker.EOF.is_set():
             self.worker.data_added.clear()
             self.worker.data_added.wait(0.2)
@@ -389,7 +389,7 @@ class SubprocessIOChunker(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self.process:
             returncode = self.process.poll()
             if (returncode is not None # process has terminated
@@ -399,7 +399,7 @@ class SubprocessIOChunker(object):
                 self.error.stop()
                 err = ''.join(self.error)
                 raise EnvironmentError("Subprocess exited due to an error:\n" + err)
-        return self.output.next()
+        return next(self.output)
 
     def throw(self, type, value=None, traceback=None):
         if self.output.length or not self.output.done_reading:

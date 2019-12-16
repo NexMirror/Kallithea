@@ -387,7 +387,7 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
         if cs in color_dict:
             col = color_dict[cs]
         else:
-            col = color_dict[cs] = cgenerator.next()
+            col = color_dict[cs] = next(cgenerator)
         return "color: rgb(%s)! important;" % (', '.join(col))
 
     def url_func(changeset):

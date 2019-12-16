@@ -146,7 +146,7 @@ class WhooshResultWrapper(object):
             docnum = self.matcher.id()
             chunks = [offsets for offsets in self.get_chunks()]
             docs_id.append([docnum, chunks])
-            self.matcher.next()
+            self.matcher.next()  # this looks like a py2 iterator ... but it isn't
         return docs_id
 
     def __str__(self):
