@@ -482,7 +482,7 @@ class TestLibs(TestController):
             """empty issue_sub <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">$123</a> and """
             """issue$456"""),
         # named groups
-        (r'(PR|pullrequest|pull request) ?(?P<sitecode>BRU|CPH|BER)-(?P<id>\d+)', 'http://foo/\g<sitecode>/pullrequest/\g<id>/', 'PR-\g<sitecode>-\g<id>',
+        (r'(PR|pullrequest|pull request) ?(?P<sitecode>BRU|CPH|BER)-(?P<id>\d+)', r'http://foo/\g<sitecode>/pullrequest/\g<id>/', r'PR-\g<sitecode>-\g<id>',
             'pullrequest CPH-789 is similar to PRBRU-747',
             """<a class="issue-tracker-link" href="http://foo/CPH/pullrequest/789/">PR-CPH-789</a> is similar to """
             """<a class="issue-tracker-link" href="http://foo/BRU/pullrequest/747/">PR-BRU-747</a>"""),
@@ -512,21 +512,21 @@ class TestLibs(TestController):
     def test_urlify_issues_multiple_issue_patterns(self, sample, expected):
         from kallithea.lib.helpers import urlify_text
         config_stub = {
-            'sqlalchemy.url': 'foo',
-            'issue_pat': 'X(\d+)',
-            'issue_server_link': 'http://main/{repo}/main/\\1/',
-            'issue_sub': '#\\1',
-            'issue_pat_pr': '(?:pullrequest|pull request|PR|pr) ?#?(\d+)',
-            'issue_server_link_pr': 'http://pr/{repo}/pr/\\1',
-            'issue_sub_pr': 'PR#\\1',
-            'issue_pat_bug': '(?:BUG|bug|issue) ?#?(\d+)',
-            'issue_server_link_bug': 'http://bug/{repo}/bug/\\1',
-            'issue_sub_bug': 'bug#\\1',
-            'issue_pat_empty_prefix': 'FAIL(\d+)',
-            'issue_server_link_empty_prefix': 'http://fail/{repo}/\\1',
-            'issue_sub_empty_prefix': '',
-            'issue_pat_absent_prefix': 'FAILMORE(\d+)',
-            'issue_server_link_absent_prefix': 'http://failmore/{repo}/\\1',
+            'sqlalchemy.url': r'foo',
+            'issue_pat': r'X(\d+)',
+            'issue_server_link': r'http://main/{repo}/main/\1/',
+            'issue_sub': r'#\1',
+            'issue_pat_pr': r'(?:pullrequest|pull request|PR|pr) ?#?(\d+)',
+            'issue_server_link_pr': r'http://pr/{repo}/pr/\1',
+            'issue_sub_pr': r'PR#\1',
+            'issue_pat_bug': r'(?:BUG|bug|issue) ?#?(\d+)',
+            'issue_server_link_bug': r'http://bug/{repo}/bug/\1',
+            'issue_sub_bug': r'bug#\1',
+            'issue_pat_empty_prefix': r'FAIL(\d+)',
+            'issue_server_link_empty_prefix': r'http://fail/{repo}/\1',
+            'issue_sub_empty_prefix': r'',
+            'issue_pat_absent_prefix': r'FAILMORE(\d+)',
+            'issue_server_link_absent_prefix': r'http://failmore/{repo}/\1',
         }
         # force recreation of lazy function
         with mock.patch('kallithea.lib.helpers._urlify_issues_f', None):

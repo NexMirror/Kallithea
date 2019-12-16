@@ -2509,7 +2509,7 @@ class _BaseTestApi(object):
             "revisions": self.TEST_PR_REVISIONS,
         }
         self._compare_ok(random_id, expected,
-                         given=re.sub("\d\d\d\d\-\d\d\-\d\dT\d\d\:\d\d\:\d\d",
+                         given=re.sub(r"\d\d\d\d\-\d\d\-\d\dT\d\d\:\d\d\:\d\d",
                                       "2000-01-01T00:00:00", response.body))
 
     def test_api_close_pullrequest(self):

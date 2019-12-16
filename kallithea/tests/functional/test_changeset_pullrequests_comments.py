@@ -168,7 +168,7 @@ class TestPullrequestsCommentsController(TestController):
                                   '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
-        pr_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
+        pr_id = int(re.search(r'/pull-request/(\d+)/', response.location).group(1))
         return pr_id
 
     def test_create(self):

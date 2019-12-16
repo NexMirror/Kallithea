@@ -130,13 +130,13 @@ def test_changeset_walk(proj, limit=None):
             break
 
         full_uri = (BASE_URI % raw_cs)
-        print('%s visiting %s\%s' % (cnt, full_uri, i))
+        print('%s visiting %s/%s' % (cnt, full_uri, i))
         s = time.time()
         f = o.open(full_uri)
         size = len(f.read())
         e = time.time() - s
         total_time += e
-        print('%s visited %s\%s size:%s req:%s ms' % (cnt, full_uri, i, size, e))
+        print('%s visited %s/%s size:%s req:%s ms' % (cnt, full_uri, i, size, e))
 
     print('total_time', total_time)
     print('average on req', total_time / float(cnt))

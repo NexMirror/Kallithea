@@ -94,7 +94,7 @@ class TestPullrequestsController(TestController):
                                   '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
-        pull_request1_id = re.search('/pull-request/(\d+)/', response.location).group(1)
+        pull_request1_id = re.search(r'/pull-request/(\d+)/', response.location).group(1)
         assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request1_id)
 
         # create new iteration
@@ -109,7 +109,7 @@ class TestPullrequestsController(TestController):
                                   'review_members': [regular_user.user_id],
                                  },
                                  status=302)
-        pull_request2_id = re.search('/pull-request/(\d+)/', response.location).group(1)
+        pull_request2_id = re.search(r'/pull-request/(\d+)/', response.location).group(1)
         assert pull_request2_id != pull_request1_id
         assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request2_id)
         response = response.follow()
@@ -155,7 +155,7 @@ class TestPullrequestsController(TestController):
                                 status=302)
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
-        m = re.search('/pull-request/(\d+)/', response.location)
+        m = re.search(r'/pull-request/(\d+)/', response.location)
         assert m is not None
         pull_request_id = m.group(1)
 
@@ -191,7 +191,7 @@ class TestPullrequestsController(TestController):
                                 status=302)
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
-        m = re.search('/pull-request/(\d+)/', response.location)
+        m = re.search(r'/pull-request/(\d+)/', response.location)
         assert m is not None
         pull_request_id = m.group(1)
 
@@ -237,7 +237,7 @@ class TestPullrequestsController(TestController):
                 '_session_csrf_secret_token': self.session_csrf_secret_token(),
             },
             status=302)
-        pr1_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
+        pr1_id = int(re.search(r'/pull-request/(\d+)/', response.location).group(1))
         pr1 = PullRequest.get(pr1_id)
 
         assert pr1.org_ref == 'branch:webvcs:9e6119747791ff886a5abe1193a730b6bf874e1c'
@@ -256,7 +256,7 @@ class TestPullrequestsController(TestController):
                 '_session_csrf_secret_token': self.session_csrf_secret_token(),
              },
              status=302)
-        pr2_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
+        pr2_id = int(re.search(r'/pull-request/(\d+)/', response.location).group(1))
         pr1 = PullRequest.get(pr1_id)
         pr2 = PullRequest.get(pr2_id)
 
@@ -278,7 +278,7 @@ class TestPullrequestsController(TestController):
                 '_session_csrf_secret_token': self.session_csrf_secret_token(),
              },
              status=302)
-        pr3_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
+        pr3_id = int(re.search(r'/pull-request/(\d+)/', response.location).group(1))
         pr2 = PullRequest.get(pr2_id)
         pr3 = PullRequest.get(pr3_id)
 
