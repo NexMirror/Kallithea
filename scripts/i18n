@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import shutil
 import sys
 
 import click
@@ -49,6 +51,61 @@ def normalize_po_files(po_files):
     """
     for po_file in po_files:
         i18n_utils._normalize_po_file(po_file, strip=True)
+
+@cli.command()
+@click.argument('local')
+@click.argument('base')
+@click.argument('other')
+@click.argument('output')
+def normalized_merge(local, base, other, output):
+    """Merge tool for use with 'hg merge/rebase/graft --tool'
+
+    Merging i18n files with a standard merge tool could yield merge conflicts
+    when one side is normalized and the other is not. In such cases, it may be
+    better to first normalize all sides, then proceed with a standard merge.
+    This command does exactly that, and can be used as 'merge-tool' in
+    Mercurial commands like merge, rebase and graft.
+
+    Add the following to your user or repository-specific .hgrc file to use it:
+        [merge-tools]
+        i18n.executable = /path/to/scripts/i18n
+        i18n.args = normalized-merge $local $base $other $output
+
+    and then invoke merge/rebase/graft with the additional argument '--tool i18n'.
+    """
+    from mercurial import (
+        context,
+        simplemerge,
+        ui as uimod,
+    )
+
+    print('i18n normalized-merge: merging file %s' % output)
+
+    i18n_utils._normalize_po_file(local, strip=True)
+    i18n_utils._normalize_po_file(base, strip=True)
+    i18n_utils._normalize_po_file(other, strip=True)
+    i18n_utils._normalize_po_file(output, strip=True)
+
+    # simplemerge will write markers to 'local' if it fails, keep a copy without markers
+    localkeep = local + '.keep'
+    shutil.copyfile(local, localkeep)
+
+    ret = simplemerge.simplemerge(uimod.ui.load(),
+         context.arbitraryfilectx(local.encode('utf-8')),
+         context.arbitraryfilectx(base.encode('utf-8')),
+         context.arbitraryfilectx(other.encode('utf-8'))
+    )
+    shutil.copyfile(local, output)  # simplemerge wrote to local
+    if ret:
+        basekeep = base + '.keep'
+        otherkeep = other + '.keep'
+        shutil.copyfile(base, basekeep)
+        shutil.copyfile(other, otherkeep)
+        sys.stderr.write("Error: simple merge failed. Run a merge tool manually to resolve conflicts, then use 'hg resolve -m'.\n")
+        sys.stderr.write('Resolve with e.g.: kdiff3 %s %s %s -o %s\n' % (basekeep, localkeep, otherkeep, output))
+        sys.exit(ret)
+
+    os.remove(localkeep)
 
 @cli.command()
 @click.argument('file1')
