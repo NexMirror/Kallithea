@@ -21,6 +21,14 @@ import i18n_utils
 
 """
 Tool for maintenance of .po and .pot files
+
+Normally, the i18n-related files contain for each translatable string a
+reference to all the source code locations where this string is found. This
+meta data is useful for translators to assess how strings are used, but is not
+relevant for normal development nor for running Kallithea. Such meta data, or
+derived data like kallithea.pot, will inherently be outdated, and create
+unnecessary churn and repository growth, making it harder to spot actual and
+important changes.
 """
 
 @click.group()
@@ -29,6 +37,17 @@ def cli(debug):
     if (debug):
         i18n_utils.do_debug = True
     pass
+
+@cli.command()
+@click.argument('po_files', nargs=-1)
+def normalize_po_files(po_files):
+    """Normalize the specified .po and .pot files.
+
+    Only actual translations and essential headers will be preserved.
+    """
+    for po_file in po_files:
+        i18n_utils._normalize_po_file(po_file, strip=True)
+
 
 if __name__ == '__main__':
     cli()
