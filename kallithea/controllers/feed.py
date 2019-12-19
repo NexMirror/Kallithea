@@ -32,9 +32,9 @@ from beaker.cache import cache_region
 from tg import response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from kallithea import CONFIG
+from kallithea.lib import feeds
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController
@@ -43,10 +43,6 @@ from kallithea.lib.utils2 import safe_int, safe_unicode, str2bool
 
 
 log = logging.getLogger(__name__)
-
-
-language = 'en-us'
-ttl = "5"
 
 
 class FeedController(BaseRepoController):
@@ -102,39 +98,37 @@ class FeedController(BaseRepoController):
         desc_msg.append('</pre>')
         return [safe_unicode(chunk) for chunk in desc_msg]
 
-    def _feed(self, repo_name, kind, feed_factory):
+    def _feed(self, repo_name, feeder):
         """Produce a simple feed"""
 
         @cache_region('long_term', '_get_feed_from_cache')
         def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
-            feed = feed_factory(
+            header = dict(
                 title=_('%s %s feed') % (c.site_name, repo_name),
                 link=h.canonical_url('summary_home', repo_name=repo_name),
                 description=_('Changes on %s repository') % repo_name,
-                language=language,
-                ttl=ttl,  # rss only
             )
 
             rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
+            entries=[]
             for cs in reversed(list(c.db_repo_scm_instance[-rss_items_per_page:])):
-                feed.add_item(title=self._get_title(cs),
-                              link=h.canonical_url('changeset_home', repo_name=repo_name,
-                                       revision=cs.raw_id),
-                              author_email=cs.author_email,
-                              author_name=cs.author_name,
-                              description=''.join(self.__get_desc(cs)),
-                              pubdate=cs.date,
-                              )
+                entries.append(dict(
+                    title=self._get_title(cs),
+                    link=h.canonical_url('changeset_home', repo_name=repo_name, revision=cs.raw_id),
+                    author_email=cs.author_email,
+                    author_name=cs.author_name,
+                    description=''.join(self.__get_desc(cs)),
+                    pubdate=cs.date,
+                ))
+            return feeder.render(header, entries)
 
-            response.content_type = feed.mime_type
-            return feed.writeString('utf-8')
-
-        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
+        response.content_type = feeder.content_type
+        return _get_feed_from_cache(repo_name, feeder.__name__)
 
     def atom(self, repo_name):
         """Produce a simple atom-1.0 feed"""
-        return self._feed(repo_name, 'ATOM', Atom1Feed)
+        return self._feed(repo_name, feeds.AtomFeed)
 
     def rss(self, repo_name):
-        """Produce an rss2 feed via feedgenerator module"""
-        return self._feed(repo_name, 'RSS', Rss201rev2Feed)
+        """Produce a simple rss2 feed"""
+        return self._feed(repo_name, feeds.RssFeed)

@@ -23,7 +23,6 @@ Original author and date, and relevant copyright and licensing information is be
 :author: marcink
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
-
 """
 
 import logging
@@ -35,11 +34,11 @@ from sqlalchemy.orm import joinedload
 from tg import request, response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 from webob.exc import HTTPBadRequest
 
 import kallithea.lib.helpers as h
 from kallithea.controllers.admin.admin import _journal_filter
+from kallithea.lib import feeds
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.page import Page
@@ -104,17 +103,17 @@ class JournalController(BaseController):
 
         return journal
 
-    def _feed(self, repos, feed_factory, link, desc):
+    def _feed(self, repos, feeder, link, desc):
+        response.content_type = feeder.content_type
         journal = self._get_journal_data(repos)
 
-        feed = feed_factory(
+        header = dict(
             title=desc,
             link=link,
             description=desc,
-            language=language,
-            ttl=ttl,
         )
 
+        entries=[]
         for entry in journal[:feed_nr]:
             user = entry.user
             if user is None:
@@ -130,15 +129,16 @@ class JournalController(BaseController):
                 _url = h.canonical_url('changelog_home',
                            repo_name=entry.repository.repo_name)
 
-            feed.add_item(title=title,
-                          pubdate=entry.action_date,
-                          link=_url or h.canonical_url(''),
-                          author_email=user.email,
-                          author_name=user.full_name_or_username,
-                          description=action_extra())
+            entries.append(dict(
+                title=title,
+                pubdate=entry.action_date,
+                link=_url or h.canonical_url(''),
+                author_email=user.email,
+                author_name=user.full_name_or_username,
+                description=action_extra(),
+            ))
 
-        response.content_type = feed.mime_type
-        return feed.writeString('utf-8')
+        return feeder.render(header, entries)
 
     def _atom_feed(self, repos, public=True):
         if public:
@@ -149,7 +149,7 @@ class JournalController(BaseController):
             link = h.canonical_url('journal_atom')
             desc = '%s %s %s' % (c.site_name, _('Journal'), 'atom feed')
 
-        return self._feed(repos, Atom1Feed, link, desc)
+        return self._feed(repos, feeds.AtomFeed, link, desc)
 
     def _rss_feed(self, repos, public=True):
         if public:
@@ -160,7 +160,7 @@ class JournalController(BaseController):
             link = h.canonical_url('journal_atom')
             desc = '%s %s %s' % (c.site_name, _('Journal'), 'rss feed')
 
-        return self._feed(repos, Rss201rev2Feed, link, desc)
+        return self._feed(repos, feeds.RssFeed, link, desc)
 
     @LoginRequired()
     def index(self):
@@ -192,9 +192,7 @@ class JournalController(BaseController):
 
     @LoginRequired()
     def journal_atom(self):
-        """
-        Produce an atom-1.0 feed via feedgenerator module
-        """
+        """Produce a simple atom-1.0 feed"""
         following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
@@ -203,9 +201,7 @@ class JournalController(BaseController):
 
     @LoginRequired()
     def journal_rss(self):
-        """
-        Produce an rss feed via feedgenerator module
-        """
+        """Produce a simple rss2 feed"""
         following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
@@ -261,9 +257,7 @@ class JournalController(BaseController):
 
     @LoginRequired(allow_default_user=True)
     def public_journal_atom(self):
-        """
-        Produce an atom-1.0 feed via feedgenerator module
-        """
+        """Produce a simple atom-1.0 feed"""
         c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
@@ -273,9 +267,7 @@ class JournalController(BaseController):
 
     @LoginRequired(allow_default_user=True)
     def public_journal_rss(self):
-        """
-        Produce an rss2 feed via feedgenerator module
-        """
+        """Produce a simple rss2 feed"""
         c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
