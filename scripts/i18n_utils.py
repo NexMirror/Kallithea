@@ -133,6 +133,9 @@ def _normalize_po(raw_content):
             .strip(),
         '',
         header_normalize_re.sub('', raw_content[header_start:header_end])
+            .replace(
+                r'"Content-Type: text/plain; charset=utf-8\n"',
+                r'"Content-Type: text/plain; charset=UTF-8\n"')  # maintain msgmerge casing
             .strip(),
         '']  # preserve normalized header
     # all chunks are separated by empty line
