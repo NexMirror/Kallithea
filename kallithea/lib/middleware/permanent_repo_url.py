@@ -20,7 +20,8 @@ middleware to handle permanent repo URLs, replacing PATH_INFO '/_123/yada' with
 """
 
 
-from kallithea.lib.utils import fix_repo_id_name, safe_str
+from kallithea.lib.utils import fix_repo_id_name
+from kallithea.lib.utils2 import safe_str
 
 
 class PermanentRepoUrl(object):
