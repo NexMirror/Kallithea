@@ -32,6 +32,7 @@ import uuid
 from ConfigParser import ConfigParser
 
 import ldap
+
 from kallithea.lib.compat import json
 
 

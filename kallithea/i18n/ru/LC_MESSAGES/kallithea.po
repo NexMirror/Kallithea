@@ -80,7 +80,7 @@ msgstr "%s (%s)"
 
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
-"Вы можете удалять файлы только в ревизии, связанной с существующей веткой "
+"Вы можете удалять файлы только в ревизии, являющейся корректной веткой"
 
 msgid "Deleted file %s via Kallithea"
 msgstr "Файл %s удалён с помощью Kallithea"
@@ -94,7 +94,7 @@ msgstr "Во время коммита произошла ошибка"
 msgid "You can only edit files with revision being a valid branch"
 msgstr ""
 "Вы можете редактировать файлы только в ревизии, связанной с существующей "
-"веткой "
+"веткой"
 
 msgid "Edited file %s via Kallithea"
 msgstr "Файл %s отредактирован с помощью Kallithea"
@@ -711,9 +711,9 @@ msgstr[2] "%d минуты"
 
 msgid "%d second"
 msgid_plural "%d seconds"
-msgstr[0] "%d секунды"
+msgstr[0] "%d секунда"
 msgstr[1] "%d секунды"
-msgstr[2] "%d секунды"
+msgstr[2] "%d секунд"
 
 msgid "in %s"
 msgstr "в %s"
@@ -837,7 +837,7 @@ msgid "Group \"%(group_name)s\" already exists"
 msgstr "Группа \"%(group_name)s\" уже существует"
 
 msgid "Repository with name \"%(group_name)s\" already exists"
-msgstr "Репозитарий с  именем \"%(group_name)s\" уже существует"
+msgstr "Репозиторий с именем «%(group_name)s» уже существует"
 
 msgid "Invalid characters (non-ascii) in password"
 msgstr "Недопустимые символы (не ascii) в пароле"
