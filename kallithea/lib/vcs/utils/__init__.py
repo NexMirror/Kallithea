@@ -70,21 +70,21 @@ def safe_int(val, default=None):
 
 def safe_unicode(s):
     """
-    Safe unicode function. Use a few tricks to turn s into unicode string:
+    Safe unicode str function. Use a few tricks to turn s into str:
     In case of UnicodeDecodeError with configured default encodings, try to
     detect encoding with chardet library, then fall back to first encoding with
     errors replaced.
     """
-    if isinstance(s, unicode):
+    if isinstance(s, str):
         return s
 
-    if not isinstance(s, bytes):  # use __str__ / __unicode__ and don't expect UnicodeDecodeError
-        return unicode(s)
+    if not isinstance(s, bytes):  # use __str__ and don't expect UnicodeDecodeError
+        return str(s)
 
     from kallithea.lib.vcs.conf import settings
     for enc in settings.DEFAULT_ENCODINGS:
         try:
-            return unicode(s, enc)
+            return str(s, enc)
         except UnicodeDecodeError:
             pass
 
@@ -96,7 +96,7 @@ def safe_unicode(s):
     except (ImportError, UnicodeDecodeError):
         pass
 
-    return unicode(s, settings.DEFAULT_ENCODINGS[0], 'replace')
+    return str(s, settings.DEFAULT_ENCODINGS[0], 'replace')
 
 
 def safe_bytes(s):
@@ -108,7 +108,7 @@ def safe_bytes(s):
     if isinstance(s, bytes):
         return s
 
-    assert isinstance(s, unicode), repr(s)  # bytes cannot coerse with __str__ or handle None or int
+    assert isinstance(s, str), repr(s)  # bytes cannot coerse with __str__ or handle None or int
 
     from kallithea.lib.vcs.conf import settings
     for enc in settings.DEFAULT_ENCODINGS:
@@ -120,12 +120,12 @@ def safe_bytes(s):
     return s.encode(settings.DEFAULT_ENCODINGS[0], 'replace')
 
 
-safe_str = safe_bytes  # safe_str is deprecated - it will be redefined when changing to py3
+safe_str = safe_unicode
 
 
 def ascii_bytes(s):
     """
-    Simple conversion from unicode/str to bytes, *assuming* all codepoints are
+    Simple conversion from str to bytes, *assuming* all codepoints are
     7-bit and it thus is pure ASCII.
     Will fail badly with UnicodeError on invalid input.
     This should be used where enocding and "safe" ambiguity should be avoided.
@@ -134,17 +134,17 @@ def ascii_bytes(s):
     identifiers.
 
     >>> ascii_bytes('a')
-    'a'
+    b'a'
     >>> ascii_bytes(u'a')
-    'a'
+    b'a'
     >>> ascii_bytes('å')
     Traceback (most recent call last):
-    UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 0: ordinal not in range(128)
-    >>> ascii_bytes(u'å')
+    UnicodeEncodeError: 'ascii' codec can't encode character '\xe5' in position 0: ordinal not in range(128)
+    >>> ascii_bytes('å'.encode('utf8'))
     Traceback (most recent call last):
-    UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+    AssertionError: b'\xc3\xa5'
     """
-    assert isinstance(s, (unicode, str)), repr(s)
+    assert isinstance(s, str), repr(s)
     return s.encode('ascii')
 
 
@@ -158,23 +158,20 @@ def ascii_str(s):
     where a unicode string is wanted without caring about encoding. For example
     to hex, base64, urlencoding, or are known to be identifiers.
 
-    >>> ascii_str('a')
+    >>> ascii_str(b'a')
     'a'
     >>> ascii_str(u'a')
     Traceback (most recent call last):
-    AssertionError: u'a'
-    >>> ascii_str('å')
+    AssertionError: 'a'
+    >>> ascii_str('å'.encode('utf8'))
     Traceback (most recent call last):
     UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 0: ordinal not in range(128)
     >>> ascii_str(u'å')
     Traceback (most recent call last):
-    AssertionError: u'\xc3\xa5'
+    AssertionError: 'å'
     """
     assert isinstance(s, bytes), repr(s)
-    # Note: we use "encode", even though we really *should* use "decode". But
-    # we are in py2 and don't want py2, and encode is doing what we need for the
-    # ascii subset.
-    return s.encode('ascii')
+    return s.decode('ascii')
 
 
 # Regex taken from http://www.regular-expressions.info/email.html
