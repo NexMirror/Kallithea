@@ -14,7 +14,7 @@ from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 
 class MercurialChangeset(BaseChangeset):
     """
-    Represents state of the repository at the single revision.
+    Represents state of the repository at a revision.
     """
 
     def __init__(self, repository, revision):
@@ -202,7 +202,7 @@ class MercurialChangeset(BaseChangeset):
                 return cs
 
     def diff(self):
-        # Only used for feed diffstat
+        # Only used to feed diffstat
         return ''.join(self._ctx.diff())
 
     def _fix_path(self, path):
@@ -316,7 +316,6 @@ class MercurialChangeset(BaseChangeset):
         :raise ImproperArchiveTypeError: If given kind is wrong.
         :raise VcsError: If given stream is None
         """
-
         allowed_kinds = settings.ARCHIVE_SPECS.keys()
         if kind not in allowed_kinds:
             raise ImproperArchiveTypeError('Archive kind not supported use one'
@@ -363,11 +362,9 @@ class MercurialChangeset(BaseChangeset):
             dirnodes.append(SubModuleNode(k, url=loc, changeset=cs,
                                           alias=als))
         nodes = dirnodes + filenodes
-        # cache nodes
         for node in nodes:
             self.nodes[node.path] = node
         nodes.sort()
-
         return nodes
 
     def get_node(self, path):
@@ -375,9 +372,7 @@ class MercurialChangeset(BaseChangeset):
         Returns ``Node`` object from the given ``path``. If there is no node at
         the given ``path``, ``ChangesetError`` would be raised.
         """
-
         path = self._fix_path(path)
-
         if path not in self.nodes:
             if path in self._file_paths:
                 node = FileNode(path, changeset=self)

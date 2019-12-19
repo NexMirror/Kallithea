@@ -17,7 +17,7 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 class GitChangeset(BaseChangeset):
     """
-    Represents state of the repository at single revision.
+    Represents state of the repository at a revision.
     """
 
     def __init__(self, repository, revision):
@@ -243,6 +243,7 @@ class GitChangeset(BaseChangeset):
                 return cs
 
     def diff(self, ignore_whitespace=True, context=3):
+        # Only used to feed diffstat
         rev1 = self.parents[0] if self.parents else self.repository.EMPTY_CHANGESET
         rev2 = self
         return ''.join(self.repository.get_diff(rev1, rev2,
@@ -353,12 +354,15 @@ class GitChangeset(BaseChangeset):
 
         :raise ImproperArchiveTypeError: If given kind is wrong.
         :raise VcsError: If given stream is None
-
         """
         allowed_kinds = settings.ARCHIVE_SPECS.keys()
         if kind not in allowed_kinds:
             raise ImproperArchiveTypeError('Archive kind not supported use one'
                 'of %s' % allowed_kinds)
+
+        if stream is None:
+            raise VCSError('You need to pass in a valid stream for filling'
+                           ' with archival data')
 
         if prefix is None:
             prefix = '%s-%s' % (self.repository.name, self.short_id)
@@ -394,6 +398,12 @@ class GitChangeset(BaseChangeset):
         popen.communicate()
 
     def get_nodes(self, path):
+        """
+        Returns combined ``DirNode`` and ``FileNode`` objects list representing
+        state of changeset at the given ``path``. If node at the given ``path``
+        is not instance of ``DirNode``, ChangesetError would be raised.
+        """
+
         if self._get_kind(path) != NodeKind.DIR:
             raise ChangesetError("Directory does not exist for revision %s at "
                 " '%s'" % (self.revision, path))
@@ -434,6 +444,10 @@ class GitChangeset(BaseChangeset):
         return nodes
 
     def get_node(self, path):
+        """
+        Returns ``Node`` object from the given ``path``. If there is no node at
+        the given ``path``, ``ChangesetError`` would be raised.
+        """
         if isinstance(path, unicode):
             path = path.encode('utf-8')
         path = self._fix_path(path)
@@ -465,7 +479,7 @@ class GitChangeset(BaseChangeset):
                     node._blob = obj
                 else:
                     raise NodeDoesNotExistError("There is no file nor directory "
-                        "at the given path '%s' at revision %s"
+                        "at the given path: '%s' at revision %s"
                         % (path, self.short_id))
             # cache node
             self.nodes[path] = node
