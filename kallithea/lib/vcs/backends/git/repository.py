@@ -274,7 +274,7 @@ class GitRepository(BaseRepository):
                 msg = "Revision %r does not exist for %s" % (revision, self.name)
                 raise ChangesetDoesNotExistError(msg)
 
-        if isinstance(revision, (str, unicode)):
+        if isinstance(revision, str):
             if revision.isdigit() and (len(revision) < 12 or len(revision) == revision.count('0')):
                 try:
                     return self.revisions[int(revision)]

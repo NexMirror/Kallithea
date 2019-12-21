@@ -60,7 +60,7 @@ def _journal_filter(user_log, search_term):
     if search_term:
         qp = QueryParser('repository', schema=JOURNAL_SCHEMA)
         qp.add_plugin(DateParserPlugin())
-        qry = qp.parse(unicode(search_term))
+        qry = qp.parse(search_term)
         log.debug('Filtering using parsed query %r', qry)
 
     def wildcard_handler(col, wc_term):

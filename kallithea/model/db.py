@@ -218,9 +218,7 @@ class Setting(Base, BaseDbModel):
     @app_settings_value.setter
     def app_settings_value(self, val):
         """
-        Setter that will always make sure we use unicode in app_settings_value
-
-        :param val:
+        Setter that will always make sure we use str in app_settings_value
         """
         self._app_settings_value = safe_str(val)
 

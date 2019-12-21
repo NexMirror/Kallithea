@@ -51,7 +51,7 @@ def sortkey(x):
     * first contribution
     * number of contribution years
     * name (with some unicode normalization)
-    The entries must be 2-tuples of a list of string years and the unicode name"""
+    The entries must be 2-tuples of a list of string years and the name"""
     return (x[0] and -int(x[0][-1]),
             x[0] and int(x[0][0]),
             -len(x[0]),

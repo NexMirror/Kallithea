@@ -96,7 +96,7 @@ class SearchController(BaseRepoController):
                     # for case-sensitive matching
                     cur_query = u'repository_rawname:%s %s' % (c.repo_name, cur_query)
                 try:
-                    query = qp.parse(unicode(cur_query))
+                    query = qp.parse(cur_query)
                     # extract words for highlight
                     if isinstance(query, Phrase):
                         highlight_items.update(query.words)

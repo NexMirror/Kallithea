@@ -30,12 +30,12 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
         """
         self.check_integrity(parents)
 
-        from .repository import MercurialRepository
-        if not isinstance(message, unicode) or not isinstance(author, unicode):
-            raise RepositoryError('Given message and author needs to be '
-                                  'an <unicode> instance got %r & %r instead'
-                                  % (type(message), type(author)))
+        if not isinstance(message, str):
+            raise RepositoryError('message must be a str - got %r' % type(message))
+        if not isinstance(author, str):
+            raise RepositoryError('author must be a str - got %r' % type(author))
 
+        from .repository import MercurialRepository
         if branch is None:
             branch = MercurialRepository.DEFAULT_BRANCH_NAME
         kwargs[b'branch'] = safe_bytes(branch)
