@@ -78,11 +78,11 @@ class UsersController(BaseController):
 
         username = lambda user_id, username: (
                 template.get_def("user_name")
-                .render(user_id, username, _=_, h=h, c=c))
+                .render_unicode(user_id, username, _=_, h=h, c=c))
 
         user_actions = lambda user_id, username: (
                 template.get_def("user_actions")
-                .render(user_id, username, _=_, h=h, c=c))
+                .render_unicode(user_id, username, _=_, h=h, c=c))
 
         for user in c.users_list:
             users_data.append({

@@ -92,11 +92,11 @@ class UserGroupsController(BaseController):
 
         user_group_name = lambda user_group_id, user_group_name: (
             template.get_def("user_group_name")
-            .render(user_group_id, user_group_name, _=_, h=h, c=c)
+            .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
         )
         user_group_actions = lambda user_group_id, user_group_name: (
             template.get_def("user_group_actions")
-            .render(user_group_id, user_group_name, _=_, h=h, c=c)
+            .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
         )
         for user_gr in group_iter:
 

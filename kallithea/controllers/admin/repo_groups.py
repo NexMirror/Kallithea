@@ -107,11 +107,11 @@ class RepoGroupsController(BaseController):
 
         repo_group_name = lambda repo_group_name, children_groups: (
             template.get_def("repo_group_name")
-            .render(repo_group_name, children_groups, _=_, h=h, c=c)
+            .render_unicode(repo_group_name, children_groups, _=_, h=h, c=c)
         )
         repo_group_actions = lambda repo_group_id, repo_group_name, gr_count: (
             template.get_def("repo_group_actions")
-            .render(repo_group_id, repo_group_name, gr_count, _=_, h=h, c=c,
+            .render_unicode(repo_group_id, repo_group_name, gr_count, _=_, h=h, c=c,
                     ungettext=ungettext)
         )
 
