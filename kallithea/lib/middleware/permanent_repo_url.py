@@ -33,9 +33,9 @@ class PermanentRepoUrl(object):
     def __call__(self, environ, start_response):
         # Extract path_info as get_path_info does, but do it explicitly because
         # we also have to do the reverse operation when patching it back in
-        path_info = safe_str(environ['PATH_INFO'])
+        path_info = safe_str(environ['PATH_INFO'].encode('latin1'))
         if path_info.startswith('/'): # it must
             path_info = '/' + fix_repo_id_name(path_info[1:])
-            environ['PATH_INFO'] = safe_bytes(path_info)
+            environ['PATH_INFO'] = safe_bytes(path_info).decode('latin1')
 
         return self.application(environ, start_response)

@@ -97,12 +97,17 @@ def _get_ip_addr(environ):
 
 
 def get_path_info(environ):
-    """Return unicode PATH_INFO from environ ... using tg.original_request if available.
+    """Return PATH_INFO from environ ... using tg.original_request if available.
+
+    In Python 3 WSGI, PATH_INFO is a unicode str, but kind of contains encoded
+    bytes. The code points are guaranteed to only use the lower 8 bit bits, and
+    encoding the string with the 1:1 encoding latin1 will give the
+    corresponding byte string ... which then can be decoded to proper unicode.
     """
     org_req = environ.get('tg.original_request')
     if org_req is not None:
         environ = org_req.environ
-    return safe_str(environ['PATH_INFO'])
+    return safe_str(environ['PATH_INFO'].encode('latin1'))
 
 
 def log_in_user(user, remember, is_external_auth, ip_addr):

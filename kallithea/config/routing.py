@@ -19,12 +19,32 @@ may take precedent over the more generic routes. For more information
 refer to the routes manual at http://routes.groovie.org/docs/
 """
 
-from routes import Mapper
+import routes
 from tg import request
+
+from kallithea.lib.utils2 import safe_str
 
 
 # prefix for non repository related links needs to be prefixed with `/`
 ADMIN_PREFIX = '/_admin'
+
+
+class Mapper(routes.Mapper):
+    """
+    Subclassed Mapper with routematch patched to decode "unicode" str url to
+    *real* unicode str before applying matches and invoking controller methods.
+    """
+
+    def routematch(self, url=None, environ=None):
+        """
+        routematch that also decode url from "fake bytes" to real unicode
+        string before matching and invoking controllers.
+        """
+        # Process url like get_path_info does ... but PATH_INFO has already
+        # been retrieved from environ and is passed, so - let's just use that
+        # instead.
+        url = safe_str(url.encode('latin1'))
+        return super().routematch(url=url, environ=environ)
 
 
 def make_map(config):
