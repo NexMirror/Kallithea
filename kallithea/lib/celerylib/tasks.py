@@ -123,7 +123,6 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             co_day_auth_aggr = json.loads(cur_stats.commit_activity)
 
         log.debug('starting parsing %s', parse_limit)
-        lmktime = mktime
 
         last_rev = last_rev + 1 if last_rev >= 0 else 0
         log.debug('Getting revisions from %s to %s',
@@ -132,8 +131,8 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
         for cs in repo[last_rev:last_rev + parse_limit]:
             log.debug('parsing %s', cs)
             last_cs = cs  # remember last parsed changeset
-            k = lmktime([cs.date.timetuple()[0], cs.date.timetuple()[1],
-                          cs.date.timetuple()[2], 0, 0, 0, 0, 0, 0])
+            tt = cs.date.timetuple()
+            k = mktime(tt[:3] + (0, 0, 0, 0, 0, 0))
 
             if akc(cs.author) in co_day_auth_aggr:
                 try:
