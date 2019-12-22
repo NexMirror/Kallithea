@@ -48,8 +48,9 @@ class NodeGeneratorBase(object):
     def __call__(self):
         return [n for n in self]
 
-    def __getslice__(self, i, j):
-        for p in self.current_paths[i:j]:
+    def __getitem__(self, key):
+        assert isinstance(key, slice), key
+        for p in self.current_paths[key]:
             yield self.cs.get_node(p)
 
     def __len__(self):
@@ -82,8 +83,9 @@ class RemovedFileNodesGenerator(NodeGeneratorBase):
         for p in self.current_paths:
             yield RemovedFileNode(path=p)
 
-    def __getslice__(self, i, j):
-        for p in self.current_paths[i:j]:
+    def __getitem__(self, key):
+        assert isinstance(key, slice), key
+        for p in self.current_paths[key]:
             yield RemovedFileNode(path=p)
 
 

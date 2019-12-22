@@ -169,14 +169,9 @@ class BaseRepository(object):
         """
         raise NotImplementedError
 
-    def __getslice__(self, i, j):
-        """
-        Returns a iterator of sliced repository
-        """
-        for rev in self.revisions[i:j]:
-            yield self.get_changeset(rev)
-
     def __getitem__(self, key):
+        if isinstance(key, slice):
+            return (self.get_changeset(rev) for rev in self.revisions[key])
         return self.get_changeset(key)
 
     def count(self):
