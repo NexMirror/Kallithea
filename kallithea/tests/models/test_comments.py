@@ -126,15 +126,15 @@ class TestComments(TestController):
                     expected_len_comments=0, expected_len_inline_comments=2)
             # inline_comments is a list of tuples (file_path, dict)
             # where the dict keys are line numbers and values are lists of comments
-            assert inline_comments[1][0] == f_path
-            assert len(inline_comments[1][1]) == 2
-            assert inline_comments[1][1][line_no][0].text == text
-            assert inline_comments[1][1][line_no2][0].text == text2
+            assert inline_comments[0][0] == f_path
+            assert len(inline_comments[0][1]) == 2
+            assert inline_comments[0][1][line_no][0].text == text
+            assert inline_comments[0][1][line_no2][0].text == text2
 
-            assert inline_comments[0][0] == f_path3
-            assert len(inline_comments[0][1]) == 1
-            assert line_no3 in inline_comments[0][1]
-            assert inline_comments[0][1][line_no3][0].text == text3
+            assert inline_comments[1][0] == f_path3
+            assert len(inline_comments[1][1]) == 1
+            assert line_no3 in inline_comments[1][1]
+            assert inline_comments[1][1][line_no3][0].text == text3
 
             # now delete only one comment
             ChangesetCommentsModel().delete(new_comment2)
@@ -143,14 +143,14 @@ class TestComments(TestController):
                     expected_len_comments=0, expected_len_inline_comments=2)
             # inline_comments is a list of tuples (file_path, dict)
             # where the dict keys are line numbers and values are lists of comments
-            assert inline_comments[1][0] == f_path
-            assert len(inline_comments[1][1]) == 1
-            assert inline_comments[1][1][line_no][0].text == text
-
-            assert inline_comments[0][0] == f_path3
+            assert inline_comments[0][0] == f_path
             assert len(inline_comments[0][1]) == 1
-            assert line_no3 in inline_comments[0][1]
-            assert inline_comments[0][1][line_no3][0].text == text3
+            assert inline_comments[0][1][line_no][0].text == text
+
+            assert inline_comments[1][0] == f_path3
+            assert len(inline_comments[1][1]) == 1
+            assert line_no3 in inline_comments[1][1]
+            assert inline_comments[1][1][line_no3][0].text == text3
 
             # now delete all others
             ChangesetCommentsModel().delete(new_comment)

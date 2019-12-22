@@ -257,7 +257,7 @@ class ChangesetCommentsModel(object):
         paths = defaultdict(lambda: defaultdict(list))
         for co in comments:
             paths[co.f_path][co.line_no].append(co)
-        return paths.items()
+        return sorted(paths.items())
 
     def _get_comments(self, repo_id, revision=None, pull_request=None,
                 inline=False, f_path=None, line_no=None):
