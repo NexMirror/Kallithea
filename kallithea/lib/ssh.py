@@ -109,11 +109,12 @@ def authorized_keys_line(kallithea_cli_path, config_file, key):
     'no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding,command="/srv/kallithea/venv/bin/kallithea-cli ssh-serve -c /srv/kallithea/my.ini 7 17" ssh-rsa AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ==\\n'
     """
     try:
-        keytype, decoded, comment = parse_pub_key(key.public_key)
+        keytype, key_bytes, comment = parse_pub_key(key.public_key)
     except SshKeyParseError:
         return '# Invalid Kallithea SSH key: %s %s\n' % (key.user.user_id, key.user_ssh_key_id)
-    mimekey = decoded.encode('base64').replace('\n', '')
+    base64_key = base64.b64encode(key_bytes)
+    assert '\n' not in base64_key
     return '%s,command="%s ssh-serve -c %s %s %s" %s %s\n' % (
         SSH_OPTIONS, kallithea_cli_path, config_file,
         key.user.user_id, key.user_ssh_key_id,
-        keytype, mimekey)
+        keytype, base64_key)
