@@ -272,7 +272,7 @@ class TestFilesController(TestController):
                                     revision=rev,
                                     f_path=f_path), status=404)
 
-        msg = "There is no file nor directory at the given path: &#39;%s&#39; at revision %s" % (f_path, rev[:12])
+        msg = "There is no file nor directory at the given path: &apos;%s&apos; at revision %s" % (f_path, rev[:12])
         response.mustcontain(msg)
 
     #==========================================================================
@@ -308,7 +308,7 @@ class TestFilesController(TestController):
                                     repo_name=HG_REPO,
                                     revision=rev,
                                     f_path=f_path), status=404)
-        msg = "There is no file nor directory at the given path: &#39;%s&#39; at revision %s" % (f_path, rev[:12])
+        msg = "There is no file nor directory at the given path: &apos;%s&apos; at revision %s" % (f_path, rev[:12])
         response.mustcontain(msg)
 
     def test_ajaxed_files_list(self):

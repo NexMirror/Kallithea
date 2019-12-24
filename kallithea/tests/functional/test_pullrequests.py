@@ -171,7 +171,7 @@ class TestPullrequestsController(TestController):
                                   'review_members': [str(invalid_user_id)],
                                  },
                                  status=400)
-        response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
+        response.mustcontain('Invalid reviewer &quot;%s&quot; specified' % invalid_user_id)
 
     def test_edit_with_invalid_reviewer(self):
         invalid_user_id = 99999
@@ -206,7 +206,7 @@ class TestPullrequestsController(TestController):
                                   'review_members': [str(invalid_user_id)],
                                  },
                                  status=400)
-        response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
+        response.mustcontain('Invalid reviewer &quot;%s&quot; specified' % invalid_user_id)
 
     def test_iteration_refs(self):
         # Repo graph excerpt:

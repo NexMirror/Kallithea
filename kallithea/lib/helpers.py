@@ -423,21 +423,13 @@ class _Message(object):
     Converting the message to a string returns the message text. Instances
     also have the following attributes:
 
-    * ``message``: the message text.
     * ``category``: the category specified when the message was created.
+    * ``message``: the html-safe message text.
     """
 
     def __init__(self, category, message):
         self.category = category
         self.message = message
-
-    def __str__(self):
-        return self.message
-
-    __unicode__ = __str__
-
-    def __html__(self):
-        return escape(safe_unicode(self.message))
 
 
 def _session_flash_messages(append=None, clear=False):
@@ -460,7 +452,7 @@ def _session_flash_messages(append=None, clear=False):
     return flash_messages
 
 
-def flash(message, category=None, logf=None):
+def flash(message, category, logf=None):
     """
     Show a message to the user _and_ log it through the specified function
 
@@ -470,14 +462,22 @@ def flash(message, category=None, logf=None):
     logf defaults to log.info, unless category equals 'success', in which
     case logf defaults to log.debug.
     """
+    assert category in ('error', 'success', 'warning'), category
+    if hasattr(message, '__html__'):
+        # render to HTML for storing in cookie
+        safe_message = unicode(message)
+    else:
+        # Apply str - the message might be an exception with __str__
+        # Escape, so we can trust the result without further escaping, without any risk of injection
+        safe_message = html_escape(unicode(message))
     if logf is None:
         logf = log.info
         if category == 'success':
             logf = log.debug
 
-    logf('Flash %s: %s', category, message)
+    logf('Flash %s: %s', category, safe_message)
 
-    _session_flash_messages(append=(category, message))
+    _session_flash_messages(append=(category, safe_message))
 
 
 def pop_flash_messages():
@@ -485,7 +485,7 @@ def pop_flash_messages():
 
     The return value is a list of ``Message`` objects.
     """
-    return [_Message(*m) for m in _session_flash_messages(clear=True)]
+    return [_Message(category, message) for category, message in _session_flash_messages(clear=True)]
 
 
 age = lambda x, y=False: _age(x, y)

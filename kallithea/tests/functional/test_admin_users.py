@@ -203,7 +203,7 @@ class TestAdminUsersController(TestController):
             .filter(User.username == username).one()
         response = self.app.post(url('delete_user', id=new_user.user_id),
             params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
-        self.checkSessionFlash(response, 'User "%s" still '
+        self.checkSessionFlash(response, 'User &quot;%s&quot; still '
                                'owns 1 repositories and cannot be removed. '
                                'Switch owners or remove those repositories: '
                                '%s' % (username, reponame))
@@ -225,7 +225,7 @@ class TestAdminUsersController(TestController):
 
         response = self.app.post(url('delete_user', id=new_user.user_id),
             params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
-        self.checkSessionFlash(response, 'User "%s" still '
+        self.checkSessionFlash(response, 'User &quot;%s&quot; still '
                                'owns 1 repository groups and cannot be removed. '
                                'Switch owners or remove those repository groups: '
                                '%s' % (username, groupname))
@@ -254,7 +254,7 @@ class TestAdminUsersController(TestController):
             .filter(User.username == username).one()
         response = self.app.post(url('delete_user', id=new_user.user_id),
             params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
-        self.checkSessionFlash(response, 'User "%s" still '
+        self.checkSessionFlash(response, 'User &quot;%s&quot; still '
                                'owns 1 user groups and cannot be removed. '
                                'Switch owners or remove those user groups: '
                                '%s' % (username, groupname))

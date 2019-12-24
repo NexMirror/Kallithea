@@ -471,7 +471,7 @@ class ReposController(BaseRepoController):
                     category='success')
         except RepositoryError as e:
             log.error(traceback.format_exc())
-            h.flash(str(e), category='error')
+            h.flash(e, category='error')
         except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during this operation'),

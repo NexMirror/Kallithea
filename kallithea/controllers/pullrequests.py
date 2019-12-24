@@ -340,7 +340,7 @@ class PullrequestsController(BaseRepoController):
         try:
             cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, description, owner, reviewers)
         except CreatePullRequestAction.ValidationError as e:
-            h.flash(str(e), category='error', logf=log.error)
+            h.flash(e, category='error', logf=log.error)
             raise HTTPNotFound
 
         try:
@@ -363,7 +363,7 @@ class PullrequestsController(BaseRepoController):
         try:
             cmd = CreatePullRequestIterationAction(old_pull_request, new_org_rev, new_other_rev, title, description, owner, reviewers)
         except CreatePullRequestAction.ValidationError as e:
-            h.flash(str(e), category='error', logf=log.error)
+            h.flash(e, category='error', logf=log.error)
             raise HTTPNotFound
 
         try:

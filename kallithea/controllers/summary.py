@@ -108,7 +108,7 @@ class SummaryController(BaseRepoController):
         try:
             collection = c.db_repo_scm_instance.get_changesets(reverse=True)
         except EmptyRepositoryError as e:
-            h.flash(unicode(e), category='warning')
+            h.flash(e, category='warning')
             collection = []
         c.cs_pagination = Page(collection, page=p, items_per_page=size)
         page_revisions = [x.raw_id for x in list(c.cs_pagination)]
