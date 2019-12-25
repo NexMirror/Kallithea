@@ -45,7 +45,7 @@ GIST_STORE_LOC = '.rc_gist_store'
 GIST_METADATA_FILE = '.rc_gist_metadata'
 
 
-def make_gist_id():
+def make_gist_access_id():
     """Generate a random, URL safe, almost certainly unique gist identifier."""
     rnd = random.SystemRandom() # use cryptographically secure system PRNG
     alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz'
@@ -108,7 +108,7 @@ class GistModel(object):
         :param lifetime: in minutes, -1 == forever
         """
         owner = User.guess_instance(owner)
-        gist_id = make_gist_id()
+        gist_access_id = make_gist_access_id()
         lifetime = safe_int(lifetime, -1)
         gist_expires = time.time() + (lifetime * 60) if lifetime != -1 else -1
         log.debug('set GIST expiration date to: %s',
@@ -117,7 +117,7 @@ class GistModel(object):
         # create the Database version
         gist = Gist()
         gist.gist_description = description
-        gist.gist_access_id = gist_id
+        gist.gist_access_id = gist_access_id
         gist.owner_id = owner.user_id
         gist.gist_expires = gist_expires
         gist.gist_type = safe_unicode(gist_type)
@@ -125,13 +125,11 @@ class GistModel(object):
         Session().flush() # make database assign gist.gist_id
         if gist_type == Gist.GIST_PUBLIC:
             # use DB ID for easy to use GIST ID
-            gist_id = safe_unicode(gist.gist_id)
-            gist.gist_access_id = gist_id
+            gist.gist_access_id = unicode(gist.gist_id)
 
-        gist_repo_path = os.path.join(GIST_STORE_LOC, gist_id)
-        log.debug('Creating new %s GIST repo in %s', gist_type, gist_repo_path)
+        log.debug('Creating new %s GIST repo %s', gist_type, gist.gist_access_id)
         repo = RepoModel()._create_filesystem_repo(
-            repo_name=gist_id, repo_type='hg', repo_group=GIST_STORE_LOC)
+            repo_name=gist.gist_access_id, repo_type='hg', repo_group=GIST_STORE_LOC)
 
         processed_mapping = {}
         for filename in gist_mapping:
@@ -155,7 +153,7 @@ class GistModel(object):
 
         # fake Kallithea Repository object
         fake_repo = AttributeDict(dict(
-            repo_name=gist_repo_path,
+            repo_name=os.path.join(GIST_STORE_LOC, gist.gist_access_id),
             scm_instance_no_cache=lambda: repo,
         ))
         ScmModel().create_nodes(
@@ -219,7 +217,7 @@ class GistModel(object):
 
         # fake Kallithea Repository object
         fake_repo = AttributeDict(dict(
-            repo_name=gist_repo.path,
+            repo_name=os.path.join(GIST_STORE_LOC, gist.gist_access_id),
             scm_instance_no_cache=lambda: gist_repo,
         ))
 
