@@ -37,15 +37,18 @@ import beaker
 from beaker.cache import _cache_decorate
 from tg.i18n import ugettext as _
 
+import kallithea.config.conf
 from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.lib.utils2 import get_current_authuser, safe_str, safe_unicode
+from kallithea.lib.utils2 import aslist, get_current_authuser, safe_str, safe_unicode
+from kallithea.lib.vcs.backends.git.repository import GitRepository
+from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
+from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.utils.fakemod import create_module
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.utils.hgcompat import config, ui
 from kallithea.model import meta
 from kallithea.model.db import RepoGroup, Repository, Setting, Ui, User, UserGroup, UserLog
-from kallithea.model.repo_group import RepoGroupModel
 
 
 log = logging.getLogger(__name__)
@@ -102,7 +105,6 @@ def fix_repo_id_name(path):
         rest = '/' + rest_
     repo_id = _get_permanent_id(first)
     if repo_id is not None:
-        from kallithea.model.db import Repository
         repo = Repository.get(repo_id)
         if repo is not None:
             return repo.repo_name + rest
@@ -225,7 +227,6 @@ def get_filesystem_repos(path):
 def is_valid_repo_uri(repo_type, url, ui):
     """Check if the url seems like a valid remote repo location - raise an Exception if any problems"""
     if repo_type == 'hg':
-        from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
         if url.startswith('http') or url.startswith('ssh'):
             # initially check if it's at least the proper URL
             # or does it pass basic auth
@@ -243,7 +244,6 @@ def is_valid_repo_uri(repo_type, url, ui):
             raise Exception('URI %s not allowed' % (url,))
 
     elif repo_type == 'git':
-        from kallithea.lib.vcs.backends.git.repository import GitRepository
         if url.startswith('http') or url.startswith('git'):
             # initially check if it's at least the proper URL
             # or does it pass basic auth
@@ -387,16 +387,14 @@ def set_vcs_config(config):
 
     :param config: kallithea.CONFIG
     """
-    from kallithea.lib.vcs import conf
-    from kallithea.lib.utils2 import aslist
-    conf.settings.BACKENDS = {
+    settings.BACKENDS = {
         'hg': 'kallithea.lib.vcs.backends.hg.MercurialRepository',
         'git': 'kallithea.lib.vcs.backends.git.GitRepository',
     }
 
-    conf.settings.GIT_EXECUTABLE_PATH = config.get('git_path', 'git')
-    conf.settings.GIT_REV_FILTER = config.get('git_rev_filter', '--all').strip()
-    conf.settings.DEFAULT_ENCODINGS = aslist(config.get('default_encoding',
+    settings.GIT_EXECUTABLE_PATH = config.get('git_path', 'git')
+    settings.GIT_REV_FILTER = config.get('git_rev_filter', '--all').strip()
+    settings.DEFAULT_ENCODINGS = aslist(config.get('default_encoding',
                                                         'utf-8'), sep=',')
 
 
@@ -406,13 +404,11 @@ def set_indexer_config(config):
 
     :param config: kallithea.CONFIG
     """
-    from kallithea.config import conf
-
     log.debug('adding extra into INDEX_EXTENSIONS')
-    conf.INDEX_EXTENSIONS.extend(re.split(r'\s+', config.get('index.extensions', '')))
+    kallithea.config.conf.INDEX_EXTENSIONS.extend(re.split(r'\s+', config.get('index.extensions', '')))
 
     log.debug('adding extra into INDEX_FILENAMES')
-    conf.INDEX_FILENAMES.extend(re.split(r'\s+', config.get('index.filenames', '')))
+    kallithea.config.conf.INDEX_FILENAMES.extend(re.split(r'\s+', config.get('index.filenames', '')))
 
 
 def map_groups(path):
@@ -423,6 +419,7 @@ def map_groups(path):
 
     :param paths: full path to repository
     """
+    from kallithea.model.repo_group import RepoGroupModel
     sa = meta.Session()
     groups = path.split(Repository.url_sep())
     parent = None
@@ -540,9 +537,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
 
 def load_rcextensions(root_path):
-    import kallithea
-    from kallithea.config import conf
-
     path = os.path.join(root_path, 'rcextensions', '__init__.py')
     if os.path.isfile(path):
         rcext = create_module('rc', path)
@@ -550,17 +544,17 @@ def load_rcextensions(root_path):
         log.debug('Found rcextensions now loading %s...', rcext)
 
         # Additional mappings that are not present in the pygments lexers
-        conf.LANGUAGES_EXTENSIONS_MAP.update(getattr(EXT, 'EXTRA_MAPPINGS', {}))
+        kallithea.config.conf.LANGUAGES_EXTENSIONS_MAP.update(getattr(EXT, 'EXTRA_MAPPINGS', {}))
 
         # OVERRIDE OUR EXTENSIONS FROM RC-EXTENSIONS (if present)
 
         if getattr(EXT, 'INDEX_EXTENSIONS', []):
             log.debug('settings custom INDEX_EXTENSIONS')
-            conf.INDEX_EXTENSIONS = getattr(EXT, 'INDEX_EXTENSIONS', [])
+            kallithea.config.conf.INDEX_EXTENSIONS = getattr(EXT, 'INDEX_EXTENSIONS', [])
 
         # ADDITIONAL MAPPINGS
         log.debug('adding extra into INDEX_EXTENSIONS')
-        conf.INDEX_EXTENSIONS.extend(getattr(EXT, 'EXTRA_INDEX_EXTENSIONS', []))
+        kallithea.config.conf.INDEX_EXTENSIONS.extend(getattr(EXT, 'EXTRA_INDEX_EXTENSIONS', []))
 
         # auto check if the module is not missing any data, set to default if is
         # this will help autoupdate new feature of rcext module
@@ -581,11 +575,7 @@ def check_git_version():
     Checks what version of git is installed on the system, and raise a system exit
     if it's too old for Kallithea to work properly.
     """
-    from kallithea import BACKENDS
-    from kallithea.lib.vcs.backends.git.repository import GitRepository
-    from kallithea.lib.vcs.conf import settings
-
-    if 'git' not in BACKENDS:
+    if 'git' not in kallithea.BACKENDS:
         return None
 
     if not settings.GIT_EXECUTABLE_PATH:
