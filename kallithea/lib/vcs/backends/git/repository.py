@@ -96,63 +96,54 @@ class GitRepository(BaseRepository):
         return self._get_all_revisions()
 
     @classmethod
-    def _run_git_command(cls, cmd, **opts):
+    def _run_git_command(cls, cmd, cwd=None):
         """
-        Runs given ``cmd`` as git command and returns tuple
-        (stdout, stderr).
+        Runs given ``cmd`` as git command and returns output bytes in a tuple
+        (stdout, stderr) ... or raise RepositoryError.
 
         :param cmd: git command to be executed
-        :param opts: env options to pass into Subprocess command
+        :param cwd: passed directly to subprocess
         """
-
-        if '_bare' in opts:
-            _copts = []
-            del opts['_bare']
-        else:
-            _copts = ['-c', 'core.quotepath=false', ]
-        safe_call = False
-        if '_safe' in opts:
-            # no exc on failure
-            del opts['_safe']
-            safe_call = True
-
-        assert isinstance(cmd, list), cmd
-
-        gitenv = os.environ
         # need to clean fix GIT_DIR !
-        if 'GIT_DIR' in gitenv:
-            del gitenv['GIT_DIR']
+        gitenv = dict(os.environ)
+        gitenv.pop('GIT_DIR', None)
         gitenv['GIT_CONFIG_NOGLOBAL'] = '1'
 
-        _git_path = settings.GIT_EXECUTABLE_PATH
-        cmd = [_git_path] + _copts + cmd
-
+        assert isinstance(cmd, list), cmd
+        cmd = [settings.GIT_EXECUTABLE_PATH, '-c', 'core.quotepath=false'] + cmd
         try:
-            _opts = dict(
-                env=gitenv,
-                shell=False,
-            )
-            _opts.update(opts)
-            p = subprocessio.SubprocessIOChunker(cmd, **_opts)
+            p = subprocessio.SubprocessIOChunker(cmd, cwd=cwd, env=gitenv, shell=False)
         except (EnvironmentError, OSError) as err:
-            tb_err = ("Couldn't run git command (%s).\n"
-                      "Original error was:%s\n" % (cmd, err))
-            log.error(tb_err)
-            if safe_call:
-                return '', err
-            else:
-                raise RepositoryError(tb_err)
+            # output from the failing process is in str(EnvironmentError)
+            msg = ("Couldn't run git command %s.\n"
+                   "Subprocess failed with '%s': %s\n" %
+                   (cmd, type(err).__name__, err)
+            ).strip()
+            log.error(msg)
+            raise RepositoryError(msg)
 
         try:
-            return ''.join(p.output), ''.join(p.error)
+            stdout = ''.join(p.output)
+            stderr = ''.join(p.error)
         finally:
             p.close()
+        # TODO: introduce option to make commands fail if they have any stderr output?
+        if stderr:
+            log.debug('stderr from %s:\n%s', cmd, stderr)
+        else:
+            log.debug('stderr from %s: None', cmd)
+        return stdout, stderr
 
     def run_git_command(self, cmd):
-        opts = {}
+        """
+        Runs given ``cmd`` as git command with cwd set to current repo.
+        Returns output bytes in a tuple (stdout, stderr) ... or raise
+        RepositoryError.
+        """
+        cwd = None
         if os.path.isdir(self.path):
-            opts['cwd'] = self.path
-        return self._run_git_command(cmd, **opts)
+            cwd = self.path
+        return self._run_git_command(cmd, cwd=cwd)
 
     @classmethod
     def _check_url(cls, url):
@@ -579,8 +570,8 @@ class GitRepository(BaseRepository):
     def get_diff(self, rev1, rev2, path=None, ignore_whitespace=False,
                  context=3):
         """
-        Returns (git like) *diff*, as plain text. Shows changes introduced by
-        ``rev2`` since ``rev1``.
+        Returns (git like) *diff*, as plain bytes text. Shows changes
+        introduced by ``rev2`` since ``rev1``.
 
         :param rev1: Entry point from which diff is shown. Can be
           ``self.EMPTY_CHANGESET`` - in this case, patch showing all
