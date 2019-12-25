@@ -47,17 +47,11 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def bumped(self):
-        try:
-            return self._ctx.phasedivergent()
-        except AttributeError: # renamed in Mercurial 4.6 (9fa874fb34e1)
-            return self._ctx.bumped()
+        return self._ctx.phasedivergent()
 
     @LazyProperty
     def divergent(self):
-        try:
-            return self._ctx.contentdivergent()
-        except AttributeError: # renamed in Mercurial 4.6 (8b2d7684407b)
-            return self._ctx.divergent()
+        return self._ctx.contentdivergent()
 
     @LazyProperty
     def extinct(self):
@@ -65,10 +59,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def unstable(self):
-        try:
-            return self._ctx.orphan()
-        except AttributeError: # renamed in Mercurial 4.6 (03039ff3082b)
-            return self._ctx.unstable()
+        return self._ctx.orphan()
 
     @LazyProperty
     def phase(self):
@@ -292,10 +283,7 @@ class MercurialChangeset(BaseChangeset):
             lineno, sha, changeset lazy loader and line
         """
         annotations = self._get_filectx(path).annotate()
-        try:
-            annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
-        except AttributeError: # annotateline was introduced in Mercurial 4.6 (b33b91ca2ec2)
-            annotation_lines = [(aline.fctx, l) for aline, l in annotations]
+        annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
         for i, (fctx, l) in enumerate(annotation_lines):
             sha = fctx.hex()
             yield (i + 1, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)

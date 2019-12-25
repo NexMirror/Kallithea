@@ -422,10 +422,7 @@ class MercurialRepository(BaseRepository):
         try:
             if isinstance(revision, int):
                 return self._repo[revision].hex()
-            try:
-                return scmutil.revsymbol(self._repo, revision).hex()
-            except AttributeError: # revsymbol was introduced in Mercurial 4.6
-                return self._repo[revision].hex()
+            return scmutil.revsymbol(self._repo, revision).hex()
         except (IndexError, ValueError, RepoLookupError, TypeError):
             msg = ("Revision %s does not exist for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)
@@ -458,11 +455,7 @@ class MercurialRepository(BaseRepository):
             msg = ("Revision %s:%s does not exist for %s" % (ref_type, ref_name, self.name))
             raise ChangesetDoesNotExistError(msg)
         if revs:
-            try:
-                revision = revs.last()
-            except AttributeError:
-                # removed in hg 3.2
-                revision = revs[-1]
+            revision = revs.last()
         else:
             # TODO: just report 'not found'?
             revision = ref_name
@@ -565,11 +558,8 @@ class MercurialRepository(BaseRepository):
         url = self._get_url(url)
         other = peer(self._repo, {}, url)
         try:
-            # hg 3.2 moved push / pull to exchange module
             from mercurial import exchange
             exchange.pull(self._repo, other, heads=None, force=None)
-        except ImportError:
-            self._repo.pull(other, heads=None, force=None)
         except Abort as err:
             # Propagate error but with vcs's type
             raise RepositoryError(str(err))
