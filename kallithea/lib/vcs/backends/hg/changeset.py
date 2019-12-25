@@ -134,12 +134,6 @@ class MercurialChangeset(BaseChangeset):
         return self._dir_paths + self._file_paths
 
     @LazyProperty
-    def id(self):
-        if self.last:
-            return u'tip'
-        return self.short_id
-
-    @LazyProperty
     def short_id(self):
         return self.raw_id[:12]
 

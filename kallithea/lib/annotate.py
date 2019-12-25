@@ -69,7 +69,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
 
             def changeset_to_anchor(changeset):
                 return '<a href="/changesets/%s/">%s</a>\n' % \
-                       (changeset.id, changeset.id)
+                       (changeset.raw_id, changeset.raw_id)
 
         :param annotate_from_changeset_func: see above
         :param order: (default: ``['ls', 'annotate', 'code']``); order of

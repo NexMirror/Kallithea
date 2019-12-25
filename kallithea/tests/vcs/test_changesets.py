@@ -15,7 +15,6 @@ class TestBaseChangeset(object):
 
     def test_as_dict(self):
         changeset = BaseChangeset()
-        changeset.id = 'ID'
         changeset.raw_id = 'RAW_ID'
         changeset.short_id = 'SHORT_ID'
         changeset.revision = 1009
@@ -26,7 +25,6 @@ class TestBaseChangeset(object):
         changeset.changed = []
         changeset.removed = []
         assert changeset.as_dict() == {
-            'id': 'ID',
             'raw_id': 'RAW_ID',
             'short_id': 'SHORT_ID',
             'revision': 1009,

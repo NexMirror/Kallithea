@@ -320,9 +320,6 @@ class BaseChangeset(object):
         ``repository``
             repository object within which changeset exists
 
-        ``id``
-            may be ``raw_id`` or i.e. for mercurial's tip just ``tip``
-
         ``raw_id``
             raw changeset representation (i.e. full 40 length sha for git
             backend)
@@ -410,13 +407,6 @@ class BaseChangeset(object):
     def children(self):
         """
         Returns list of children changesets.
-        """
-        raise NotImplementedError
-
-    @LazyProperty
-    def id(self):
-        """
-        Returns string identifying this changeset.
         """
         raise NotImplementedError
 
@@ -650,7 +640,7 @@ class BaseChangeset(object):
         """
         Returns dictionary with changeset's attributes and their values.
         """
-        data = get_dict_for_attrs(self, ['id', 'raw_id', 'short_id',
+        data = get_dict_for_attrs(self, ['raw_id', 'short_id',
             'revision', 'date', 'message'])
         data['author'] = {'name': self.author_name, 'email': self.author_email}
         data['added'] = [safe_unicode(node.path) for node in self.added]

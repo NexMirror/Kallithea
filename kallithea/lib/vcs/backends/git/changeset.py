@@ -32,7 +32,6 @@ class GitChangeset(BaseChangeset):
         except KeyError:
             raise RepositoryError("Cannot get object with id %s" % revision)
         self.raw_id = ascii_str(commit.id)
-        self.id = self.raw_id
         self.short_id = self.raw_id[:12]
         self._commit = commit  # a Dulwich Commmit with .id
         self._tree_id = commit.tree
@@ -289,16 +288,15 @@ class GitChangeset(BaseChangeset):
         iterating commits.
         """
         self._get_filectx(path)
-        cs_id = safe_str(self.id)
         f_path = safe_str(path)
 
         if limit is not None:
             cmd = ['log', '-n', str(safe_int(limit, 0)),
-                   '--pretty=format:%H', '-s', cs_id, '--', f_path]
+                   '--pretty=format:%H', '-s', self.raw_id, '--', f_path]
 
         else:
             cmd = ['log',
-                   '--pretty=format:%H', '-s', cs_id, '--', f_path]
+                   '--pretty=format:%H', '-s', self.raw_id, '--', f_path]
         so = self.repository.run_git_command(cmd)
         ids = re.findall(r'[0-9a-fA-F]{40}', so)
         return [self.repository.get_changeset(sha) for sha in ids]
@@ -311,7 +309,7 @@ class GitChangeset(BaseChangeset):
         """
         self._get_filectx(path)
         from dulwich.walk import Walker
-        include = [self.id]
+        include = [self.raw_id]
         walker = Walker(self.repository._repo.object_store, include,
                         paths=[path], max_entries=1)
         return [self.repository.get_changeset(ascii_str(x.commit.id.decode))
@@ -325,7 +323,7 @@ class GitChangeset(BaseChangeset):
         # TODO: This function now uses os underlying 'git' command which is
         # generally not good. Should be replaced with algorithm iterating
         # commits.
-        cmd = ['blame', '-l', '--root', '-r', self.id, '--', path]
+        cmd = ['blame', '-l', '--root', '-r', self.raw_id, '--', path]
         # -l     ==> outputs long shas (and we need all 40 characters)
         # --root ==> doesn't put '^' character for boundaries
         # -r sha ==> blames for the given revision

@@ -153,7 +153,7 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
 
         newtip = self.repo.get_changeset()
         assert tip != newtip
-        assert tip.id != newtip.id
+        assert tip.raw_id != newtip.raw_id
         assert newtip.get_node('foo/bar/baz').content == b'My **changed** content'
 
     def test_change_non_ascii(self):
@@ -179,7 +179,7 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
 
         newtip = self.repo.get_changeset()
         assert tip != newtip
-        assert tip.id != newtip.id
+        assert tip.raw_id != newtip.raw_id
 
         assert newtip.get_node('żółwik/zwierzątko').content == b'My **changed** content'
         assert newtip.get_node('żółwik/zwierzątko_uni').content == b'My **changed** content'
@@ -237,7 +237,7 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
 
         newtip = self.repo.get_changeset()
         assert tip != newtip
-        assert tip.id != newtip.id
+        assert tip.raw_id != newtip.raw_id
         with pytest.raises(NodeDoesNotExistError):
             newtip.get_node(node.path)
 
