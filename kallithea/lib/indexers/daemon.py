@@ -110,7 +110,7 @@ class WhooshIndexingDaemon(object):
             self.initial = False
 
     def _get_index_revision(self, repo):
-        db_repo = Repository.get_by_repo_name(repo.name_unicode)
+        db_repo = Repository.get_by_repo_name(safe_unicode(repo.name))
         landing_rev = 'tip'
         if db_repo:
             _rev_type, _rev = db_repo.landing_rev

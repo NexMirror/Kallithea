@@ -98,10 +98,6 @@ class BaseRepository(object):
         """
         raise NotImplementedError
 
-    @property
-    def name_unicode(self):
-        return safe_unicode(self.name)
-
     @LazyProperty
     def owner(self):
         raise NotImplementedError
