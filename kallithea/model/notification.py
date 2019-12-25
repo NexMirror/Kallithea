@@ -35,7 +35,6 @@ from tg.i18n import ugettext as _
 
 import kallithea
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import User
 
 
@@ -180,12 +179,19 @@ class EmailNotificationModel(object):
         except KeyError as e:
             log.error('error generating email subject for %r from %s: %s', type_, ','.join(self._subj_map.keys()), e)
             raise
-        l = [safe_unicode(x) for x in [kwargs.get('status_change'), kwargs.get('closing_pr') and _('Closing')] if x]
-        if l:
+        # gmail doesn't do proper threading but will ignore leading square
+        # bracket content ... so that is where we put status info
+        bracket_tags = []
+        status_change = kwargs.get('status_change')
+        if status_change:
+            bracket_tags.append(unicode(status_change))  # apply unicode to evaluate LazyString before .join
+        if kwargs.get('closing_pr'):
+            bracket_tags.append(_('Closing'))
+        if bracket_tags:
             if subj.startswith('['):
-                subj = '[' + ', '.join(l) + ': ' + subj[1:]
+                subj = '[' + ', '.join(bracket_tags) + ': ' + subj[1:]
             else:
-                subj = '[' + ', '.join(l) + '] ' + subj
+                subj = '[' + ', '.join(bracket_tags) + '] ' + subj
         return subj
 
     def get_email_tmpl(self, type_, content_type, **kwargs):
