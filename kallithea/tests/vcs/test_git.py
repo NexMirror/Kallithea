@@ -620,30 +620,6 @@ class TestGitChangeset(object):
         assert 'marcink none@none' == self.repo.get_changeset('8430a588b43b5d6da365400117c89400326e7992').author_name
 
 
-class TestGitSpecific():
-
-    def test_error_is_raised_for_added_if_diff_name_status_is_wrong(self):
-        repo = mock.MagicMock()
-        changeset = GitChangeset(repo, 'foobar')
-        changeset._diff_name_status = 'foobar'
-        with pytest.raises(VCSError):
-            changeset.added
-
-    def test_error_is_raised_for_changed_if_diff_name_status_is_wrong(self):
-        repo = mock.MagicMock()
-        changeset = GitChangeset(repo, 'foobar')
-        changeset._diff_name_status = 'foobar'
-        with pytest.raises(VCSError):
-            changeset.added
-
-    def test_error_is_raised_for_removed_if_diff_name_status_is_wrong(self):
-        repo = mock.MagicMock()
-        changeset = GitChangeset(repo, 'foobar')
-        changeset._diff_name_status = 'foobar'
-        with pytest.raises(VCSError):
-            changeset.added
-
-
 class TestGitSpecificWithRepo(_BackendTestMixin):
     backend_alias = 'git'
 

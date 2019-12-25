@@ -494,16 +494,6 @@ class GitChangeset(BaseChangeset):
         return list(added.union(modified).union(deleted))
 
     @LazyProperty
-    def _diff_name_status(self):
-        output = []
-        for parent in self.parents:
-            cmd = ['diff', '--name-status', parent.raw_id, self.raw_id,
-                   '--encoding=utf8']
-            so, se = self.repository.run_git_command(cmd)
-            output.append(so.strip())
-        return '\n'.join(output)
-
-    @LazyProperty
     def _changes_cache(self):
         added = set()
         modified = set()
