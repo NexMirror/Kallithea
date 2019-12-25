@@ -98,15 +98,6 @@ class GitChangeset(BaseChangeset):
         heads = self.repository._heads(reverse=True)
         return [safe_str(b) for b in heads if heads[b] == self._commit.id] # FIXME: Inefficient ... and returning None!
 
-    def _fix_path(self, path):
-        """
-        Paths are stored without trailing slash so we need to get rid off it if
-        needed.
-        """
-        if path.endswith('/'):
-            path = path.rstrip('/')
-        return path
-
     def _get_id_for_path(self, path):
         # FIXME: Please, spare a couple of minutes and make those codes cleaner;
         if path not in self._paths:
@@ -167,7 +158,7 @@ class GitChangeset(BaseChangeset):
             return NodeKind.DIR
 
     def _get_filectx(self, path):
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         if self._get_kind(path) != NodeKind.FILE:
             raise ChangesetError("File does not exist for revision %s at "
                 " '%s'" % (self.raw_id, path))
@@ -396,7 +387,7 @@ class GitChangeset(BaseChangeset):
         if self._get_kind(path) != NodeKind.DIR:
             raise ChangesetError("Directory does not exist for revision %s at "
                 " '%s'" % (self.revision, path))
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         id = self._get_id_for_path(path)
         tree = self.repository._repo[id]
         dirnodes = []
@@ -436,7 +427,7 @@ class GitChangeset(BaseChangeset):
         Returns ``Node`` object from the given ``path``. If there is no node at
         the given ``path``, ``ChangesetError`` would be raised.
         """
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         if path not in self.nodes:
             try:
                 id_ = self._get_id_for_path(path)

@@ -193,19 +193,8 @@ class MercurialChangeset(BaseChangeset):
         # Only used to feed diffstat
         return b''.join(self._ctx.diff())
 
-    def _fix_path(self, path):
-        """
-        Paths are stored without trailing slash so we need to get rid off it if
-        needed. Also mercurial keeps filenodes as str so we need to decode
-        from unicode to str
-        """
-        if path.endswith('/'):
-            path = path.rstrip('/')
-
-        return path
-
     def _get_kind(self, path):
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         if path in self._file_paths:
             return NodeKind.FILE
         elif path in self._dir_paths:
@@ -215,7 +204,7 @@ class MercurialChangeset(BaseChangeset):
                 % (path))
 
     def _get_filectx(self, path):
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         if self._get_kind(path) != NodeKind.FILE:
             raise ChangesetError("File does not exist for revision %s at "
                 " '%s'" % (self.raw_id, path))
@@ -330,8 +319,7 @@ class MercurialChangeset(BaseChangeset):
         if self._get_kind(path) != NodeKind.DIR:
             raise ChangesetError("Directory does not exist for revision %s at "
                 " '%s'" % (self.revision, path))
-        path = self._fix_path(path)
-
+        path = path.rstrip('/')
         filenodes = [FileNode(f, changeset=self) for f in self._file_paths
             if os.path.dirname(f) == path]
         dirs = path == '' and '' or [d for d in self._dir_paths
@@ -357,7 +345,7 @@ class MercurialChangeset(BaseChangeset):
         Returns ``Node`` object from the given ``path``. If there is no node at
         the given ``path``, ``ChangesetError`` would be raised.
         """
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         if path not in self.nodes:
             if path in self._file_paths:
                 node = FileNode(path, changeset=self)
