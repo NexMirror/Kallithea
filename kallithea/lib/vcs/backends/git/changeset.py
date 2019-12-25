@@ -321,11 +321,10 @@ class GitChangeset(BaseChangeset):
         """
         Returns a generator of four element tuples with
             lineno, sha, changeset lazy loader and line
-
-        TODO: This function now uses os underlying 'git' command which is
-        generally not good. Should be replaced with algorithm iterating
-        commits.
         """
+        # TODO: This function now uses os underlying 'git' command which is
+        # generally not good. Should be replaced with algorithm iterating
+        # commits.
         cmd = ['blame', '-l', '--root', '-r', self.id, '--', path]
         # -l     ==> outputs long shas (and we need all 40 characters)
         # --root ==> doesn't put '^' character for boundaries
@@ -333,9 +332,8 @@ class GitChangeset(BaseChangeset):
         so = self.repository.run_git_command(cmd)
 
         for i, blame_line in enumerate(so.split('\n')[:-1]):
-            ln_no = i + 1
             sha, line = re.split(r' ', blame_line, 1)
-            yield (ln_no, sha, lambda: self.repository.get_changeset(sha), line)
+            yield (i + 1, sha, lambda sha=sha: self.repository.get_changeset(sha), line)
 
     def fill_archive(self, stream=None, kind='tgz', prefix=None,
                      subrepos=False):

@@ -287,9 +287,9 @@ class MercurialChangeset(BaseChangeset):
         """
         annotations = self._get_filectx(path).annotate()
         annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
-        for i, (fctx, l) in enumerate(annotation_lines):
+        for i, (fctx, line) in enumerate(annotation_lines):
             sha = ascii_str(fctx.hex())
-            yield (i + 1, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)
+            yield (i + 1, sha, lambda sha=sha: self.repository.get_changeset(sha), line)
 
     def fill_archive(self, stream=None, kind='tgz', prefix=None,
                      subrepos=False):
