@@ -166,13 +166,13 @@ class JSONRPCController(TGController):
 
         # now that we have a method, add self._req_params to
         # self.kargs and dispatch control to WGIController
-        argspec = inspect.getargspec(self._func)
-        arglist = argspec[0][1:]
-        defaults = [type(arg) for arg in argspec[3] or []]
+        argspec = inspect.getfullargspec(self._func)
+        arglist = argspec.args[1:]
+        argtypes = [type(arg) for arg in argspec.defaults or []]
         default_empty = type(NotImplemented)
 
         # kw arguments required by this method
-        func_kwargs = dict(itertools.zip_longest(reversed(arglist), reversed(defaults),
+        func_kwargs = dict(itertools.zip_longest(reversed(arglist), reversed(argtypes),
                                                   fillvalue=default_empty))
 
         # This attribute will need to be first param of a method that uses
