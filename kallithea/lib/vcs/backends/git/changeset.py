@@ -448,8 +448,6 @@ class GitChangeset(BaseChangeset):
         Returns ``Node`` object from the given ``path``. If there is no node at
         the given ``path``, ``ChangesetError`` would be raised.
         """
-        if isinstance(path, unicode):
-            path = path.encode('utf-8')
         path = self._fix_path(path)
         if path not in self.nodes:
             try:

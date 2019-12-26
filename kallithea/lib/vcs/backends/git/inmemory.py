@@ -7,7 +7,7 @@ from dulwich import objects
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils import safe_str
+from kallithea.lib.vcs.utils import safe_bytes, safe_str
 
 
 class GitInMemoryChangeset(BaseInMemoryChangeset):
@@ -39,7 +39,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         repo = self.repository._repo
         object_store = repo.object_store
 
-        ENCODING = "UTF-8"
+        ENCODING = "UTF-8"  # TODO: should probably be kept in sync with safe_unicode/safe_bytes and vcs/conf/settings.py DEFAULT_ENCODINGS
 
         # Create tree and populates it with blobs
         commit_tree = self.parents[0] and repo[self.parents[0]._commit.tree] or \
@@ -74,7 +74,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
                 content = node.content
             blob = objects.Blob.from_string(content)
 
-            node_path = node.name.encode(ENCODING)
+            node_path = safe_bytes(node.name)
             if dirnames:
                 # If there are trees which should be created we need to build
                 # them now (in reverse order)

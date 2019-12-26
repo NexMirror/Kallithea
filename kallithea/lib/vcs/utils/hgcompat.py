@@ -9,7 +9,6 @@ from mercurial import obsutil, patch, scmutil, sshpeer, ui, unionrepo
 from mercurial.commands import clone, nullid, pull
 from mercurial.context import memctx, memfilectx
 from mercurial.discovery import findcommonoutgoing
-from mercurial.encoding import tolocal
 from mercurial.error import Abort, RepoError, RepoLookupError
 from mercurial.hg import peer
 from mercurial.hgweb import hgweb_mod

@@ -2,7 +2,8 @@ import datetime
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils.hgcompat import hex, memctx, memfilectx, tolocal
+from kallithea.lib.vcs.utils import safe_bytes
+from kallithea.lib.vcs.utils.hgcompat import hex, memctx, memfilectx
 
 
 class MercurialInMemoryChangeset(BaseInMemoryChangeset):
@@ -87,11 +88,9 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             date=date,
             extra=kwargs)
 
-        loc = lambda u: tolocal(u.encode('utf-8'))
-
         # injecting given _repo params
-        commit_ctx._text = loc(message)
-        commit_ctx._user = loc(author)
+        commit_ctx._text = safe_bytes(message)
+        commit_ctx._user = safe_bytes(author)
         commit_ctx._date = date
 
         # TODO: Catch exceptions!
