@@ -1,7 +1,6 @@
 import datetime
 import os
 import sys
-import urllib.error
 
 import mock
 import pytest
@@ -31,8 +30,8 @@ class TestGitRepository(object):
             GitRepository(wrong_repo_path)
 
     def test_git_cmd_injection(self):
-        repo_inject_path = TEST_GIT_REPO + '; echo "Cake";'
-        with pytest.raises(urllib.error.URLError):
+        repo_inject_path = 'file:/%s; echo "Cake";' % TEST_GIT_REPO
+        with pytest.raises(RepositoryError):
             # Should fail because URL will contain the parts after ; too
             GitRepository(get_new_dir('injection-repo'), src_url=repo_inject_path, update_after_clone=True, create=True)
 
