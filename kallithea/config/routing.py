@@ -474,7 +474,7 @@ def make_map(config):
     #==========================================================================
     rmap.connect('repo_creating_home', '/{repo_name:.*?}/repo_creating',
                 controller='admin/repos', action='repo_creating')
-    rmap.connect('repo_check_home', '/{repo_name:.*?}/crepo_check',
+    rmap.connect('repo_check_home', '/{repo_name:.*?}/repo_check_creating',
                 controller='admin/repos', action='repo_check')
 
     rmap.connect('summary_home', '/{repo_name:.*?}',
