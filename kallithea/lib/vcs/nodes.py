@@ -144,6 +144,8 @@ class Node(object):
     kind = property(_get_kind, _set_kind)
 
     def __eq__(self, other):
+        if type(self) is not type(other):
+            return False
         if self._kind != other._kind:
             return False
         if self.path != other.path:

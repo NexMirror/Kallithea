@@ -374,6 +374,8 @@ class BaseChangeset(object):
         return u'%s:%s' % (self.revision, self.short_id)
 
     def __eq__(self, other):
+        if type(self) is not type(other):
+            return False
         return self.raw_id == other.raw_id
 
     def __json__(self, with_file_list=False):
