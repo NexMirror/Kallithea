@@ -12,7 +12,6 @@
 import errno
 import logging
 import os
-import posixpath
 import re
 import time
 import urllib
@@ -439,7 +438,8 @@ class GitRepository(BaseRepository):
         """
         if name not in self.tags:
             raise TagDoesNotExistError("Tag %s does not exist" % name)
-        tagpath = posixpath.join(self._repo.refs.path, 'refs', 'tags', name)
+        # self._repo.refs is a DiskRefsContainer, and .path gives the full absolute path of '.git'
+        tagpath = os.path.join(self._repo.refs.path, 'refs', 'tags', name)
         try:
             os.remove(tagpath)
             self._parsed_refs = self._get_parsed_refs()
