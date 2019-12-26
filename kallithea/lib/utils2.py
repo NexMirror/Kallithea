@@ -329,7 +329,7 @@ def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None)
         system_user = 'kallithea' # hardcoded default value ...
     args = {
         'scheme': parsed_url.scheme,
-        'user': urllib.parse.quote(safe_str(username or '')),
+        'user': urllib.parse.quote(username or ''),
         'netloc': parsed_url.netloc + prefix,  # like "hostname:port/prefix" (with optional ":port" and "/prefix")
         'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,
@@ -561,7 +561,7 @@ class Optional(object):
 
 
 def urlreadable(s, _cleanstringsub=re.compile('[^-a-zA-Z0-9./]+').sub):
-    return _cleanstringsub('_', safe_str(s)).rstrip('_')
+    return _cleanstringsub('_', s).rstrip('_')
 
 
 def recursive_replace(str_, replace=' '):

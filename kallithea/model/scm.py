@@ -41,7 +41,7 @@ from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, Ha
 from kallithea.lib.exceptions import IMCCommitError, NonRelativePathError
 from kallithea.lib.hooks import process_pushed_raw_ids
 from kallithea.lib.utils import action_logger, get_filesystem_repos, make_ui
-from kallithea.lib.utils2 import safe_bytes, safe_str, set_hook_environment
+from kallithea.lib.utils2 import safe_bytes, set_hook_environment
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
@@ -190,7 +190,7 @@ class ScmModel(object):
                     klass = get_backend(path[0])
 
                     if path[0] == 'hg' and path[0] in BACKENDS:
-                        repos[name] = klass(safe_str(path[1]), baseui=baseui)
+                        repos[name] = klass(path[1], baseui=baseui)
 
                     if path[0] == 'git' and path[0] in BACKENDS:
                         repos[name] = klass(path[1])
@@ -396,13 +396,8 @@ class ScmModel(object):
         """
         user = User.guess_instance(user)
         IMC = self._get_IMC_module(repo.alias)
-
-        # decoding here will force that we have proper encoded values
-        # in any other case this will throw exceptions and deny commit
-        content = safe_str(content)
-        path = safe_str(f_path)
         imc = IMC(repo)
-        imc.change(FileNode(path, content, mode=cs.get_file_mode(f_path)))
+        imc.change(FileNode(f_path, content, mode=cs.get_file_mode(f_path)))
         try:
             tip = imc.commit(message=message, author=author,
                              parents=[cs], branch=cs.branch)
@@ -478,12 +473,7 @@ class ScmModel(object):
         for f_path in nodes:
             content = nodes[f_path]['content']
             f_path = self._sanitize_path(f_path)
-            f_path = safe_str(f_path)
-            # decoding here will force that we have proper encoded values
-            # in any other case this will throw exceptions and deny commit
-            if isinstance(content, (str,)):
-                content = safe_str(content)
-            else:
+            if not isinstance(content, str) and not isinstance(content, bytes):
                 content = content.read()
             processed_nodes.append((f_path, content))
 

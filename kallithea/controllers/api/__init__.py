@@ -39,7 +39,7 @@ from kallithea.lib import ext_json
 from kallithea.lib.auth import AuthUser
 from kallithea.lib.base import _get_ip_addr as _get_ip
 from kallithea.lib.base import get_path_info
-from kallithea.lib.utils2 import ascii_bytes, safe_str
+from kallithea.lib.utils2 import ascii_bytes
 from kallithea.model.db import User
 
 
@@ -53,7 +53,7 @@ class JSONRPCError(BaseException):
         super(JSONRPCError, self).__init__()
 
     def __str__(self):
-        return safe_str(self.message)
+        return self.message
 
 
 class JSONRPCErrorResponse(Response, HTTPException):

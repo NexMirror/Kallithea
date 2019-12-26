@@ -7,7 +7,6 @@ import mock
 import pytest
 
 from kallithea.lib import vcs
-from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Permission, RepoGroup, Repository, Ui, User, UserRepoToPerm
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -74,7 +73,7 @@ class _BaseTestCase(base.TestController):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
+            vcs.get_repo(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name))
         except vcs.exceptions.VCSError:
             pytest.fail('no repo %s in filesystem' % repo_name)
 
@@ -149,7 +148,7 @@ class _BaseTestCase(base.TestController):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full)))
+            vcs.get_repo(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -241,7 +240,7 @@ class _BaseTestCase(base.TestController):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full)))
+            vcs.get_repo(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -298,7 +297,7 @@ class _BaseTestCase(base.TestController):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full)))
+            vcs.get_repo(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -373,7 +372,7 @@ class _BaseTestCase(base.TestController):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
+            vcs.get_repo(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name))
         except vcs.exceptions.VCSError:
             pytest.fail('no repo %s in filesystem' % repo_name)
 
@@ -395,7 +394,7 @@ class _BaseTestCase(base.TestController):
     def test_delete_non_ascii(self):
         self.log_user()
         non_ascii = "ąęł"
-        repo_name = "%s%s" % (safe_str(self.NEW_REPO), non_ascii)
+        repo_name = "%s%s" % (self.NEW_REPO, non_ascii)
         description = 'description for newly created repo' + non_ascii
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,

@@ -34,7 +34,7 @@ import mercurial.scmutil
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import action_logger, make_ui
-from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes, safe_str
+from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.model.db import Repository, User
 
@@ -44,7 +44,7 @@ def _get_scm_size(alias, root_path):
         alias += '.'
 
     size_scm, size_root = 0, 0
-    for path, dirs, files in os.walk(safe_str(root_path)):
+    for path, dirs, files in os.walk(root_path):
         if path.find(alias) != -1:
             for f in files:
                 try:
@@ -318,8 +318,7 @@ def _hook_environment(repo_path):
 
     repo = Repository.get_by_full_path(repo_path)
     if not repo:
-        raise OSError('Repository %s not found in database'
-                      % (safe_str(repo_path)))
+        raise OSError('Repository %s not found in database' % repo_path)
 
     baseui = make_ui()
     return baseui, repo
@@ -397,5 +396,5 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
 def rejectpush(ui, **kwargs):
     """Mercurial hook to be installed as pretxnopen and prepushkey for read-only repos"""
     ex = get_hook_environment()
-    ui.warn(safe_bytes("Push access to %r denied\n" % safe_str(ex.repository)))
+    ui.warn(safe_bytes("Push access to %r denied\n" % ex.repository))
     return 1

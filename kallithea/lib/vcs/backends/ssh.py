@@ -25,7 +25,6 @@ import sys
 
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.utils2 import set_hook_environment
-from kallithea.lib.vcs.utils import safe_str
 from kallithea.model.db import Repository, User, UserSshKeys
 from kallithea.model.meta import Session
 
@@ -83,7 +82,7 @@ class BaseSshHandler(object):
         elif HasPermissionAnyMiddleware('repository.read')(self.authuser, self.repo_name):
             self.allow_push = False
         else:
-            self.exit('Access to %r denied' % safe_str(self.repo_name))
+            self.exit('Access to %r denied' % self.repo_name)
 
         self.db_repo = Repository.get_by_repo_name(self.repo_name)
         if self.db_repo is None:

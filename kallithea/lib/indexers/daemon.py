@@ -39,7 +39,7 @@ from whoosh.qparser import QueryParser
 
 from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
 from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_unicode
 from kallithea.lib.vcs.exceptions import ChangesetError, NodeDoesNotExistError, RepositoryError
 from kallithea.model.db import Repository
 from kallithea.model.scm import ScmModel
@@ -132,7 +132,7 @@ class WhooshIndexingDaemon(object):
             cs = self._get_index_changeset(repo)
             for _topnode, _dirs, files in cs.walk('/'):
                 for f in files:
-                    index_paths_.add(os.path.join(safe_str(repo.path), safe_str(f.path)))
+                    index_paths_.add(os.path.join(repo.path, f.path))
 
         except RepositoryError:
             log.debug(traceback.format_exc())
@@ -141,19 +141,16 @@ class WhooshIndexingDaemon(object):
 
     def get_node(self, repo, path, index_rev=None):
         """
-        gets a filenode based on given full path. It operates on string for
-        hg git compatibility.
+        gets a filenode based on given full path.
 
         :param repo: scm repo instance
         :param path: full path including root location
         :return: FileNode
         """
         # FIXME: paths should be normalized ... or even better: don't include repo.path
-        path = safe_str(path)
-        repo_path = safe_str(repo.path)
-        assert path.startswith(repo_path)
-        assert path[len(repo_path)] in (os.path.sep, os.path.altsep)
-        node_path = path[len(repo_path) + 1:]
+        assert path.startswith(repo.path)
+        assert path[len(repo.path)] in (os.path.sep, os.path.altsep)
+        node_path = path[len(repo.path) + 1:]
         cs = self._get_index_changeset(repo, index_rev=index_rev)
         node = cs.get_node(node_path)
         return node

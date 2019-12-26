@@ -11,7 +11,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, RepositoryError, VCSError
 from kallithea.lib.vcs.nodes import (
     AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
-from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_int, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_int, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -23,7 +23,6 @@ class GitChangeset(BaseChangeset):
     def __init__(self, repository, revision):
         self._stat_modes = {}
         self.repository = repository
-        revision = safe_str(revision)
         try:
             commit = self.repository._repo[ascii_bytes(revision)]
             if isinstance(commit, objects.Tag):
@@ -109,7 +108,6 @@ class GitChangeset(BaseChangeset):
         return path
 
     def _get_id_for_path(self, path):
-        path = safe_str(path)
         # FIXME: Please, spare a couple of minutes and make those codes cleaner;
         if path not in self._paths:
             path = path.strip('/')
@@ -159,7 +157,7 @@ class GitChangeset(BaseChangeset):
             if path not in self._paths:
                 raise NodeDoesNotExistError("There is no file nor directory "
                     "at the given path '%s' at revision %s"
-                    % (path, safe_str(self.short_id)))
+                    % (path, self.short_id))
         return self._paths[path]
 
     def _get_kind(self, path):
@@ -252,7 +250,6 @@ class GitChangeset(BaseChangeset):
         Returns stat mode of the file at the given ``path``.
         """
         # ensure path is traversed
-        path = safe_str(path)
         self._get_id_for_path(path)
         return self._stat_modes[path]
 
@@ -288,15 +285,14 @@ class GitChangeset(BaseChangeset):
         iterating commits.
         """
         self._get_filectx(path)
-        f_path = safe_str(path)
 
         if limit is not None:
             cmd = ['log', '-n', str(safe_int(limit, 0)),
-                   '--pretty=format:%H', '-s', self.raw_id, '--', f_path]
+                   '--pretty=format:%H', '-s', self.raw_id, '--', path]
 
         else:
             cmd = ['log',
-                   '--pretty=format:%H', '-s', self.raw_id, '--', f_path]
+                   '--pretty=format:%H', '-s', self.raw_id, '--', path]
         so = self.repository.run_git_command(cmd)
         ids = re.findall(r'[0-9a-fA-F]{40}', so)
         return [self.repository.get_changeset(sha) for sha in ids]

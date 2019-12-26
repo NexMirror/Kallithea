@@ -2,7 +2,6 @@
 
 import urllib.parse
 
-from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Repository, User
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -144,7 +143,7 @@ class _BaseTestCase(base.TestController):
         # create a fork
         repo_name = self.REPO
         org_repo = Repository.get_by_repo_name(repo_name)
-        fork_name = safe_str(self.REPO_FORK + u'-rødgrød')
+        fork_name = self.REPO_FORK + u'-rødgrød'
         creation_args = {
             'repo_name': fork_name,
             'repo_group': u'-1',
@@ -165,7 +164,7 @@ class _BaseTestCase(base.TestController):
         assert fork_repo
 
         # fork the fork
-        fork_name_2 = safe_str(self.REPO_FORK + u'-blåbærgrød')
+        fork_name_2 = self.REPO_FORK + u'-blåbærgrød'
         creation_args = {
             'repo_name': fork_name_2,
             'repo_group': u'-1',

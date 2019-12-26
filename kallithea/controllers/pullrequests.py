@@ -43,7 +43,7 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import ascii_bytes, safe_bytes, safe_int, safe_str
+from kallithea.lib.utils2 import ascii_bytes, safe_bytes, safe_int
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.comment import ChangesetCommentsModel
@@ -81,12 +81,6 @@ class PullrequestsController(BaseRepoController):
         branch_rev: a revision of which peers should be preferred and available."""
         # list named branches that has been merged to this named branch - it should probably merge back
         peers = []
-
-        if rev:
-            rev = safe_str(rev)
-
-        if branch:
-            branch = safe_str(branch)
 
         if branch_rev:
             # a revset not restricting to merge() would be better
@@ -586,7 +580,7 @@ class PullrequestsController(BaseRepoController):
         log.debug('running diff between %s and %s in %s',
                   c.a_rev, c.cs_rev, org_scm_instance.path)
         try:
-            raw_diff = diffs.get_diff(org_scm_instance, rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
+            raw_diff = diffs.get_diff(org_scm_instance, rev1=c.a_rev, rev2=c.cs_rev,
                                       ignore_whitespace=ignore_whitespace, context=line_context)
         except ChangesetDoesNotExistError:
             raw_diff = safe_bytes(_("The diff can't be shown - the PR revisions could not be found."))

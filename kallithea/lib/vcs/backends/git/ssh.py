@@ -18,7 +18,6 @@ import os
 from kallithea.lib.hooks import log_pull_action
 from kallithea.lib.utils import make_ui
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
-from kallithea.lib.vcs.utils import safe_str
 
 
 log = logging.getLogger(__name__)
@@ -70,7 +69,7 @@ class GitSshHandler(BaseSshHandler):
             log_pull_action(ui=make_ui(), repo=self.db_repo.scm_instance._repo)
         else: # probably verb 'git-receive-pack', action 'push'
             if not self.allow_push:
-                self.exit('Push access to %r denied' % safe_str(self.repo_name))
+                self.exit('Push access to %r denied' % self.repo_name)
             # Note: push logging is handled by Git post-receive hook
 
         # git shell is not a real shell but use shell inspired quoting *inside* the argument.

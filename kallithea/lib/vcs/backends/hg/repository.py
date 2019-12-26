@@ -39,7 +39,7 @@ import mercurial.util
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
-from kallithea.lib.vcs.utils import ascii_str, author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_str, author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath
 
@@ -446,7 +446,6 @@ class MercurialRepository(BaseRepository):
         """
         Returns revision number for the given reference.
         """
-        ref_name = safe_str(ref_name)
         if ref_type == 'rev' and not ref_name.strip('0'):
             return self.EMPTY_CHANGESET
         # lookup up the exact node id
@@ -485,11 +484,9 @@ class MercurialRepository(BaseRepository):
 
     def _get_url(self, url):
         """
-        Returns normalized url. If schema is not given, would fall
-        to filesystem
-        (``file:///``) schema.
+        Returns normalized url. If schema is not given, fall back to
+        filesystem (``file:///``) schema.
         """
-        url = safe_str(url)
         if url != 'default' and '://' not in url:
             url = "file:" + urllib.request.pathname2url(url)
         return url

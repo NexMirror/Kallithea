@@ -39,7 +39,7 @@ from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA, WhooshResultWrapper
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_int, safe_str
+from kallithea.lib.utils2 import safe_int
 from kallithea.model.repo import RepoModel
 
 
@@ -124,8 +124,8 @@ class SearchController(BaseRepoController):
                         page=p,
                         item_count=res_ln,
                         items_per_page=10,
-                        type=safe_str(c.cur_type),
-                        q=safe_str(c.cur_query),
+                        type=c.cur_type,
+                        q=c.cur_query,
                     )
 
                 except QueryParserError:

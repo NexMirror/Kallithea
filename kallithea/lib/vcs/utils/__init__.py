@@ -204,7 +204,7 @@ def author_email(author):
     m = email_re.search(author)
     if m is None:
         return ''
-    return safe_str(m.group(0))
+    return m.group(0)
 
 
 def author_name(author):

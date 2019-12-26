@@ -24,8 +24,6 @@ from sqlalchemy.orm.interfaces import MapperOption
 from sqlalchemy.orm.query import Query
 from sqlalchemy.sql import visitors
 
-from kallithea.lib.utils2 import safe_str
-
 
 class CachingQuery(Query):
     """A Query subclass which optionally loads full results from a Beaker
@@ -175,7 +173,7 @@ def _set_cache_parameters(query, region, namespace, cache_key):
                         "for region %r namespace %r" %
                         (region, namespace)
                     )
-    query._cache_parameters = region, safe_str(namespace), cache_key
+    query._cache_parameters = region, namespace, cache_key
 
 
 class FromCache(MapperOption):

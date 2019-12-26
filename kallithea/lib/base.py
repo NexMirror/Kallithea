@@ -49,7 +49,7 @@ from kallithea.lib import auth_modules, ext_json
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import get_repo_slug, is_valid_repo
-from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_str, safe_unicode, set_hook_environment, str2bool
+from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_unicode, set_hook_environment, str2bool
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model import meta
 from kallithea.model.db import PullRequest, Repository, Setting, User
@@ -242,7 +242,7 @@ class BaseVCSController(object):
 
         # If not authenticated by the container, running basic auth
         if not username:
-            self.authenticate.realm = safe_str(self.config['realm'])
+            self.authenticate.realm = self.config['realm']
             result = self.authenticate(environ)
             if isinstance(result, str):
                 paste.httpheaders.AUTH_TYPE.update(environ, 'basic')
@@ -333,7 +333,7 @@ class BaseVCSController(object):
 
             try:
                 log.info('%s action on %s repo "%s" by "%s" from %s',
-                         parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
+                         parsed_request.action, self.scm_alias, parsed_request.repo_name, user.username, ip_addr)
                 app = self._make_app(parsed_request)
                 return app(environ, start_response)
             except Exception:

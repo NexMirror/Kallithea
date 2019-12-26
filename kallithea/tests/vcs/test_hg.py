@@ -6,7 +6,6 @@ import pytest
 from kallithea.lib.vcs.backends.hg import MercurialChangeset, MercurialRepository
 from kallithea.lib.vcs.exceptions import NodeDoesNotExistError, RepositoryError, VCSError
 from kallithea.lib.vcs.nodes import NodeKind, NodeState
-from kallithea.lib.vcs.utils import safe_str
 from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_HG_REPO_CLONE, TEST_HG_REPO_PULL, TESTS_TMP_PATH
 
 
@@ -19,7 +18,7 @@ class TestMercurialRepository(object):
                       % TEST_HG_REPO_CLONE)
 
     def setup_method(self):
-        self.repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        self.repo = MercurialRepository(TEST_HG_REPO)
 
     def test_wrong_repo_path(self):
         wrong_repo_path = os.path.join(TESTS_TMP_PATH, 'errorrepo')
@@ -32,7 +31,7 @@ class TestMercurialRepository(object):
 
     def test_repo_clone(self):
         self.__check_for_existing_repo()
-        repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        repo = MercurialRepository(TEST_HG_REPO)
         repo_clone = MercurialRepository(TEST_HG_REPO_CLONE,
             src_url=TEST_HG_REPO, update_after_clone=True)
         assert len(repo.revisions) == len(repo_clone.revisions)
@@ -42,7 +41,7 @@ class TestMercurialRepository(object):
             assert raw_id == repo_clone.get_changeset(raw_id).raw_id
 
     def test_repo_clone_with_update(self):
-        repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        repo = MercurialRepository(TEST_HG_REPO)
         repo_clone = MercurialRepository(TEST_HG_REPO_CLONE + '_w_update',
             src_url=TEST_HG_REPO, update_after_clone=True)
         assert len(repo.revisions) == len(repo_clone.revisions)
@@ -55,7 +54,7 @@ class TestMercurialRepository(object):
         )
 
     def test_repo_clone_without_update(self):
-        repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        repo = MercurialRepository(TEST_HG_REPO)
         repo_clone = MercurialRepository(TEST_HG_REPO_CLONE + '_wo_update',
             src_url=TEST_HG_REPO, update_after_clone=False)
         assert len(repo.revisions) == len(repo_clone.revisions)
@@ -256,7 +255,7 @@ TODO: To be written...
 class TestMercurialChangeset(object):
 
     def setup_method(self):
-        self.repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        self.repo = MercurialRepository(TEST_HG_REPO)
 
     def _test_equality(self, changeset):
         revision = changeset.revision

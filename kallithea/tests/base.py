@@ -22,7 +22,7 @@ import time
 import pytest
 from webtest import TestApp
 
-from kallithea.lib.utils2 import ascii_str, safe_str
+from kallithea.lib.utils2 import ascii_str
 from kallithea.model.db import User
 
 
@@ -180,16 +180,15 @@ class TestController(object):
 
     def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:
-            pytest.fail(safe_str(u'msg `%s` not found - session has no flash:\n%s' % (msg, response)))
+            pytest.fail(u'msg `%s` not found - session has no flash:\n%s' % (msg, response))
         try:
             level, m = response.session['flash'][-1 - skip]
             if _matcher(msg, m):
                 return
         except IndexError:
             pass
-        pytest.fail(safe_str(u'msg `%s` not found in session flash (skipping %s): %s' %
-                           (msg, skip,
-                            ', '.join('`%s`' % m for level, m in response.session['flash']))))
+        pytest.fail(u'msg `%s` not found in session flash (skipping %s): %s' %
+                    (msg, skip, ', '.join('`%s`' % m for level, m in response.session['flash'])))
 
     def checkSessionFlashRegex(self, response, regex, skip=0):
         self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)

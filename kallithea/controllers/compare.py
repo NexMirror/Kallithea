@@ -43,7 +43,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes, safe_int, safe_str
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes, safe_int
 from kallithea.model.db import Repository
 
 
@@ -135,10 +135,10 @@ class CompareController(BaseRepoController):
                 from dulwich.client import SubprocessGitClient
 
                 gitrepo = Repo(org_repo.path)
-                SubprocessGitClient(thin_packs=False).fetch(safe_str(other_repo.path), gitrepo)
+                SubprocessGitClient(thin_packs=False).fetch(other_repo.path, gitrepo)
 
                 gitrepo_remote = Repo(other_repo.path)
-                SubprocessGitClient(thin_packs=False).fetch(safe_str(org_repo.path), gitrepo_remote)
+                SubprocessGitClient(thin_packs=False).fetch(org_repo.path, gitrepo_remote)
 
                 revs = [
                     ascii_str(x.commit.id)

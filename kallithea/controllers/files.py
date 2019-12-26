@@ -46,7 +46,7 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.exceptions import NonRelativePathError
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_str, safe_unicode, str2bool
+from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_unicode, str2bool
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
@@ -232,8 +232,8 @@ class FilesController(BaseRepoController):
         cs = self.__get_cs(revision)
         file_node = self.__get_filenode(cs, f_path)
 
-        response.content_disposition = 'attachment; filename=%s' % \
-            safe_str(f_path.split(Repository.url_sep())[-1])
+        response.content_disposition = \
+            'attachment; filename=%s' % f_path.split(Repository.url_sep())[-1]
 
         response.content_type = file_node.mimetype
         return file_node.content
@@ -277,8 +277,7 @@ class FilesController(BaseRepoController):
                 mimetype, dispo = 'text/plain', 'inline'
 
         if dispo == 'attachment':
-            dispo = 'attachment; filename=%s' % \
-                        safe_str(f_path.split(os.sep)[-1])
+            dispo = 'attachment; filename=%s' % f_path.split(os.sep)[-1]
 
         response.content_disposition = dispo
         response.content_type = mimetype
@@ -508,8 +507,7 @@ class FilesController(BaseRepoController):
 
         from kallithea import CONFIG
         rev_name = cs.raw_id[:12]
-        archive_name = '%s-%s%s' % (safe_str(repo_name.replace('/', '_')),
-                                    safe_str(rev_name), ext)
+        archive_name = '%s-%s%s' % (repo_name.replace('/', '_'), rev_name, ext)
 
         archive_path = None
         cached_archive_path = None

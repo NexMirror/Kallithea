@@ -30,7 +30,7 @@ from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
-from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_bytes, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_bytes, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
 
@@ -317,7 +317,6 @@ class GitRepository(BaseRepository):
         Returns normalized url. If schema is not given, would fall to
         filesystem (``file:///``) schema.
         """
-        url = safe_str(url)
         if url != 'default' and '://' not in url:
             url = ':///'.join(('file', url))
         return url

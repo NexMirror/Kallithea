@@ -40,7 +40,7 @@ from tg.i18n import ugettext as _
 
 import kallithea.config.conf
 from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str
+from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes
 from kallithea.lib.vcs.backends.git.repository import GitRepository
 from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
 from kallithea.lib.vcs.conf import settings
@@ -174,7 +174,7 @@ def get_filesystem_repos(path):
     """
 
     # remove ending slash for better results
-    path = safe_str(path.rstrip(os.sep))
+    path = path.rstrip(os.sep)
     log.debug('now scanning in %s', path)
 
     def isdir(*n):
@@ -269,7 +269,7 @@ def is_valid_repo(repo_name, base_path, scm=None):
     :return True: if given path is a valid repository
     """
     # TODO: paranoid security checks?
-    full_path = os.path.join(safe_str(base_path), safe_str(repo_name))
+    full_path = os.path.join(base_path, repo_name)
 
     try:
         scm_ = get_scm(full_path)
@@ -287,7 +287,7 @@ def is_valid_repo_group(repo_group_name, base_path, skip_path_check=False):
     :param repo_name:
     :param base_path:
     """
-    full_path = os.path.join(safe_str(base_path), safe_str(repo_group_name))
+    full_path = os.path.join(base_path, repo_group_name)
 
     # check if it's not a repo
     if is_valid_repo(repo_group_name, base_path):

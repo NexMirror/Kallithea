@@ -28,7 +28,7 @@ import click
 
 import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.utils import REMOVED_REPO_PAT, repo2db_mapper
-from kallithea.lib.utils2 import ask_ok, safe_str
+from kallithea.lib.utils2 import ask_ok
 from kallithea.model.db import Repository, Ui
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
@@ -127,7 +127,7 @@ def repo_purge_deleted(ask, older_than):
 
     repos_location = Ui.get_repos_location()
     to_remove = []
-    for dn_, dirs, f in os.walk(safe_str(repos_location)):
+    for dn_, dirs, f in os.walk(repos_location):
         alldirs = list(dirs)
         del dirs[:]
         if ('.hg' in alldirs or
@@ -175,9 +175,8 @@ def repo_purge_deleted(ask, older_than):
         remove = True
     else:
         remove = ask_ok('The following repositories will be removed completely:\n%s\n'
-                'Do you want to proceed? [y/n] '
-                % '\n'.join(['%s deleted on %s' % (safe_str(x[0]), safe_str(x[1]))
-                                     for x in to_remove]))
+            'Do you want to proceed? [y/n] ' %
+            '\n'.join('%s deleted on %s' % (path, date_) for path, date_ in to_remove))
 
     if remove:
         for path, date_ in to_remove:

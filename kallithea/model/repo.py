@@ -39,7 +39,7 @@ from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import AttachedForksError
 from kallithea.lib.hooks import log_delete_repository
 from kallithea.lib.utils import is_valid_repo_uri, make_ui
-from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix, safe_str
+from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix
 from kallithea.lib.vcs.backends import get_backend
 from kallithea.model.db import (
     Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
@@ -641,8 +641,7 @@ class RepoModel(object):
             _paths = [repo_store_location]
         else:
             _paths = [self.repos_path, new_parent_path, repo_name]
-            # we need to make it str for mercurial
-        repo_path = os.path.join(*(safe_str(x) for x in _paths))
+        repo_path = os.path.join(*_paths)
 
         # check if this path is not a repository
         if is_valid_repo(repo_path, self.repos_path):
@@ -686,8 +685,8 @@ class RepoModel(object):
         """
         log.info('renaming repo from %s to %s', old, new)
 
-        old_path = safe_str(os.path.join(self.repos_path, old))
-        new_path = safe_str(os.path.join(self.repos_path, new))
+        old_path = os.path.join(self.repos_path, old)
+        new_path = os.path.join(self.repos_path, new)
         if os.path.isdir(new_path):
             raise Exception(
                 'Was trying to rename to already existing dir %s' % new_path
@@ -702,7 +701,7 @@ class RepoModel(object):
 
         :param repo: repo object
         """
-        rm_path = safe_str(os.path.join(self.repos_path, repo.repo_name))
+        rm_path = os.path.join(self.repos_path, repo.repo_name)
         log.info("Removing %s", rm_path)
 
         _now = datetime.now()
@@ -713,6 +712,6 @@ class RepoModel(object):
             args = repo.group.full_path_splitted + [_d]
             _d = os.path.join(*args)
         if os.path.exists(rm_path):
-            shutil.move(rm_path, safe_str(os.path.join(self.repos_path, _d)))
+            shutil.move(rm_path, os.path.join(self.repos_path, _d))
         else:
             log.error("Can't find repo to delete in %r", rm_path)

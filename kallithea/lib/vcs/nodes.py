@@ -16,7 +16,7 @@ import stat
 
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import NodeError, RemovedFileNodeError
-from kallithea.lib.vcs.utils import safe_bytes, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import safe_bytes, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -102,7 +102,7 @@ class Node(object):
         if path.startswith('/'):
             raise NodeError("Cannot initialize Node objects with slash at "
                             "the beginning as only relative paths are supported")
-        self.path = safe_str(path.rstrip('/'))  # we store paths as str
+        self.path = path.rstrip('/')
         if path == '' and kind != NodeKind.DIR:
             raise NodeError("Only DirNode and its subclasses may be "
                             "initialized with empty path")
@@ -592,7 +592,7 @@ class SubModuleNode(Node):
         self.alias = alias
         # we have to use emptyChangeset here since this can point to svn/git/hg
         # submodules we cannot get from repository
-        self.changeset = EmptyChangeset(str(changeset), alias=alias)
+        self.changeset = EmptyChangeset(changeset, alias=alias)
         self.url = url
 
     def __repr__(self):

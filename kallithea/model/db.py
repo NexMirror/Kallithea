@@ -49,7 +49,7 @@ from kallithea.lib import ext_json
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.utils2 import (
-    Optional, ascii_bytes, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_str, safe_unicode, str2bool, urlreadable)
+    Optional, ascii_bytes, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_unicode, str2bool, urlreadable)
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
@@ -1424,7 +1424,7 @@ class Repository(Base, BaseDbModel):
         return _c(rn)
 
     def scm_instance_no_cache(self):
-        repo_full_path = safe_str(self.repo_full_path)
+        repo_full_path = self.repo_full_path
         alias = get_scm(repo_full_path)[0]
         log.debug('Creating instance of %s repository from %s',
                   alias, self.repo_full_path)
@@ -2091,11 +2091,11 @@ class CacheInvalidation(Base, BaseDbModel):
         """
         inv_objs = Session().query(cls).filter(cls.cache_args == repo_name).all()
         log.debug('for repo %s got %s invalidation objects',
-                  safe_str(repo_name), inv_objs)
+                  repo_name, inv_objs)
 
         for inv_obj in inv_objs:
             log.debug('marking %s key for invalidation based on repo_name=%s',
-                      inv_obj, safe_str(repo_name))
+                      inv_obj, repo_name)
             Session().delete(inv_obj)
         Session().commit()
 
@@ -2517,7 +2517,7 @@ class Gist(Base, BaseDbModel):
     def scm_instance(self):
         from kallithea.lib.vcs import get_repo
         base_path = self.base_path()
-        return get_repo(os.path.join(safe_str(base_path), safe_str(self.gist_access_id)))
+        return get_repo(os.path.join(base_path, self.gist_access_id))
 
 
 class UserSshKeys(Base, BaseDbModel):

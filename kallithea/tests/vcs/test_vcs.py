@@ -5,7 +5,6 @@ import pytest
 
 from kallithea.lib.vcs import VCSError, get_backend, get_repo
 from kallithea.lib.vcs.backends.hg import MercurialRepository
-from kallithea.lib.vcs.utils import safe_str
 from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_HG_REPO, TESTS_TMP_PATH
 
 
@@ -22,14 +21,14 @@ class TestVCS(object):
         alias = 'hg'
         path = TEST_HG_REPO
         backend = get_backend(alias)
-        repo = backend(safe_str(path))
+        repo = backend(path)
         assert 'hg' == repo.alias
 
     def test_alias_detect_git(self):
         alias = 'git'
         path = TEST_GIT_REPO
         backend = get_backend(alias)
-        repo = backend(safe_str(path))
+        repo = backend(path)
         assert 'git' == repo.alias
 
     def test_wrong_alias(self):
@@ -41,28 +40,28 @@ class TestVCS(object):
         alias = 'hg'
         path = TEST_HG_REPO
         backend = get_backend(alias)
-        repo = backend(safe_str(path))
+        repo = backend(path)
 
-        assert repo.__class__ == get_repo(safe_str(path), alias).__class__
-        assert repo.path == get_repo(safe_str(path), alias).path
+        assert repo.__class__ == get_repo(path, alias).__class__
+        assert repo.path == get_repo(path, alias).path
 
     def test_get_repo_autoalias_hg(self):
         alias = 'hg'
         path = TEST_HG_REPO
         backend = get_backend(alias)
-        repo = backend(safe_str(path))
+        repo = backend(path)
 
-        assert repo.__class__ == get_repo(safe_str(path)).__class__
-        assert repo.path == get_repo(safe_str(path)).path
+        assert repo.__class__ == get_repo(path).__class__
+        assert repo.path == get_repo(path).path
 
     def test_get_repo_autoalias_git(self):
         alias = 'git'
         path = TEST_GIT_REPO
         backend = get_backend(alias)
-        repo = backend(safe_str(path))
+        repo = backend(path)
 
-        assert repo.__class__ == get_repo(safe_str(path)).__class__
-        assert repo.path == get_repo(safe_str(path)).path
+        assert repo.__class__ == get_repo(path).__class__
+        assert repo.path == get_repo(path).path
 
     def test_get_repo_err(self):
         blank_repo_path = os.path.join(TESTS_TMP_PATH, 'blank-error-repo')

@@ -41,7 +41,6 @@ from kallithea.config.routing import url
 from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
-from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Setting, User
 from kallithea.model.forms import LoginForm, PasswordResetConfirmationForm, PasswordResetRequestForm, RegisterForm
 from kallithea.model.meta import Session
@@ -68,7 +67,7 @@ class LoginController(BaseController):
         return _re.match(came_from) is not None
 
     def index(self):
-        c.came_from = safe_str(request.GET.get('came_from', ''))
+        c.came_from = request.GET.get('came_from', '')
         if c.came_from:
             if not self._validate_came_from(c.came_from):
                 log.error('Invalid came_from (not server-relative): %r', c.came_from)
