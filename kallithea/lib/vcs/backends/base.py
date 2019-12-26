@@ -929,18 +929,18 @@ class BaseInMemoryChangeset(object):
                         "at %s" % (node.path, p))
 
         # Check nodes marked as changed
-        missing = set(self.changed)
-        not_changed = set(self.changed)
+        missing = set(node.path for node in self.changed)
+        not_changed = set(node.path for node in self.changed)
         if self.changed and not parents:
-            raise NodeDoesNotExistError(str(self.changed[0].path))
+            raise NodeDoesNotExistError(self.changed[0].path)
         for p in parents:
             for node in self.changed:
                 try:
                     old = p.get_node(node.path)
-                    missing.remove(node)
+                    missing.remove(node.path)
                     # if content actually changed, remove node from unchanged
                     if old.content != node.content:
-                        not_changed.remove(node)
+                        not_changed.remove(node.path)
                 except NodeDoesNotExistError:
                     pass
         if self.changed and missing:
@@ -949,7 +949,7 @@ class BaseInMemoryChangeset(object):
 
         if self.changed and not_changed:
             raise NodeNotChangedError("Node at %s wasn't actually changed "
-                "since parents' changesets: %s" % (not_changed.pop().path,
+                "since parents' changesets: %s" % (not_changed.pop(),
                     parents)
             )
 
@@ -962,10 +962,10 @@ class BaseInMemoryChangeset(object):
             for node in self.removed:
                 try:
                     p.get_node(node.path)
-                    really_removed.add(node)
+                    really_removed.add(node.path)
                 except ChangesetError:
                     pass
-        not_removed = set(self.removed) - really_removed
+        not_removed = list(set(node.path for node in self.removed) - really_removed)
         if not_removed:
             raise NodeDoesNotExistError("Cannot remove node at %s from "
                 "following parents: %s" % (not_removed[0], parents))
