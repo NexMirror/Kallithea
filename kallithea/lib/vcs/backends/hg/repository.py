@@ -75,7 +75,6 @@ class MercurialRepository(BaseRepository):
             raise VCSError('Mercurial backend requires repository path to '
                            'be instance of <str> got %s instead' %
                            type(repo_path))
-
         self.path = abspath(repo_path)
         self.baseui = baseui or mercurial.ui.ui()
         # We've set path and ui, now we can set _repo itself
@@ -324,11 +323,14 @@ class MercurialRepository(BaseRepository):
         o.addheaders = [('Content-Type', 'application/mercurial-0.1'),
                         ('Accept', 'application/mercurial-0.1')]
 
-        q = {"cmd": 'between'}
-        q.update({'pairs': "%s-%s" % ('0' * 40, '0' * 40)})
-        qs = '?%s' % urllib.urlencode(q)
-        cu = "%s%s" % (test_uri, qs)
-        req = urllib2.Request(cu, None, {})
+        req = urllib2.Request(
+            "%s?%s" % (
+                test_uri,
+                urllib.urlencode({
+                    'cmd': 'between',
+                    'pairs': "%s-%s" % ('0' * 40, '0' * 40),
+                })
+            ))
 
         try:
             resp = o.open(req)
@@ -359,7 +361,6 @@ class MercurialRepository(BaseRepository):
         location at given clone_point. Additionally it'll make update to
         working copy accordingly to ``update_after_clone`` flag
         """
-
         try:
             if src_url:
                 url = safe_bytes(self._get_url(src_url))
@@ -502,9 +503,7 @@ class MercurialRepository(BaseRepository):
         Returns ``MercurialChangeset`` object representing repository's
         changeset at the given ``revision``.
         """
-        revision = self._get_revision(revision)
-        changeset = MercurialChangeset(repository=self, revision=revision)
-        return changeset
+        return MercurialChangeset(repository=self, revision=self._get_revision(revision))
 
     def get_changesets(self, start=None, end=None, start_date=None,
                        end_date=None, branch_name=None, reverse=False, max_revisions=None):

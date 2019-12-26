@@ -157,7 +157,6 @@ class GitRepository(BaseRepository):
         On failures it'll raise urllib2.HTTPError, exception is also thrown
         when the return code is non 200
         """
-
         # check first if it's not an local url
         if os.path.isdir(url) or url.startswith('file:'):
             return True
@@ -188,10 +187,11 @@ class GitRepository(BaseRepository):
         o = urllib2.build_opener(*handlers)
         o.addheaders = [('User-Agent', 'git/1.7.8.0')]  # fake some git
 
-        q = {"service": 'git-upload-pack'}
-        qs = '?%s' % urllib.urlencode(q)
-        cu = "%s%s" % (test_uri, qs)
-        req = urllib2.Request(cu, None, {})
+        req = urllib2.Request(
+            "%s?%s" % (
+                test_uri,
+                urllib.urlencode({"service": 'git-upload-pack'})
+            ))
 
         try:
             resp = o.open(req)
@@ -252,8 +252,8 @@ class GitRepository(BaseRepository):
 
     def _get_all_revisions2(self):
         # alternate implementation using dulwich
-        includes = [ascii_str(x[1][0]) for x in self._parsed_refs.iteritems()
-                    if x[1][1] != b'T']
+        includes = [ascii_str(sha) for key, (sha, type_) in self._parsed_refs.iteritems()
+                    if type_ != b'T']
         return [c.commit.id for c in self._repo.get_walker(include=includes)]
 
     def _get_revision(self, revision):
@@ -368,8 +368,8 @@ class GitRepository(BaseRepository):
         if not self.revisions:
             return {}
         sortkey = lambda ctx: ctx[0]
-        _branches = [(x[0], ascii_str(x[1][0]))
-                     for x in self._parsed_refs.iteritems() if x[1][1] == b'H']
+        _branches = [(key, ascii_str(sha))
+                     for key, (sha, type_) in self._parsed_refs.iteritems() if type_ == b'H']
         return OrderedDict(sorted(_branches, key=sortkey, reverse=False))
 
     @LazyProperty
@@ -385,8 +385,8 @@ class GitRepository(BaseRepository):
             return {}
 
         sortkey = lambda ctx: ctx[0]
-        _tags = [(x[0], ascii_str(x[1][0]))
-                 for x in self._parsed_refs.iteritems() if x[1][1] == b'T']
+        _tags = [(key, ascii_str(sha))
+                 for key, (sha, type_) in self._parsed_refs.iteritems() if type_ == b'T']
         return OrderedDict(sorted(_tags, key=sortkey, reverse=True))
 
     def tag(self, name, user, revision=None, message=None, date=None,
@@ -488,9 +488,7 @@ class GitRepository(BaseRepository):
         """
         if isinstance(revision, GitChangeset):
             return revision
-        revision = self._get_revision(revision)
-        changeset = GitChangeset(repository=self, revision=revision)
-        return changeset
+        return GitChangeset(repository=self, revision=self._get_revision(revision))
 
     def get_changesets(self, start=None, end=None, start_date=None,
            end_date=None, branch_name=None, reverse=False, max_revisions=None):

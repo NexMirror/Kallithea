@@ -98,7 +98,7 @@ class GitChangeset(BaseChangeset):
     @LazyProperty
     def branches(self):
         heads = self.repository._heads(reverse=True)
-        return [b for b in heads if heads[b] == self.raw_id] # FIXME: Inefficient ... and returning None!
+        return [b for b in heads if heads[b] == self._commit.id] # FIXME: Inefficient ... and returning None!
 
     def _fix_path(self, path):
         """
