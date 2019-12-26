@@ -39,8 +39,8 @@ def test_list_valued_setting_update():
         # Assign back setting value.
         setting.app_settings_value = setting.app_settings_value
         # Quirk: value is stringified on write and listified on read.
-        assert setting.app_settings_value == ["[u'spam']"]
+        assert setting.app_settings_value == ["['spam']"]
         setting.app_settings_value = setting.app_settings_value
-        assert setting.app_settings_value == ["[u\"[u'spam']\"]"]
+        assert setting.app_settings_value == ["[\"['spam']\"]"]
     finally:
         Session().delete(setting)
