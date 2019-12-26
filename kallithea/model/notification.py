@@ -177,7 +177,7 @@ class EmailNotificationModel(object):
         try:
             subj = tmpl % kwargs
         except KeyError as e:
-            log.error('error generating email subject for %r from %s: %s', type_, ','.join(self._subj_map.keys()), e)
+            log.error('error generating email subject for %r from %s: %s', type_, ', '.join(self._subj_map), e)
             raise
         # gmail doesn't do proper threading but will ignore leading square
         # bracket content ... so that is where we put status info

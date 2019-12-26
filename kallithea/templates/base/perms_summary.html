@@ -5,7 +5,7 @@
 
 <%def name="perms_summary(permissions, show_all=False, actions=True)">
 <div id="perms">
-     %for section in sorted(permissions.keys()):
+     %for section in sorted(permissions):
         <div class="perms_section_head">
             <h4>${section.replace("_"," ").capitalize()}</h4>
             %if section != 'global':

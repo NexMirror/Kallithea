@@ -331,8 +331,8 @@ class WhooshIndexingDaemon(object):
                     log.debug('>> NOTHING TO COMMIT TO CHANGESET INDEX<<')
 
     def update_file_index(self):
-        log.debug((u'STARTING INCREMENTAL INDEXING UPDATE FOR EXTENSIONS %s '
-                   'AND REPOS %s') % (INDEX_EXTENSIONS, self.repo_paths.keys()))
+        log.debug(u'STARTING INCREMENTAL INDEXING UPDATE FOR EXTENSIONS %s '
+                  'AND REPOS %s', INDEX_EXTENSIONS, ' and '.join(self.repo_paths))
 
         idx = open_dir(self.index_location, indexname=self.indexname)
         # The set of all paths in the index
@@ -432,7 +432,7 @@ class WhooshIndexingDaemon(object):
         file_idx = create_in(self.index_location, SCHEMA, indexname=IDX_NAME)
         file_idx_writer = file_idx.writer()
         log.debug('BUILDING INDEX FOR EXTENSIONS %s '
-                  'AND REPOS %s' % (INDEX_EXTENSIONS, self.repo_paths.keys()))
+                  'AND REPOS %s', INDEX_EXTENSIONS, ' and '.join(self.repo_paths))
 
         for repo_name, repo in sorted(self.repo_paths.items()):
             log.debug('Updating indices for repo %s', repo_name)

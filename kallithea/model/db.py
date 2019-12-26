@@ -74,6 +74,7 @@ class BaseDbModel(object):
     @classmethod
     def _get_keys(cls):
         """return column names for this model """
+        # Note: not a normal dict - iterator gives "users.firstname", but keys gives "firstname"
         return class_mapper(cls).c.keys()
 
     def get_dict(self):

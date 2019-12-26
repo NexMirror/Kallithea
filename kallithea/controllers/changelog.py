@@ -134,11 +134,11 @@ class ChangelogController(BaseRepoController):
 
         c.branch_name = branch_name
         c.branch_filters = [('', _('None'))] + \
-            [(k, k) for k in c.db_repo_scm_instance.branches.keys()]
+            [(k, k) for k in c.db_repo_scm_instance.branches]
         if c.db_repo_scm_instance.closed_branches:
             prefix = _('(closed)') + ' '
             c.branch_filters += [('-', '-')] + \
-                [(k, prefix + k) for k in c.db_repo_scm_instance.closed_branches.keys()]
+                [(k, prefix + k) for k in c.db_repo_scm_instance.closed_branches]
         revs = []
         if not f_path:
             revs = [x.revision for x in c.cs_pagination]
