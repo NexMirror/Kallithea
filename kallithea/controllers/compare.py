@@ -150,13 +150,13 @@ class CompareController(BaseRepoController):
                 gitrepo_remote.close()
 
             else:
-                so, se = org_repo.run_git_command(
+                so = org_repo.run_git_command(
                     ['log', '--reverse', '--pretty=format:%H',
                      '-s', '%s..%s' % (org_rev, other_rev)]
                 )
                 other_changesets = [org_repo.get_changeset(cs)
                               for cs in re.findall(r'[0-9a-fA-F]{40}', so)]
-                so, se = org_repo.run_git_command(
+                so = org_repo.run_git_command(
                     ['merge-base', org_rev, other_rev]
                 )
                 ancestors = [re.findall(r'[0-9a-fA-F]{40}', so)[0]]

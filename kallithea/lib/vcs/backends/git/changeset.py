@@ -194,7 +194,7 @@ class GitChangeset(BaseChangeset):
         Returns list of children changesets.
         """
         rev_filter = settings.GIT_REV_FILTER
-        so, se = self.repository.run_git_command(
+        so = self.repository.run_git_command(
             ['rev-list', rev_filter, '--children']
         )
         return [
@@ -299,7 +299,7 @@ class GitChangeset(BaseChangeset):
         else:
             cmd = ['log',
                    '--pretty=format:%H', '-s', cs_id, '--', f_path]
-        so, se = self.repository.run_git_command(cmd)
+        so = self.repository.run_git_command(cmd)
         ids = re.findall(r'[0-9a-fA-F]{40}', so)
         return [self.repository.get_changeset(sha) for sha in ids]
 
@@ -330,7 +330,7 @@ class GitChangeset(BaseChangeset):
         # -l     ==> outputs long shas (and we need all 40 characters)
         # --root ==> doesn't put '^' character for boundaries
         # -r sha ==> blames for the given revision
-        so, se = self.repository.run_git_command(cmd)
+        so = self.repository.run_git_command(cmd)
 
         for i, blame_line in enumerate(so.split('\n')[:-1]):
             ln_no = i + 1

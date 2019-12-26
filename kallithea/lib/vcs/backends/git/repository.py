@@ -137,13 +137,13 @@ class GitRepository(BaseRepository):
     def run_git_command(self, cmd):
         """
         Runs given ``cmd`` as git command with cwd set to current repo.
-        Returns output bytes in a tuple (stdout, stderr) ... or raise
-        RepositoryError.
+        Returns stdout as unicode str ... or raise RepositoryError.
         """
         cwd = None
         if os.path.isdir(self.path):
             cwd = self.path
-        return self._run_git_command(cmd, cwd=cwd)
+        stdout, _stderr = self._run_git_command(cmd, cwd=cwd)
+        return safe_unicode(stdout)
 
     @classmethod
     def _check_url(cls, url):
@@ -243,7 +243,7 @@ class GitRepository(BaseRepository):
         rev_filter = settings.GIT_REV_FILTER
         cmd = ['rev-list', rev_filter, '--reverse', '--date-order']
         try:
-            so, se = self.run_git_command(cmd)
+            so = self.run_git_command(cmd)
         except RepositoryError:
             # Can be raised for empty repositories
             return []
@@ -538,7 +538,7 @@ class GitRepository(BaseRepository):
         else:
             cmd.append(settings.GIT_REV_FILTER)
 
-        revs = self.run_git_command(cmd)[0].splitlines()
+        revs = self.run_git_command(cmd).splitlines()
         start_pos = 0
         end_pos = len(revs)
         if start:
@@ -674,7 +674,7 @@ class GitRepository(BaseRepository):
         Tries to pull changes from external location.
         """
         url = self._get_url(url)
-        so, se = self.run_git_command(['ls-remote', '-h', url])
+        so = self.run_git_command(['ls-remote', '-h', url])
         cmd = ['fetch', url, '--']
         for line in (x for x in so.splitlines()):
             sha, ref = line.split('\t')

@@ -368,14 +368,14 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
 
                 # build exclude list without the ref
                 cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
-                stdout, stderr = scm_repo.run_git_command(cmd)
+                stdout = scm_repo.run_git_command(cmd)
                 ref = push_ref['ref']
                 heads = [head for head in stdout.splitlines() if head != ref]
                 # now list the git revs while excluding from the list
                 cmd = ['log', push_ref['new_rev'], '--reverse', '--pretty=format:%H']
                 cmd.append('--not')
                 cmd.extend(heads) # empty list is ok
-                stdout, stderr = scm_repo.run_git_command(cmd)
+                stdout = scm_repo.run_git_command(cmd)
                 git_revs += stdout.splitlines()
 
             elif push_ref['new_rev'] == EmptyChangeset().raw_id:
@@ -384,7 +384,7 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
             else:
                 cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,
                        '--reverse', '--pretty=format:%H']
-                stdout, stderr = scm_repo.run_git_command(cmd)
+                stdout = scm_repo.run_git_command(cmd)
                 git_revs += stdout.splitlines()
 
         elif _type == 'tags':
