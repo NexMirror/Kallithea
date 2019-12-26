@@ -197,14 +197,12 @@ class GitChangeset(BaseChangeset):
         so, se = self.repository.run_git_command(
             ['rev-list', rev_filter, '--children']
         )
-
-        children = []
-        pat = re.compile(r'^%s' % self.raw_id)
-        for l in so.splitlines():
-            if pat.match(l):
-                childs = l.split(' ')[1:]
-                children.extend(childs)
-        return [self.repository.get_changeset(cs) for cs in children]
+        return [
+            self.repository.get_changeset(cs)
+            for parts in (l.split(' ') for l in so.splitlines())
+            if parts[0] == self.raw_id
+            for cs in parts[1:]
+        ]
 
     def next(self, branch=None):
         if branch and self.branch != branch:
