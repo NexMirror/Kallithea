@@ -56,4 +56,4 @@ class TestUserGroups(TestController):
 
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         in_groups = user.group_member
-        assert expected == [x.users_group.users_group_name for x in in_groups]
+        assert sorted(expected) == sorted(x.users_group.users_group_name for x in in_groups)
