@@ -509,11 +509,11 @@ class MercurialRepository(BaseRepository):
         :param reversed: return changesets in reversed order
         """
         start_raw_id = self._get_revision(start)
-        start_pos = self.revisions.index(start_raw_id) if start else None
+        start_pos = None if start is None else self.revisions.index(start_raw_id)
         end_raw_id = self._get_revision(end)
-        end_pos = self.revisions.index(end_raw_id) if end else None
+        end_pos = None if end is None else self.revisions.index(end_raw_id)
 
-        if None not in [start, end] and start_pos > end_pos:
+        if start_pos is not None and end_pos is not None and start_pos > end_pos:
             raise RepositoryError("Start revision '%s' cannot be "
                                   "after end revision '%s'" % (start, end))
 
