@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import mimetypes
 import posixpath
 
@@ -119,7 +120,7 @@ class TestFilesController(TestController):
                                     revision='tip',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
-        assert response.body == HG_NODE_HISTORY
+        assert json.loads(response.body) == json.loads(HG_NODE_HISTORY)
 
     def test_file_source_history_git(self):
         self.log_user()
@@ -128,7 +129,7 @@ class TestFilesController(TestController):
                                     revision='master',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
-        assert response.body == GIT_NODE_HISTORY
+        assert json.loads(response.body) == json.loads(GIT_NODE_HISTORY)
 
     def test_file_annotation(self):
         self.log_user()
@@ -158,7 +159,7 @@ class TestFilesController(TestController):
                                     annotate='1'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
-        assert response.body == HG_NODE_HISTORY
+        assert json.loads(response.body) == json.loads(HG_NODE_HISTORY)
 
     def test_file_annotation_history_git(self):
         self.log_user()
@@ -169,7 +170,7 @@ class TestFilesController(TestController):
                                     annotate=True),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
-        assert response.body == GIT_NODE_HISTORY
+        assert json.loads(response.body) == json.loads(GIT_NODE_HISTORY)
 
     def test_file_authors(self):
         self.log_user()
@@ -210,7 +211,7 @@ class TestFilesController(TestController):
                 ('Content-Disposition', 'attachment; filename=%s' % filename),
                 ('Content-Type', info[0]),
             ]
-            assert response.response._headers.items() == heads
+            assert sorted(response.response._headers.items()) == sorted(heads)
 
     def test_archival_wrong_ext(self):
         self.log_user()
