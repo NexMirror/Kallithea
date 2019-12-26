@@ -18,7 +18,7 @@ from kallithea.model.db import Repository
 from kallithea.tests.base import *
 
 
-@pytest.mark.skipif("not os.environ.has_key('TEST_PERFORMANCE')", reason="skipping performance tests, set TEST_PERFORMANCE in environment if desired")
+@pytest.mark.skipif("'TEST_PERFORMANCE' not in os.environ", reason="skipping performance tests, set TEST_PERFORMANCE in environment if desired")
 class TestVCSPerformance(TestController):
 
     def graphmod(self, repo):
