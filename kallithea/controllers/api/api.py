@@ -1160,7 +1160,7 @@ class ApiController(JSONRPCController):
             return _map[ret_type]
         except KeyError:
             raise JSONRPCError('ret_type must be one of %s'
-                               % (','.join(_map.keys())))
+                               % (','.join(sorted(_map))))
         except Exception:
             log.error(traceback.format_exc())
             raise JSONRPCError(

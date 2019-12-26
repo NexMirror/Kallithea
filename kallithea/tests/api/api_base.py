@@ -807,7 +807,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         expected = ('ret_type must be one of %s'
-                    % (','.join(['files', 'dirs', 'all'])))
+                    % (','.join(sorted(['files', 'dirs', 'all']))))
         self._compare_error(id_, expected, given=response.body)
 
     @parametrize('name,ret_type,grant_perm', [
