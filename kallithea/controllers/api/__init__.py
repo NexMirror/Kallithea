@@ -36,10 +36,10 @@ from tg import Response, TGController, request, response
 from webob.exc import HTTPError, HTTPException
 
 from kallithea.lib.auth import AuthUser
-from kallithea.lib.base import _get_access_path
 from kallithea.lib.base import _get_ip_addr as _get_ip
+from kallithea.lib.base import get_path_info
 from kallithea.lib.compat import json
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import User
 
 
@@ -209,7 +209,7 @@ class JSONRPCController(TGController):
 
         log.info('IP: %s Request to %s time: %.3fs' % (
             self._get_ip_addr(environ),
-            safe_unicode(_get_access_path(environ)), time.time() - start)
+            get_path_info(environ), time.time() - start)
         )
 
         state.set_action(self._rpc_call, [])

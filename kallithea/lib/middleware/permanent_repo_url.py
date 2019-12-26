@@ -21,7 +21,7 @@ middleware to handle permanent repo URLs, replacing PATH_INFO '/_123/yada' with
 
 
 from kallithea.lib.utils import fix_repo_id_name
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import safe_str, safe_unicode
 
 
 class PermanentRepoUrl(object):
@@ -31,7 +31,9 @@ class PermanentRepoUrl(object):
         self.config = config
 
     def __call__(self, environ, start_response):
-        path_info = environ['PATH_INFO']
+        # Extract path_info as get_path_info does, but do it explicitly because
+        # we also have to do the reverse operation when patching it back in
+        path_info = safe_unicode(environ['PATH_INFO'])
         if path_info.startswith('/'): # it must
             path_info = '/' + safe_str(fix_repo_id_name(path_info[1:]))
             environ['PATH_INFO'] = path_info

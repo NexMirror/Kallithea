@@ -31,7 +31,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import re
 
-from kallithea.lib.base import BaseVCSController
+from kallithea.lib.base import BaseVCSController, get_path_info
 from kallithea.lib.hooks import log_pull_action
 from kallithea.lib.middleware.pygrack import make_wsgi_app
 from kallithea.lib.utils import make_ui
@@ -57,7 +57,7 @@ class SimpleGit(BaseVCSController):
 
     @classmethod
     def parse_request(cls, environ):
-        path_info = environ.get('PATH_INFO', '')
+        path_info = get_path_info(environ)
         m = GIT_PROTO_PAT.match(path_info)
         if m is None:
             return None

@@ -97,12 +97,13 @@ def _get_ip_addr(environ):
     return _filter_proxy(ip)
 
 
-def _get_access_path(environ):
-    """Return PATH_INFO from environ ... using tg.original_request if available."""
+def get_path_info(environ):
+    """Return unicode PATH_INFO from environ ... using tg.original_request if available.
+    """
     org_req = environ.get('tg.original_request')
     if org_req is not None:
         environ = org_req.environ
-    return environ.get('PATH_INFO')
+    return safe_unicode(environ['PATH_INFO'])
 
 
 def log_in_user(user, remember, is_external_auth, ip_addr):
@@ -526,7 +527,7 @@ class BaseController(TGController):
 
             log.info('IP: %s User: %s accessed %s',
                 request.ip_addr, request.authuser,
-                safe_unicode(_get_access_path(environ)),
+                get_path_info(environ),
             )
             return super(BaseController, self).__call__(environ, context)
         except webob.exc.HTTPException as e:
