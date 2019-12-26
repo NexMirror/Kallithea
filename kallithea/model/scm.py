@@ -162,7 +162,8 @@ class ScmModel(object):
     def repo_scan(self, repos_path=None):
         """
         Listing of repositories in given path. This path should not be a
-        repository itself. Return a dictionary of repository objects
+        repository itself. Return a dictionary of repository objects mapping to
+        vcs instances.
 
         :param repos_path: path to directory containing repositories
         """

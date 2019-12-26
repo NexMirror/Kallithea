@@ -451,14 +451,14 @@ def map_groups(path):
     return group
 
 
-def repo2db_mapper(initial_repo_list, remove_obsolete=False,
+def repo2db_mapper(initial_repo_dict, remove_obsolete=False,
                    install_git_hooks=False, user=None, overwrite_git_hooks=False):
     """
-    maps all repos given in initial_repo_list, non existing repositories
+    maps all repos given in initial_repo_dict, non existing repositories
     are created, if remove_obsolete is True it also check for db entries
-    that are not in initial_repo_list and removes them.
+    that are not in initial_repo_dict and removes them.
 
-    :param initial_repo_list: list of repositories found by scanning methods
+    :param initial_repo_dict: mapping with repositories found by scanning methods
     :param remove_obsolete: check for obsolete entries in database
     :param install_git_hooks: if this is True, also check and install git hook
         for a repo if missing
@@ -479,7 +479,7 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
     enable_downloads = defs.get('repo_enable_downloads')
     private = defs.get('repo_private')
 
-    for name, repo in initial_repo_list.items():
+    for name, repo in initial_repo_dict.items():
         group = map_groups(name)
         unicode_name = safe_unicode(name)
         db_repo = repo_model.get_by_repo_name(unicode_name)
@@ -518,9 +518,9 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
     removed = []
     # remove from database those repositories that are not in the filesystem
-    unicode_initial_repo_list = set(safe_unicode(name) for name in initial_repo_list)
+    unicode_initial_repo_names = set(safe_unicode(name) for name in initial_repo_dict)
     for repo in sa.query(Repository).all():
-        if repo.repo_name not in unicode_initial_repo_list:
+        if repo.repo_name not in unicode_initial_repo_names:
             if remove_obsolete:
                 log.debug("Removing non-existing repository found in db `%s`",
                           repo.repo_name)
