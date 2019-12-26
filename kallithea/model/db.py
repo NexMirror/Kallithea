@@ -48,7 +48,8 @@ import kallithea
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import DefaultUserException
-from kallithea.lib.utils2 import Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_int, safe_str, safe_unicode, str2bool, urlreadable
+from kallithea.lib.utils2 import (
+    Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_str, safe_unicode, str2bool, urlreadable)
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
@@ -63,7 +64,8 @@ log = logging.getLogger(__name__)
 # BASE CLASSES
 #==============================================================================
 
-_hash_key = lambda k: hashlib.md5(safe_str(k)).hexdigest()
+def _hash_key(k):
+    return hashlib.md5(safe_bytes(k)).hexdigest()
 
 
 class BaseDbModel(object):
@@ -183,7 +185,7 @@ class Setting(Base, BaseDbModel):
     )
 
     SETTINGS_TYPES = {
-        'str': safe_str,
+        'str': safe_bytes,
         'int': safe_int,
         'unicode': safe_unicode,
         'bool': str2bool,

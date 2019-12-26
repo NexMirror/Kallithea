@@ -347,7 +347,7 @@ class MercurialRepository(BaseRepository):
 
         try:
             if src_url:
-                url = safe_str(self._get_url(src_url))
+                url = safe_bytes(self._get_url(src_url))
                 opts = {}
                 if not update_after_clone:
                     opts.update({'noupdate': True})
@@ -521,7 +521,7 @@ class MercurialRepository(BaseRepository):
         # filter branches
         filter_ = []
         if branch_name:
-            filter_.append(b'branch("%s")' % safe_str(branch_name))
+            filter_.append(b'branch("%s")' % safe_bytes(branch_name))
         if start_date:
             filter_.append(b'date(">%s")' % start_date)
         if end_date:

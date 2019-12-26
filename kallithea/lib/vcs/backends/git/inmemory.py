@@ -7,7 +7,7 @@ from dulwich import objects
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils import ascii_str, safe_bytes, safe_str
+from kallithea.lib.vcs.utils import ascii_str, safe_bytes
 
 
 class GitInMemoryChangeset(BaseInMemoryChangeset):
@@ -47,7 +47,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         for node in self.added + self.changed:
             # Compute subdirs if needed
             dirpath, nodename = posixpath.split(node.path)
-            dirnames = safe_str(dirpath).split(b'/') if dirpath else []
+            dirnames = safe_bytes(dirpath).split(b'/') if dirpath else []
             parent = commit_tree
             ancestors = [('', parent)]
 
@@ -126,9 +126,9 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         commit = objects.Commit()
         commit.tree = commit_tree.id
         commit.parents = [p._commit.id for p in self.parents if p]
-        commit.author = commit.committer = safe_str(author)
+        commit.author = commit.committer = safe_bytes(author)
         commit.encoding = ENCODING
-        commit.message = safe_str(message)
+        commit.message = safe_bytes(message)
 
         # Compute date
         if date is None:

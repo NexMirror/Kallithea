@@ -48,7 +48,7 @@ from kallithea.lib.markup_renderer import url_re
 from kallithea.lib.pygmentsutils import get_custom_lexer
 from kallithea.lib.utils2 import MENTIONS_REGEX, AttributeDict
 from kallithea.lib.utils2 import age as _age
-from kallithea.lib.utils2 import credentials_filter, safe_int, safe_str, safe_unicode, str2bool, time_to_datetime
+from kallithea.lib.utils2 import credentials_filter, safe_bytes, safe_int, safe_unicode, str2bool, time_to_datetime
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 #==============================================================================
@@ -199,7 +199,7 @@ def FID(raw_id, path):
     :param path:
     """
 
-    return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_str(path)).hexdigest()[:12])
+    return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_bytes(path)).hexdigest()[:12])
 
 
 class _FilesBreadCrumbs(object):
@@ -938,7 +938,7 @@ def gravatar_url(email_address, size=30, default=''):
     parsed_url = urlparse.urlparse(url.current(qualified=True))
     url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL) \
                .replace('{email}', email_address) \
-               .replace('{md5email}', hashlib.md5(safe_str(email_address).lower()).hexdigest()) \
+               .replace('{md5email}', hashlib.md5(safe_bytes(email_address).lower()).hexdigest()) \
                .replace('{netloc}', parsed_url.netloc) \
                .replace('{scheme}', parsed_url.scheme) \
                .replace('{size}', str(size))
