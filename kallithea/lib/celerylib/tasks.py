@@ -124,7 +124,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
         log.debug('starting parsing %s', parse_limit)
 
-        last_rev = last_rev + 1 if last_rev >= 0 else 0
+        last_rev = last_rev + 1 if last_rev and last_rev >= 0 else 0
         log.debug('Getting revisions from %s to %s',
              last_rev, last_rev + parse_limit
         )
@@ -142,8 +142,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                 except ValueError:
                     time_pos = None
 
-                if time_pos >= 0 and time_pos is not None:
-
+                if time_pos is not None and time_pos >= 0:
                     datadict = \
                         co_day_auth_aggr[akc(cs.author)]['data'][time_pos]
 
