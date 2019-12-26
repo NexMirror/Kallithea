@@ -11,7 +11,7 @@ from kallithea.lib.vcs.utils import ascii_str, safe_bytes
 class MercurialInMemoryChangeset(BaseInMemoryChangeset):
 
     def commit(self, message, author, parents=None, branch=None, date=None,
-            **kwargs):
+               **kwargs):
         """
         Performs in-memory commit (doesn't check workdir in any way) and
         returns newly created ``Changeset``. Updates repository's
@@ -40,11 +40,12 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             branch = MercurialRepository.DEFAULT_BRANCH_NAME
         kwargs[b'branch'] = branch
 
-        def filectxfn(_repo, memctx, path):
+        def filectxfn(_repo, memctx, bytes_path):
             """
-            Marks given path as added/changed/removed in a given _repo. This is
-            for internal mercurial commit function.
+            Callback from Mercurial, returning ctx to commit for the given
+            path.
             """
+            path = bytes_path  # will be different for py3
 
             # check if this path is removed
             if path in (node.path for node in self.removed):
@@ -53,7 +54,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             # check if this path is added
             for node in self.added:
                 if node.path == path:
-                    return mercurial.context.memfilectx(_repo, memctx, path=node.path,
+                    return mercurial.context.memfilectx(_repo, memctx, path=bytes_path,
                         data=node.content,
                         islink=False,
                         isexec=node.is_executable,
@@ -62,13 +63,13 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             # or changed
             for node in self.changed:
                 if node.path == path:
-                    return mercurial.context.memfilectx(_repo, memctx, path=node.path,
+                    return mercurial.context.memfilectx(_repo, memctx, path=bytes_path,
                         data=node.content,
                         islink=False,
                         isexec=node.is_executable,
                         copysource=False)
 
-            raise RepositoryError("Given path haven't been marked as added,"
+            raise RepositoryError("Given path haven't been marked as added, "
                                   "changed or removed (%s)" % path)
 
         parents = [None, None]
