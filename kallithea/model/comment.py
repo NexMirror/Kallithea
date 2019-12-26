@@ -31,7 +31,7 @@ from collections import defaultdict
 from tg.i18n import ugettext as _
 
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
+from kallithea.lib.utils2 import extract_mentioned_users
 from kallithea.model.db import ChangesetComment, PullRequest, Repository, User
 from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel
@@ -81,11 +81,10 @@ class ChangesetCommentsModel(object):
                 repo_name=repo.repo_name,
                 revision=revision,
                 anchor='comment-%s' % comment.comment_id)
-            subj = safe_unicode(
-                h.link_to('Re changeset: %(desc)s %(line)s' %
+            subj = h.link_to(
+                'Re changeset: %(desc)s %(line)s' %
                           {'desc': desc, 'line': line},
-                          comment_url)
-            )
+                 comment_url)
             # get the current participants of this changeset
             recipients = _list_changeset_commenters(revision)
             # add changeset author if it's known locally
@@ -127,13 +126,12 @@ class ChangesetCommentsModel(object):
                                                           h.canonical_hostname()))
             comment_url = pull_request.url(canonical=True,
                 anchor='comment-%s' % comment.comment_id)
-            subj = safe_unicode(
-                h.link_to('Re pull request %(pr_nice_id)s: %(desc)s %(line)s' %
+            subj = h.link_to(
+                'Re pull request %(pr_nice_id)s: %(desc)s %(line)s' %
                           {'desc': desc,
                            'pr_nice_id': comment.pull_request.nice_id(),
                            'line': line},
-                          comment_url)
-            )
+                comment_url)
             # get the current participants of this pull request
             recipients = _list_pull_request_commenters(pull_request)
             recipients.append(pull_request.owner)

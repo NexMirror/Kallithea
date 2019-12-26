@@ -2,7 +2,7 @@
 
 import urllib.parse
 
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Repository, User
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -161,7 +161,7 @@ class _BaseTestCase(base.TestController):
         response.mustcontain(
             """<a href="/%s">%s</a>""" % (urllib.parse.quote(fork_name), fork_name)
         )
-        fork_repo = Repository.get_by_repo_name(safe_unicode(fork_name))
+        fork_repo = Repository.get_by_repo_name(fork_name)
         assert fork_repo
 
         # fork the fork

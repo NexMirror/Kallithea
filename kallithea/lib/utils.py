@@ -40,7 +40,7 @@ from tg.i18n import ugettext as _
 
 import kallithea.config.conf
 from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str
 from kallithea.lib.vcs.backends.git.repository import GitRepository
 from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
 from kallithea.lib.vcs.conf import settings
@@ -150,7 +150,7 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
     user_log = UserLog()
     user_log.user_id = user_obj.user_id
     user_log.username = user_obj.username
-    user_log.action = safe_unicode(action)
+    user_log.action = action
 
     user_log.repository = repo_obj
     user_log.repository_name = repo_name
@@ -160,7 +160,7 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
     meta.Session().add(user_log)
 
     log.info('Logging action:%s on %s by user:%s ip:%s',
-             action, safe_unicode(repo), user_obj, ipaddr)
+             action, repo, user_obj, ipaddr)
     if commit:
         meta.Session().commit()
 
@@ -480,8 +480,7 @@ def repo2db_mapper(initial_repo_dict, remove_obsolete=False,
 
     for name, repo in initial_repo_dict.items():
         group = map_groups(name)
-        unicode_name = safe_unicode(name)
-        db_repo = repo_model.get_by_repo_name(unicode_name)
+        db_repo = repo_model.get_by_repo_name(name)
         # found repo that is on filesystem not in Kallithea database
         if not db_repo:
             log.info('repository %s not found, creating now', name)
@@ -517,9 +516,8 @@ def repo2db_mapper(initial_repo_dict, remove_obsolete=False,
 
     removed = []
     # remove from database those repositories that are not in the filesystem
-    unicode_initial_repo_names = set(safe_unicode(name) for name in initial_repo_dict)
     for repo in sa.query(Repository).all():
-        if repo.repo_name not in unicode_initial_repo_names:
+        if repo.repo_name not in initial_repo_dict:
             if remove_obsolete:
                 log.debug("Removing non-existing repository found in db `%s`",
                           repo.repo_name)

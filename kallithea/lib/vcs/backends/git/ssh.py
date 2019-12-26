@@ -18,7 +18,7 @@ import os
 from kallithea.lib.hooks import log_pull_action
 from kallithea.lib.utils import make_ui
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
-from kallithea.lib.vcs.utils import safe_str, safe_unicode
+from kallithea.lib.vcs.utils import safe_str
 
 
 log = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ class GitSshHandler(BaseSshHandler):
             ssh_command_parts[0] in ['git-upload-pack', 'git-receive-pack'] and
             ssh_command_parts[1].startswith('/')
         ):
-            return cls(safe_unicode(ssh_command_parts[1][1:]), ssh_command_parts[0])
+            return cls(ssh_command_parts[1][1:], ssh_command_parts[0])
 
         return None
 

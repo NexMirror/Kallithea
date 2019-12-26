@@ -76,10 +76,10 @@
               <div class="panel panel-default">
                 <div id="${h.FID('G', file.path)}" class="panel-heading clearfix">
                     <div class="pull-left">
-                      <b>${h.safe_unicode(file.path)}</b>
+                      <b>${file.path}</b>
                     </div>
                     <div class="pull-right">
-                      ${h.link_to(_('Show as raw'),h.url('formatted_gist_file', gist_id=c.gist.gist_access_id, format='raw', revision=file.changeset.raw_id, f_path=h.safe_unicode(file.path)),class_="btn btn-default btn-xs")}
+                      ${h.link_to(_('Show as raw'),h.url('formatted_gist_file', gist_id=c.gist.gist_access_id, format='raw', revision=file.changeset.raw_id, f_path=file.path),class_="btn btn-default btn-xs")}
                     </div>
                 </div>
                 <div class="panel-body no-padding">

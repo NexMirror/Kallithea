@@ -10,7 +10,6 @@ import pytest
 from kallithea.lib.vcs.exceptions import (
     EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError, NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError)
 from kallithea.lib.vcs.nodes import DirNode, FileNode
-from kallithea.lib.vcs.utils import safe_unicode
 from kallithea.tests.vcs.base import _BackendTestMixin
 
 
@@ -169,13 +168,11 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
         # Change node's content
         node = FileNode('żółwik/zwierzątko', content='My **changed** content')
         self.imc.change(node)
-        self.imc.commit(u'Changed %s' % safe_unicode(node.path),
-                        u'joe.doe@example.com')
+        self.imc.commit(u'Changed %s' % node.path, u'joe.doe@example.com')
 
         node = FileNode(u'żółwik/zwierzątko_uni', content=u'My **changed** content')
         self.imc.change(node)
-        self.imc.commit(u'Changed %s' % safe_unicode(node.path),
-                        u'joe.doe@example.com')
+        self.imc.commit(u'Changed %s' % node.path, u'joe.doe@example.com')
 
         newtip = self.repo.get_changeset()
         assert tip != newtip

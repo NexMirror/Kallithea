@@ -41,7 +41,7 @@ from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, Ha
 from kallithea.lib.exceptions import IMCCommitError, NonRelativePathError
 from kallithea.lib.hooks import process_pushed_raw_ids
 from kallithea.lib.utils import action_logger, get_filesystem_repos, make_ui
-from kallithea.lib.utils2 import safe_bytes, safe_str, safe_unicode, set_hook_environment
+from kallithea.lib.utils2 import safe_bytes, safe_str, set_hook_environment
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
@@ -401,10 +401,6 @@ class ScmModel(object):
         # in any other case this will throw exceptions and deny commit
         content = safe_str(content)
         path = safe_str(f_path)
-        # message and author needs to be unicode
-        # proper backend should then translate that into required type
-        message = safe_unicode(message)
-        author = safe_unicode(author)
         imc = IMC(repo)
         imc.change(FileNode(path, content, mode=cs.get_file_mode(f_path)))
         try:
@@ -491,9 +487,10 @@ class ScmModel(object):
                 content = content.read()
             processed_nodes.append((f_path, content))
 
-        message = safe_unicode(message)
+        message = message
         committer = user.full_contact
-        author = safe_unicode(author) if author else committer
+        if not author:
+            author = committer
 
         IMC = self._get_IMC_module(scm_instance.alias)
         imc = IMC(scm_instance)
@@ -534,9 +531,10 @@ class ScmModel(object):
         user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
-        message = safe_unicode(message)
+        message = message
         committer = user.full_contact
-        author = safe_unicode(author) if author else committer
+        if not author:
+            author = committer
 
         imc_class = self._get_IMC_module(scm_instance.alias)
         imc = imc_class(scm_instance)
@@ -614,9 +612,10 @@ class ScmModel(object):
             content = nodes[f_path].get('content')
             processed_nodes.append((f_path, content))
 
-        message = safe_unicode(message)
+        message = message
         committer = user.full_contact
-        author = safe_unicode(author) if author else committer
+        if not author:
+            author = committer
 
         IMC = self._get_IMC_module(scm_instance.alias)
         imc = IMC(scm_instance)

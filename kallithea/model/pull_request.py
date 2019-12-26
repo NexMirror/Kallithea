@@ -33,7 +33,7 @@ from tg import request
 from tg.i18n import ugettext as _
 
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import ascii_bytes, extract_mentioned_users, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, extract_mentioned_users
 from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, User
 from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel
@@ -68,14 +68,12 @@ class PullRequestModel(object):
         threading = ['%s-pr-%s@%s' % (pr.other_repo.repo_name,
                                       pr.pull_request_id,
                                       h.canonical_hostname())]
-        subject = safe_unicode(
-            h.link_to(
-              _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') %
+        subject = h.link_to(
+            _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') %
                 {'user': user.username,
                  'pr_title': pr.title,
                  'pr_nice_id': pr.nice_id()},
-                pr_url)
-            )
+            pr_url)
         body = pr.description
         _org_ref_type, org_ref_name, _org_rev = pr.org_ref.split(':')
         _other_ref_type, other_ref_name, _other_rev = pr.other_ref.split(':')

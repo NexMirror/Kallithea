@@ -40,7 +40,7 @@ from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoGroupPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.utils2 import safe_int, safe_unicode
+from kallithea.lib.utils2 import safe_int
 from kallithea.model.db import RepoGroup, Repository
 from kallithea.model.forms import RepoGroupForm, RepoGroupPermsForm
 from kallithea.model.meta import Session
@@ -116,7 +116,7 @@ class RepoGroupsController(BaseController):
         )
 
         for repo_gr in group_iter:
-            children_groups = [safe_unicode(g.name) for g in repo_gr.parents] + [safe_unicode(repo_gr.name)]
+            children_groups = [g.name for g in repo_gr.parents] + [repo_gr.name]
             repo_count = repo_gr.repositories.count()
             repo_groups_data.append({
                 "raw_name": repo_gr.group_name,

@@ -7,7 +7,7 @@ import mock
 import pytest
 
 from kallithea.lib import vcs
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Permission, RepoGroup, Repository, Ui, User, UserRepoToPerm
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -396,9 +396,7 @@ class _BaseTestCase(base.TestController):
         self.log_user()
         non_ascii = "ąęł"
         repo_name = "%s%s" % (safe_str(self.NEW_REPO), non_ascii)
-        repo_name_unicode = safe_unicode(repo_name)
         description = 'description for newly created repo' + non_ascii
-        description_unicode = safe_unicode(description)
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -410,13 +408,13 @@ class _BaseTestCase(base.TestController):
         assert response.json == {u'result': True}
         self.checkSessionFlash(response,
                                u'Created repository <a href="/%s">%s</a>'
-                               % (urllib.parse.quote(repo_name), repo_name_unicode))
+                               % (urllib.parse.quote(repo_name), repo_name))
         # test if the repo was created in the database
         new_repo = Session().query(Repository) \
-            .filter(Repository.repo_name == repo_name_unicode).one()
+            .filter(Repository.repo_name == repo_name).one()
 
-        assert new_repo.repo_name == repo_name_unicode
-        assert new_repo.description == description_unicode
+        assert new_repo.repo_name == repo_name
+        assert new_repo.description == description
 
         # test if the repository is visible in the list ?
         response = self.app.get(base.url('summary_home', repo_name=repo_name))
@@ -425,22 +423,22 @@ class _BaseTestCase(base.TestController):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)))
+            vcs.get_repo(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name))
         except vcs.exceptions.VCSError:
             pytest.fail('no repo %s in filesystem' % repo_name)
 
         response = self.app.post(base.url('delete_repo', repo_name=repo_name),
             params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
-        self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name_unicode))
+        self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name))
         response.follow()
 
         # check if repo was deleted from db
         deleted_repo = Session().query(Repository) \
-            .filter(Repository.repo_name == repo_name_unicode).scalar()
+            .filter(Repository.repo_name == repo_name).scalar()
 
         assert deleted_repo is None
 
-        assert os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)) == False
+        assert os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)) == False
 
     def test_delete_repo_with_group(self):
         # TODO:

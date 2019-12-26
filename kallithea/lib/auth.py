@@ -42,7 +42,7 @@ from kallithea import __platform__, is_unix, is_windows
 from kallithea.config.routing import url
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
-from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.model.db import (
     Permission, RepoGroup, Repository, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
@@ -817,10 +817,6 @@ class HasPermissionAnyMiddleware(object):
         self.required_perms = set(perms)
 
     def __call__(self, authuser, repo_name, purpose=None):
-        # repo_name MUST be unicode, since we handle keys in ok
-        # dict by unicode
-        repo_name = safe_unicode(repo_name)
-
         try:
             ok = authuser.permissions['repositories'][repo_name] in self.required_perms
         except KeyError:

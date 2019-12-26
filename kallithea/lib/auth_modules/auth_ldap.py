@@ -31,7 +31,7 @@ import logging
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import hybrid_property
 from kallithea.lib.exceptions import LdapConnectionError, LdapImportError, LdapPasswordError, LdapUsernameError
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_str
 
 
 log = logging.getLogger(__name__)
@@ -338,8 +338,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
             user_data = {
                 'username': username,
-                'firstname': safe_unicode(get_ldap_attr('attr_firstname') or firstname),
-                'lastname': safe_unicode(get_ldap_attr('attr_lastname') or lastname),
+                'firstname': get_ldap_attr('attr_firstname') or firstname,
+                'lastname': get_ldap_attr('attr_lastname') or lastname,
                 'groups': [],
                 'email': get_ldap_attr('attr_email') or email,
                 'admin': admin,

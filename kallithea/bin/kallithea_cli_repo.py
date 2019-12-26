@@ -28,7 +28,7 @@ import click
 
 import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.utils import REMOVED_REPO_PAT, repo2db_mapper
-from kallithea.lib.utils2 import ask_ok, safe_str, safe_unicode
+from kallithea.lib.utils2 import ask_ok, safe_str
 from kallithea.model.db import Repository, Ui
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
@@ -74,7 +74,7 @@ def repo_update_metadata(repositories):
     if not repositories:
         repo_list = Repository.query().all()
     else:
-        repo_names = [safe_unicode(n.strip()) for n in repositories]
+        repo_names = [n.strip() for n in repositories]
         repo_list = list(Repository.query()
                         .filter(Repository.repo_name.in_(repo_names)))
 

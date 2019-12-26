@@ -3,7 +3,6 @@ import datetime
 import os
 from os.path import dirname
 
-from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import UserLog
 from kallithea.model.meta import Session
 from kallithea.tests import base
@@ -35,7 +34,6 @@ class TestAdminController(base.TestController):
             for row in csv.DictReader(f):
                 ul = UserLog()
                 for k, v in row.items():
-                    v = safe_unicode(v)
                     if k == 'action_date':
                         v = strptime(v)
                     if k in ['user_id', 'repository_id']:

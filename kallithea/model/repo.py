@@ -39,7 +39,7 @@ from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import AttachedForksError
 from kallithea.lib.hooks import log_delete_repository
 from kallithea.lib.utils import is_valid_repo_uri, make_ui
-from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix, safe_str, safe_unicode
+from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix, safe_str
 from kallithea.lib.vcs.backends import get_backend
 from kallithea.model.db import (
     Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
@@ -337,8 +337,8 @@ class RepoModel(object):
         fork_of = Repository.guess_instance(fork_of)
         repo_group = RepoGroup.guess_instance(repo_group)
         try:
-            repo_name = safe_unicode(repo_name)
-            description = safe_unicode(description)
+            repo_name = repo_name
+            description = description
             # repo name is just a name of repository
             # while repo_name_full is a full qualified name that is combined
             # with name and path of group
@@ -653,7 +653,7 @@ class RepoModel(object):
             raise Exception('This path %s is a valid group' % repo_path)
 
         log.info('creating repo %s in %s from url: `%s`',
-            repo_name, safe_unicode(repo_path),
+            repo_name, repo_path,
             obfuscate_url_pw(clone_uri))
 
         backend = get_backend(repo_type)
@@ -674,7 +674,7 @@ class RepoModel(object):
             raise Exception('Not supported repo_type %s expected hg/git' % repo_type)
 
         log.debug('Created repo %s with %s backend',
-                  safe_unicode(repo_name), safe_unicode(repo_type))
+                  repo_name, repo_type)
         return repo
 
     def _rename_filesystem_repo(self, old, new):

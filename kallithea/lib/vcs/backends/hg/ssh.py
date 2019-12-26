@@ -19,7 +19,7 @@ import mercurial.wireprotoserver
 
 from kallithea.lib.utils import make_ui
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
-from kallithea.lib.vcs.utils import safe_bytes, safe_unicode
+from kallithea.lib.vcs.utils import safe_bytes
 
 
 log = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class MercurialSshHandler(BaseSshHandler):
         >>> MercurialSshHandler.make(shlex.split('git-upload-pack "/foo"')) # not handled here
         """
         if ssh_command_parts[:2] == ['hg', '-R'] and ssh_command_parts[3:] == ['serve', '--stdio']:
-            return cls(safe_unicode(ssh_command_parts[2]))
+            return cls(ssh_command_parts[2])
 
         return None
 

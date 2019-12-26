@@ -34,7 +34,7 @@ import mercurial.scmutil
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import action_logger, make_ui
-from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes, safe_str, safe_unicode
+from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.model.db import Repository, User
 
@@ -312,7 +312,6 @@ def _hook_environment(repo_path):
     #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
     kallithea.config.middleware.make_app(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
 
-    repo_path = safe_unicode(repo_path)
     # fix if it's not a bare repo
     if repo_path.endswith(os.sep + '.git'):
         repo_path = repo_path[:-5]

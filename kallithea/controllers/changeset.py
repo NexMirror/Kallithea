@@ -257,7 +257,7 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
     Session().commit()
 
     data = {
-       'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
+       'target_id': h.safeid(request.POST.get('f_path')),
     }
     if comment is not None:
         c.comment = comment

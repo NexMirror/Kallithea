@@ -77,8 +77,7 @@ class WhooshIndexingDaemon(object):
 
         # filter repo list
         if repo_list:
-            # Fix non-ascii repo names to unicode
-            repo_list = set(safe_unicode(repo_name) for repo_name in repo_list)
+            repo_list = set(repo_list)
             self.filtered_repo_paths = {}
             for repo_name, repo in self.repo_paths.items():
                 if repo_name in repo_list:
@@ -110,7 +109,7 @@ class WhooshIndexingDaemon(object):
             self.initial = False
 
     def _get_index_revision(self, repo):
-        db_repo = Repository.get_by_repo_name(safe_unicode(repo.name))
+        db_repo = Repository.get_by_repo_name(repo.name)
         landing_rev = 'tip'
         if db_repo:
             _rev_type, _rev = db_repo.landing_rev
@@ -197,13 +196,12 @@ class WhooshIndexingDaemon(object):
             u_content = u''
             indexed += 1
 
-        p = safe_unicode(path)
         writer.add_document(
-            fileid=p,
-            owner=unicode(repo.contact),
-            repository_rawname=safe_unicode(repo_name),
-            repository=safe_unicode(repo_name),
-            path=p,
+            fileid=path,
+            owner=repo.contact,
+            repository_rawname=repo_name,
+            repository=repo_name,
+            path=path,
             content=u_content,
             modtime=self.get_node_mtime(node),
             extension=node.extension
@@ -238,18 +236,18 @@ class WhooshIndexingDaemon(object):
             indexed += 1
             log.debug('    >> %s %s/%s', cs, indexed, total)
             writer.add_document(
-                raw_id=unicode(cs.raw_id),
-                owner=unicode(repo.contact),
+                raw_id=cs.raw_id,
+                owner=repo.contact,
                 date=cs._timestamp,
-                repository_rawname=safe_unicode(repo_name),
-                repository=safe_unicode(repo_name),
+                repository_rawname=repo_name,
+                repository=repo_name,
                 author=cs.author,
                 message=cs.message,
                 last=cs.last,
-                added=u' '.join([safe_unicode(node.path) for node in cs.added]).lower(),
-                removed=u' '.join([safe_unicode(node.path) for node in cs.removed]).lower(),
-                changed=u' '.join([safe_unicode(node.path) for node in cs.changed]).lower(),
-                parents=u' '.join([cs.raw_id for cs in cs.parents]),
+                added=u' '.join(node.path for node in cs.added).lower(),
+                removed=u' '.join(node.path for node in cs.removed).lower(),
+                changed=u' '.join(node.path for node in cs.changed).lower(),
+                parents=u' '.join(cs.raw_id for cs in cs.parents),
             )
 
         return indexed
@@ -391,9 +389,7 @@ class WhooshIndexingDaemon(object):
                 ri_cnt = 0   # indexed
                 riwc_cnt = 0  # indexed with content
                 for path in self.get_paths(repo):
-                    path = safe_unicode(path)
                     if path in to_index or path not in indexed_paths:
-
                         # This is either a file that's changed, or a new file
                         # that wasn't indexed before. So index it!
                         i, iwc = self.add_doc(writer, path, repo, repo_name)

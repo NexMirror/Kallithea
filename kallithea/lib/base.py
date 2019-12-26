@@ -553,7 +553,7 @@ class BaseRepoController(BaseController):
                 return
 
             log.debug('Found repository in database %s with state `%s`',
-                      safe_unicode(_dbr), safe_unicode(_dbr.repo_state))
+                      _dbr, _dbr.repo_state)
             route = getattr(request.environ.get('routes.route'), 'name', '')
 
             # allow to delete repos that are somehow damages in filesystem

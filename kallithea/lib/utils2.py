@@ -322,19 +322,19 @@ def credentials_filter(uri):
 
 def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None):
     parsed_url = urlobject.URLObject(prefix_url)
-    prefix = safe_unicode(urllib.parse.unquote(parsed_url.path.rstrip('/')))
+    prefix = urllib.parse.unquote(parsed_url.path.rstrip('/'))
     try:
         system_user = pwd.getpwuid(os.getuid()).pw_name
     except Exception: # TODO: support all systems - especially Windows
         system_user = 'kallithea' # hardcoded default value ...
     args = {
         'scheme': parsed_url.scheme,
-        'user': safe_unicode(urllib.parse.quote(safe_str(username or ''))),
+        'user': urllib.parse.quote(safe_str(username or '')),
         'netloc': parsed_url.netloc + prefix,  # like "hostname:port/prefix" (with optional ":port" and "/prefix")
         'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,
         'repoid': str(repo_id),
-        'system_user': safe_unicode(system_user),
+        'system_user': system_user,
         'hostname': parsed_url.hostname,
     }
     url = re.sub('{([^{}]+)}', lambda m: args.get(m.group(1), m.group(0)), clone_uri_tmpl)
@@ -344,7 +344,7 @@ def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None)
     if not url_obj.username:
         url_obj = url_obj.with_username(None)
 
-    return safe_unicode(url_obj)
+    return str(url_obj)
 
 
 def get_changeset_safe(repo, rev):

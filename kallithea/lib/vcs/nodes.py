@@ -126,7 +126,7 @@ class Node(object):
         Returns name of the node so if its path
         then only last part is returned.
         """
-        return safe_unicode(self.path.rstrip('/').split('/')[-1])
+        return self.path.rstrip('/').split('/')[-1]
 
     def _get_kind(self):
         return self._kind
@@ -605,5 +605,5 @@ class SubModuleNode(Node):
         Returns name of the node so if its path
         then only last part is returned.
         """
-        org = safe_unicode(self.path.rstrip('/').split('/')[-1])
+        org = self.path.rstrip('/').rsplit('/', 1)[-1]
         return u'%s @ %s' % (org, self.changeset.short_id)

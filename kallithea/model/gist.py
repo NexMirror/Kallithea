@@ -33,7 +33,7 @@ import time
 import traceback
 
 from kallithea.lib import ext_json
-from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_unicode, time_to_datetime
+from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, time_to_datetime
 from kallithea.model.db import Gist, Session, User
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
@@ -120,7 +120,7 @@ class GistModel(object):
         gist.gist_access_id = gist_access_id
         gist.owner_id = owner.user_id
         gist.gist_expires = gist_expires
-        gist.gist_type = safe_unicode(gist_type)
+        gist.gist_type = gist_type
         Session().add(gist)
         Session().flush() # make database assign gist.gist_id
         if gist_type == Gist.GIST_PUBLIC:

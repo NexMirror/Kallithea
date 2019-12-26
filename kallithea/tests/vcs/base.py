@@ -79,8 +79,8 @@ class _BackendTestMixin(object):
             for node in commit.get('removed', []):
                 cls.imc.remove(FileNode(node.path))
 
-            cls.tip = cls.imc.commit(message=unicode(commit['message']),
-                                     author=unicode(commit['author']),
+            cls.tip = cls.imc.commit(message=commit['message'],
+                                     author=commit['author'],
                                      date=commit['date'])
 
     @pytest.fixture(autouse=True)

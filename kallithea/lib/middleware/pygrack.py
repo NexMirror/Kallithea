@@ -33,7 +33,7 @@ import traceback
 from webob import Request, Response, exc
 
 import kallithea
-from kallithea.lib.utils2 import ascii_bytes, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes
 from kallithea.lib.vcs import subprocessio
 
 
@@ -87,7 +87,6 @@ class GitRepository(object):
 
         :param path:
         """
-        path = safe_unicode(path)
         assert path.startswith('/' + self.repo_name + '/')
         return path[len(self.repo_name) + 2:].strip('/')
 

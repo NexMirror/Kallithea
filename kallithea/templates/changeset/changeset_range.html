@@ -56,7 +56,7 @@ ${self.repo_context_bar('changelog')}
                             <div class="cs_${op} clearfix">
                                 <span class="node">
                                     <i class="icon-diff-${op}"></i>
-                                    ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                                    ${h.link_to(path, '#%s' % fid)}
                                 </span>
                                 <div class="changes">${h.fancy_file_stats(stats)}</div>
                             </div>

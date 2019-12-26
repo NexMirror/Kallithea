@@ -38,7 +38,7 @@ from tg.i18n import ugettext as _
 
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import DefaultUserException, UserOwnsReposException
-from kallithea.lib.utils2 import generate_api_key, get_current_authuser, safe_unicode
+from kallithea.lib.utils2 import generate_api_key, get_current_authuser
 from kallithea.model.db import Permission, User, UserEmailMap, UserIpMap, UserToPerm
 from kallithea.model.meta import Session
 
@@ -142,10 +142,8 @@ class UserModel(object):
             new_user.admin = admin
             new_user.email = email
             new_user.active = active
-            new_user.extern_name = safe_unicode(extern_name) \
-                if extern_name else None
-            new_user.extern_type = safe_unicode(extern_type) \
-                if extern_type else None
+            new_user.extern_name = extern_name
+            new_user.extern_type = extern_type
             new_user.name = firstname
             new_user.lastname = lastname
 

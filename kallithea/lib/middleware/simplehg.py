@@ -36,7 +36,7 @@ import mercurial.hgweb
 
 from kallithea.lib.base import BaseVCSController, get_path_info
 from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_bytes, safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_bytes, safe_str
 
 
 log = logging.getLogger(__name__)
@@ -105,7 +105,7 @@ class SimpleHg(BaseVCSController):
             return None
 
         class parsed_request(object):
-            repo_name = safe_unicode(path_info[1:].rstrip('/'))
+            repo_name = path_info[1:].rstrip('/')
 
             query_string = environ['QUERY_STRING']
 

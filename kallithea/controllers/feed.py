@@ -96,7 +96,7 @@ class FeedController(BaseRepoController):
             desc_msg.append('\n\n')
             desc_msg.append(safe_unicode(raw_diff))
         desc_msg.append('</pre>')
-        return [safe_unicode(chunk) for chunk in desc_msg]
+        return desc_msg
 
     def _feed(self, repo_name, feeder):
         """Produce a simple feed"""

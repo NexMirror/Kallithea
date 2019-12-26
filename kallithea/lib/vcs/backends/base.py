@@ -15,7 +15,7 @@ import itertools
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
     ChangesetError, EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError, NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError, RepositoryError)
-from kallithea.lib.vcs.utils import author_email, author_name, safe_unicode
+from kallithea.lib.vcs.utils import author_email, author_name
 from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
@@ -376,9 +376,9 @@ class BaseChangeset(object):
                 message=self.message,
                 date=self.date,
                 author=self.author,
-                added=[safe_unicode(el.path) for el in self.added],
-                changed=[safe_unicode(el.path) for el in self.changed],
-                removed=[safe_unicode(el.path) for el in self.removed],
+                added=[el.path for el in self.added],
+                changed=[el.path for el in self.changed],
+                removed=[el.path for el in self.removed],
             )
         else:
             return dict(
@@ -643,9 +643,9 @@ class BaseChangeset(object):
         data = get_dict_for_attrs(self, ['raw_id', 'short_id',
             'revision', 'date', 'message'])
         data['author'] = {'name': self.author_name, 'email': self.author_email}
-        data['added'] = [safe_unicode(node.path) for node in self.added]
-        data['changed'] = [safe_unicode(node.path) for node in self.changed]
-        data['removed'] = [safe_unicode(node.path) for node in self.removed]
+        data['added'] = [node.path for node in self.added]
+        data['changed'] = [node.path for node in self.changed]
+        data['removed'] = [node.path for node in self.removed]
         return data
 
     @LazyProperty

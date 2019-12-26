@@ -328,9 +328,9 @@ class Setting(Base, BaseDbModel):
         info = {
             'modules': sorted(mods, key=lambda k: k[0].lower()),
             'py_version': platform.python_version(),
-            'platform': safe_unicode(platform.platform()),
+            'platform': platform.platform(),
             'kallithea_version': kallithea.__version__,
-            'git_version': safe_unicode(check_git_version()),
+            'git_version': str(check_git_version()),
             'git_path': kallithea.CONFIG.get('git_path')
         }
         return info
@@ -1162,7 +1162,7 @@ class Repository(Base, BaseDbModel):
         # names in the database, but that eventually needs to be converted
         # into a valid system path
         p += self.repo_name.split(Repository.url_sep())
-        return os.path.join(*(safe_unicode(d) for d in p))
+        return os.path.join(*p)
 
     @property
     def cache_keys(self):
@@ -2282,7 +2282,7 @@ class PullRequest(Base, BaseDbModel):
 
     @revisions.setter
     def revisions(self, val):
-        self._revisions = safe_unicode(':'.join(val))
+        self._revisions = ':'.join(val)
 
     @property
     def org_ref_parts(self):
