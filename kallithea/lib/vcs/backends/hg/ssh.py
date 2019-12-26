@@ -18,8 +18,8 @@ from mercurial import hg
 from mercurial.wireprotoserver import sshserver
 
 from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
+from kallithea.lib.vcs.utils import safe_str, safe_unicode
 
 
 log = logging.getLogger(__name__)

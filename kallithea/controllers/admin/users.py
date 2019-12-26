@@ -36,7 +36,6 @@ from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPNotFound
 
-import kallithea
 from kallithea.config.routing import url
 from kallithea.lib import auth_modules
 from kallithea.lib import helpers as h

@@ -29,7 +29,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 import functools
 import os
-import sys
 
 #==============================================================================
 # Hybrid property/method

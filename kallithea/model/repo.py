@@ -119,7 +119,6 @@ class RepoModel(object):
 
     @classmethod
     def _render_datatable(cls, tmpl, *args, **kwargs):
-        import kallithea
         from tg import tmpl_context as c, request, app_globals
         from tg.i18n import ugettext as _
 

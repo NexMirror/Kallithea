@@ -24,7 +24,8 @@ import logging
 import sys
 
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
-from kallithea.lib.utils2 import safe_str, set_hook_environment
+from kallithea.lib.utils2 import set_hook_environment
+from kallithea.lib.vcs.utils import safe_str
 from kallithea.model.db import Repository, User, UserSshKeys
 from kallithea.model.meta import Session
 

@@ -30,7 +30,6 @@ import logging
 
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import formatted_json, hybrid_property
-from kallithea.model.db import User
 
 
 log = logging.getLogger(__name__)

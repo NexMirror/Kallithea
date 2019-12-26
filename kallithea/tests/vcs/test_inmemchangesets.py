@@ -7,7 +7,6 @@ import datetime
 
 import pytest
 
-from kallithea.lib import vcs
 from kallithea.lib.vcs.exceptions import (
     EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError, NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError)
 from kallithea.lib.vcs.nodes import DirNode, FileNode
