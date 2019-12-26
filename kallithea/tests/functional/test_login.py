@@ -160,12 +160,11 @@ class TestLoginController(TestController):
 
     # verify that get arguments are correctly passed along login redirection
 
-    @parametrize('args,args_encoded', [
-        ({'foo':'one', 'bar':'two'}, (('foo', 'one'), ('bar', 'two'))),
-        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
-             (('blue', u'blå'.encode('utf-8')), ('green', u'grøn'.encode('utf-8')))),
+    @parametrize('args', [
+        {'foo':'one', 'bar':'two'},
+        {'blue': u'blå', 'green': u'grøn'},
     ])
-    def test_redirection_to_login_form_preserves_get_args(self, args, args_encoded):
+    def test_redirection_to_login_form_preserves_get_args(self, args):
         with fixture.anon_access(False):
             response = self.app.get(url(controller='summary', action='index',
                                         repo_name=HG_REPO,
@@ -173,8 +172,7 @@ class TestLoginController(TestController):
             assert response.status == '302 Found'
             came_from = urlparse.parse_qs(urlparse.urlparse(response.location).query)['came_from'][0]
             came_from_qs = urlparse.parse_qsl(urlparse.urlparse(came_from).query)
-            for encoded in args_encoded:
-                assert encoded in came_from_qs
+            assert sorted(came_from_qs) == sorted((k, v.encode('utf-8')) for k, v in args.items())
 
     @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
