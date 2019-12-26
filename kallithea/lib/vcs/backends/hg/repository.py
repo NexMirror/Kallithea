@@ -428,7 +428,7 @@ class MercurialRepository(BaseRepository):
 
         if revision in [-1, None]:
             revision = b'tip'
-        elif isinstance(revision, unicode):
+        elif isinstance(revision, str):
             revision = safe_bytes(revision)
 
         try:

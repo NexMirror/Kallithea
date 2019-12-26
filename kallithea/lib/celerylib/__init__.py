@@ -95,7 +95,7 @@ def __get_lockkey(func, *fargs, **fkwargs):
     func_name = str(func.__name__) if hasattr(func, '__name__') else str(func)
 
     lockkey = 'task_%s.lock' % \
-        md5(safe_bytes(func_name + '-' + '-'.join(unicode(x) for x in params))).hexdigest()
+        md5(safe_bytes(func_name + '-' + '-'.join(str(x) for x in params))).hexdigest()
     return lockkey
 
 

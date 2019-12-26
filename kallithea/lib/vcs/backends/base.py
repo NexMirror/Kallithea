@@ -342,10 +342,10 @@ class BaseChangeset(object):
             combined list of ``Node`` objects
 
         ``author``
-            author of the changeset, as unicode
+            author of the changeset, as str
 
         ``message``
-            message of the changeset, as unicode
+            message of the changeset, as str
 
         ``parents``
             list of parent changesets

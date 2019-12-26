@@ -535,13 +535,13 @@ class TestMercurialChangeset(object):
         # but it would be one of ``removed`` (changeset's attribute)
         assert path in [rf.path for rf in chset.removed]
 
-    def test_commit_message_is_unicode(self):
+    def test_commit_message_is_str(self):
         for cm in self.repo:
-            assert isinstance(cm.message, unicode)
+            assert isinstance(cm.message, str)
 
-    def test_changeset_author_is_unicode(self):
+    def test_changeset_author_is_str(self):
         for cm in self.repo:
-            assert isinstance(cm.author, unicode)
+            assert isinstance(cm.author, str)
 
     def test_repo_files_content_is_bytes(self):
         test_changeset = self.repo.get_changeset(100)

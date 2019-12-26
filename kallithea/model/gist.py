@@ -125,7 +125,7 @@ class GistModel(object):
         Session().flush() # make database assign gist.gist_id
         if gist_type == Gist.GIST_PUBLIC:
             # use DB ID for easy to use GIST ID
-            gist.gist_access_id = unicode(gist.gist_id)
+            gist.gist_access_id = str(gist.gist_id)
 
         log.debug('Creating new %s GIST repo %s', gist_type, gist.gist_access_id)
         repo = RepoModel()._create_filesystem_repo(

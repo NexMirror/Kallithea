@@ -460,11 +460,11 @@ def flash(message, category, logf=None):
     assert category in ('error', 'success', 'warning'), category
     if hasattr(message, '__html__'):
         # render to HTML for storing in cookie
-        safe_message = unicode(message)
+        safe_message = str(message)
     else:
         # Apply str - the message might be an exception with __str__
         # Escape, so we can trust the result without further escaping, without any risk of injection
-        safe_message = html_escape(unicode(message))
+        safe_message = html_escape(str(message))
     if logf is None:
         logf = log.info
         if category == 'success':

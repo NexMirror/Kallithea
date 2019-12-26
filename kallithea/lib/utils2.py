@@ -179,8 +179,8 @@ def age(prevdate, show_short_version=False, now=None):
 
     :param prevdate: datetime object
     :param show_short_version: if it should approximate the date and return a shorter string
-    :rtype: unicode
-    :returns: unicode words describing age
+    :rtype: str
+    :returns: str words describing age
     """
     now = now or datetime.datetime.now()
     order = ['year', 'month', 'day', 'hour', 'minute', 'second']
@@ -278,7 +278,7 @@ def uri_filter(uri):
     Removes user:password from given url string
 
     :param uri:
-    :rtype: unicode
+    :rtype: str
     :returns: filtered list of strings
     """
     if not uri:

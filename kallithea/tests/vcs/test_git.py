@@ -588,13 +588,13 @@ class TestGitChangeset(object):
             'vcs/nodes.py']
         assert set(changed) == set([f.path for f in chset.changed])
 
-    def test_commit_message_is_unicode(self):
+    def test_commit_message_is_str(self):
         for cs in self.repo:
-            assert isinstance(cs.message, unicode)
+            assert isinstance(cs.message, str)
 
-    def test_changeset_author_is_unicode(self):
+    def test_changeset_author_is_str(self):
         for cs in self.repo:
-            assert isinstance(cs.author, unicode)
+            assert isinstance(cs.author, str)
 
     def test_repo_files_content_is_bytes(self):
         changeset = self.repo.get_changeset()

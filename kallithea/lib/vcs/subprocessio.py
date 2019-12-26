@@ -286,7 +286,7 @@ class SubprocessIOChunker(object):
 
     - We are multithreaded. Writing in and reading out, err are all sep threads.
     - We support concurrent (in and out) stream processing.
-    - The output is not a stream. It's a queue of read string (bytes, not unicode)
+    - The output is not a stream. It's a queue of read string (bytes, not str)
       chunks. The object behaves as an iterable. You can "for chunk in obj:" us.
     - We are non-blocking in more respects than communicate()
       (reading from subprocess out pauses when internal buffer is full, but

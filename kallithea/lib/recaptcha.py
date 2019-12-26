@@ -26,7 +26,7 @@ def submit(g_recaptcha_response, private_key, remoteip):
         return RecaptchaResponse(is_valid=False, error_code='incorrect-captcha-sol')
 
     def encode_if_necessary(s):
-        if isinstance(s, unicode):
+        if isinstance(s, str):
             return s.encode('utf-8')
         return s
 
