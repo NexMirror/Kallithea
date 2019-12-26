@@ -113,7 +113,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
                 except KeyError:
                     break
             # Cut down the blob and all rotten trees on the way back...
-            for path, tree in reversed(zip(paths, trees)):
+            for path, tree in reversed(list(zip(paths, trees))):
                 del tree[path]
                 if tree:
                     # This tree still has elements - don't remove it or any
