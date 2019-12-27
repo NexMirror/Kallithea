@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This module provides some useful tools for ``vcs`` like annotate/diff html
 output. It also includes some internal helpers.
@@ -119,6 +121,60 @@ def safe_bytes(s):
 
 
 safe_str = safe_bytes  # safe_str is deprecated - it will be redefined when changing to py3
+
+
+def ascii_bytes(s):
+    """
+    Simple conversion from unicode/str to bytes, *assuming* all codepoints are
+    7-bit and it thus is pure ASCII.
+    Will fail badly with UnicodeError on invalid input.
+    This should be used where enocding and "safe" ambiguity should be avoided.
+    Where strings already have been encoded in other ways but still are unicode
+    string - for example to hex, base64, json, urlencoding, or are known to be
+    identifiers.
+
+    >>> ascii_bytes('a')
+    'a'
+    >>> ascii_bytes(u'a')
+    'a'
+    >>> ascii_bytes('å')
+    Traceback (most recent call last):
+    UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 0: ordinal not in range(128)
+    >>> ascii_bytes(u'å')
+    Traceback (most recent call last):
+    UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+    """
+    assert isinstance(s, (unicode, str)), repr(s)
+    return s.encode('ascii')
+
+
+def ascii_str(s):
+    r"""
+    Simple conversion from bytes to str, *assuming* all codepoints are
+    7-bit and it thus is pure ASCII.
+    Will fail badly with UnicodeError on invalid input.
+    This should be used where enocding and "safe" ambiguity should be avoided.
+    Where strings are encoded but also in other ways are known to be ASCII, and
+    where a unicode string is wanted without caring about encoding. For example
+    to hex, base64, urlencoding, or are known to be identifiers.
+
+    >>> ascii_str('a')
+    'a'
+    >>> ascii_str(u'a')
+    Traceback (most recent call last):
+    AssertionError: u'a'
+    >>> ascii_str('å')
+    Traceback (most recent call last):
+    UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 0: ordinal not in range(128)
+    >>> ascii_str(u'å')
+    Traceback (most recent call last):
+    AssertionError: u'\xc3\xa5'
+    """
+    assert isinstance(s, bytes), repr(s)
+    # Note: we use "encode", even though we really *should* use "decode". But
+    # we are in py2 and don't want py2, and encode is doing what we need for the
+    # ascii subset.
+    return s.encode('ascii')
 
 
 # Regex taken from http://www.regular-expressions.info/email.html
