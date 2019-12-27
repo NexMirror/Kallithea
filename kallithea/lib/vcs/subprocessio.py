@@ -377,8 +377,7 @@ class SubprocessIOChunker(object):
                 bg_out = iter([out])
                 _p = None
             elif err:
-                raise EnvironmentError(
-                    "Subprocess exited due to an error:\n" + err)
+                raise EnvironmentError("Subprocess exited due to an error: %s" % err)
             else:
                 raise EnvironmentError(
                     "Subprocess exited with non 0 ret code: %s" % returncode)

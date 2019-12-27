@@ -376,7 +376,6 @@ def set_app_settings(config):
     :param config:
     """
     hgsettings = Setting.get_app_settings()
-
     for k, v in hgsettings.items():
         config[k] = v
 

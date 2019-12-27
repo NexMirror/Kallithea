@@ -214,7 +214,7 @@ class GitRepository(BaseRepository):
         gitdata = resp.read()
         if 'service=git-upload-pack' not in gitdata:
             raise urllib2.URLError(
-                "url [%s] does not look like an git" % (cleaned_uri))
+                "url [%s] does not look like an git" % cleaned_uri)
 
         return True
 

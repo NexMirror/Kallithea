@@ -154,12 +154,10 @@ def safe_int(val, default=None):
     :param val:
     :param default:
     """
-
     try:
         val = int(val)
     except (ValueError, TypeError):
         val = default
-
     return val
 
 

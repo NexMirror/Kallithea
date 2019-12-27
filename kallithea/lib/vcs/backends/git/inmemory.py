@@ -184,8 +184,8 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
                         return obj
                     else:
                         raise RepositoryError("Cannot create directory %s "
-                        "at tree %s as path is occupied and is not a "
-                        "Tree" % (dirname, tree))
+                            "at tree %s as path is occupied and is not a "
+                            "Tree" % (dirname, tree))
             return None
 
         trees = []
