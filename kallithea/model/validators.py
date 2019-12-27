@@ -235,7 +235,7 @@ def ValidPassword():
 
         def _validate_python(self, value, state):
             try:
-                (value or '').decode('ascii')
+                (value or '').encode('ascii')
             except UnicodeError:
                 msg = self.message('invalid_password', state)
                 raise formencode.Invalid(msg, value, state,)
