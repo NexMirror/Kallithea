@@ -2400,7 +2400,7 @@ class ApiController(JSONRPCController):
             pull_request=pull_request.pull_request_id,
             f_path=None,
             line_no=None,
-            status_change=(ChangesetStatus.get_status_lbl(status)),
+            status_change=ChangesetStatus.get_status_lbl(status),
             closing_pr=close_pr
         )
         action_logger(apiuser,

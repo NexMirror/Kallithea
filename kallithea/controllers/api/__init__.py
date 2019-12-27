@@ -240,7 +240,7 @@ class JSONRPCController(TGController):
         try:
             return json.dumps(response)
         except TypeError as e:
-            log.error('API FAILED. Error encoding response: %s', e)
+            log.error('API FAILED. Error encoding response for %s %s: %s\n%s', action, rpc_args, e, traceback.format_exc())
             return json.dumps(
                 dict(
                     id=self._req_id,
