@@ -447,7 +447,9 @@ class GitRepository(BaseRepository):
         return self._get_parsed_refs()
 
     def _get_parsed_refs(self):
-        # cache the property
+        """Return refs as a dict, like:
+        { b'v0.2.0': [b'599ba911aa24d2981225f3966eb659dfae9e9f30', b'T'] }
+        """
         _repo = self._repo
         refs = _repo.get_refs()
         keys = [(b'refs/heads/', b'H'),

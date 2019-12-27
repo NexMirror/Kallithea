@@ -65,7 +65,7 @@ def _get_scm_size(alias, root_path):
 
 
 def repo_size(ui, repo, hooktype=None, **kwargs):
-    """Presents size of repository after push"""
+    """Show size of Mercurial repository, to be called after push."""
     size_hg_f, size_root_f, size_total_f = _get_scm_size('.hg', repo.root)
 
     last_cs = repo[len(repo) - 1]

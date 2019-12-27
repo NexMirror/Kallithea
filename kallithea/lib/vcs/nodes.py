@@ -589,6 +589,7 @@ class SubModuleNode(Node):
     size = 0
 
     def __init__(self, name, url, changeset=None, alias=None):
+        # Note: Doesn't call Node.__init__!
         self.path = name
         self.kind = NodeKind.SUBMODULE
         self.alias = alias
