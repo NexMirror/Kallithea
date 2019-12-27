@@ -734,12 +734,11 @@ class ScmModel(object):
                 log.debug('hook exists, checking if it is from kallithea')
                 with open(_hook_file, 'rb') as f:
                     data = f.read()
-                    matches = re.compile(r'(?:%s)\s*=\s*(.*)'
-                                         % 'KALLITHEA_HOOK_VER').search(data)
+                    matches = re.search(br'^KALLITHEA_HOOK_VER\s*=\s*(.*)$', data, flags=re.MULTILINE)
                     if matches:
                         try:
                             ver = matches.groups()[0]
-                            log.debug('got %s it is kallithea', ver)
+                            log.debug('Found Kallithea hook - it has KALLITHEA_HOOK_VER %r', ver)
                             has_hook = True
                         except Exception:
                             log.error(traceback.format_exc())
