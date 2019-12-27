@@ -45,9 +45,6 @@ class NodeGeneratorBase(object):
         self.cs = cs
         self.current_paths = current_paths
 
-    def __call__(self):
-        return [n for n in self]
-
     def __getitem__(self, key):
         assert isinstance(key, slice), key
         for p in self.current_paths[key]:
