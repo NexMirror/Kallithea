@@ -25,7 +25,7 @@ def _get_meta_var(name, data, callback_handler=None):
 
         return callback_handler(eval(matches.groups()[0]))
 
-_meta = open(os.path.join(here, 'kallithea', '__init__.py'), 'rb')
+_meta = open(os.path.join(here, 'kallithea', '__init__.py'), 'r')
 _metadata = _meta.read()
 _meta.close()
 

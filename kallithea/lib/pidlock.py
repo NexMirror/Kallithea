@@ -137,6 +137,6 @@ class DaemonLock(object):
         dir_, file_ = os.path.split(pidfile)
         if not os.path.isdir(dir_):
             os.makedirs(dir_)
-        with open(self.pidfile, 'wb') as f:
+        with open(self.pidfile, 'w') as f:
             f.write(lockname)
         self.held = True

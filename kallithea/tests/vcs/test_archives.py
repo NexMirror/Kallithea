@@ -51,7 +51,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
 
         for x in xrange(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            assert open(os.path.join(outdir, 'repo/' + node_path)).read() == self.tip.get_node(node_path).content
+            assert open(os.path.join(outdir, 'repo/' + node_path), 'rb').read() == self.tip.get_node(node_path).content
 
     def test_archive_tbz2(self):
         path = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_tbz2-')[1]
@@ -64,7 +64,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
 
         for x in xrange(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            assert open(os.path.join(outdir, 'repo/' + node_path)).read() == self.tip.get_node(node_path).content
+            assert open(os.path.join(outdir, 'repo/' + node_path), 'rb').read() == self.tip.get_node(node_path).content
 
     def test_archive_default_stream(self):
         tmppath = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_default_stream-')[1]
