@@ -40,7 +40,7 @@ from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
 from kallithea.lib.middleware.wrapper import RequestWrapper
 from kallithea.lib.utils import check_git_version, load_rcextensions, make_ui, set_app_settings, set_indexer_config, set_vcs_config
-from kallithea.lib.utils2 import str2bool
+from kallithea.lib.utils2 import safe_str, str2bool
 
 
 log = logging.getLogger(__name__)
@@ -163,7 +163,7 @@ def setup_configuration(app):
 
     load_rcextensions(root_path=config['here'])
 
-    repos_path = make_ui().configitems(b'paths')[0][1]
+    repos_path = safe_str(make_ui().configitems(b'paths')[0][1])
     config['base_path'] = repos_path
     set_app_settings(config)
 

@@ -172,7 +172,7 @@ class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
         (authmeth, auth) = authorization.split(' ', 1)
         if 'basic' != authmeth.lower():
             return self.build_authentication(environ)
-        auth = base64.b64decode(auth.strip())
+        auth = safe_str(base64.b64decode(auth.strip()))
         _parts = auth.split(':', 1)
         if len(_parts) == 2:
             username, password = _parts

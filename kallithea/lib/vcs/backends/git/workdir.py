@@ -1,6 +1,6 @@
 import re
 
-from kallithea.lib.utils2 import ascii_str
+from kallithea.lib.utils2 import ascii_str, safe_str
 from kallithea.lib.vcs.backends.base import BaseWorkdir
 from kallithea.lib.vcs.exceptions import BranchDoesNotExistError, RepositoryError
 
@@ -10,7 +10,7 @@ class GitWorkdir(BaseWorkdir):
     def get_branch(self):
         headpath = self.repository._repo.refs.refpath(b'HEAD')
         try:
-            content = open(headpath).read()
+            content = safe_str(open(headpath, 'rb').read())
             match = re.match(r'^ref: refs/heads/(?P<branch>.+)\n$', content)
             if match:
                 return match.groupdict()['branch']

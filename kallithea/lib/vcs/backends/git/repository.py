@@ -359,7 +359,7 @@ class GitRepository(BaseRepository):
         if not self.revisions:
             return {}
         sortkey = lambda ctx: ctx[0]
-        _branches = [(key, ascii_str(sha))
+        _branches = [(safe_str(key), ascii_str(sha))
                      for key, (sha, type_) in self._parsed_refs.items() if type_ == b'H']
         return OrderedDict(sorted(_branches, key=sortkey, reverse=False))
 
@@ -376,7 +376,7 @@ class GitRepository(BaseRepository):
             return {}
 
         sortkey = lambda ctx: ctx[0]
-        _tags = [(key, ascii_str(sha))
+        _tags = [(safe_str(key), ascii_str(sha))
                  for key, (sha, type_) in self._parsed_refs.items() if type_ == b'T']
         return OrderedDict(sorted(_tags, key=sortkey, reverse=True))
 
@@ -418,7 +418,7 @@ class GitRepository(BaseRepository):
         if name not in self.tags:
             raise TagDoesNotExistError("Tag %s does not exist" % name)
         # self._repo.refs is a DiskRefsContainer, and .path gives the full absolute path of '.git'
-        tagpath = os.path.join(self._repo.refs.path, 'refs', 'tags', name)
+        tagpath = os.path.join(safe_str(self._repo.refs.path), 'refs', 'tags', name)
         try:
             os.remove(tagpath)
             self._parsed_refs = self._get_parsed_refs()
@@ -712,9 +712,10 @@ class GitRepository(BaseRepository):
 
         for config in gen_configs():
             try:
-                return config.get(section, name)
+                value = config.get(section, name)
             except KeyError:
                 continue
+            return None if value is None else safe_str(value)
         return None
 
     def get_user_name(self, config_file=None):

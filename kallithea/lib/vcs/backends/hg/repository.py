@@ -480,7 +480,7 @@ class MercurialRepository(BaseRepository):
             if name in allowed or self._repo.ui.configbool(b"web",
                                                            b"allow" + name,
                                                            untrusted=True):
-                yield {"type": name, "extension": ext, "node": archive_name}
+                yield {"type": safe_str(name), "extension": ext, "node": archive_name}
 
     def _get_url(self, url):
         """
@@ -589,7 +589,8 @@ class MercurialRepository(BaseRepository):
             config = mercurial.ui.ui()
             for path in config_file:
                 config.readconfig(safe_bytes(path))
-        return config.config(safe_bytes(section), safe_bytes(name))
+        value = config.config(safe_bytes(section), safe_bytes(name))
+        return value if value is None else safe_str(value)
 
     def get_user_name(self, config_file=None):
         """

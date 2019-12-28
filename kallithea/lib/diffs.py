@@ -538,10 +538,10 @@ def _get_header(vcs, diff_chunk):
         match = _hg_header_re.match(diff_chunk)
     if match is None:
         raise Exception('diff not recognized as valid %s diff' % vcs)
-    meta_info = match.groupdict()
+    meta_info = {k: None if v is None else safe_str(v) for k, v in match.groupdict().items()}
     rest = diff_chunk[match.end():]
     if rest and _header_next_check.match(rest):
-        raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, diff_chunk[:match.end()], rest[:1000]))
+        raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, safe_str(bytes(diff_chunk[:match.end()])), safe_str(bytes(rest[:1000]))))
     diff_lines = (_escaper(m.group(0)) for m in re.finditer(br'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
     return meta_info, diff_lines
 

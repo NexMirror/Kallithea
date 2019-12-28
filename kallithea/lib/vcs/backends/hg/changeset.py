@@ -121,7 +121,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def _file_paths(self):
-        return list(self._ctx)
+        return list(safe_str(f) for f in self._ctx)
 
     @LazyProperty
     def _dir_paths(self):
@@ -386,21 +386,21 @@ class MercurialChangeset(BaseChangeset):
         """
         Returns list of added ``FileNode`` objects.
         """
-        return AddedFileNodesGenerator([n for n in self.status.added], self)
+        return AddedFileNodesGenerator([safe_str(n) for n in self.status.added], self)
 
     @property
     def changed(self):
         """
         Returns list of modified ``FileNode`` objects.
         """
-        return ChangedFileNodesGenerator([n for n in self.status.modified], self)
+        return ChangedFileNodesGenerator([safe_str(n) for n in self.status.modified], self)
 
     @property
     def removed(self):
         """
         Returns list of removed ``FileNode`` objects.
         """
-        return RemovedFileNodesGenerator([n for n in self.status.removed], self)
+        return RemovedFileNodesGenerator([safe_str(n) for n in self.status.removed], self)
 
     @LazyProperty
     def extra(self):

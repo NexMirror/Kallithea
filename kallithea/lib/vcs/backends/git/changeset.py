@@ -96,7 +96,7 @@ class GitChangeset(BaseChangeset):
     @LazyProperty
     def branches(self):
         heads = self.repository._heads(reverse=True)
-        return [b for b in heads if heads[b] == self._commit.id] # FIXME: Inefficient ... and returning None!
+        return [safe_str(b) for b in heads if heads[b] == self._commit.id] # FIXME: Inefficient ... and returning None!
 
     def _fix_path(self, path):
         """
@@ -122,10 +122,9 @@ class GitChangeset(BaseChangeset):
 
             # initially extract things from root dir
             for item, stat, id in tree.items():
+                name = safe_str(item)
                 if curdir:
-                    name = '/'.join((curdir, item))
-                else:
-                    name = item
+                    name = '/'.join((curdir, name))
                 self._paths[name] = id
                 self._stat_modes[name] = stat
 
@@ -136,7 +135,8 @@ class GitChangeset(BaseChangeset):
                     curdir = dir
                 dir_id = None
                 for item, stat, id in tree.items():
-                    if dir == item:
+                    name = safe_str(item)
+                    if dir == name:
                         dir_id = id
                 if dir_id:
                     # Update tree
@@ -148,10 +148,9 @@ class GitChangeset(BaseChangeset):
 
                 # cache all items from the given traversed tree
                 for item, stat, id in tree.items():
+                    name = safe_str(item)
                     if curdir:
-                        name = '/'.join((curdir, item))
-                    else:
-                        name = item
+                        name = '/'.join((curdir, name))
                     self._paths[name] = id
                     self._stat_modes[name] = stat
             if path not in self._paths:
@@ -404,10 +403,9 @@ class GitChangeset(BaseChangeset):
         filenodes = []
         als = self.repository.alias
         for name, stat, id in tree.items():
+            obj_path = safe_str(name)
             if path != '':
-                obj_path = '/'.join((path, name))
-            else:
-                obj_path = name
+                obj_path = '/'.join((path, obj_path))
             if objects.S_ISGITLINK(stat):
                 root_tree = self.repository._repo[self._tree_id]
                 cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(root_tree[b'.gitmodules'][1]).data))
@@ -499,11 +497,11 @@ class GitChangeset(BaseChangeset):
             changes = _r.object_store.tree_changes(oid, _r[self._commit.id].tree)
             for (oldpath, newpath), (_, _), (_, _) in changes:
                 if newpath and oldpath:
-                    modified.add(newpath)
+                    modified.add(safe_str(newpath))
                 elif newpath and not oldpath:
-                    added.add(newpath)
+                    added.add(safe_str(newpath))
                 elif not newpath and oldpath:
-                    deleted.add(oldpath)
+                    deleted.add(safe_str(oldpath))
         return added, modified, deleted
 
     def _get_paths_for_status(self, status):

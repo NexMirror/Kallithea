@@ -40,7 +40,7 @@ from tg.i18n import ugettext as _
 
 import kallithea.config.conf
 from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes
+from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str
 from kallithea.lib.vcs.backends.git.repository import GitRepository
 from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
 from kallithea.lib.vcs.conf import settings
@@ -586,13 +586,13 @@ def check_git_version():
         return None
 
     if stderr:
-        log.warning('Error/stderr from "%s --version":\n%s', settings.GIT_EXECUTABLE_PATH, stderr)
+        log.warning('Error/stderr from "%s --version":\n%s', settings.GIT_EXECUTABLE_PATH, safe_str(stderr))
 
     if not stdout:
         log.warning('No working git executable found - check "git_path" in the ini file.')
         return None
 
-    output = stdout.strip()
+    output = safe_str(stdout).strip()
     m = re.search(r"\d+.\d+.\d+", output)
     if m:
         ver = StrictVersion(m.group(0))

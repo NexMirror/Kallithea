@@ -5,7 +5,7 @@ import mercurial.node
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils import ascii_str, safe_bytes
+from kallithea.lib.vcs.utils import ascii_str, safe_bytes, safe_str
 
 
 class MercurialInMemoryChangeset(BaseInMemoryChangeset):
@@ -45,7 +45,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             Callback from Mercurial, returning ctx to commit for the given
             path.
             """
-            path = bytes_path  # will be different for py3
+            path = safe_str(bytes_path)
 
             # check if this path is removed
             if path in (node.path for node in self.removed):

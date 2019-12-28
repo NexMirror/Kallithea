@@ -2,13 +2,13 @@ import mercurial.merge
 
 from kallithea.lib.vcs.backends.base import BaseWorkdir
 from kallithea.lib.vcs.exceptions import BranchDoesNotExistError
-from kallithea.lib.vcs.utils import ascii_bytes, ascii_str
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, safe_str
 
 
 class MercurialWorkdir(BaseWorkdir):
 
     def get_branch(self):
-        return self.repository._repo.dirstate.branch()
+        return safe_str(self.repository._repo.dirstate.branch())
 
     def get_changeset(self):
         wk_dir_id = ascii_str(self.repository._repo[None].parents()[0].hex())

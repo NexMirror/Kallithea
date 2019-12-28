@@ -34,7 +34,7 @@ import mercurial.scmutil
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import action_logger, make_ui
-from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes
+from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.model.db import Repository, User
 
@@ -67,7 +67,7 @@ def _get_scm_size(alias, root_path):
 
 def repo_size(ui, repo, hooktype=None, **kwargs):
     """Show size of Mercurial repository, to be called after push."""
-    size_hg_f, size_root_f, size_total_f = _get_scm_size('.hg', repo.root)
+    size_hg_f, size_root_f, size_total_f = _get_scm_size('.hg', safe_str(repo.root))
 
     last_cs = repo[len(repo) - 1]
 
