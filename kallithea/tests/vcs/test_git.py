@@ -229,7 +229,7 @@ class TestGitRepository(object):
     def test_changeset10(self):
 
         chset10 = self.repo.get_changeset(self.repo.revisions[9])
-        readme = """===
+        readme = b"""===
 VCS
 ===
 
@@ -649,11 +649,11 @@ class TestGitSpecificWithRepo(_BackendTestMixin):
 
     def test_paths_slow_traversing(self):
         cs = self.repo.get_changeset()
-        assert cs.get_node('foobar').get_node('static').get_node('js').get_node('admin').get_node('base.js').content == 'base'
+        assert cs.get_node('foobar').get_node('static').get_node('js').get_node('admin').get_node('base.js').content == b'base'
 
     def test_paths_fast_traversing(self):
         cs = self.repo.get_changeset()
-        assert cs.get_node('foobar/static/js/admin/base.js').content == 'base'
+        assert cs.get_node('foobar/static/js/admin/base.js').content == b'base'
 
     def test_workdir_get_branch(self):
         self.repo.run_git_command(['checkout', '-b', 'production'])

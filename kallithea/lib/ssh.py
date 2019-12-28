@@ -88,8 +88,8 @@ def parse_pub_key(ssh_key):
     except TypeError:
         raise SshKeyParseError(_("Incorrect SSH key - failed to decode base64 part %r") % keyvalue)
 
-    if not decoded.startswith('\x00\x00\x00' + chr(len(keytype)) + str(keytype) + '\x00'):
-        raise SshKeyParseError(_("Incorrect SSH key - base64 part is not %r as claimed but %r") % (str(keytype), str(decoded[4:].split('\0', 1)[0])))
+    if not decoded.startswith(b'\x00\x00\x00' + chr(len(keytype)) + str(keytype) + b'\x00'):
+        raise SshKeyParseError(_("Incorrect SSH key - base64 part is not %r as claimed but %r") % (str(keytype), str(decoded[4:].split(b'\0', 1)[0])))
 
     return keytype, decoded, comment
 

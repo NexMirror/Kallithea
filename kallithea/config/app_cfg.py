@@ -162,7 +162,7 @@ def setup_configuration(app):
 
     load_rcextensions(root_path=config['here'])
 
-    repos_path = make_ui().configitems('paths')[0][1]
+    repos_path = make_ui().configitems(b'paths')[0][1]
     config['base_path'] = repos_path
     set_app_settings(config)
 

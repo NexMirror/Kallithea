@@ -423,7 +423,7 @@ def create_test_index(repo_location, config, full_index):
 
 
 def failing_test_hook(ui, repo, **kwargs):
-    ui.write("failing_test_hook failed\n")
+    ui.write(b"failing_test_hook failed\n")
     return 1
 
 
@@ -432,5 +432,5 @@ def exception_test_hook(ui, repo, **kwargs):
 
 
 def passing_test_hook(ui, repo, **kwargs):
-    ui.write("passing_test_hook succeeded\n")
+    ui.write(b"passing_test_hook succeeded\n")
     return 0

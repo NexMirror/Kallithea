@@ -58,8 +58,8 @@ class MercurialSshHandler(BaseSshHandler):
         # Note: we want a repo with config based on .hg/hgrc and can thus not use self.db_repo.scm_instance._repo.ui
         baseui = make_ui(repo_path=self.db_repo.repo_full_path)
         if not self.allow_push:
-            baseui.setconfig('hooks', 'pretxnopen._ssh_reject', 'python:kallithea.lib.hooks.rejectpush')
-            baseui.setconfig('hooks', 'prepushkey._ssh_reject', 'python:kallithea.lib.hooks.rejectpush')
+            baseui.setconfig(b'hooks', b'pretxnopen._ssh_reject', b'python:kallithea.lib.hooks.rejectpush')
+            baseui.setconfig(b'hooks', b'prepushkey._ssh_reject', b'python:kallithea.lib.hooks.rejectpush')
 
         repo = hg.repository(baseui, safe_str(self.db_repo.repo_full_path))
         log.debug("Starting Mercurial sshserver for %s", self.db_repo.repo_full_path)

@@ -716,11 +716,11 @@ class ScmModel(object):
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
-        tmpl_post = "#!%s\n" % self._get_git_hook_interpreter()
+        tmpl_post = b"#!%s\n" % self._get_git_hook_interpreter()
         tmpl_post += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'post_receive_tmpl.py')
         )
-        tmpl_pre = "#!%s\n" % self._get_git_hook_interpreter()
+        tmpl_pre = b"#!%s\n" % self._get_git_hook_interpreter()
         tmpl_pre += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'pre_receive_tmpl.py')
         )
@@ -750,7 +750,7 @@ class ScmModel(object):
                 log.debug('writing %s hook file !', h_type)
                 try:
                     with open(_hook_file, 'wb') as f:
-                        tmpl = tmpl.replace('_TMPL_', kallithea.__version__)
+                        tmpl = tmpl.replace(b'_TMPL_', kallithea.__version__)
                         f.write(tmpl)
                     os.chmod(_hook_file, 0o755)
                 except IOError as e:

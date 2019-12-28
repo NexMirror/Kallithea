@@ -219,7 +219,7 @@ class TestAuthSettingsController(TestController):
             url=url(controller='admin/my_account', action='my_account'),
             extra_environ={'REMOTE_USER': 'john'},
         )
-        assert 'Log Out' not in response.normal_body
+        assert b'Log Out' not in response.normal_body
 
     def test_crowd_save_settings(self):
         self.log_user()

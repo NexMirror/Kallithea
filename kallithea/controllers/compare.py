@@ -108,20 +108,26 @@ class CompareController(BaseRepoController):
                 hgrepo = other_repo._repo
 
             ancestors = [hgrepo[ancestor].hex() for ancestor in
-                         hgrepo.revs("id(%s) & ::id(%s)", other_rev, org_rev)]
+                         hgrepo.revs(b"id(%s) & ::id(%s)", other_rev, org_rev)]
             if ancestors:
                 log.debug("shortcut found: %s is already an ancestor of %s", other_rev, org_rev)
             else:
                 log.debug("no shortcut found: %s is not an ancestor of %s", other_rev, org_rev)
                 ancestors = [hgrepo[ancestor].hex() for ancestor in
-                             hgrepo.revs("heads(::id(%s) & ::id(%s))", org_rev, other_rev)] # FIXME: expensive!
+                             hgrepo.revs(b"heads(::id(%s) & ::id(%s))", org_rev, other_rev)] # FIXME: expensive!
 
-            other_revs = hgrepo.revs("ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
-                                     other_rev, org_rev, org_rev)
-            other_changesets = [other_repo.get_changeset(rev) for rev in other_revs]
-            org_revs = hgrepo.revs("ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
-                                   org_rev, other_rev, other_rev)
-            org_changesets = [org_repo.get_changeset(hgrepo[rev].hex()) for rev in org_revs]
+            other_changesets = [
+                other_repo.get_changeset(rev)
+                for rev in hgrepo.revs(
+                    b"ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
+                     other_rev, org_rev, org_rev)
+            ]
+            org_changesets = [
+                org_repo.get_changeset(hgrepo[rev].hex())
+                for rev in hgrepo.revs(
+                    b"ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
+                    org_rev, other_rev, other_rev)
+            ]
 
         elif alias == 'git':
             if org_repo != other_repo:

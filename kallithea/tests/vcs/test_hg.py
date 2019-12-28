@@ -219,7 +219,7 @@ class TestMercurialRepository(object):
     def test_changeset10(self):
 
         chset10 = self.repo.get_changeset(10)
-        readme = """===
+        readme = b"""===
 VCS
 ===
 

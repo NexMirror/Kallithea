@@ -367,11 +367,11 @@ class SubprocessIOChunker(object):
             and returncode != 0
         ): # and it failed
             bg_out.stop()
-            out = ''.join(bg_out)
+            out = b''.join(bg_out)
             bg_err.stop()
-            err = ''.join(bg_err)
-            if (err.strip() == 'fatal: The remote end hung up unexpectedly' and
-                out.startswith('0034shallow ')
+            err = b''.join(bg_err)
+            if (err.strip() == b'fatal: The remote end hung up unexpectedly' and
+                out.startswith(b'0034shallow ')
             ):
                 # hack inspired by https://github.com/schacon/grack/pull/7
                 bg_out = iter([out])

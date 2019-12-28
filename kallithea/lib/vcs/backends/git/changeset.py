@@ -244,7 +244,7 @@ class GitChangeset(BaseChangeset):
         # Only used to feed diffstat
         rev1 = self.parents[0] if self.parents else self.repository.EMPTY_CHANGESET
         rev2 = self
-        return ''.join(self.repository.get_diff(rev1, rev2,
+        return b''.join(self.repository.get_diff(rev1, rev2,
                                     ignore_whitespace=ignore_whitespace,
                                     context=context))
 
@@ -418,7 +418,7 @@ class GitChangeset(BaseChangeset):
                 obj_path = name
             if objects.S_ISGITLINK(stat):
                 root_tree = self.repository._repo[self._tree_id]
-                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(root_tree['.gitmodules'][1]).data))
+                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(root_tree[b'.gitmodules'][1]).data))
                 url = cf.get(('submodule', obj_path), 'url')
                 dirnodes.append(SubModuleNode(obj_path, url=url, changeset=id,
                                               alias=als))
@@ -457,7 +457,7 @@ class GitChangeset(BaseChangeset):
             _GL = lambda m: m and objects.S_ISGITLINK(m)
             if _GL(self._stat_modes.get(path)):
                 tree = self.repository._repo[self._tree_id]
-                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree['.gitmodules'][1]).data))
+                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree[b'.gitmodules'][1]).data))
                 url = cf.get(('submodule', path), 'url')
                 node = SubModuleNode(path, url=url, changeset=id_,
                                      alias=self.repository.alias)

@@ -236,7 +236,7 @@ def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     context = context or 3
     submodules = [o for o in [filenode_new, filenode_old] if isinstance(o, SubModuleNode)]
     if submodules:
-        return ''
+        return b''
 
     for filenode in (filenode_old, filenode_new):
         if not isinstance(filenode, FileNode):
@@ -261,7 +261,7 @@ def get_diff(scm_instance, rev1, rev2, path=None, ignore_whitespace=False, conte
                                      ignore_whitespace=ignore_whitespace, context=context)
     except MemoryError:
         h.flash('MemoryError: Diff is too big', category='error')
-        return ''
+        return b''
 
 
 NEW_FILENODE = 1
@@ -279,7 +279,7 @@ class DiffProcessor(object):
     mentioned in the diff together with a dict of meta information that
     can be used to render it in a HTML template.
     """
-    _diff_git_re = re.compile('^diff --git', re.MULTILINE)
+    _diff_git_re = re.compile(b'^diff --git', re.MULTILINE)
 
     def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
         """
@@ -480,7 +480,7 @@ def _escaper(string):
     return _escape_re.sub(substitute, safe_unicode(string))
 
 
-_git_header_re = re.compile(r"""
+_git_header_re = re.compile(br"""
     ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
     (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
        ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
@@ -497,7 +497,7 @@ _git_header_re = re.compile(r"""
 """, re.VERBOSE | re.MULTILINE)
 
 
-_hg_header_re = re.compile(r"""
+_hg_header_re = re.compile(br"""
     ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
     (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
        ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
@@ -542,7 +542,7 @@ def _get_header(vcs, diff_chunk):
     rest = diff_chunk[match.end():]
     if rest and _header_next_check.match(rest):
         raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, diff_chunk[:match.end()], rest[:1000]))
-    diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
+    diff_lines = (_escaper(m.group(0)) for m in re.finditer(br'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
     return meta_info, diff_lines
 
 

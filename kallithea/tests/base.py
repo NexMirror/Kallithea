@@ -156,7 +156,7 @@ class TestController(object):
                                   'password': password,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
-        if 'Invalid username or password' in response.body:
+        if b'Invalid username or password' in response.body:
             pytest.fail('could not login using %s %s' % (username, password))
 
         assert response.status == '302 Found'

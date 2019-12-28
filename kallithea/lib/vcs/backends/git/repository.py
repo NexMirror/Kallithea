@@ -123,8 +123,8 @@ class GitRepository(BaseRepository):
             raise RepositoryError(msg)
 
         try:
-            stdout = ''.join(p.output)
-            stderr = ''.join(p.error)
+            stdout = b''.join(p.output)
+            stderr = b''.join(p.error)
         finally:
             p.close()
         # TODO: introduce option to make commands fail if they have any stderr output?
@@ -170,11 +170,11 @@ class GitRepository(BaseRepository):
         handlers = []
         url_obj = hg_url(url)
         test_uri, authinfo = url_obj.authinfo()
-        url_obj.passwd = '*****'
-        cleaned_uri = str(url_obj)
-
         if not test_uri.endswith('info/refs'):
             test_uri = test_uri.rstrip('/') + '/info/refs'
+
+        url_obj.passwd = b'*****'
+        cleaned_uri = str(url_obj)
 
         if authinfo:
             # create a password manager
@@ -252,7 +252,7 @@ class GitRepository(BaseRepository):
     def _get_all_revisions2(self):
         # alternate implementation using dulwich
         includes = [x[1][0] for x in self._parsed_refs.iteritems()
-                    if x[1][1] != 'T']
+                    if x[1][1] != b'T']
         return [c.commit.id for c in self._repo.get_walker(include=includes)]
 
     def _get_revision(self, revision):
@@ -282,7 +282,7 @@ class GitRepository(BaseRepository):
 
             # get by branch/tag name
             _ref_revision = self._parsed_refs.get(revision)
-            if _ref_revision:  # and _ref_revision[1] in ['H', 'RH', 'T']:
+            if _ref_revision:  # and _ref_revision[1] in [b'H', b'RH', b'T']:
                 return _ref_revision[0]
 
             if revision in self.revisions:
@@ -355,9 +355,7 @@ class GitRepository(BaseRepository):
 
     @LazyProperty
     def description(self):
-        undefined_description = u'unknown'
-        _desc = self._repo.get_description()
-        return safe_unicode(_desc or undefined_description)
+        return safe_unicode(self._repo.get_description() or b'unknown')
 
     @LazyProperty
     def contact(self):
@@ -370,7 +368,7 @@ class GitRepository(BaseRepository):
             return {}
         sortkey = lambda ctx: ctx[0]
         _branches = [(x[0], x[1][0])
-                     for x in self._parsed_refs.iteritems() if x[1][1] == 'H']
+                     for x in self._parsed_refs.iteritems() if x[1][1] == b'H']
         return OrderedDict(sorted(_branches, key=sortkey, reverse=False))
 
     @LazyProperty
@@ -387,7 +385,7 @@ class GitRepository(BaseRepository):
 
         sortkey = lambda ctx: ctx[0]
         _tags = [(x[0], x[1][0])
-                 for x in self._parsed_refs.iteritems() if x[1][1] == 'T']
+                 for x in self._parsed_refs.iteritems() if x[1][1] == b'T']
         return OrderedDict(sorted(_tags, key=sortkey, reverse=True))
 
     def tag(self, name, user, revision=None, message=None, date=None,
@@ -408,7 +406,7 @@ class GitRepository(BaseRepository):
         changeset = self.get_changeset(revision)
         message = message or "Added tag %s for commit %s" % (name,
             changeset.raw_id)
-        self._repo.refs["refs/tags/%s" % name] = changeset._commit.id
+        self._repo.refs[b"refs/tags/%s" % name] = changeset._commit.id
 
         self._parsed_refs = self._get_parsed_refs()
         self.tags = self._get_tags()
@@ -451,15 +449,15 @@ class GitRepository(BaseRepository):
         # cache the property
         _repo = self._repo
         refs = _repo.get_refs()
-        keys = [('refs/heads/', 'H'),
-                ('refs/remotes/origin/', 'RH'),
-                ('refs/tags/', 'T')]
+        keys = [(b'refs/heads/', b'H'),
+                (b'refs/remotes/origin/', b'RH'),
+                (b'refs/tags/', b'T')]
         _refs = {}
         for ref, sha in refs.iteritems():
             for k, type_ in keys:
                 if ref.startswith(k):
                     _key = ref[len(k):]
-                    if type_ == 'T':
+                    if type_ == b'T':
                         obj = _repo.get_object(sha)
                         if isinstance(obj, Tag):
                             sha = _repo.get_object(sha).object[1]
@@ -472,10 +470,10 @@ class GitRepository(BaseRepository):
         heads = {}
 
         for key, val in refs.items():
-            for ref_key in ['refs/heads/', 'refs/remotes/origin/']:
+            for ref_key in [b'refs/heads/', b'refs/remotes/origin/']:
                 if key.startswith(ref_key):
                     n = key[len(ref_key):]
-                    if n not in ['HEAD']:
+                    if n not in [b'HEAD']:
                         heads[n] = val
 
         return heads if reverse else dict((y, x) for x, y in heads.iteritems())
@@ -627,9 +625,9 @@ class GitRepository(BaseRepository):
         # If we used 'show' command, strip first few lines (until actual diff
         # starts)
         if rev1 == self.EMPTY_CHANGESET:
-            parts = stdout.split('\ndiff ', 1)
+            parts = stdout.split(b'\ndiff ', 1)
             if len(parts) > 1:
-                stdout = 'diff ' + parts[1]
+                stdout = b'diff ' + parts[1]
         return stdout
 
     @LazyProperty

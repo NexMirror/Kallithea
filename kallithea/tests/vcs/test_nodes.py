@@ -158,10 +158,10 @@ class TestNodeBasic(object):
         tar_node = FileNode('test.tar.gz')
 
         my_node2 = FileNode('myfile2')
-        my_node2._content = 'foobar'
+        my_node2._content = b'foobar'
 
         my_node3 = FileNode('myfile3')
-        my_node3._content = '\0foobar'
+        my_node3._content = b'\0foobar'
 
         assert py_node.mimetype == mimetypes.guess_type(py_node.name)[0]
         assert py_node.get_mimetype() == mimetypes.guess_type(py_node.name)

@@ -39,7 +39,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         repo = self.repository._repo
         object_store = repo.object_store
 
-        ENCODING = "UTF-8"  # TODO: should probably be kept in sync with safe_unicode/safe_bytes and vcs/conf/settings.py DEFAULT_ENCODINGS
+        ENCODING = b"UTF-8"  # TODO: should probably be kept in sync with safe_unicode/safe_bytes and vcs/conf/settings.py DEFAULT_ENCODINGS
 
         # Create tree and populates it with blobs
         commit_tree = self.parents[0] and repo[self.parents[0]._commit.tree] or \
@@ -47,7 +47,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         for node in self.added + self.changed:
             # Compute subdirs if needed
             dirpath, nodename = posixpath.split(node.path)
-            dirnames = safe_str(dirpath).split('/') if dirpath else []
+            dirnames = safe_str(dirpath).split(b'/') if dirpath else []
             parent = commit_tree
             ancestors = [('', parent)]
 
@@ -100,7 +100,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             for tree in new_trees:
                 object_store.add_object(tree)
         for node in self.removed:
-            paths = node.path.split('/')
+            paths = node.path.split(b'/')
             tree = commit_tree
             trees = [tree]
             # Traverse deep into the forest...
@@ -146,10 +146,9 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
 
         object_store.add_object(commit)
 
-        ref = 'refs/heads/%s' % branch
-        repo.refs[ref] = commit.id
-
         # Update vcs repository object & recreate dulwich repo
+        ref = b'refs/heads/%s' % branch
+        repo.refs[ref] = commit.id
         self.repository.revisions.append(commit.id)
         # invalidate parsed refs after commit
         self.repository._parsed_refs = self.repository._get_parsed_refs()

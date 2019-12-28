@@ -36,7 +36,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
 
         if branch is None:
             branch = MercurialRepository.DEFAULT_BRANCH_NAME
-        kwargs['branch'] = branch
+        kwargs[b'branch'] = branch
 
         def filectxfn(_repo, memctx, path):
             """
@@ -79,7 +79,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
 
         commit_ctx = memctx(repo=self.repository._repo,
             parents=parents,
-            text='',
+            text=b'',
             files=self.get_paths(),
             filectxfn=filectxfn,
             user=author,

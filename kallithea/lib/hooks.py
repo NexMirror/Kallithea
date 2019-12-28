@@ -110,7 +110,7 @@ def log_push_action(ui, repo, node, node_last, **kwargs):
     cahes! The function should perhaps be renamed.
     """
     _h = binascii.hexlify
-    revs = [_h(repo[r].node()) for r in revrange(repo, [node + ':' + node_last])]
+    revs = [_h(repo[r].node()) for r in revrange(repo, [b'%s:%s' % (node, node_last)])]
     process_pushed_raw_ids(revs)
     return 0
 
@@ -363,8 +363,9 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
             if push_ref['old_rev'] == EmptyChangeset().raw_id:
                 # update the symbolic ref if we push new repo
                 if scm_repo.is_empty():
-                    scm_repo._repo.refs.set_symbolic_ref('HEAD',
-                                        'refs/heads/%s' % push_ref['name'])
+                    scm_repo._repo.refs.set_symbolic_ref(
+                        b'HEAD',
+                        b'refs/heads/%s' % push_ref['name'])
 
                 # build exclude list without the ref
                 cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']

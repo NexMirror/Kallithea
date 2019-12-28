@@ -82,8 +82,8 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
         changeset = self.imc.commit(u'Initial', u'joe.doe@example.com')
         assert isinstance(changeset.get_node('foo'), DirNode)
         assert isinstance(changeset.get_node('foo/bar'), DirNode)
-        assert changeset.get_node('foo/bar/image.png').content == '\0'
-        assert changeset.get_node('foo/README.txt').content == 'readme!'
+        assert changeset.get_node('foo/bar/image.png').content == b'\0'
+        assert changeset.get_node('foo/README.txt').content == b'readme!'
 
         # commit some more files again
         to_add = [
@@ -95,11 +95,11 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
         ]
         self.imc.add(*to_add)
         changeset = self.imc.commit(u'Another', u'joe.doe@example.com')
-        changeset.get_node('foo/bar/foobaz/bar').content == 'foo'
-        changeset.get_node('foo/bar/another/bar').content == 'foo'
-        changeset.get_node('foo/baz.txt').content == 'foo'
-        changeset.get_node('foobar/foobaz/file').content == 'foo'
-        changeset.get_node('foobar/barbaz').content == 'foo'
+        changeset.get_node('foo/bar/foobaz/bar').content == b'foo'
+        changeset.get_node('foo/bar/another/bar').content == b'foo'
+        changeset.get_node('foo/baz.txt').content == b'foo'
+        changeset.get_node('foobar/foobaz/file').content == b'foo'
+        changeset.get_node('foobar/barbaz').content == b'foo'
 
     def test_add_non_ascii_files(self):
         rev_count = len(self.repo.revisions)
@@ -154,7 +154,7 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
         newtip = self.repo.get_changeset()
         assert tip != newtip
         assert tip.id != newtip.id
-        assert newtip.get_node('foo/bar/baz').content == 'My **changed** content'
+        assert newtip.get_node('foo/bar/baz').content == b'My **changed** content'
 
     def test_change_non_ascii(self):
         to_add = [
@@ -181,8 +181,8 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
         assert tip != newtip
         assert tip.id != newtip.id
 
-        assert newtip.get_node('żółwik/zwierzątko').content == 'My **changed** content'
-        assert newtip.get_node('żółwik/zwierzątko_uni').content == 'My **changed** content'
+        assert newtip.get_node('żółwik/zwierzątko').content == b'My **changed** content'
+        assert newtip.get_node('żółwik/zwierzątko_uni').content == b'My **changed** content'
 
     def test_change_raise_empty_repository(self):
         node = FileNode('foobar')

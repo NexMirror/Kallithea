@@ -337,21 +337,21 @@ def make_ui(repo_path=None):
     sa = meta.Session()
     for ui_ in sa.query(Ui).all():
         if ui_.ui_active:
-            ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
+            ui_val = b'' if ui_.ui_value is None else safe_str(ui_.ui_value)
             log.debug('config from db: [%s] %s=%r', ui_.ui_section,
                       ui_.ui_key, ui_val)
             baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
                              ui_val)
 
     # force set push_ssl requirement to False, Kallithea handles that
-    baseui.setconfig('web', 'push_ssl', False)
-    baseui.setconfig('web', 'allow_push', '*')
+    baseui.setconfig(b'web', b'push_ssl', False)
+    baseui.setconfig(b'web', b'allow_push', b'*')
     # prevent interactive questions for ssh password / passphrase
-    ssh = baseui.config('ui', 'ssh', default='ssh')
-    baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
+    ssh = baseui.config(b'ui', b'ssh', default=b'ssh')
+    baseui.setconfig(b'ui', b'ssh', b'%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
     # push / pull hooks
-    baseui.setconfig('hooks', 'changegroup.kallithea_log_push_action', 'python:kallithea.lib.hooks.log_push_action')
-    baseui.setconfig('hooks', 'outgoing.kallithea_log_pull_action', 'python:kallithea.lib.hooks.log_pull_action')
+    baseui.setconfig(b'hooks', b'changegroup.kallithea_log_push_action', b'python:kallithea.lib.hooks.log_push_action')
+    baseui.setconfig(b'hooks', b'outgoing.kallithea_log_pull_action', b'python:kallithea.lib.hooks.log_pull_action')
 
     if repo_path is not None:
         hgrc_path = os.path.join(repo_path, '.hg', 'hgrc')

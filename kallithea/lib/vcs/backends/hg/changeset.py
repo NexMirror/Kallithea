@@ -194,7 +194,7 @@ class MercurialChangeset(BaseChangeset):
 
     def diff(self):
         # Only used to feed diffstat
-        return ''.join(self._ctx.diff())
+        return b''.join(self._ctx.diff())
 
     def _fix_path(self, path):
         """
@@ -236,7 +236,7 @@ class MercurialChangeset(BaseChangeset):
         Returns stat mode of the file at the given ``path``.
         """
         fctx = self._get_filectx(path)
-        if 'x' in fctx.flags():
+        if b'x' in fctx.flags():
             return 0o100755
         else:
             return 0o100644

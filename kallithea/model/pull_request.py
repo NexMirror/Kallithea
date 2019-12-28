@@ -261,7 +261,7 @@ class CreatePullRequestAction(object):
 
         if self.org_repo.scm_instance.alias == 'git':
             # create a ref under refs/pull/ so that commits don't get garbage-collected
-            self.org_repo.scm_instance._repo["refs/pull/%d/head" % pr.pull_request_id] = safe_str(self.org_rev)
+            self.org_repo.scm_instance._repo[b"refs/pull/%d/head" % pr.pull_request_id] = safe_str(self.org_rev)
 
         # reset state to under-review
         from kallithea.model.changeset_status import ChangesetStatusModel

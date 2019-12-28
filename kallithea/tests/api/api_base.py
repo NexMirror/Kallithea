@@ -2509,8 +2509,8 @@ class _BaseTestApi(object):
             "revisions": self.TEST_PR_REVISIONS,
         }
         self._compare_ok(random_id, expected,
-                         given=re.sub(r"\d\d\d\d\-\d\d\-\d\dT\d\d\:\d\d\:\d\d",
-                                      "2000-01-01T00:00:00", response.body))
+                         given=re.sub(br"\d\d\d\d\-\d\d\-\d\dT\d\d\:\d\d\:\d\d",
+                                      b"2000-01-01T00:00:00", response.body))
 
     def test_api_close_pullrequest(self):
         pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u'close test')

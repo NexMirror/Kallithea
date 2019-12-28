@@ -97,7 +97,7 @@ class PullrequestsController(BaseRepoController):
             # including branches of children could be nice too
             peerbranches = set()
             for i in repo._repo.revs(
-                "sort(parents(branch(id(%s)) and merge()) - branch(id(%s)), -rev)",
+                b"sort(parents(branch(id(%s)) and merge()) - branch(id(%s)), -rev)",
                 branch_rev, branch_rev
             ):
                 for abranch in repo.get_changeset(i).branches:

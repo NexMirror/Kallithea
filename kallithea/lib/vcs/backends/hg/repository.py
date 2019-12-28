@@ -221,8 +221,7 @@ class MercurialRepository(BaseRepository):
         ))
 
     def _get_all_revisions(self):
-
-        return [self._repo[x].hex() for x in self._repo.filtered('visible').changelog.revs()]
+        return [self._repo[x].hex() for x in self._repo.filtered(b'visible').changelog.revs()]
 
     def get_diff(self, rev1, rev2, path='', ignore_whitespace=False,
                   context=3):
@@ -262,7 +261,7 @@ class MercurialRepository(BaseRepository):
         else:
             file_filter = None
 
-        return ''.join(patch.diff(self._repo, rev1, rev2, match=file_filter,
+        return b''.join(patch.diff(self._repo, rev1, rev2, match=file_filter,
                           opts=diffopts(git=True,
                                         showfunc=True,
                                         ignorews=ignore_whitespace,
@@ -280,23 +279,23 @@ class MercurialRepository(BaseRepository):
         when the return code is non 200
         """
         # check first if it's not an local url
-        if os.path.isdir(url) or url.startswith('file:'):
+        if os.path.isdir(url) or url.startswith(b'file:'):
             return True
 
-        if url.startswith('ssh:'):
+        if url.startswith(b'ssh:'):
             # in case of invalid uri or authentication issues, sshpeer will
             # throw an exception.
-            sshpeer.instance(repoui or ui.ui(), url, False).lookup('tip')
+            sshpeer.instance(repoui or ui.ui(), url, False).lookup(b'tip')
             return True
 
         url_prefix = None
-        if '+' in url[:url.find('://')]:
-            url_prefix, url = url.split('+', 1)
+        if b'+' in url[:url.find(b'://')]:
+            url_prefix, url = url.split(b'+', 1)
 
         handlers = []
         url_obj = hg_url(url)
         test_uri, authinfo = url_obj.authinfo()
-        url_obj.passwd = '*****'
+        url_obj.passwd = b'*****'
         cleaned_uri = str(url_obj)
 
         if authinfo:
@@ -328,7 +327,7 @@ class MercurialRepository(BaseRepository):
         if not url_prefix: # skip svn+http://... (and git+... too)
             # now check if it's a proper hg repo
             try:
-                httppeer.instance(repoui or ui.ui(), url, False).lookup('tip')
+                httppeer.instance(repoui or ui.ui(), url, False).lookup(b'tip')
             except Exception as e:
                 raise urllib2.URLError(
                     "url [%s] does not look like an hg repo org_exc: %s"
@@ -374,15 +373,13 @@ class MercurialRepository(BaseRepository):
 
     @LazyProperty
     def description(self):
-        undefined_description = u'unknown'
-        _desc = self._repo.ui.config('web', 'description', None, untrusted=True)
-        return safe_unicode(_desc or undefined_description)
+        _desc = self._repo.ui.config(b'web', b'description', None, untrusted=True)
+        return safe_unicode(_desc or b'unknown')
 
     @LazyProperty
     def contact(self):
-        undefined_contact = u'Unknown'
         return safe_unicode(get_contact(self._repo.ui.config)
-                            or undefined_contact)
+                            or b'Unknown')
 
     @LazyProperty
     def last_change(self):
@@ -413,7 +410,7 @@ class MercurialRepository(BaseRepository):
             raise EmptyRepositoryError("There are no changesets yet")
 
         if revision in [-1, None]:
-            revision = 'tip'
+            revision = b'tip'
         elif isinstance(revision, unicode):
             revision = safe_bytes(revision)
 
@@ -461,13 +458,13 @@ class MercurialRepository(BaseRepository):
         return self._get_revision(revision)
 
     def _get_archives(self, archive_name='tip'):
-        allowed = self.baseui.configlist("web", "allow_archive",
+        allowed = self.baseui.configlist(b"web", b"allow_archive",
                                          untrusted=True)
-        for i in [('zip', '.zip'), ('gz', '.tar.gz'), ('bz2', '.tar.bz2')]:
-            if i[0] in allowed or self._repo.ui.configbool("web",
-                                                           "allow" + i[0],
+        for name, ext in [(b'zip', '.zip'), (b'gz', '.tar.gz'), (b'bz2', '.tar.bz2')]:
+            if name in allowed or self._repo.ui.configbool(b"web",
+                                                           b"allow" + name,
                                                            untrusted=True):
-                yield {"type": i[0], "extension": i[1], "node": archive_name}
+                yield {"type": name, "extension": ext, "node": archive_name}
 
     def _get_url(self, url):
         """
@@ -525,18 +522,18 @@ class MercurialRepository(BaseRepository):
         # filter branches
         filter_ = []
         if branch_name:
-            filter_.append('branch("%s")' % safe_str(branch_name))
+            filter_.append(b'branch("%s")' % safe_str(branch_name))
         if start_date:
-            filter_.append('date(">%s")' % start_date)
+            filter_.append(b'date(">%s")' % start_date)
         if end_date:
-            filter_.append('date("<%s")' % end_date)
+            filter_.append(b'date("<%s")' % end_date)
         if filter_ or max_revisions:
             if filter_:
-                revspec = ' and '.join(filter_)
+                revspec = b' and '.join(filter_)
             else:
-                revspec = 'all()'
+                revspec = b'all()'
             if max_revisions:
-                revspec = 'limit(%s, %s)' % (revspec, max_revisions)
+                revspec = b'limit(%s, %d)' % (revspec, max_revisions)
             revisions = scmutil.revrange(self._repo, [revspec])
         else:
             revisions = self.revisions
