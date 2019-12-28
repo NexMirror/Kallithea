@@ -270,7 +270,7 @@ class GitRepository(BaseRepository):
             try:
                 return self.revisions[revision]
             except IndexError:
-                msg = ("Revision %s does not exist for %s" % (revision, self))
+                msg = "Revision %r does not exist for %s" % (revision, self.name)
                 raise ChangesetDoesNotExistError(msg)
 
         if isinstance(revision, (str, unicode)):
@@ -294,7 +294,7 @@ class GitRepository(BaseRepository):
                 return revision
 
             if SHA_PATTERN.match(revision):
-                msg = ("Revision %s does not exist for %s" % (revision, self))
+                msg = "Revision %r does not exist for %s" % (revision, self.name)
                 raise ChangesetDoesNotExistError(msg)
 
         raise ChangesetDoesNotExistError("Given revision %r not recognized" % revision)

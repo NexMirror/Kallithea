@@ -376,10 +376,10 @@ class MercurialRepository(BaseRepository):
         except (mercurial.error.Abort, mercurial.error.RepoError) as err:
             if create:
                 msg = "Cannot create repository at %s. Original error was %s" \
-                    % (self.path, err)
+                    % (self.name, err)
             else:
                 msg = "Not valid repository at %s. Original error was %s" \
-                    % (self.path, err)
+                    % (self.name, err)
             raise RepositoryError(msg)
 
     @LazyProperty
@@ -434,10 +434,10 @@ class MercurialRepository(BaseRepository):
                 return ascii_str(self._repo[revision].hex())
             return ascii_str(mercurial.scmutil.revsymbol(self._repo, revision).hex())
         except (IndexError, ValueError, mercurial.error.RepoLookupError, TypeError):
-            msg = ("Revision %s does not exist for %s" % (revision, self))
+            msg = "Revision %r does not exist for %s" % (safe_unicode(revision), self.name)
             raise ChangesetDoesNotExistError(msg)
         except (LookupError, ):
-            msg = ("Ambiguous identifier `%s` for %s" % (revision, self))
+            msg = "Ambiguous identifier `%s` for %s" % (safe_unicode(revision), self.name)
             raise ChangesetDoesNotExistError(msg)
 
     def get_ref_revision(self, ref_type, ref_name):
@@ -459,10 +459,10 @@ class MercurialRepository(BaseRepository):
         try:
             revs = self._repo.revs(rev_spec, ref_name, ref_name)
         except LookupError:
-            msg = ("Ambiguous identifier %s:%s for %s" % (ref_type, ref_name, self.name))
+            msg = "Ambiguous identifier %s:%s for %s" % (ref_type, ref_name, self.name)
             raise ChangesetDoesNotExistError(msg)
         except mercurial.error.RepoLookupError:
-            msg = ("Revision %s:%s does not exist for %s" % (ref_type, ref_name, self.name))
+            msg = "Revision %s:%s does not exist for %s" % (ref_type, ref_name, self.name)
             raise ChangesetDoesNotExistError(msg)
         if revs:
             revision = revs.last()
@@ -528,7 +528,7 @@ class MercurialRepository(BaseRepository):
                                   "after end revision '%s'" % (start, end))
 
         if branch_name and branch_name not in self.allbranches:
-            msg = ("Branch %s not found in %s" % (branch_name, self))
+            msg = "Branch %r not found in %s" % (branch_name, self.name)
             raise BranchDoesNotExistError(msg)
         if end_pos is not None:
             end_pos += 1
