@@ -543,7 +543,7 @@ class AuthUser(object):
                 if x[1] == 'usergroup.admin']
 
     def __repr__(self):
-        return "<AuthUser('id:%s[%s]')>" % (self.user_id, self.username)
+        return "<%s %s: %r>" % (self.__class__.__name__, self.user_id, self.username)
 
     def to_cookie(self):
         """ Serializes this login session to a cookie `dict`. """

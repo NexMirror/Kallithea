@@ -180,12 +180,6 @@ class Node(object):
     def __repr__(self):
         return '<%s %r>' % (self.__class__.__name__, self.path)
 
-    def __str__(self):
-        return self.__repr__()
-
-    def __unicode__(self):
-        return self.name
-
     def get_parent_path(self):
         """
         Returns node's parent path or empty string if node is root.

@@ -365,9 +365,6 @@ class BaseChangeset(object):
     def __repr__(self):
         return self.__str__()
 
-    def __unicode__(self):
-        return u'%s:%s' % (self.revision, self.short_id)
-
     def __eq__(self, other):
         if type(self) is not type(other):
             return False

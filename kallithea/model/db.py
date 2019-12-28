@@ -167,12 +167,6 @@ class BaseDbModel(object):
         Session().delete(obj)
 
     def __repr__(self):
-        if hasattr(self, '__unicode__'):
-            # python repr needs to return str
-            try:
-                return safe_str(self.__unicode__())
-            except UnicodeDecodeError:
-                pass
         return '<DB:%s>' % (self.__class__.__name__)
 
 
@@ -239,10 +233,10 @@ class Setting(Base, BaseDbModel):
                             % (list(self.SETTINGS_TYPES), val))
         self._app_settings_type = val
 
-    def __unicode__(self):
-        return u"<%s('%s:%s[%s]')>" % (
+    def __repr__(self):
+        return "<%s %s.%s=%r>" % (
             self.__class__.__name__,
-            self.app_settings_name, self.app_settings_value, self.app_settings_type
+            self.app_settings_name, self.app_settings_type, self.app_settings_value
         )
 
     @classmethod
@@ -398,8 +392,9 @@ class Ui(Base, BaseDbModel):
         new_ui.ui_value = val
 
     def __repr__(self):
-        return '<%s[%s]%s=>%s]>' % (self.__class__.__name__, self.ui_section,
-                                    self.ui_key, self.ui_value)
+        return '<%s %s.%s=%r>' % (
+            self.__class__.__name__,
+            self.ui_section, self.ui_key, self.ui_value)
 
 
 class User(Base, BaseDbModel):
@@ -535,9 +530,8 @@ class User(Base, BaseDbModel):
         except Exception:
             log.error(traceback.format_exc())
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
-                                      self.user_id, self.username)
+    def __repr__(self):
+        return "<%s %s: %r')>" % (self.__class__.__name__, self.user_id, self.username)
 
     @classmethod
     def guess_instance(cls, value):
@@ -776,9 +770,8 @@ class UserIpMap(Base, BaseDbModel):
           ip_range=self._get_ip_range(self.ip_addr)
         )
 
-    def __unicode__(self):
-        return u"<%s('user_id:%s=>%s')>" % (self.__class__.__name__,
-                                            self.user_id, self.ip_addr)
+    def __repr__(self):
+        return "<%s %s: %s>" % (self.__class__.__name__, self.user_id, self.ip_addr)
 
 
 class UserLog(Base, BaseDbModel):
@@ -796,10 +789,10 @@ class UserLog(Base, BaseDbModel):
     action = Column(UnicodeText(), nullable=False)
     action_date = Column(DateTime(timezone=False), nullable=False)
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
-                                      self.repository_name,
-                                      self.action)
+    def __repr__(self):
+        return "<%s %r: %r')>" % (self.__class__.__name__,
+                                  self.repository_name,
+                                  self.action)
 
     @property
     def action_as_day(self):
@@ -849,10 +842,10 @@ class UserGroup(Base, BaseDbModel):
         except Exception:
             log.error(traceback.format_exc())
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
-                                      self.users_group_id,
-                                      self.users_group_name)
+    def __repr__(self):
+        return "<%s %s: %r')>" % (self.__class__.__name__,
+                                  self.users_group_id,
+                                  self.users_group_name)
 
     @classmethod
     def guess_instance(cls, value):
@@ -1013,9 +1006,9 @@ class Repository(Base, BaseDbModel):
                     primaryjoin='PullRequest.other_repo_id==Repository.repo_id',
                     cascade="all, delete-orphan")
 
-    def __unicode__(self):
-        return u"<%s('%s:%s')>" % (self.__class__.__name__, self.repo_id,
-                                   safe_unicode(self.repo_name))
+    def __repr__(self):
+        return "<%s %s: %r>" % (self.__class__.__name__,
+                                  self.repo_id, self.repo_name)
 
     @hybrid_property
     def landing_rev(self):
@@ -1488,9 +1481,9 @@ class RepoGroup(Base, BaseDbModel):
         self.group_name = group_name
         self.parent_group = parent_group
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__, self.group_id,
-                                      self.group_name)
+    def __repr__(self):
+        return "<%s %s: %s>" % (self.__class__.__name__,
+                                self.group_id, self.group_name)
 
     @classmethod
     def _generate_choice(cls, repo_group):
@@ -1735,8 +1728,8 @@ class Permission(Base, BaseDbModel):
     permission_id = Column(Integer(), primary_key=True)
     permission_name = Column(String(255), nullable=False)
 
-    def __unicode__(self):
-        return u"<%s('%s:%s')>" % (
+    def __repr__(self):
+        return "<%s %s: %r>" % (
             self.__class__.__name__, self.permission_id, self.permission_name
         )
 
@@ -1801,8 +1794,9 @@ class UserRepoToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<%s => %s >' % (self.user, self.repository)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.user, self.repository, self.permission)
 
 
 class UserUserGroupToPerm(Base, BaseDbModel):
@@ -1830,8 +1824,9 @@ class UserUserGroupToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<%s => %s >' % (self.user, self.user_group)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.user, self.user_group, self.permission)
 
 
 class UserToPerm(Base, BaseDbModel):
@@ -1848,8 +1843,9 @@ class UserToPerm(Base, BaseDbModel):
     user = relationship('User')
     permission = relationship('Permission')
 
-    def __unicode__(self):
-        return u'<%s => %s >' % (self.user, self.permission)
+    def __repr__(self):
+        return '<%s %s: %s>' % (
+            self.__class__.__name__, self.user, self.permission)
 
 
 class UserGroupRepoToPerm(Base, BaseDbModel):
@@ -1877,8 +1873,9 @@ class UserGroupRepoToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<UserGroupRepoToPerm:%s => %s >' % (self.users_group, self.repository)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.users_group, self.repository, self.permission)
 
 
 class UserGroupUserGroupToPerm(Base, BaseDbModel):
@@ -1906,8 +1903,9 @@ class UserGroupUserGroupToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<UserGroupUserGroup:%s => %s >' % (self.target_user_group, self.user_group)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.user_group, self.target_user_group, self.permission)
 
 
 class UserGroupToPerm(Base, BaseDbModel):
@@ -2039,8 +2037,8 @@ class CacheInvalidation(Base, BaseDbModel):
         self.cache_args = repo_name
         self.cache_active = False
 
-    def __unicode__(self):
-        return u"<%s('%s:%s[%s]')>" % (
+    def __repr__(self):
+        return "<%s %s: %s=%s" % (
             self.__class__.__name__,
             self.cache_id, self.cache_key, self.cache_active)
 
@@ -2229,8 +2227,8 @@ class ChangesetStatus(Base, BaseDbModel):
     comment = relationship('ChangesetComment')
     pull_request = relationship('PullRequest')
 
-    def __unicode__(self):
-        return u"<%s('%s:%s')>" % (
+    def __repr__(self):
+        return "<%s %r by %r>" % (
             self.__class__.__name__,
             self.status, self.author
         )
@@ -2450,7 +2448,9 @@ class Gist(Base, BaseDbModel):
         return (self.gist_expires != -1) & (time.time() > self.gist_expires)
 
     def __repr__(self):
-        return '<Gist:[%s]%s>' % (self.gist_type, self.gist_access_id)
+        return "<%s %s %s>" % (
+            self.__class__.__name__,
+            self.gist_type, self.gist_access_id)
 
     @classmethod
     def guess_instance(cls, value):
