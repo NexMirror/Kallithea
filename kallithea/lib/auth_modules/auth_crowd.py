@@ -30,8 +30,9 @@ import base64
 import logging
 import urllib2
 
-from kallithea.lib import auth_modules
-from kallithea.lib.compat import formatted_json, hybrid_property, json
+from kallithea.lib import auth_modules, ext_json
+from kallithea.lib.compat import formatted_json, hybrid_property
+from kallithea.lib.utils2 import ascii_bytes
 
 
 log = logging.getLogger(__name__)
@@ -103,7 +104,7 @@ class CrowdServer(object):
                 rval["status"] = True
                 rval["error"] = "Response body was empty"
             elif not noformat:
-                rval = json.loads(msg)
+                rval = ext_json.loads(msg)
                 rval["status"] = True
             else:
                 rval = "".join(rdoc.readlines())
@@ -121,7 +122,7 @@ class CrowdServer(object):
         the user."""
         url = ("%s/rest/usermanagement/%s/authentication?username=%s"
                % (self._uri, self._version, urllib2.quote(username)))
-        body = json.dumps({"value": password})
+        body = ascii_bytes(ext_json.dumps({"value": password}))
         return self._request(url, body)
 
     def user_groups(self, username):

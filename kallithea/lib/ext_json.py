@@ -1,16 +1,16 @@
 """
-Extended JSON encoder for json
+Extended JSON encoder with support for more data types
 
-json.org does not specify how date time can be represented - monkeypatch it to do something.
+json.org does not specify how date time can be represented - just encode it somehow and ignore decoding ...
 """
 
 import datetime
 import decimal
 import functools
-import json  # is re-exported after monkey patching
+import json
 
 
-__all__ = ['json']
+__all__ = ['dumps', 'dump', 'load', 'loads']
 
 
 def _is_tz_aware(value):
@@ -70,10 +70,12 @@ class ExtendedEncoder(json.JSONEncoder):
         try:
             return _obj_dump(obj)
         except NotImplementedError:
-            pass
+            pass  # quiet skipping of unsupported types!
         raise TypeError("%r is not JSON serializable" % (obj,))
 
 
-# monkey-patch and export JSON encoder to use custom encoding method
-json.dumps = functools.partial(json.dumps, cls=ExtendedEncoder)
-json.dump = functools.partial(json.dump, cls=ExtendedEncoder)
+dumps = functools.partial(json.dumps, cls=ExtendedEncoder)
+dump = functools.partial(json.dump, cls=ExtendedEncoder)
+# No special support for loading these types back!!!
+load = json.load
+loads = json.loads

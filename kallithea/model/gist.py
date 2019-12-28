@@ -32,8 +32,8 @@ import shutil
 import time
 import traceback
 
-from kallithea.lib.compat import json
-from kallithea.lib.utils2 import AttributeDict, safe_int, safe_unicode, time_to_datetime
+from kallithea.lib import ext_json
+from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_unicode, time_to_datetime
 from kallithea.model.db import Gist, Session, User
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
@@ -82,7 +82,7 @@ class GistModel(object):
             'gist_updated': time.time(),
         }
         with open(os.path.join(repo.path, '.hg', GIST_METADATA_FILE), 'wb') as f:
-            f.write(json.dumps(metadata))
+            f.write(ascii_bytes(ext_json.dumps(metadata)))
 
     def get_gist(self, gist):
         return Gist.guess_instance(gist)

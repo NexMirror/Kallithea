@@ -23,8 +23,9 @@ import re
 import mock
 import pytest
 
+from kallithea.lib import ext_json
 from kallithea.lib.auth import AuthUser
-from kallithea.lib.compat import json
+from kallithea.lib.utils2 import ascii_bytes
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetStatus, PullRequest, RepoGroup, Repository, Setting, Ui, User
 from kallithea.model.gist import GistModel
@@ -48,11 +49,10 @@ fixture = Fixture()
 def _build_data(apikey, method, **kw):
     """
     Builds API data with given random ID
-
-    :param random_id:
+    For convenience, the json is returned as str
     """
     random_id = random.randrange(1, 9999)
-    return random_id, json.dumps({
+    return random_id, ext_json.dumps({
         "id": random_id,
         "api_key": apikey,
         "method": method,
@@ -60,7 +60,7 @@ def _build_data(apikey, method, **kw):
     })
 
 
-jsonify = lambda obj: json.loads(json.dumps(obj))
+jsonify = lambda obj: ext_json.loads(ext_json.dumps(obj))
 
 
 def crash(*args, **kwargs):
@@ -127,7 +127,7 @@ class _BaseTestApi(object):
             'error': None,
             'result': expected
         })
-        given = json.loads(given)
+        given = ext_json.loads(given)
         assert expected == given, (expected, given)
 
     def _compare_error(self, id_, expected, given):
@@ -136,7 +136,7 @@ class _BaseTestApi(object):
             'error': expected,
             'result': None
         })
-        given = json.loads(given)
+        given = ext_json.loads(given)
         assert expected == given, (expected, given)
 
     def test_Optional_object(self):
@@ -2322,16 +2322,15 @@ class _BaseTestApi(object):
                                   gist_type='public',
                                   files={'foobar': {'content': 'foo'}})
         response = api_call(self, params)
-        response_json = response.json
         expected = {
             'gist': {
-                'access_id': response_json['result']['gist']['access_id'],
-                'created_on': response_json['result']['gist']['created_on'],
+                'access_id': response.json['result']['gist']['access_id'],
+                'created_on': response.json['result']['gist']['created_on'],
                 'description': 'foobar-gist',
-                'expires': response_json['result']['gist']['expires'],
-                'gist_id': response_json['result']['gist']['gist_id'],
+                'expires': response.json['result']['gist']['expires'],
+                'gist_id': response.json['result']['gist']['gist_id'],
                 'type': 'public',
-                'url': response_json['result']['gist']['url']
+                'url': response.json['result']['gist']['url']
             },
             'msg': 'created new gist'
         }
@@ -2397,7 +2396,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_changesets',
                                   repoid=self.REPO, start=0, end=2)
         response = api_call(self, params)
-        result = json.loads(response.body)["result"]
+        result = ext_json.loads(response.body)["result"]
         assert len(result) == 3
         assert 'message' in result[0]
         assert 'added' not in result[0]
@@ -2406,7 +2405,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_changesets',
                                   repoid=self.REPO, start_date="2011-02-24T00:00:00", max_revisions=10)
         response = api_call(self, params)
-        result = json.loads(response.body)["result"]
+        result = ext_json.loads(response.body)["result"]
         assert len(result) == 10
         assert 'message' in result[0]
         assert 'added' not in result[0]
@@ -2419,7 +2418,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_changesets',
                                   repoid=self.REPO, branch_name=branch, start_date="2011-02-24T00:00:00")
         response = api_call(self, params)
-        result = json.loads(response.body)["result"]
+        result = ext_json.loads(response.body)["result"]
         assert len(result) == 5
         assert 'message' in result[0]
         assert 'added' not in result[0]
@@ -2428,7 +2427,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_changesets',
                                   repoid=self.REPO, start_date="2010-04-07T23:30:30", end_date="2010-04-08T00:31:14", with_file_list=True)
         response = api_call(self, params)
-        result = json.loads(response.body)["result"]
+        result = ext_json.loads(response.body)["result"]
         assert len(result) == 3
         assert 'message' in result[0]
         assert 'added' in result[0]
@@ -2438,7 +2437,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_changeset',
                                   repoid=self.REPO, raw_id=self.TEST_REVISION)
         response = api_call(self, params)
-        result = json.loads(response.body)["result"]
+        result = ext_json.loads(response.body)["result"]
         assert result["raw_id"] == self.TEST_REVISION
         assert "reviews" not in result
 
@@ -2448,7 +2447,7 @@ class _BaseTestApi(object):
                                   repoid=self.REPO, raw_id=self.TEST_REVISION,
                                   with_reviews=True)
         response = api_call(self, params)
-        result = json.loads(response.body)["result"]
+        result = ext_json.loads(response.body)["result"]
         assert result["raw_id"] == self.TEST_REVISION
         assert "reviews" in result
         assert len(result["reviews"]) == 1
@@ -2484,12 +2483,12 @@ class _BaseTestApi(object):
     def test_api_get_pullrequest(self):
         pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u'get test')
         random_id = random.randrange(1, 9999)
-        params = json.dumps({
+        params = ascii_bytes(ext_json.dumps({
             "id": random_id,
             "api_key": self.apikey,
             "method": 'get_pullrequest',
             "args": {"pullrequest_id": pull_request_id},
-        })
+        }))
         response = api_call(self, params)
         pullrequest = PullRequest().get(pull_request_id)
         expected = {
@@ -2515,12 +2514,12 @@ class _BaseTestApi(object):
     def test_api_close_pullrequest(self):
         pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u'close test')
         random_id = random.randrange(1, 9999)
-        params = json.dumps({
+        params = ascii_bytes(ext_json.dumps({
             "id": random_id,
             "api_key": self.apikey,
             "method": "comment_pullrequest",
             "args": {"pull_request_id": pull_request_id, "close_pr": True},
-        })
+        }))
         response = api_call(self, params)
         self._compare_ok(random_id, True, given=response.body)
         pullrequest = PullRequest().get(pull_request_id)
@@ -2532,22 +2531,22 @@ class _BaseTestApi(object):
         pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u"status test")
 
         random_id = random.randrange(1, 9999)
-        params = json.dumps({
+        params = ascii_bytes(ext_json.dumps({
             "id": random_id,
             "api_key": User.get_by_username(base.TEST_USER_REGULAR2_LOGIN).api_key,
             "method": "comment_pullrequest",
             "args": {"pull_request_id": pull_request_id, "status": ChangesetStatus.STATUS_APPROVED},
-        })
+        }))
         response = api_call(self, params)
         pullrequest = PullRequest().get(pull_request_id)
         self._compare_error(random_id, "No permission to change pull request status. User needs to be admin, owner or reviewer.", given=response.body)
         assert ChangesetStatus.STATUS_UNDER_REVIEW == ChangesetStatusModel().calculate_pull_request_result(pullrequest)[2]
-        params = json.dumps({
+        params = ascii_bytes(ext_json.dumps({
             "id": random_id,
             "api_key": User.get_by_username(base.TEST_USER_REGULAR_LOGIN).api_key,
             "method": "comment_pullrequest",
             "args": {"pull_request_id": pull_request_id, "status": ChangesetStatus.STATUS_APPROVED},
-        })
+        }))
         response = api_call(self, params)
         self._compare_ok(random_id, True, given=response.body)
         pullrequest = PullRequest().get(pull_request_id)
@@ -2556,12 +2555,12 @@ class _BaseTestApi(object):
     def test_api_comment_pullrequest(self):
         pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u"comment test")
         random_id = random.randrange(1, 9999)
-        params = json.dumps({
+        params = ascii_bytes(ext_json.dumps({
             "id": random_id,
             "api_key": self.apikey,
             "method": "comment_pullrequest",
             "args": {"pull_request_id": pull_request_id, "comment_msg": "Looks good to me"},
-        })
+        }))
         response = api_call(self, params)
         self._compare_ok(random_id, True, given=response.body)
         pullrequest = PullRequest().get(pull_request_id)

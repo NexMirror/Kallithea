@@ -31,6 +31,7 @@ from __future__ import print_function
 
 import binascii
 import datetime
+import json
 import os
 import pwd
 import re
@@ -42,7 +43,6 @@ from tg.i18n import ugettext as _
 from tg.i18n import ungettext
 from webhelpers2.text import collapse, remove_formatting, strip_tags
 
-from kallithea.lib.compat import json
 from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, safe_bytes, safe_str, safe_unicode  # re-export
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 

@@ -29,11 +29,12 @@ from __future__ import print_function
 
 import argparse
 import fileinput
+import json
 import os
 import stat
 import sys
 
-from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call, json
+from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call
 
 
 def argparser(argv):

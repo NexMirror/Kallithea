@@ -42,15 +42,10 @@ from sqlalchemy.util import OrderedSet
 #==============================================================================
 # json
 #==============================================================================
-from kallithea.lib.ext_json import json
+from kallithea.lib import ext_json
 
 
-# alias for formatted json
-formatted_json = functools.partial(json.dumps, indent=4, sort_keys=True)
-
-
-
-
+formatted_json = functools.partial(ext_json.dumps, indent=4, sort_keys=True)
 
 
 #==============================================================================

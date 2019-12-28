@@ -37,13 +37,12 @@ from time import mktime
 from tg import config
 
 from kallithea import CELERY_ON
-from kallithea.lib import celerylib
-from kallithea.lib.compat import json
+from kallithea.lib import celerylib, ext_json
 from kallithea.lib.helpers import person
 from kallithea.lib.hooks import log_create_repository
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import str2bool
+from kallithea.lib.utils2 import ascii_bytes, str2bool
 from kallithea.lib.vcs.utils import author_email
 from kallithea.model.db import RepoGroup, Repository, Statistics, User
 
@@ -118,9 +117,9 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             return True
 
         if cur_stats:
-            commits_by_day_aggregate = OrderedDict(json.loads(
+            commits_by_day_aggregate = OrderedDict(ext_json.loads(
                                         cur_stats.commit_activity_combined))
-            co_day_auth_aggr = json.loads(cur_stats.commit_activity)
+            co_day_auth_aggr = ext_json.loads(cur_stats.commit_activity)
 
         log.debug('starting parsing %s', parse_limit)
 
@@ -193,8 +192,8 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             }
 
         stats = cur_stats if cur_stats else Statistics()
-        stats.commit_activity = json.dumps(co_day_auth_aggr)
-        stats.commit_activity_combined = json.dumps(overview_data)
+        stats.commit_activity = ascii_bytes(ext_json.dumps(co_day_auth_aggr))
+        stats.commit_activity_combined = ascii_bytes(ext_json.dumps(overview_data))
 
         log.debug('last revision %s', last_rev)
         leftovers = len(repo.revisions[last_rev:])
@@ -202,7 +201,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
         if last_rev == 0 or leftovers < parse_limit:
             log.debug('getting code trending stats')
-            stats.languages = json.dumps(__get_codes_stats(repo_name))
+            stats.languages = ascii_bytes(ext_json.dumps(__get_codes_stats(repo_name)))
 
         try:
             stats.repository = dbrepo

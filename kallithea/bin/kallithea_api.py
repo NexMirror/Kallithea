@@ -28,9 +28,10 @@ Original author and date, and relevant copyright and licensing information is be
 from __future__ import print_function
 
 import argparse
+import json
 import sys
 
-from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call, json
+from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call
 
 
 def argparser(argv):

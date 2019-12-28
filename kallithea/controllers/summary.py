@@ -40,10 +40,10 @@ from webob.exc import HTTPBadRequest
 
 import kallithea.lib.helpers as h
 from kallithea.config.conf import ALL_EXTS, ALL_READMES, LANGUAGES_EXTENSIONS_MAP
+from kallithea.lib import ext_json
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.celerylib.tasks import get_commits_stats
-from kallithea.lib.compat import json
 from kallithea.lib.markup_renderer import MarkupRenderer
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int, safe_unicode
@@ -139,7 +139,7 @@ class SummaryController(BaseRepoController):
 
         if stats and stats.languages:
             c.no_data = False is c.db_repo.enable_statistics
-            lang_stats_d = json.loads(stats.languages)
+            lang_stats_d = ext_json.loads(stats.languages)
 
             lang_stats = [(x, {"count": y,
                                "desc": LANGUAGES_EXTENSIONS_MAP.get(x, '?')})
@@ -191,9 +191,9 @@ class SummaryController(BaseRepoController):
         c.stats_percentage = 0
         if stats and stats.languages:
             c.no_data = False is c.db_repo.enable_statistics
-            lang_stats_d = json.loads(stats.languages)
-            c.commit_data = json.loads(stats.commit_activity)
-            c.overview_data = json.loads(stats.commit_activity_combined)
+            lang_stats_d = ext_json.loads(stats.languages)
+            c.commit_data = ext_json.loads(stats.commit_activity)
+            c.overview_data = ext_json.loads(stats.commit_activity_combined)
 
             lang_stats = ((x, {"count": y,
                                "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})

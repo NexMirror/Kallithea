@@ -35,11 +35,11 @@ import types
 from tg import Response, TGController, request, response
 from webob.exc import HTTPError, HTTPException
 
+from kallithea.lib import ext_json
 from kallithea.lib.auth import AuthUser
 from kallithea.lib.base import _get_ip_addr as _get_ip
 from kallithea.lib.base import get_path_info
-from kallithea.lib.compat import json
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import ascii_bytes, safe_str
 from kallithea.model.db import User
 
 
@@ -121,7 +121,7 @@ class JSONRPCController(TGController):
         raw_body = environ['wsgi.input'].read(length)
 
         try:
-            json_body = json.loads(raw_body)
+            json_body = ext_json.loads(raw_body)
         except ValueError as e:
             # catch JSON errors Here
             raise JSONRPCErrorResponse(retid=self._req_id,
@@ -238,16 +238,16 @@ class JSONRPCController(TGController):
 
         response = dict(id=self._req_id, result=raw_response, error=self._error)
         try:
-            return json.dumps(response)
+            return ascii_bytes(ext_json.dumps(response))
         except TypeError as e:
             log.error('API FAILED. Error encoding response for %s %s: %s\n%s', action, rpc_args, e, traceback.format_exc())
-            return json.dumps(
+            return ascii_bytes(ext_json.dumps(
                 dict(
                     id=self._req_id,
                     result=None,
-                    error="Error encoding response"
+                    error="Error encoding response",
                 )
-            )
+            ))
 
     def _find_method(self):
         """

@@ -45,12 +45,11 @@ from tg.i18n import ugettext as _
 
 from kallithea import BACKENDS, __version__
 from kallithea.config.routing import url
-from kallithea.lib import auth_modules
+from kallithea.lib import auth_modules, ext_json
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
-from kallithea.lib.compat import json
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import get_repo_slug, is_valid_repo
-from kallithea.lib.utils2 import AttributeDict, safe_int, safe_str, safe_unicode, set_hook_environment, str2bool
+from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_str, safe_unicode, set_hook_environment, str2bool
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model import meta
 from kallithea.model.db import PullRequest, Repository, Setting, User
@@ -630,7 +629,7 @@ def jsonify(func, *args, **kwargs):
         warnings.warn(msg, Warning, 2)
         log.warning(msg)
     log.debug("Returning JSON wrapped action output")
-    return json.dumps(data)
+    return ascii_bytes(ext_json.dumps(data))
 
 @decorator.decorator
 def IfSshEnabled(func, *args, **kwargs):

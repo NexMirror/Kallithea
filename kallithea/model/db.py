@@ -45,11 +45,11 @@ from tg.i18n import lazy_ugettext as _
 from webob.exc import HTTPNotFound
 
 import kallithea
+from kallithea.lib import ext_json
 from kallithea.lib.caching_query import FromCache
-from kallithea.lib.compat import json
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.utils2 import (
-    Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_str, safe_unicode, str2bool, urlreadable)
+    Optional, ascii_bytes, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_str, safe_unicode, str2bool, urlreadable)
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
@@ -521,14 +521,14 @@ class User(Base, BaseDbModel):
             return {}
 
         try:
-            return json.loads(self._user_data)
+            return ext_json.loads(self._user_data)
         except TypeError:
             return {}
 
     @user_data.setter
     def user_data(self, val):
         try:
-            self._user_data = json.dumps(val)
+            self._user_data = ascii_bytes(ext_json.dumps(val))
         except Exception:
             log.error(traceback.format_exc())
 
@@ -833,14 +833,14 @@ class UserGroup(Base, BaseDbModel):
             return {}
 
         try:
-            return json.loads(self._group_data)
+            return ext_json.loads(self._group_data)
         except TypeError:
             return {}
 
     @group_data.setter
     def group_data(self, val):
         try:
-            self._group_data = json.dumps(val)
+            self._group_data = ascii_bytes(ext_json.dumps(val))
         except Exception:
             log.error(traceback.format_exc())
 
@@ -1032,7 +1032,7 @@ class Repository(Base, BaseDbModel):
     @hybrid_property
     def changeset_cache(self):
         try:
-            cs_cache = json.loads(self._changeset_cache) # might raise on bad data
+            cs_cache = ext_json.loads(self._changeset_cache) # might raise on bad data
             cs_cache['raw_id'] # verify data, raise exception on error
             return cs_cache
         except (TypeError, KeyError, ValueError):
@@ -1041,7 +1041,7 @@ class Repository(Base, BaseDbModel):
     @changeset_cache.setter
     def changeset_cache(self, val):
         try:
-            self._changeset_cache = json.dumps(val)
+            self._changeset_cache = ascii_bytes(ext_json.dumps(val))
         except Exception:
             log.error(traceback.format_exc())
 
