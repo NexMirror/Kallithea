@@ -292,7 +292,6 @@ class TestDiffLib(base.TestController):
         #from pprint import pprint; pprint(chunks[1])
         l = ['\n']
         for d in chunks[1]:
-            d['line'] = d['line'].encode()  # not needed for py3
             l.append('%(action)-7s %(new_lineno)3s %(old_lineno)3s %(line)r\n' % d)
         s = ''.join(l)
         assert s == r'''

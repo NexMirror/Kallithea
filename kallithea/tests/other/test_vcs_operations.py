@@ -39,7 +39,7 @@ from tempfile import _RandomNameSequence
 import pytest
 
 from kallithea import CONFIG
-from kallithea.lib.utils2 import ascii_bytes
+from kallithea.lib.utils2 import ascii_bytes, safe_str
 from kallithea.model.db import CacheInvalidation, Repository, Ui, User, UserIpMap, UserLog
 from kallithea.model.meta import Session
 from kallithea.model.ssh_key import SshKeyModel
@@ -163,7 +163,7 @@ class Command(object):
                 print('stderr:', stderr)
         if not ignoreReturnCode:
             assert p.returncode == 0
-        return stdout, stderr
+        return safe_str(stdout), safe_str(stderr)
 
 
 def _get_tmp_dir(prefix='vcs_operations-', suffix=''):

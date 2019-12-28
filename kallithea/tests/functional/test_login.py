@@ -174,7 +174,7 @@ class TestLoginController(base.TestController):
             assert response.status == '302 Found'
             came_from = urllib.parse.parse_qs(urllib.parse.urlparse(response.location).query)['came_from'][0]
             came_from_qs = urllib.parse.parse_qsl(urllib.parse.urlparse(came_from).query)
-            assert sorted(came_from_qs) == sorted((k, v.encode('utf-8')) for k, v in args.items())
+            assert sorted(came_from_qs) == sorted(args.items())
 
     @base.parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),

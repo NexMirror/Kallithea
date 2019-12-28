@@ -208,7 +208,7 @@ class TestAdminSettingsController(base.TestController):
                                 ))
 
             self.checkSessionFlash(response, 'Updated application settings')
-            assert Setting.get_app_settings()['title'] == new_title.decode('utf-8')
+            assert Setting.get_app_settings()['title'] == new_title
 
             response = response.follow()
             response.mustcontain("""<span class="branding">%s</span>""" % new_title)
