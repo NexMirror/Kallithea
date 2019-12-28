@@ -46,7 +46,7 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.exceptions import NonRelativePathError
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_str, str2bool
+from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_str, safe_unicode, str2bool
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
@@ -365,8 +365,7 @@ class FilesController(BaseRepoController):
         c.f_path = f_path
 
         if r_post:
-
-            old_content = c.file.content
+            old_content = safe_unicode(c.file.content)
             sl = old_content.splitlines(1)
             first_line = sl[0] if sl else ''
             # modes:  0 - Unix, 1 - Mac, 2 - DOS

@@ -16,7 +16,7 @@ import stat
 
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import NodeError, RemovedFileNodeError
-from kallithea.lib.vcs.utils import safe_str, safe_unicode
+from kallithea.lib.vcs.utils import safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -263,6 +263,10 @@ class FileNode(Node):
             raise NodeError("Cannot use both content and changeset")
         super(FileNode, self).__init__(path, kind=NodeKind.FILE)
         self.changeset = changeset
+        if not isinstance(content, bytes) and content is not None:
+            # File content is one thing that inherently must be bytes ... but
+            # VCS module tries to be "user friendly" and support unicode ...
+            content = safe_bytes(content)
         self._content = content
         self._mode = mode or 0o100644
 
@@ -278,24 +282,16 @@ class FileNode(Node):
             mode = self._mode
         return mode
 
-    def _get_content(self):
+    @property
+    def content(self):
+        """
+        Returns lazily byte content of the FileNode.
+        """
         if self.changeset:
             content = self.changeset.get_file_content(self.path)
         else:
             content = self._content
         return content
-
-    @property
-    def content(self):
-        """
-        Returns lazily content of the FileNode. If possible, would try to
-        decode content from UTF-8.
-        """
-        content = self._get_content()
-
-        if bool(content and '\0' in content):
-            return content
-        return safe_unicode(content)
 
     @LazyProperty
     def size(self):
@@ -366,7 +362,7 @@ class FileNode(Node):
         """
         from pygments import lexers
         try:
-            lexer = lexers.guess_lexer_for_filename(self.name, self.content, stripnl=False)
+            lexer = lexers.guess_lexer_for_filename(self.name, safe_unicode(self.content), stripnl=False)
         except lexers.ClassNotFound:
             lexer = lexers.TextLexer(stripnl=False)
         # returns first alias
@@ -414,8 +410,7 @@ class FileNode(Node):
         """
         Returns True if file has binary content.
         """
-        _bin = '\0' in self._get_content()
-        return _bin
+        return b'\0' in self.content
 
     def is_browser_compatible_image(self):
         return self.mimetype in [

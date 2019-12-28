@@ -544,11 +544,11 @@ class TestMercurialChangeset(object):
         for cm in self.repo:
             assert isinstance(cm.author, unicode)
 
-    def test_repo_files_content_is_unicode(self):
+    def test_repo_files_content_is_bytes(self):
         test_changeset = self.repo.get_changeset(100)
         for node in test_changeset.get_node('/'):
             if node.is_file():
-                assert isinstance(node.content, unicode)
+                assert isinstance(node.content, bytes)
 
     def test_wrong_path(self):
         # There is 'setup.py' in the root dir but not there:

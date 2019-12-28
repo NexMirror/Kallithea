@@ -330,7 +330,7 @@ def pygmentize(filenode, **kwargs):
     """
     lexer = get_custom_lexer(filenode.extension) or filenode.lexer
     return literal(markup_whitespace(
-        code_highlight(filenode.content, lexer, CodeHtmlFormatter(**kwargs))))
+        code_highlight(safe_unicode(filenode.content), lexer, CodeHtmlFormatter(**kwargs))))
 
 
 def pygmentize_annotation(repo_name, filenode, **kwargs):

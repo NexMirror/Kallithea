@@ -68,11 +68,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             # for dirnames (in reverse order) [this only applies for nodes from added]
             new_trees = []
 
-            if not node.is_binary:
-                content = node.content.encode(ENCODING)
-            else:
-                content = node.content
-            blob = objects.Blob.from_string(content)
+            blob = objects.Blob.from_string(node.content)
 
             node_path = safe_bytes(node.name)
             if dirnames:

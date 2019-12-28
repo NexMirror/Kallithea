@@ -591,7 +591,7 @@ class PullrequestsController(BaseRepoController):
                                       ignore_whitespace=ignore_whitespace, context=line_context)
         except ChangesetDoesNotExistError:
             raw_diff = _("The diff can't be shown - the PR revisions could not be found.")
-        diff_processor = diffs.DiffProcessor(raw_diff or '', diff_limit=diff_limit)
+        diff_processor = diffs.DiffProcessor(raw_diff, diff_limit=diff_limit)
         c.limited_diff = diff_processor.limited_diff
         c.file_diff_data = []
         c.lines_added = 0

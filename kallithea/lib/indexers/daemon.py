@@ -182,12 +182,13 @@ class WhooshIndexingDaemon(object):
 
         indexed = indexed_w_content = 0
         if self.is_indexable_node(node):
-            u_content = node.content
-            if not isinstance(u_content, unicode):
+            bytes_content = node.content
+            if b'\0' in bytes_content:
                 log.warning('    >> %s - no text content', path)
                 u_content = u''
             else:
                 log.debug('    >> %s', path)
+                u_content = safe_unicode(bytes_content)
                 indexed_w_content += 1
 
         else:

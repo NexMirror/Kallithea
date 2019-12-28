@@ -73,7 +73,7 @@
                     </div>
                     <div class="panel-body no-padding">
                         <div id="editor_container">
-                            <textarea id="editor_${h.FID('f',file.path)}" name="contents" style="display:none">${file.content}</textarea>
+                            <textarea id="editor_${h.FID('f',file.path)}" name="contents" style="display:none">${safe_unicode(file.content)}</textarea>
                         </div>
                     </div>
                 </div>

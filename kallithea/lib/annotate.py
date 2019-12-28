@@ -30,6 +30,7 @@ from pygments.formatters import HtmlFormatter
 
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
+from kallithea.lib.vcs.utils import safe_unicode
 
 
 def annotate_highlight(filenode, annotate_from_changeset_func=None,
@@ -53,7 +54,7 @@ def annotate_highlight(filenode, annotate_from_changeset_func=None,
         headers=headers,
         annotate_from_changeset_func=annotate_from_changeset_func, **options)
     lexer = get_custom_lexer(filenode.extension) or filenode.lexer
-    highlighted = highlight(filenode.content, lexer, formatter)
+    highlighted = highlight(safe_unicode(filenode.content), lexer, formatter)
     return highlighted
 
 

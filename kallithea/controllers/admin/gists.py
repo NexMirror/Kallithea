@@ -182,7 +182,7 @@ class GistsController(BaseController):
             log.error(traceback.format_exc())
             raise HTTPNotFound()
         if format == 'raw':
-            content = '\n\n'.join([f.content for f in c.files if (f_path is None or safe_unicode(f.path) == f_path)])
+            content = '\n\n'.join([safe_unicode(f.content) for f in c.files if (f_path is None or safe_unicode(f.path) == f_path)])
             response.content_type = 'text/plain'
             return content
         return render('admin/gists/show.html')

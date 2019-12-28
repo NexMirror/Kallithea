@@ -289,8 +289,8 @@ class DiffProcessor(object):
             based on that parameter cut off will be triggered, set to None
             to show full diff
         """
-        if not isinstance(diff, basestring):
-            raise Exception('Diff must be a basestring got %s instead' % type(diff))
+        if not isinstance(diff, bytes):
+            raise Exception('Diff must be bytes - got %s' % type(diff))
 
         self._diff = diff
         self.adds = 0
@@ -516,6 +516,9 @@ _hg_header_re = re.compile(r"""
 """, re.VERBOSE | re.MULTILINE)
 
 
+_header_next_check = re.compile(br'''(?!@)(?!literal )(?!delta )''')
+
+
 def _get_header(vcs, diff_chunk):
     """
     Parses a Git diff for a single file (header and chunks) and returns a tuple with:
@@ -537,7 +540,7 @@ def _get_header(vcs, diff_chunk):
         raise Exception('diff not recognized as valid %s diff' % vcs)
     meta_info = match.groupdict()
     rest = diff_chunk[match.end():]
-    if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
+    if rest and _header_next_check.match(rest):
         raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, diff_chunk[:match.end()], rest[:1000]))
     diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
     return meta_info, diff_lines

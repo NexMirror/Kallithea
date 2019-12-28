@@ -94,7 +94,7 @@ class FeedController(BaseRepoController):
         desc_msg.extend(changes)
         if str2bool(CONFIG.get('rss_include_diff', False)):
             desc_msg.append('\n\n')
-            desc_msg.append(raw_diff)
+            desc_msg.append(safe_unicode(raw_diff))
         desc_msg.append('</pre>')
         return [safe_unicode(chunk) for chunk in desc_msg]
 
