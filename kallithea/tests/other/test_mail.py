@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import mock
 
 import kallithea
@@ -144,9 +146,9 @@ class TestMail(base.TestController):
 
     def test_send_mail_with_author_full_mail_from(self):
         mailserver = 'smtp.mailserver.org'
-        recipients = ['rcpt1', 'rcpt2']
+        recipients = ['ræcpt1', 'receptor2 <rcpt2@example.com>', 'tæst@example.com', 'Tæst <test@example.com>']
         envelope_addr = 'noreply@mailserver.org'
-        envelope_from = 'Some Name <%s>' % envelope_addr
+        envelope_from = 'Söme Næme <%s>' % envelope_addr
         subject = 'subject'
         body = 'body'
         html_body = 'html_body'

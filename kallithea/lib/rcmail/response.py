@@ -346,13 +346,13 @@ def to_message(mail, separator="; "):
 
     for k in mail.keys():
         if k in ADDRESS_HEADERS_WHITELIST:
-            out[k.encode('ascii')] = header_to_mime_encoding(
+            out[k] = header_to_mime_encoding(
                                          mail[k],
                                          not_email=False,
                                          separator=separator
                                      )
         else:
-            out[k.encode('ascii')] = header_to_mime_encoding(
+            out[k] = header_to_mime_encoding(
                                          mail[k],
                                          not_email=True
                                     )
@@ -443,12 +443,12 @@ def properly_encode_header(value, encoder, not_email):
     check different, then change this.
     """
     try:
-        return value.encode("ascii")
-    except UnicodeEncodeError:
+        value.encode("ascii")
+        return value
+    except UnicodeError:
         if not not_email and VALUE_IS_EMAIL_ADDRESS(value):
             # this could have an email address, make sure we don't screw it up
             name, address = parseaddr(value)
-            return '"%s" <%s>' % (
-                encoder.header_encode(name.encode("utf-8")), address)
+            return '"%s" <%s>' % (encoder.header_encode(name), address)
 
-        return encoder.header_encode(value.encode("utf-8"))
+        return encoder.header_encode(value)
