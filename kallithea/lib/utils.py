@@ -43,7 +43,7 @@ from kallithea.lib.utils2 import aslist, get_current_authuser, safe_str, safe_un
 from kallithea.lib.vcs.backends.git.repository import GitRepository
 from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import VCSError
+from kallithea.lib.vcs.exceptions import RepositoryError, VCSError
 from kallithea.lib.vcs.utils.fakemod import create_module
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.utils.hgcompat import config, ui
@@ -581,17 +581,26 @@ def check_git_version():
         log.warning('No git executable configured - check "git_path" in the ini file.')
         return None
 
-    stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
-                                                    _safe=True)
+    try:
+        stdout, stderr = GitRepository._run_git_command(['--version'])
+    except RepositoryError as e:
+        # message will already have been logged as error
+        log.warning('No working git executable found - check "git_path" in the ini file.')
+        return None
 
     if stderr:
-        log.warning('Error/stderr from "%s --version": %r', settings.GIT_EXECUTABLE_PATH, stderr)
+        log.warning('Error/stderr from "%s --version":\n%s', settings.GIT_EXECUTABLE_PATH, stderr)
 
-    m = re.search(r"\d+.\d+.\d+", stdout)
+    if not stdout:
+        log.warning('No working git executable found - check "git_path" in the ini file.')
+        return None
+
+    output = stdout.strip()
+    m = re.search(r"\d+.\d+.\d+", output)
     if m:
         ver = StrictVersion(m.group(0))
         log.debug('Git executable: "%s", version %s (parsed from: "%s")',
-                  settings.GIT_EXECUTABLE_PATH, ver, stdout.strip())
+                  settings.GIT_EXECUTABLE_PATH, ver, output)
         if ver < git_req_ver:
             log.error('Kallithea detected %s version %s, which is too old '
                       'for the system to function properly. '
@@ -603,8 +612,8 @@ def check_git_version():
             sys.exit(1)
     else:
         ver = StrictVersion('0.0.0')
-        log.warning('Error finding version number in "%s --version" stdout: %r',
-                    settings.GIT_EXECUTABLE_PATH, stdout.strip())
+        log.warning('Error finding version number in "%s --version" stdout:\n%s',
+                    settings.GIT_EXECUTABLE_PATH, output)
 
     return ver
 
