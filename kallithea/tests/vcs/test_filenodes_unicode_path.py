@@ -8,29 +8,22 @@ from kallithea.tests.vcs.base import _BackendTestMixin
 
 class FileNodeUnicodePathTestsMixin(_BackendTestMixin):
 
-    fname = 'ąśðąęłąć.txt'
-    ufname = (fname).decode('utf-8')
+    fname = u'ąśðąęłąć.txt'
 
     @classmethod
     def _get_commits(cls):
-        cls.nodes = [
-            FileNode(cls.fname, content='Foobar'),
-        ]
-
-        commits = [
+        return [
             {
                 'message': 'Initial commit',
                 'author': 'Joe Doe <joe.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 20),
-                'added': cls.nodes,
+                'added': [FileNode(cls.fname, content='Foobar')],
             },
         ]
-        return commits
 
     def test_filenode_path(self):
         node = self.tip.get_node(self.fname)
-        unode = self.tip.get_node(self.ufname)
-        assert node == unode
+        assert node.path == self.fname
 
 
 class TestGitFileNodeUnicodePath(FileNodeUnicodePathTestsMixin):
