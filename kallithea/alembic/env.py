@@ -43,7 +43,9 @@ logging.getLogger('alembic').setLevel(logging.INFO)
 # stamping during "kallithea-cli db-create"), config_file_name is not available,
 # and loggers are assumed to already have been configured.
 if config.config_file_name:
-    fileConfig(config.config_file_name, disable_existing_loggers=False)
+    fileConfig(config.config_file_name,
+        {'__file__': config.config_file_name, 'here': os.path.dirname(config.config_file_name)},
+        disable_existing_loggers=False)
 
 
 def include_in_autogeneration(object, name, type, reflected, compare_to):

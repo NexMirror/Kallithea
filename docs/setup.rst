@@ -562,7 +562,7 @@ that, you'll need to:
 
       ini = '/srv/kallithea/my.ini'
       from logging.config import fileConfig
-      fileConfig(ini)
+      fileConfig(ini, {'__file__': ini, 'here': '/srv/kallithea'})
       from paste.deploy import loadapp
       application = loadapp('config:' + ini)
 
@@ -578,7 +578,7 @@ that, you'll need to:
 
       ini = '/srv/kallithea/kallithea.ini'
       from logging.config import fileConfig
-      fileConfig(ini)
+      fileConfig(ini, {'__file__': ini, 'here': '/srv/kallithea'})
       from paste.deploy import loadapp
       application = loadapp('config:' + ini)
 

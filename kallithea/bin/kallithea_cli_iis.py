@@ -33,7 +33,8 @@ import os
 def __ExtensionFactory__():
     from paste.deploy import loadapp
     from logging.config import fileConfig
-    fileConfig('%(inifile)s')
+    fileConfig('%(inifile)s', {'__file__': '%(inifile)s', 'here': '%(inifiledir)s'})
+
     application = loadapp('config:%(inifile)s')
 
     def app(environ, start_response):
@@ -75,6 +76,7 @@ def iis_install(virtualdir):
     with open(dispatchfile, 'w') as f:
         f.write(dispath_py_template % {
             'inifile': config_file_abs.replace('\\', '\\\\'),
+            'inifiledir': os.path.dirname(config_file_abs).replace('\\', '\\\\'),
             'virtualdir': virtualdir,
             })
 
