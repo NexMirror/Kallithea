@@ -30,6 +30,7 @@ from tg.i18n import ugettext as _
 
 from kallithea.lib import ssh
 from kallithea.lib.utils2 import safe_str, str2bool
+from kallithea.lib.vcs.exceptions import RepositoryError
 from kallithea.model.db import User, UserSshKeys
 from kallithea.model.meta import Session
 
@@ -37,7 +38,7 @@ from kallithea.model.meta import Session
 log = logging.getLogger(__name__)
 
 
-class SshKeyModelException(Exception):
+class SshKeyModelException(RepositoryError):
     """Exception raised by SshKeyModel methods to report errors"""
 
 
@@ -114,7 +115,7 @@ class SshKeyModel(object):
         # Now, test that the directory is or was created in a readable way by previous.
         if not (os.path.isdir(authorized_keys_dir) and
                 os.access(authorized_keys_dir, os.W_OK)):
-            raise Exception("Directory of authorized_keys cannot be written to so authorized_keys file %s cannot be written" % (authorized_keys))
+            raise SshKeyModelException("Directory of authorized_keys cannot be written to so authorized_keys file %s cannot be written" % (authorized_keys))
 
         # Make sure we don't overwrite a key file with important content
         if os.path.exists(authorized_keys):
@@ -125,7 +126,7 @@ class SshKeyModel(object):
                     elif ssh.SSH_OPTIONS in l and ' ssh-serve ' in l:
                         pass # Kallithea entries are ok to overwrite
                     else:
-                        raise Exception("Safety check failed, found %r in %s - please review and remove it" % (l.strip(), authorized_keys))
+                        raise SshKeyModelException("Safety check failed, found %r in %s - please review and remove it" % (l.strip(), authorized_keys))
 
         fh, tmp_authorized_keys = tempfile.mkstemp('.authorized_keys', dir=os.path.dirname(authorized_keys))
         with os.fdopen(fh, 'w') as f:
