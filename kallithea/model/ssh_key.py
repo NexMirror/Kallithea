@@ -129,6 +129,7 @@ class SshKeyModel(object):
 
         fh, tmp_authorized_keys = tempfile.mkstemp('.authorized_keys', dir=os.path.dirname(authorized_keys))
         with os.fdopen(fh, 'w') as f:
+            f.write("# WARNING: This .ssh/authorized_keys file is managed by Kallithea. Manual editing or adding new entries will make Kallithea back off.\n")
             for key in UserSshKeys.query().join(UserSshKeys.user).filter(User.active == True):
                 f.write(ssh.authorized_keys_line(kallithea_cli_path, config['__file__'], key))
         os.chmod(tmp_authorized_keys, stat.S_IRUSR | stat.S_IWUSR)
