@@ -285,9 +285,9 @@ class MyAccountController(BaseController):
 
     @IfSshEnabled
     def my_account_ssh_keys_delete(self):
-        public_key = request.POST.get('del_public_key')
+        fingerprint = request.POST.get('del_public_key_fingerprint')
         try:
-            SshKeyModel().delete(public_key, request.authuser.user_id)
+            SshKeyModel().delete(fingerprint, request.authuser.user_id)
             Session().commit()
             SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key successfully deleted"), category='success')

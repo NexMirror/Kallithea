@@ -72,13 +72,13 @@ class SshKeyModel(object):
 
         return new_ssh_key
 
-    def delete(self, public_key, user=None):
+    def delete(self, fingerprint, user=None):
         """
-        Deletes given public_key, if user is set it also filters the object for
-        deletion by given user.
+        Deletes ssh key with given fingerprint. If user is set, it also filters
+        the object for deletion by given user.
         Will raise SshKeyModelException on errors
         """
-        ssh_key = UserSshKeys.query().filter(UserSshKeys._public_key == public_key)
+        ssh_key = UserSshKeys.query().filter(UserSshKeys.fingerprint == fingerprint)
 
         if user:
             user = User.guess_instance(user)
@@ -86,7 +86,7 @@ class SshKeyModel(object):
 
         ssh_key = ssh_key.scalar()
         if ssh_key is None:
-            raise SshKeyModelException(_('SSH key %r not found') % safe_str(public_key))
+            raise SshKeyModelException(_('SSH key with fingerprint %r found') % safe_str(fingerprint))
         Session().delete(ssh_key)
 
     def get_ssh_keys(self, user):

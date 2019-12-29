@@ -556,7 +556,7 @@ class TestAdminUsersController(TestController):
         assert ssh_key.description == u'me@localhost'
 
         response = self.app.post(url('edit_user_ssh_keys_delete', id=user_id),
-                                 {'del_public_key': ssh_key.public_key,
+                                 {'del_public_key_fingerprint': ssh_key.fingerprint,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'SSH key successfully deleted')
         keys = UserSshKeys.query().all()
