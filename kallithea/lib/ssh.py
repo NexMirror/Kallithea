@@ -46,7 +46,7 @@ def parse_pub_key(ssh_key):
     >>> parse_pub_key('''AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ''')
     Traceback (most recent call last):
     ...
-    SshKeyParseError: Incorrect SSH key - it must have both a key type and a base64 part
+    SshKeyParseError: Incorrect SSH key - it must have both a key type and a base64 part, like 'ssh-rsa ASRNeaZu4FA...xlJp='
     >>> parse_pub_key('''abc AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ''')
     Traceback (most recent call last):
     ...
@@ -74,7 +74,7 @@ def parse_pub_key(ssh_key):
 
     parts = ssh_key.split(None, 2)
     if len(parts) < 2:
-        raise SshKeyParseError(_("Incorrect SSH key - it must have both a key type and a base64 part"))
+        raise SshKeyParseError(_("Incorrect SSH key - it must have both a key type and a base64 part, like 'ssh-rsa ASRNeaZu4FA...xlJp='"))
 
     keytype, keyvalue, comment = (parts + [''])[:3]
     if keytype not in ('ssh-rsa', 'ssh-dss', 'ssh-ed25519'):

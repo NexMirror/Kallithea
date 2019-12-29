@@ -126,7 +126,7 @@ class SshKeyModel(object):
                     elif ssh.SSH_OPTIONS in l and ' ssh-serve ' in l:
                         pass # Kallithea entries are ok to overwrite
                     else:
-                        raise SshKeyModelException("Safety check failed, found %r in %s - please review and remove it" % (l.strip(), authorized_keys))
+                        raise SshKeyModelException("Safety check failed, found %r line in %s - please remove it if Kallithea should manage the file" % (l.strip(), authorized_keys))
 
         fh, tmp_authorized_keys = tempfile.mkstemp('.authorized_keys', dir=os.path.dirname(authorized_keys))
         with os.fdopen(fh, 'w') as f:
