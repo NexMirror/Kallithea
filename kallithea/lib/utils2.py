@@ -536,12 +536,13 @@ def get_hook_environment():
     """
 
     try:
-        extras = json.loads(os.environ['KALLITHEA_EXTRAS'])
+        kallithea_extras = os.environ['KALLITHEA_EXTRAS']
     except KeyError:
         raise HookEnvironmentError("Environment variable KALLITHEA_EXTRAS not found")
 
+    extras = json.loads(kallithea_extras)
     try:
-        for k in ['username', 'repository', 'scm', 'action', 'ip']:
+        for k in ['username', 'repository', 'scm', 'action', 'ip', 'config']:
             extras[k]
     except KeyError:
         raise HookEnvironmentError('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
