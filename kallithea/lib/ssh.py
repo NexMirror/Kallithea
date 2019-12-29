@@ -97,6 +97,18 @@ def parse_pub_key(ssh_key):
 SSH_OPTIONS = 'no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding'
 
 
+def _safe_check(s, rec = re.compile('^[a-zA-Z0-9+/]+={0,2}$')):
+    """Return true if s really has the right content for base64 encoding and only contains safe characters
+    >>> _safe_check('asdf')
+    True
+    >>> _safe_check('as df')
+    False
+    >>> _safe_check('AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ==')
+    True
+    """
+    return rec.match(s) is not None
+
+
 def authorized_keys_line(kallithea_cli_path, config_file, key):
     """
     Return a line as it would appear in .authorized_keys
@@ -113,6 +125,8 @@ def authorized_keys_line(kallithea_cli_path, config_file, key):
     except SshKeyParseError:
         return '# Invalid Kallithea SSH key: %s %s\n' % (key.user.user_id, key.user_ssh_key_id)
     mimekey = decoded.encode('base64').replace('\n', '')
+    if not _safe_check(mimekey):
+        return '# Invalid Kallithea SSH key - bad base64 encoding: %s %s\n' % (key.user.user_id, key.user_ssh_key_id)
     return '%s,command="%s ssh-serve -c %s %s %s" %s %s\n' % (
         SSH_OPTIONS, kallithea_cli_path, config_file,
         key.user.user_id, key.user_ssh_key_id,
