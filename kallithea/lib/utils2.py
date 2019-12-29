@@ -522,6 +522,9 @@ def obfuscate_url_pw(engine):
     return str(_url)
 
 
+class HookEnvironmentError(Exception): pass
+
+
 def get_hook_environment():
     """
     Get hook context by deserializing the global KALLITHEA_EXTRAS environment
@@ -535,13 +538,13 @@ def get_hook_environment():
     try:
         extras = json.loads(os.environ['KALLITHEA_EXTRAS'])
     except KeyError:
-        raise Exception("Environment variable KALLITHEA_EXTRAS not found")
+        raise HookEnvironmentError("Environment variable KALLITHEA_EXTRAS not found")
 
     try:
         for k in ['username', 'repository', 'scm', 'action', 'ip']:
             extras[k]
     except KeyError:
-        raise Exception('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
+        raise HookEnvironmentError('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
 
     return AttributeDict(extras)
 
