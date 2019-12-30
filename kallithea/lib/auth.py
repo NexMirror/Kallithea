@@ -30,6 +30,7 @@ import logging
 import os
 import string
 
+import bcrypt
 import ipaddr
 from decorator import decorator
 from sqlalchemy.orm import joinedload
@@ -38,7 +39,6 @@ from tg import request
 from tg.i18n import ugettext as _
 from webob.exc import HTTPForbidden, HTTPFound
 
-from kallithea import __platform__, is_unix, is_windows
 from kallithea.config.routing import url
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
@@ -87,44 +87,34 @@ class PasswordGenerator(object):
 
 def get_crypt_password(password):
     """
-    Cryptographic function used for password hashing based on pybcrypt
-    or Python's own OpenSSL wrapper on windows
+    Cryptographic function used for bcrypt password hashing.
 
     :param password: password to hash
     """
-    if is_windows:
-        return hashlib.sha256(password).hexdigest()
-    elif is_unix:
-        import bcrypt
-        return ascii_str(bcrypt.hashpw(safe_bytes(password), bcrypt.gensalt(10)))
-    else:
-        raise Exception('Unknown or unsupported platform %s'
-                        % __platform__)
+    return ascii_str(bcrypt.hashpw(safe_bytes(password), bcrypt.gensalt(10)))
 
 
 def check_password(password, hashed):
     """
-    Checks matching password with it's hashed value, runs different
-    implementation based on platform it runs on
+    Checks password match the hashed value using bcrypt.
+    Remains backwards compatible and accept plain sha256 hashes which used to
+    be used on Windows.
 
     :param password: password
     :param hashed: password in hashed form
     """
     # sha256 hashes will always be 64 hex chars
     # bcrypt hashes will always contain $ (and be shorter)
-    if is_windows or len(hashed) == 64 and all(x in string.hexdigits for x in hashed):
-        return hashlib.sha256(safe_bytes(password)).hexdigest() == hashed
-    elif is_unix:
-        import bcrypt
-        try:
-            return bcrypt.checkpw(safe_bytes(password), ascii_bytes(hashed))
-        except ValueError as e:
-            # bcrypt will throw ValueError 'Invalid hashed_password salt' on all password errors
-            log.error('error from bcrypt checking password: %s', e)
-            return False
-    else:
-        raise Exception('Unknown or unsupported platform %s'
-                        % __platform__)
+    if len(hashed) == 64 and all(x in string.hexdigits for x in hashed):
+        return hashlib.sha256(password).hexdigest() == hashed
+    try:
+        return bcrypt.checkpw(safe_bytes(password), ascii_bytes(hashed))
+    except ValueError as e:
+        # bcrypt will throw ValueError 'Invalid hashed_password salt' on all password errors
+        log.error('error from bcrypt checking password: %s', e)
+        return False
+    log.error('check_password failed - no method found for hash length %s', len(hashed))
+    return False
 
 
 def _cached_perms_data(user_id, user_is_admin):

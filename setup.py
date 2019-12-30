@@ -71,10 +71,8 @@ requirements = [
     "ipaddr >= 2.2.0, < 2.3",
     "paginate >= 0.5, < 0.6",
     "paginate_sqlalchemy >= 0.3.0, < 0.4",
+    "bcrypt >= 3.1.0, < 3.2",
 ]
-
-if not is_windows:
-    requirements.append("bcrypt >= 3.1.0, < 3.2")
 
 dependency_links = [
 ]
