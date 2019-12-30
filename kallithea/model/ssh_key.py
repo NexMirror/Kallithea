@@ -72,17 +72,15 @@ class SshKeyModel(object):
 
         return new_ssh_key
 
-    def delete(self, fingerprint, user=None):
+    def delete(self, fingerprint, user):
         """
-        Deletes ssh key with given fingerprint. If user is set, it also filters
-        the object for deletion by given user.
+        Deletes ssh key with given fingerprint for the given user.
         Will raise SshKeyModelException on errors
         """
         ssh_key = UserSshKeys.query().filter(UserSshKeys.fingerprint == fingerprint)
 
-        if user:
-            user = User.guess_instance(user)
-            ssh_key = ssh_key.filter(UserSshKeys.user_id == user.user_id)
+        user = User.guess_instance(user)
+        ssh_key = ssh_key.filter(UserSshKeys.user_id == user.user_id)
 
         ssh_key = ssh_key.scalar()
         if ssh_key is None:
