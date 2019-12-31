@@ -40,7 +40,7 @@ class GitChangeset(BaseChangeset):
         self._author_property = 'author'
         self._date_property = 'commit_time'
         self._date_tz_property = 'commit_timezone'
-        self.revision = repository.revisions.index(revision)
+        self.revision = repository.revisions.index(self.raw_id)
 
         self.nodes = {}
         self._paths = {}
@@ -91,7 +91,7 @@ class GitChangeset(BaseChangeset):
         # that might not make sense in Git where branches() is a better match
         # for the basic model
         heads = self.repository._heads(reverse=False)
-        ref = heads.get(self.raw_id)
+        ref = heads.get(self._commit.id)
         if ref:
             return safe_unicode(ref)
 
@@ -505,8 +505,8 @@ class GitChangeset(BaseChangeset):
             if isinstance(parent, EmptyChangeset):
                 oid = None
             else:
-                oid = _r[parent.raw_id].tree
-            changes = _r.object_store.tree_changes(oid, _r[self.raw_id].tree)
+                oid = _r[parent._commit.id].tree
+            changes = _r.object_store.tree_changes(oid, _r[self._commit.id].tree)
             for (oldpath, newpath), (_, _), (_, _) in changes:
                 if newpath and oldpath:
                     modified.add(newpath)
