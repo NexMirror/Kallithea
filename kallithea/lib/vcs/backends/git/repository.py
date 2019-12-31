@@ -634,8 +634,7 @@ class GitRepository(BaseRepository):
         if path:
             cmd += ['--', path]
 
-        stdout, stderr = self.run_git_command(cmd)
-        # TODO: don't ignore stderr
+        stdout, stderr = self._run_git_command(cmd, cwd=self.path)
         # If we used 'show' command, strip first few lines (until actual diff
         # starts)
         if rev1 == self.EMPTY_CHANGESET:
