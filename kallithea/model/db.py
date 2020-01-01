@@ -38,7 +38,7 @@ import traceback
 import ipaddr
 import sqlalchemy
 from beaker.cache import cache_region, region_invalidate
-from sqlalchemy import *
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, LargeBinary, String, Unicode, UnicodeText, UniqueConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import class_mapper, joinedload, relationship, validates
 from tg.i18n import lazy_ugettext as _
@@ -567,7 +567,7 @@ class User(Base, BaseDbModel):
     @classmethod
     def get_by_username(cls, username, case_insensitive=False, cache=False):
         if case_insensitive:
-            q = cls.query().filter(func.lower(cls.username) == func.lower(username))
+            q = cls.query().filter(sqlalchemy.func.lower(cls.username) == sqlalchemy.func.lower(username))
         else:
             q = cls.query().filter(cls.username == username)
 
@@ -602,7 +602,7 @@ class User(Base, BaseDbModel):
 
     @classmethod
     def get_by_email(cls, email, cache=False):
-        q = cls.query().filter(func.lower(cls.email) == func.lower(email))
+        q = cls.query().filter(sqlalchemy.func.lower(cls.email) == sqlalchemy.func.lower(email))
 
         if cache:
             q = q.options(FromCache("sql_cache_short",
@@ -612,7 +612,7 @@ class User(Base, BaseDbModel):
         if ret is None:
             q = UserEmailMap.query()
             # try fetching in alternate email map
-            q = q.filter(func.lower(UserEmailMap.email) == func.lower(email))
+            q = q.filter(sqlalchemy.func.lower(UserEmailMap.email) == sqlalchemy.func.lower(email))
             q = q.options(joinedload(UserEmailMap.user))
             if cache:
                 q = q.options(FromCache("sql_cache_short",
@@ -857,7 +857,7 @@ class UserGroup(Base, BaseDbModel):
     def get_by_group_name(cls, group_name, cache=False,
                           case_insensitive=False):
         if case_insensitive:
-            q = cls.query().filter(func.lower(cls.users_group_name) == func.lower(group_name))
+            q = cls.query().filter(sqlalchemy.func.lower(cls.users_group_name) == sqlalchemy.func.lower(group_name))
         else:
             q = cls.query().filter(cls.users_group_name == group_name)
         if cache:
@@ -1054,7 +1054,7 @@ class Repository(Base, BaseDbModel):
         q = super(Repository, cls).query()
 
         if sorted:
-            q = q.order_by(func.lower(Repository.repo_name))
+            q = q.order_by(sqlalchemy.func.lower(Repository.repo_name))
 
         return q
 
@@ -1082,7 +1082,7 @@ class Repository(Base, BaseDbModel):
         """Get the repo, defaulting to database case sensitivity.
         case_insensitive will be slower and should only be specified if necessary."""
         if case_insensitive:
-            q = Session().query(cls).filter(func.lower(cls.repo_name) == func.lower(repo_name))
+            q = Session().query(cls).filter(sqlalchemy.func.lower(cls.repo_name) == sqlalchemy.func.lower(repo_name))
         else:
             q = Session().query(cls).filter(cls.repo_name == repo_name)
         q = q.options(joinedload(Repository.fork)) \
@@ -1475,7 +1475,7 @@ class RepoGroup(Base, BaseDbModel):
         q = super(RepoGroup, cls).query()
 
         if sorted:
-            q = q.order_by(func.lower(RepoGroup.group_name))
+            q = q.order_by(sqlalchemy.func.lower(RepoGroup.group_name))
 
         return q
 
@@ -1514,7 +1514,7 @@ class RepoGroup(Base, BaseDbModel):
         group_name = group_name.rstrip('/')
         if case_insensitive:
             gr = cls.query() \
-                .filter(func.lower(cls.group_name) == func.lower(group_name))
+                .filter(sqlalchemy.func.lower(cls.group_name) == sqlalchemy.func.lower(group_name))
         else:
             gr = cls.query() \
                 .filter(cls.group_name == group_name)
@@ -2010,7 +2010,7 @@ class UserFollowing(Base, BaseDbModel):
     user = relationship('User', primaryjoin='User.user_id==UserFollowing.user_id')
 
     follows_user = relationship('User', primaryjoin='User.user_id==UserFollowing.follows_user_id')
-    follows_repository = relationship('Repository', order_by=lambda: func.lower(Repository.repo_name))
+    follows_repository = relationship('Repository', order_by=lambda: sqlalchemy.func.lower(Repository.repo_name))
 
     @classmethod
     def get_repo_followers(cls, repo_id):
