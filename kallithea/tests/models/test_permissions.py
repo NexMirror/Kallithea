@@ -6,14 +6,14 @@ from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()
 
 
-class TestPermissions(TestController):
+class TestPermissions(base.TestController):
 
     @classmethod
     def setup_class(cls):
@@ -71,33 +71,33 @@ class TestPermissions(TestController):
             'repositories_groups': {},
             'global': set(['hg.create.repository', 'repository.read',
                            'hg.register.manual_activate']),
-            'repositories': {HG_REPO: 'repository.read'}
+            'repositories': {base.HG_REPO: 'repository.read'}
         }
-        assert u1_auth.permissions['repositories'][HG_REPO] == perms['repositories'][HG_REPO]
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
         new_perm = 'repository.write'
-        RepoModel().grant_user_permission(repo=HG_REPO, user=self.u1,
+        RepoModel().grant_user_permission(repo=base.HG_REPO, user=self.u1,
                                           perm=new_perm)
         Session().commit()
 
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories'][HG_REPO] == new_perm
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == new_perm
 
     def test_default_admin_perms_set(self):
         a1_auth = AuthUser(user_id=self.a1.user_id)
         perms = {
             'repositories_groups': {},
             'global': set(['hg.admin', 'hg.create.write_on_repogroup.true']),
-            'repositories': {HG_REPO: 'repository.admin'}
+            'repositories': {base.HG_REPO: 'repository.admin'}
         }
-        assert a1_auth.permissions['repositories'][HG_REPO] == perms['repositories'][HG_REPO]
+        assert a1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
         new_perm = 'repository.write'
-        RepoModel().grant_user_permission(repo=HG_REPO, user=self.a1,
+        RepoModel().grant_user_permission(repo=base.HG_REPO, user=self.a1,
                                           perm=new_perm)
         Session().commit()
         # cannot really downgrade admins permissions !? they still gets set as
         # admin !
         u1_auth = AuthUser(user_id=self.a1.user_id)
-        assert u1_auth.permissions['repositories'][HG_REPO] == perms['repositories'][HG_REPO]
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
 
     def test_default_group_perms(self):
         self.g1 = fixture.create_repo_group(u'test1', skip_if_exists=True)
@@ -106,9 +106,9 @@ class TestPermissions(TestController):
         perms = {
             'repositories_groups': {u'test1': 'group.read', u'test2': 'group.read'},
             'global': set(Permission.DEFAULT_USER_PERMISSIONS),
-            'repositories': {HG_REPO: 'repository.read'}
+            'repositories': {base.HG_REPO: 'repository.read'}
         }
-        assert u1_auth.permissions['repositories'][HG_REPO] == perms['repositories'][HG_REPO]
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
         assert u1_auth.permissions['repositories_groups'] == perms['repositories_groups']
         assert u1_auth.permissions['global'] == perms['global']
 
@@ -119,10 +119,10 @@ class TestPermissions(TestController):
         perms = {
             'repositories_groups': {u'test1': 'group.admin', u'test2': 'group.admin'},
             'global': set(['hg.admin', 'hg.create.write_on_repogroup.true']),
-            'repositories': {HG_REPO: 'repository.admin'}
+            'repositories': {base.HG_REPO: 'repository.admin'}
         }
 
-        assert a1_auth.permissions['repositories'][HG_REPO] == perms['repositories'][HG_REPO]
+        assert a1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
         assert a1_auth.permissions['repositories_groups'] == perms['repositories_groups']
 
     def test_propagated_permission_from_users_group_by_explicit_perms_exist(self):
@@ -131,19 +131,19 @@ class TestPermissions(TestController):
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
 
         # set user permission none
-        RepoModel().grant_user_permission(repo=HG_REPO, user=self.u1, perm='repository.none')
+        RepoModel().grant_user_permission(repo=base.HG_REPO, user=self.u1, perm='repository.none')
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories'][HG_REPO] == 'repository.read' # inherit from default user
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == 'repository.read' # inherit from default user
 
         # grant perm for group this should override permission from user
-        RepoModel().grant_user_group_permission(repo=HG_REPO,
+        RepoModel().grant_user_group_permission(repo=base.HG_REPO,
                                                  group_name=self.ug1,
                                                  perm='repository.write')
 
         # verify that user group permissions win
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories'][HG_REPO] == 'repository.write'
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == 'repository.write'
 
     def test_propagated_permission_from_users_group(self):
         # make group
@@ -152,7 +152,7 @@ class TestPermissions(TestController):
 
         # grant perm for group this should override default permission from user
         new_perm_gr = 'repository.write'
-        RepoModel().grant_user_group_permission(repo=HG_REPO,
+        RepoModel().grant_user_group_permission(repo=base.HG_REPO,
                                                  group_name=self.ug1,
                                                  perm=new_perm_gr)
         # check perms
@@ -161,9 +161,9 @@ class TestPermissions(TestController):
             'repositories_groups': {},
             'global': set(['hg.create.repository', 'repository.read',
                            'hg.register.manual_activate']),
-            'repositories': {HG_REPO: 'repository.read'}
+            'repositories': {base.HG_REPO: 'repository.read'}
         }
-        assert u3_auth.permissions['repositories'][HG_REPO] == new_perm_gr
+        assert u3_auth.permissions['repositories'][base.HG_REPO] == new_perm_gr
         assert u3_auth.permissions['repositories_groups'] == perms['repositories_groups']
 
     def test_propagated_permission_from_users_group_lower_weight(self):
@@ -174,16 +174,16 @@ class TestPermissions(TestController):
 
         # set permission to lower
         new_perm_h = 'repository.write'
-        RepoModel().grant_user_permission(repo=HG_REPO, user=self.u1,
+        RepoModel().grant_user_permission(repo=base.HG_REPO, user=self.u1,
                                           perm=new_perm_h)
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories'][HG_REPO] == new_perm_h
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == new_perm_h
 
         # grant perm for group this should NOT override permission from user
         # since it's lower than granted
         new_perm_l = 'repository.read'
-        RepoModel().grant_user_group_permission(repo=HG_REPO,
+        RepoModel().grant_user_group_permission(repo=base.HG_REPO,
                                                  group_name=self.ug1,
                                                  perm=new_perm_l)
         # check perms
@@ -192,9 +192,9 @@ class TestPermissions(TestController):
             'repositories_groups': {},
             'global': set(['hg.create.repository', 'repository.read',
                            'hg.register.manual_activate']),
-            'repositories': {HG_REPO: 'repository.write'}
+            'repositories': {base.HG_REPO: 'repository.write'}
         }
-        assert u1_auth.permissions['repositories'][HG_REPO] == new_perm_h
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == new_perm_h
         assert u1_auth.permissions['repositories_groups'] == perms['repositories_groups']
 
     def test_repo_in_group_permissions(self):
@@ -641,7 +641,7 @@ class TestPermissions(TestController):
         PermissionModel().create_default_permissions(user=self.u1)
         self._test_def_perm_equal(user=self.u1)
 
-    @parametrize('perm,modify_to', [
+    @base.parametrize('perm,modify_to', [
         ('repository.read', 'repository.none'),
         ('group.read', 'group.none'),
         ('usergroup.read', 'usergroup.none'),

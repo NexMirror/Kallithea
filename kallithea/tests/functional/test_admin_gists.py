@@ -1,24 +1,24 @@
 from kallithea.model.db import Gist, User
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
 def _create_gist(f_name, content='some gist', lifetime=-1,
                  description=u'gist-desc', gist_type='public',
-                 owner=TEST_USER_ADMIN_LOGIN):
+                 owner=base.TEST_USER_ADMIN_LOGIN):
     gist_mapping = {
         f_name: {'content': content}
     }
     owner = User.get_by_username(owner)
-    gist = GistModel().create(description, owner=owner, ip_addr=IP_ADDR,
+    gist = GistModel().create(description, owner=owner, ip_addr=base.IP_ADDR,
                        gist_mapping=gist_mapping, gist_type=gist_type,
                        lifetime=lifetime)
     Session().commit()
     return gist
 
 
-class TestGistsController(TestController):
+class TestGistsController(base.TestController):
 
     def teardown_method(self, method):
         for g in Gist.query():
@@ -27,7 +27,7 @@ class TestGistsController(TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url('gists'))
+        response = self.app.get(base.url('gists'))
         # Test response...
         response.mustcontain('There are no gists yet')
 
@@ -35,7 +35,7 @@ class TestGistsController(TestController):
         g2 = _create_gist('gist2', lifetime=1400).gist_access_id
         g3 = _create_gist('gist3', description=u'gist3-desc').gist_access_id
         g4 = _create_gist('gist4', gist_type='private').gist_access_id
-        response = self.app.get(url('gists'))
+        response = self.app.get(base.url('gists'))
         # Test response...
         response.mustcontain('gist: %s' % g1)
         response.mustcontain('gist: %s' % g2)
@@ -47,7 +47,7 @@ class TestGistsController(TestController):
     def test_index_private_gists(self):
         self.log_user()
         gist = _create_gist('gist5', gist_type='private')
-        response = self.app.get(url('gists', private=1))
+        response = self.app.get(base.url('gists', private=1))
         # Test response...
 
         # and privates
@@ -55,7 +55,7 @@ class TestGistsController(TestController):
 
     def test_create_missing_description(self):
         self.log_user()
-        response = self.app.post(url('gists'),
+        response = self.app.post(base.url('gists'),
                                  params={'lifetime': -1, '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=200)
 
@@ -63,7 +63,7 @@ class TestGistsController(TestController):
 
     def test_create(self):
         self.log_user()
-        response = self.app.post(url('gists'),
+        response = self.app.post(base.url('gists'),
                                  params={'lifetime': -1,
                                          'content': 'gist test',
                                          'filename': 'foo',
@@ -77,7 +77,7 @@ class TestGistsController(TestController):
 
     def test_create_with_path_with_dirs(self):
         self.log_user()
-        response = self.app.post(url('gists'),
+        response = self.app.post(base.url('gists'),
                                  params={'lifetime': -1,
                                          'content': 'gist test',
                                          'filename': '/home/foo',
@@ -92,11 +92,11 @@ class TestGistsController(TestController):
         gist.gist_expires = 0  # 1970
         Session().commit()
 
-        response = self.app.get(url('gist', gist_id=gist.gist_access_id), status=404)
+        response = self.app.get(base.url('gist', gist_id=gist.gist_access_id), status=404)
 
     def test_create_private(self):
         self.log_user()
-        response = self.app.post(url('gists'),
+        response = self.app.post(base.url('gists'),
                                  params={'lifetime': -1,
                                          'content': 'private gist test',
                                          'filename': 'private-foo',
@@ -110,7 +110,7 @@ class TestGistsController(TestController):
 
     def test_create_with_description(self):
         self.log_user()
-        response = self.app.post(url('gists'),
+        response = self.app.post(base.url('gists'),
                                  params={'lifetime': -1,
                                          'content': 'gist test',
                                          'filename': 'foo-desc',
@@ -126,46 +126,46 @@ class TestGistsController(TestController):
 
     def test_new(self):
         self.log_user()
-        response = self.app.get(url('new_gist'))
+        response = self.app.get(base.url('new_gist'))
 
     def test_delete(self):
         self.log_user()
         gist = _create_gist('delete-me')
-        response = self.app.post(url('gist_delete', gist_id=gist.gist_id),
+        response = self.app.post(base.url('gist_delete', gist_id=gist.gist_id),
             params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_delete_normal_user_his_gist(self):
-        self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
-        gist = _create_gist('delete-me', owner=TEST_USER_REGULAR_LOGIN)
-        response = self.app.post(url('gist_delete', gist_id=gist.gist_id),
+        self.log_user(base.TEST_USER_REGULAR_LOGIN, base.TEST_USER_REGULAR_PASS)
+        gist = _create_gist('delete-me', owner=base.TEST_USER_REGULAR_LOGIN)
+        response = self.app.post(base.url('gist_delete', gist_id=gist.gist_id),
             params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_delete_normal_user_not_his_own_gist(self):
-        self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
+        self.log_user(base.TEST_USER_REGULAR_LOGIN, base.TEST_USER_REGULAR_PASS)
         gist = _create_gist('delete-me')
-        response = self.app.post(url('gist_delete', gist_id=gist.gist_id), status=403,
+        response = self.app.post(base.url('gist_delete', gist_id=gist.gist_id), status=403,
             params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_show(self):
         gist = _create_gist('gist-show-me')
-        response = self.app.get(url('gist', gist_id=gist.gist_access_id))
+        response = self.app.get(base.url('gist', gist_id=gist.gist_access_id))
         response.mustcontain('added file: gist-show-me<')
-        response.mustcontain('%s - created' % TEST_USER_ADMIN_LOGIN)
+        response.mustcontain('%s - created' % base.TEST_USER_ADMIN_LOGIN)
         response.mustcontain('gist-desc')
         response.mustcontain('<div class="label label-success">Public Gist</div>')
 
     def test_show_as_raw(self):
         gist = _create_gist('gist-show-me', content='GIST CONTENT')
-        response = self.app.get(url('formatted_gist',
+        response = self.app.get(base.url('formatted_gist',
                                     gist_id=gist.gist_access_id, format='raw'))
         assert response.body == b'GIST CONTENT'
 
     def test_show_as_raw_individual_file(self):
         gist = _create_gist('gist-show-me-raw', content='GIST BODY')
-        response = self.app.get(url('formatted_gist_file',
+        response = self.app.get(base.url('formatted_gist_file',
                                     gist_id=gist.gist_access_id, format='raw',
                                     revision='tip', f_path='gist-show-me-raw'))
         assert response.body == b'GIST BODY'
 
     def test_edit(self):
-        response = self.app.get(url('edit_gist', gist_id=1))
+        response = self.app.get(base.url('edit_gist', gist_id=1))

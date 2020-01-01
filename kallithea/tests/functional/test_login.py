@@ -13,61 +13,61 @@ from kallithea.model.api_key import ApiKeyModel
 from kallithea.model.db import User
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()
 
 
-class TestLoginController(TestController):
+class TestLoginController(base.TestController):
 
     def test_index(self):
-        response = self.app.get(url(controller='login', action='index'))
+        response = self.app.get(base.url(controller='login', action='index'))
         assert response.status == '200 OK'
         # Test response...
 
     def test_login_admin_ok(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': TEST_USER_ADMIN_PASS,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_ADMIN_LOGIN,
+                                  'password': base.TEST_USER_ADMIN_PASS,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '302 Found'
-        self.assert_authenticated_user(response, TEST_USER_ADMIN_LOGIN)
+        self.assert_authenticated_user(response, base.TEST_USER_ADMIN_LOGIN)
 
         response = response.follow()
-        response.mustcontain('/%s' % HG_REPO)
+        response.mustcontain('/%s' % base.HG_REPO)
 
     def test_login_regular_ok(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_REGULAR_LOGIN,
-                                  'password': TEST_USER_REGULAR_PASS,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_REGULAR_LOGIN,
+                                  'password': base.TEST_USER_REGULAR_PASS,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         assert response.status == '302 Found'
-        self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
+        self.assert_authenticated_user(response, base.TEST_USER_REGULAR_LOGIN)
 
         response = response.follow()
-        response.mustcontain('/%s' % HG_REPO)
+        response.mustcontain('/%s' % base.HG_REPO)
 
     def test_login_regular_email_ok(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_REGULAR_EMAIL,
-                                  'password': TEST_USER_REGULAR_PASS,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_REGULAR_EMAIL,
+                                  'password': base.TEST_USER_REGULAR_PASS,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         assert response.status == '302 Found'
-        self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
+        self.assert_authenticated_user(response, base.TEST_USER_REGULAR_LOGIN)
 
         response = response.follow()
-        response.mustcontain('/%s' % HG_REPO)
+        response.mustcontain('/%s' % base.HG_REPO)
 
     def test_login_ok_came_from(self):
         test_came_from = '/_admin/users'
-        response = self.app.post(url(controller='login', action='index',
+        response = self.app.post(base.url(controller='login', action='index',
                                      came_from=test_came_from),
-                                 {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': TEST_USER_ADMIN_PASS,
+                                 {'username': base.TEST_USER_ADMIN_LOGIN,
+                                  'password': base.TEST_USER_ADMIN_PASS,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '302 Found'
         response = response.follow()
@@ -76,9 +76,9 @@ class TestLoginController(TestController):
         response.mustcontain('Users Administration')
 
     def test_login_do_not_remember(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_REGULAR_LOGIN,
-                                  'password': TEST_USER_REGULAR_PASS,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_REGULAR_LOGIN,
+                                  'password': base.TEST_USER_REGULAR_PASS,
                                   'remember': False,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
@@ -87,9 +87,9 @@ class TestLoginController(TestController):
             assert not re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE), 'Cookie %r has expiration date, but should be a session cookie' % cookie
 
     def test_login_remember(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_REGULAR_LOGIN,
-                                  'password': TEST_USER_REGULAR_PASS,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_REGULAR_LOGIN,
+                                  'password': base.TEST_USER_REGULAR_PASS,
                                   'remember': True,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
@@ -98,23 +98,23 @@ class TestLoginController(TestController):
             assert re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE), 'Cookie %r should have expiration date, but is a session cookie' % cookie
 
     def test_logout(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_REGULAR_LOGIN,
-                                  'password': TEST_USER_REGULAR_PASS,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_REGULAR_LOGIN,
+                                  'password': base.TEST_USER_REGULAR_PASS,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         # Verify that a login session has been established.
-        response = self.app.get(url(controller='login', action='index'))
+        response = self.app.get(base.url(controller='login', action='index'))
         response = response.follow()
         assert 'authuser' in response.session
 
         response.click('Log Out')
 
         # Verify that the login session has been terminated.
-        response = self.app.get(url(controller='login', action='index'))
+        response = self.app.get(base.url(controller='login', action='index'))
         assert 'authuser' not in response.session
 
-    @parametrize('url_came_from', [
+    @base.parametrize('url_came_from', [
           ('data:text/html,<script>window.alert("xss")</script>',),
           ('mailto:test@example.com',),
           ('file:///etc/passwd',),
@@ -126,16 +126,16 @@ class TestLoginController(TestController):
           ('non-absolute-path',),
     ])
     def test_login_bad_came_froms(self, url_came_from):
-        response = self.app.post(url(controller='login', action='index',
+        response = self.app.post(base.url(controller='login', action='index',
                                      came_from=url_came_from),
-                                 {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': TEST_USER_ADMIN_PASS,
+                                 {'username': base.TEST_USER_ADMIN_LOGIN,
+                                  'password': base.TEST_USER_ADMIN_PASS,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=400)
 
     def test_login_short_password(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_ADMIN_LOGIN,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_ADMIN_LOGIN,
                                   'password': 'as',
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '200 OK'
@@ -143,7 +143,7 @@ class TestLoginController(TestController):
         response.mustcontain('Enter 3 characters or more')
 
     def test_login_wrong_username_password(self):
-        response = self.app.post(url(controller='login', action='index'),
+        response = self.app.post(base.url(controller='login', action='index'),
                                  {'username': 'error',
                                   'password': 'test12',
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
@@ -151,8 +151,8 @@ class TestLoginController(TestController):
         response.mustcontain('Invalid username or password')
 
     def test_login_non_ascii(self):
-        response = self.app.post(url(controller='login', action='index'),
-                                 {'username': TEST_USER_REGULAR_LOGIN,
+        response = self.app.post(base.url(controller='login', action='index'),
+                                 {'username': base.TEST_USER_REGULAR_LOGIN,
                                   'password': 'blåbærgrød',
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
@@ -160,55 +160,55 @@ class TestLoginController(TestController):
 
     # verify that get arguments are correctly passed along login redirection
 
-    @parametrize('args', [
+    @base.parametrize('args', [
         {'foo':'one', 'bar':'two'},
         {'blue': u'blå', 'green': u'grøn'},
     ])
     def test_redirection_to_login_form_preserves_get_args(self, args):
         with fixture.anon_access(False):
-            response = self.app.get(url(controller='summary', action='index',
-                                        repo_name=HG_REPO,
+            response = self.app.get(base.url(controller='summary', action='index',
+                                        repo_name=base.HG_REPO,
                                         **args))
             assert response.status == '302 Found'
             came_from = urlparse.parse_qs(urlparse.urlparse(response.location).query)['came_from'][0]
             came_from_qs = urlparse.parse_qsl(urlparse.urlparse(came_from).query)
             assert sorted(came_from_qs) == sorted((k, v.encode('utf-8')) for k, v in args.items())
 
-    @parametrize('args,args_encoded', [
+    @base.parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
         ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_preserves_get_args(self, args, args_encoded):
-        response = self.app.get(url(controller='login', action='index',
-                                    came_from=url('/_admin/users', **args)))
+        response = self.app.get(base.url(controller='login', action='index',
+                                    came_from=base.url('/_admin/users', **args)))
         came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
             assert encoded in came_from
 
-    @parametrize('args,args_encoded', [
+    @base.parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
         ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_redirection_after_successful_login_preserves_get_args(self, args, args_encoded):
-        response = self.app.post(url(controller='login', action='index',
-                                     came_from=url('/_admin/users', **args)),
-                                 {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': TEST_USER_ADMIN_PASS,
+        response = self.app.post(base.url(controller='login', action='index',
+                                     came_from=base.url('/_admin/users', **args)),
+                                 {'username': base.TEST_USER_ADMIN_LOGIN,
+                                  'password': base.TEST_USER_ADMIN_PASS,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '302 Found'
         for encoded in args_encoded:
             assert encoded in response.location
 
-    @parametrize('args,args_encoded', [
+    @base.parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
         ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_after_incorrect_login_preserves_get_args(self, args, args_encoded):
-        response = self.app.post(url(controller='login', action='index',
-                                     came_from=url('/_admin/users', **args)),
+        response = self.app.post(base.url(controller='login', action='index',
+                                     came_from=base.url('/_admin/users', **args)),
                                  {'username': 'error',
                                   'password': 'test12',
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
@@ -222,12 +222,12 @@ class TestLoginController(TestController):
     # REGISTRATIONS
     #==========================================================================
     def test_register(self):
-        response = self.app.get(url(controller='login', action='register'))
+        response = self.app.get(base.url(controller='login', action='register'))
         response.mustcontain('Sign Up')
 
     def test_register_err_same_username(self):
-        uname = TEST_USER_ADMIN_LOGIN
-        response = self.app.post(url(controller='login', action='register'),
+        uname = base.TEST_USER_ADMIN_LOGIN
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': uname,
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
@@ -242,11 +242,11 @@ class TestLoginController(TestController):
         response.mustcontain(msg)
 
     def test_register_err_same_email(self):
-        response = self.app.post(url(controller='login', action='register'),
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': 'test_admin_0',
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
-                                             'email': TEST_USER_ADMIN_EMAIL,
+                                             'email': base.TEST_USER_ADMIN_EMAIL,
                                              'firstname': 'test',
                                              'lastname': 'test',
                                              '_session_csrf_secret_token': self.session_csrf_secret_token()})
@@ -256,11 +256,11 @@ class TestLoginController(TestController):
         response.mustcontain(msg)
 
     def test_register_err_same_email_case_sensitive(self):
-        response = self.app.post(url(controller='login', action='register'),
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': 'test_admin_1',
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
-                                             'email': TEST_USER_ADMIN_EMAIL.title(),
+                                             'email': base.TEST_USER_ADMIN_EMAIL.title(),
                                              'firstname': 'test',
                                              'lastname': 'test',
                                              '_session_csrf_secret_token': self.session_csrf_secret_token()})
@@ -269,7 +269,7 @@ class TestLoginController(TestController):
         response.mustcontain(msg)
 
     def test_register_err_wrong_data(self):
-        response = self.app.post(url(controller='login', action='register'),
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': 'xs',
                                              'password': 'test',
                                              'password_confirmation': 'test',
@@ -282,7 +282,7 @@ class TestLoginController(TestController):
         response.mustcontain('Enter a value 6 characters long or more')
 
     def test_register_err_username(self):
-        response = self.app.post(url(controller='login', action='register'),
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': 'error user',
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
@@ -298,8 +298,8 @@ class TestLoginController(TestController):
                 'alphanumeric character')
 
     def test_register_err_case_sensitive(self):
-        usr = TEST_USER_ADMIN_LOGIN.title()
-        response = self.app.post(url(controller='login', action='register'),
+        usr = base.TEST_USER_ADMIN_LOGIN.title()
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': usr,
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
@@ -315,7 +315,7 @@ class TestLoginController(TestController):
         response.mustcontain(msg)
 
     def test_register_special_chars(self):
-        response = self.app.post(url(controller='login', action='register'),
+        response = self.app.post(base.url(controller='login', action='register'),
                                         {'username': 'xxxaxn',
                                          'password': 'ąćźżąśśśś',
                                          'password_confirmation': 'ąćźżąśśśś',
@@ -329,7 +329,7 @@ class TestLoginController(TestController):
         response.mustcontain(msg)
 
     def test_register_password_mismatch(self):
-        response = self.app.post(url(controller='login', action='register'),
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': 'xs',
                                              'password': '123qwe',
                                              'password_confirmation': 'qwe123',
@@ -348,7 +348,7 @@ class TestLoginController(TestController):
         name = 'testname'
         lastname = 'testlastname'
 
-        response = self.app.post(url(controller='login', action='register'),
+        response = self.app.post(base.url(controller='login', action='register'),
                                             {'username': username,
                                              'password': password,
                                              'password_confirmation': password,
@@ -376,14 +376,14 @@ class TestLoginController(TestController):
     def test_forgot_password_wrong_mail(self):
         bad_email = 'username%wrongmail.org'
         response = self.app.post(
-                        url(controller='login', action='password_reset'),
+                        base.url(controller='login', action='password_reset'),
                             {'email': bad_email,
                              '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('An email address must contain a single @')
 
     def test_forgot_password(self):
-        response = self.app.get(url(controller='login',
+        response = self.app.get(base.url(controller='login',
                                     action='password_reset'))
         assert response.status == '200 OK'
 
@@ -404,7 +404,7 @@ class TestLoginController(TestController):
         Session().add(new)
         Session().commit()
 
-        response = self.app.post(url(controller='login',
+        response = self.app.post(base.url(controller='login',
                                      action='password_reset'),
                                  {'email': email,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
@@ -417,7 +417,7 @@ class TestLoginController(TestController):
 
         token = "bad"
 
-        response = self.app.post(url(controller='login',
+        response = self.app.post(base.url(controller='login',
                                      action='password_reset_confirmation'),
                                  {'email': email,
                                   'timestamp': timestamp,
@@ -437,7 +437,7 @@ class TestLoginController(TestController):
         token = UserModel().get_reset_password_token(
             User.get_by_username(username), timestamp, self.session_csrf_secret_token())
 
-        response = self.app.get(url(controller='login',
+        response = self.app.get(base.url(controller='login',
                                     action='password_reset_confirmation',
                                     email=email,
                                     timestamp=timestamp,
@@ -445,7 +445,7 @@ class TestLoginController(TestController):
         assert response.status == '200 OK'
         response.mustcontain("You are about to set a new password for the email address %s" % email)
 
-        response = self.app.post(url(controller='login',
+        response = self.app.post(base.url(controller='login',
                                      action='password_reset_confirmation'),
                                  {'email': email,
                                   'timestamp': timestamp,
@@ -481,16 +481,16 @@ class TestLoginController(TestController):
                 params = {'api_key': api_key}
                 headers = {'Authorization': 'Bearer ' + str(api_key)}
 
-            self.app.get(url(controller='changeset', action='changeset_raw',
-                             repo_name=HG_REPO, revision='tip', **params),
+            self.app.get(base.url(controller='changeset', action='changeset_raw',
+                             repo_name=base.HG_REPO, revision='tip', **params),
                          status=status)
 
-            self.app.get(url(controller='changeset', action='changeset_raw',
-                             repo_name=HG_REPO, revision='tip'),
+            self.app.get(base.url(controller='changeset', action='changeset_raw',
+                             repo_name=base.HG_REPO, revision='tip'),
                          headers=headers,
                          status=status)
 
-    @parametrize('test_name,api_key,code', [
+    @base.parametrize('test_name,api_key,code', [
         ('none', None, 302),
         ('empty_string', '', 403),
         ('fake_number', '123456', 403),
@@ -502,12 +502,12 @@ class TestLoginController(TestController):
         self._api_key_test(api_key, code)
 
     def test_access_page_via_extra_api_key(self):
-        new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
+        new_api_key = ApiKeyModel().create(base.TEST_USER_ADMIN_LOGIN, u'test')
         Session().commit()
         self._api_key_test(new_api_key.api_key, status=200)
 
     def test_access_page_via_expired_api_key(self):
-        new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
+        new_api_key = ApiKeyModel().create(base.TEST_USER_ADMIN_LOGIN, u'test')
         Session().commit()
         # patch the API key and make it expired
         new_api_key.expires = 0

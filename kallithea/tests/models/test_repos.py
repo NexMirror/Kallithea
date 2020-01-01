@@ -4,14 +4,14 @@ from kallithea.lib.exceptions import AttachedForksError
 from kallithea.model.db import Repository
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()
 
 
-class TestRepos(TestController):
+class TestRepos(base.TestController):
 
     def teardown_method(self, method):
         Session.remove()

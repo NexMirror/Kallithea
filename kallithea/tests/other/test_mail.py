@@ -2,7 +2,7 @@ import mock
 
 import kallithea
 from kallithea.model.db import User
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
 class smtplib_mock(object):
@@ -25,7 +25,7 @@ class smtplib_mock(object):
 
 
 @mock.patch('kallithea.lib.rcmail.smtp_mailer.smtplib', smtplib_mock)
-class TestMail(TestController):
+class TestMail(base.TestController):
 
     def test_send_mail_trivial(self):
         mailserver = 'smtp.mailserver.org'
@@ -66,7 +66,7 @@ class TestMail(TestController):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
 
-        assert smtplib_mock.lastdest == set([TEST_USER_ADMIN_EMAIL, email_to])
+        assert smtplib_mock.lastdest == set([base.TEST_USER_ADMIN_EMAIL, email_to])
         assert smtplib_mock.lastsender == envelope_from
         assert 'From: %s' % envelope_from in smtplib_mock.lastmsg
         assert 'Subject: %s' % subject in smtplib_mock.lastmsg
@@ -90,7 +90,7 @@ class TestMail(TestController):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
 
-        assert smtplib_mock.lastdest == set([TEST_USER_ADMIN_EMAIL] + email_to.split(','))
+        assert smtplib_mock.lastdest == set([base.TEST_USER_ADMIN_EMAIL] + email_to.split(','))
         assert smtplib_mock.lastsender == envelope_from
         assert 'From: %s' % envelope_from in smtplib_mock.lastmsg
         assert 'Subject: %s' % subject in smtplib_mock.lastmsg
@@ -112,7 +112,7 @@ class TestMail(TestController):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
 
-        assert smtplib_mock.lastdest == set([TEST_USER_ADMIN_EMAIL])
+        assert smtplib_mock.lastdest == set([base.TEST_USER_ADMIN_EMAIL])
         assert smtplib_mock.lastsender == envelope_from
         assert 'From: %s' % envelope_from in smtplib_mock.lastmsg
         assert 'Subject: %s' % subject in smtplib_mock.lastmsg
@@ -126,7 +126,7 @@ class TestMail(TestController):
         subject = 'subject'
         body = 'body'
         html_body = 'html_body'
-        author = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        author = User.get_by_username(base.TEST_USER_REGULAR_LOGIN)
 
         config_mock = {
             'smtp_server': mailserver,
@@ -150,7 +150,7 @@ class TestMail(TestController):
         subject = 'subject'
         body = 'body'
         html_body = 'html_body'
-        author = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        author = User.get_by_username(base.TEST_USER_REGULAR_LOGIN)
 
         config_mock = {
             'smtp_server': mailserver,

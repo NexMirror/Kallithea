@@ -4,14 +4,14 @@ from kallithea.model.db import Permission, User, UserEmailMap, UserGroup, UserGr
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()
 
 
-class TestUser(TestController):
+class TestUser(base.TestController):
 
     @classmethod
     def setup_class(cls):
@@ -101,7 +101,7 @@ class TestUser(TestController):
         Session().commit()
 
 
-class TestUsers(TestController):
+class TestUsers(base.TestController):
 
     def setup_method(self, method):
         self.u1 = UserModel().create_or_update(username=u'u1',

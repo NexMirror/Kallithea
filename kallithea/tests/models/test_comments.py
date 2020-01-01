@@ -3,10 +3,10 @@ from tg.util.webtest import test_context
 
 from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.db import Repository
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestComments(TestController):
+class TestComments(base.TestController):
 
     def _check_comment_count(self, repo_id, revision,
             expected_len_comments, expected_len_inline_comments,
@@ -23,7 +23,7 @@ class TestComments(TestController):
 
     def test_create_delete_general_comment(self):
         with test_context(self.app):
-            repo_id = Repository.get_by_repo_name(HG_REPO).repo_id
+            repo_id = Repository.get_by_repo_name(base.HG_REPO).repo_id
             revision = '9a7b4ff9e8b40bbda72fc75f162325b9baa45cda'
 
             self._check_comment_count(repo_id, revision,
@@ -32,8 +32,8 @@ class TestComments(TestController):
             text = u'a comment'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     send_email=False)
 
@@ -47,7 +47,7 @@ class TestComments(TestController):
 
     def test_create_delete_inline_comment(self):
         with test_context(self.app):
-            repo_id = Repository.get_by_repo_name(HG_REPO).repo_id
+            repo_id = Repository.get_by_repo_name(base.HG_REPO).repo_id
             revision = '9a7b4ff9e8b40bbda72fc75f162325b9baa45cda'
 
             self._check_comment_count(repo_id, revision,
@@ -58,8 +58,8 @@ class TestComments(TestController):
             line_no = u'n50'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     f_path=f_path,
                     line_no=line_no,
@@ -81,7 +81,7 @@ class TestComments(TestController):
 
     def test_create_delete_multiple_inline_comments(self):
         with test_context(self.app):
-            repo_id = Repository.get_by_repo_name(HG_REPO).repo_id
+            repo_id = Repository.get_by_repo_name(base.HG_REPO).repo_id
             revision = '9a7b4ff9e8b40bbda72fc75f162325b9baa45cda'
 
             self._check_comment_count(repo_id, revision,
@@ -92,8 +92,8 @@ class TestComments(TestController):
             line_no = u'n50'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     f_path=f_path,
                     line_no=line_no,
@@ -103,8 +103,8 @@ class TestComments(TestController):
             line_no2 = u'o41'
             new_comment2 = ChangesetCommentsModel().create(
                     text=text2,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     f_path=f_path,
                     line_no=line_no2,
@@ -115,8 +115,8 @@ class TestComments(TestController):
             line_no3 = u'n159'
             new_comment3 = ChangesetCommentsModel().create(
                     text=text3,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     f_path=f_path3,
                     line_no=line_no3,
@@ -161,7 +161,7 @@ class TestComments(TestController):
 
     def test_selective_retrieval_of_inline_comments(self):
         with test_context(self.app):
-            repo_id = Repository.get_by_repo_name(HG_REPO).repo_id
+            repo_id = Repository.get_by_repo_name(base.HG_REPO).repo_id
             revision = '9a7b4ff9e8b40bbda72fc75f162325b9baa45cda'
 
             self._check_comment_count(repo_id, revision,
@@ -172,8 +172,8 @@ class TestComments(TestController):
             line_no = u'n50'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     f_path=f_path,
                     line_no=line_no,
@@ -183,8 +183,8 @@ class TestComments(TestController):
             line_no2 = u'o41'
             new_comment2 = ChangesetCommentsModel().create(
                     text=text2,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     f_path=f_path,
                     line_no=line_no2,
@@ -195,8 +195,8 @@ class TestComments(TestController):
             line_no3 = u'n159'
             new_comment3 = ChangesetCommentsModel().create(
                     text=text3,
-                    repo=HG_REPO,
-                    author=TEST_USER_REGULAR_LOGIN,
+                    repo=base.HG_REPO,
+                    author=base.TEST_USER_REGULAR_LOGIN,
                     revision=revision,
                     f_path=f_path3,
                     line_no=line_no3,

@@ -1,13 +1,13 @@
 import datetime
 
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestJournalController(TestController):
+class TestJournalController(base.TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url(controller='journal', action='index'))
+        response = self.app.get(base.url(controller='journal', action='index'))
 
         response.mustcontain("""<h4>%s</h4>""" % datetime.date.today())
 
@@ -22,18 +22,18 @@ class TestJournalController(TestController):
 #
 #        assert len(followings) == 1, 'Not following any repository'
 #
-#        response = self.app.post(url(controller='journal',
+#        response = self.app.post(base.url(controller='journal',
 #                                     action='toggle_following'),
 #                                     {'follows_repository_id':repo.repo_id})
 
     def test_start_following_repository(self):
         self.log_user()
-        response = self.app.get(url(controller='journal', action='index'),)
+        response = self.app.get(base.url(controller='journal', action='index'),)
 
     def test_public_journal_atom(self):
         self.log_user()
-        response = self.app.get(url(controller='journal', action='public_journal_atom'),)
+        response = self.app.get(base.url(controller='journal', action='public_journal_atom'),)
 
     def test_public_journal_rss(self):
         self.log_user()
-        response = self.app.get(url(controller='journal', action='public_journal_rss'),)
+        response = self.app.get(base.url(controller='journal', action='public_journal_rss'),)

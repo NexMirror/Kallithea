@@ -7,7 +7,7 @@ from kallithea.model.db import RepoGroup
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -34,7 +34,7 @@ def _update_repo(name, **kwargs):
     return r
 
 
-class TestRepoGroups(TestController):
+class TestRepoGroups(base.TestController):
 
     def setup_method(self, method):
         self.g1 = fixture.create_repo_group(u'test1', skip_if_exists=True)
@@ -48,7 +48,7 @@ class TestRepoGroups(TestController):
         """
         Checks the path for existence !
         """
-        path = [TESTS_TMP_PATH] + list(path)
+        path = [base.TESTS_TMP_PATH] + list(path)
         path = os.path.join(*path)
         return os.path.isdir(path)
 

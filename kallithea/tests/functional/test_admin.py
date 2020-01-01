@@ -6,13 +6,13 @@ from os.path import dirname
 from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import UserLog
 from kallithea.model.meta import Session
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
 FIXTURES = os.path.join(dirname(dirname(os.path.abspath(__file__))), 'fixtures')
 
 
-class TestAdminController(TestController):
+class TestAdminController(base.TestController):
 
     @classmethod
     def setup_class(cls):
@@ -52,105 +52,105 @@ class TestAdminController(TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index'))
+        response = self.app.get(base.url(controller='admin/admin', action='index'))
         response.mustcontain('Admin Journal')
 
     def test_filter_all_entries(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',))
+        response = self.app.get(base.url(controller='admin/admin', action='index',))
         response.mustcontain(' 2036 Entries')
 
     def test_filter_journal_filter_exact_match_on_repository(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='repository:xxx'))
         response.mustcontain(' 3 Entries')
 
     def test_filter_journal_filter_exact_match_on_repository_CamelCase(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='repository:XxX'))
         response.mustcontain(' 3 Entries')
 
     def test_filter_journal_filter_wildcard_on_repository(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='repository:*test*'))
         response.mustcontain(' 862 Entries')
 
     def test_filter_journal_filter_prefix_on_repository(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='repository:test*'))
         response.mustcontain(' 257 Entries')
 
     def test_filter_journal_filter_prefix_on_repository_CamelCase(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='repository:Test*'))
         response.mustcontain(' 257 Entries')
 
     def test_filter_journal_filter_prefix_on_repository_and_user(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='repository:test* AND username:demo'))
         response.mustcontain(' 130 Entries')
 
     def test_filter_journal_filter_prefix_on_repository_or_other_repo(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='repository:test* OR repository:xxx'))
         response.mustcontain(' 260 Entries')  # 257 + 3
 
     def test_filter_journal_filter_exact_match_on_username(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='username:demo'))
         response.mustcontain(' 1087 Entries')
 
     def test_filter_journal_filter_exact_match_on_username_camelCase(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='username:DemO'))
         response.mustcontain(' 1087 Entries')
 
     def test_filter_journal_filter_wildcard_on_username(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='username:*test*'))
         response.mustcontain(' 100 Entries')
 
     def test_filter_journal_filter_prefix_on_username(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='username:demo*'))
         response.mustcontain(' 1101 Entries')
 
     def test_filter_journal_filter_prefix_on_user_or_other_user(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='username:demo OR username:volcan'))
         response.mustcontain(' 1095 Entries')  # 1087 + 8
 
     def test_filter_journal_filter_wildcard_on_action(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='action:*pull_request*'))
         response.mustcontain(' 187 Entries')
 
     def test_filter_journal_filter_on_date(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='date:20121010'))
         response.mustcontain(' 47 Entries')
 
     def test_filter_journal_filter_on_date_2(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter='date:20121020'))
         response.mustcontain(' 17 Entries')
 
-    @parametrize('filter,hit', [
+    @base.parametrize('filter,hit', [
         #### "repository:" filtering
         # "/" is used for grouping
         ('repository:group/test', 4),
@@ -189,7 +189,7 @@ class TestAdminController(TestController):
     def test_filter_journal_filter_tokenization(self, filter, hit):
         self.log_user()
 
-        response = self.app.get(url(controller='admin/admin', action='index',
+        response = self.app.get(base.url(controller='admin/admin', action='index',
                                     filter=filter))
         if hit != 1:
             response.mustcontain(' %s Entries' % hit)

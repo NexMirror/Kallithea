@@ -25,7 +25,7 @@ from __future__ import print_function
 import sys
 
 import kallithea.bin.kallithea_cli_base as cli_base
-from kallithea.model.db import *
+from kallithea.model.db import *  # these names will be directly available in the IPython shell
 
 
 @cli_base.register_command(config_file_initialize_app=True)

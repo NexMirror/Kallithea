@@ -5,27 +5,27 @@ import pytest
 from kallithea.controllers.pullrequests import PullrequestsController
 from kallithea.model.db import PullRequest, User
 from kallithea.model.meta import Session
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()
 
 
-class TestPullrequestsController(TestController):
+class TestPullrequestsController(base.TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url(controller='pullrequests', action='index',
-                                    repo_name=HG_REPO))
+        response = self.app.get(base.url(controller='pullrequests', action='index',
+                                    repo_name=base.HG_REPO))
 
     def test_create_trivial(self):
         self.log_user()
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
-                                 {'org_repo': HG_REPO,
+        response = self.app.post(base.url(controller='pullrequests', action='create',
+                                     repo_name=base.HG_REPO),
+                                 {'org_repo': base.HG_REPO,
                                   'org_ref': 'branch:stable:4f7e2131323e0749a740c0a56ab68ae9269c562a',
-                                  'other_repo': HG_REPO,
+                                  'other_repo': base.HG_REPO,
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
@@ -40,11 +40,11 @@ class TestPullrequestsController(TestController):
 
     def test_available(self):
         self.log_user()
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
-                                 {'org_repo': HG_REPO,
+        response = self.app.post(base.url(controller='pullrequests', action='create',
+                                     repo_name=base.HG_REPO),
+                                 {'org_repo': base.HG_REPO,
                                   'org_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
-                                  'other_repo': HG_REPO,
+                                  'other_repo': base.HG_REPO,
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
@@ -60,11 +60,11 @@ class TestPullrequestsController(TestController):
 
     def test_range(self):
         self.log_user()
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
-                                 {'org_repo': HG_REPO,
+        response = self.app.post(base.url(controller='pullrequests', action='create',
+                                     repo_name=base.HG_REPO),
+                                 {'org_repo': base.HG_REPO,
                                   'org_ref': 'branch:stable:4f7e2131323e0749a740c0a56ab68ae9269c562a',
-                                  'other_repo': HG_REPO,
+                                  'other_repo': base.HG_REPO,
                                   'other_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
@@ -78,16 +78,16 @@ class TestPullrequestsController(TestController):
 
     def test_update_reviewers(self):
         self.log_user()
-        regular_user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
-        regular_user2 = User.get_by_username(TEST_USER_REGULAR2_LOGIN)
-        admin_user = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        regular_user = User.get_by_username(base.TEST_USER_REGULAR_LOGIN)
+        regular_user2 = User.get_by_username(base.TEST_USER_REGULAR2_LOGIN)
+        admin_user = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
 
         # create initial PR
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
-                                 {'org_repo': HG_REPO,
+        response = self.app.post(base.url(controller='pullrequests', action='create',
+                                     repo_name=base.HG_REPO),
+                                 {'org_repo': base.HG_REPO,
                                   'org_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
-                                  'other_repo': HG_REPO,
+                                  'other_repo': base.HG_REPO,
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
@@ -95,40 +95,40 @@ class TestPullrequestsController(TestController):
                                  },
                                  status=302)
         pull_request1_id = re.search(r'/pull-request/(\d+)/', response.location).group(1)
-        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request1_id)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (base.HG_REPO, pull_request1_id)
 
         # create new iteration
-        response = self.app.post(url(controller='pullrequests', action='post',
-                                     repo_name=HG_REPO, pull_request_id=pull_request1_id),
+        response = self.app.post(base.url(controller='pullrequests', action='post',
+                                     repo_name=base.HG_REPO, pull_request_id=pull_request1_id),
                                  {
                                   'updaterev': '4f7e2131323e0749a740c0a56ab68ae9269c562a',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  'owner': base.TEST_USER_ADMIN_LOGIN,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'review_members': [regular_user.user_id],
                                  },
                                  status=302)
         pull_request2_id = re.search(r'/pull-request/(\d+)/', response.location).group(1)
         assert pull_request2_id != pull_request1_id
-        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request2_id)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (base.HG_REPO, pull_request2_id)
         response = response.follow()
         # verify reviewer was added
         response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % regular_user.user_id)
 
         # update without creating new iteration
-        response = self.app.post(url(controller='pullrequests', action='post',
-                                     repo_name=HG_REPO, pull_request_id=pull_request2_id),
+        response = self.app.post(base.url(controller='pullrequests', action='post',
+                                     repo_name=base.HG_REPO, pull_request_id=pull_request2_id),
                                  {
                                   'pullrequest_title': 'Title',
                                   'pullrequest_desc': 'description',
-                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  'owner': base.TEST_USER_ADMIN_LOGIN,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'org_review_members': [admin_user.user_id], # fake - just to get some 'meanwhile' warning ... but it is also added ...
                                   'review_members': [regular_user2.user_id, admin_user.user_id],
                                  },
                                  status=302)
-        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request2_id)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (base.HG_REPO, pull_request2_id)
         response = response.follow()
         # verify reviewers were added / removed
         response.mustcontain('Meanwhile, the following reviewers have been added: test_regular')
@@ -141,12 +141,12 @@ class TestPullrequestsController(TestController):
         invalid_user_id = 99999
         self.log_user()
         # create a valid pull request
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
+        response = self.app.post(base.url(controller='pullrequests', action='create',
+                                     repo_name=base.HG_REPO),
                                  {
-                                  'org_repo': HG_REPO,
+                                  'org_repo': base.HG_REPO,
                                   'org_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
-                                  'other_repo': HG_REPO,
+                                  'other_repo': base.HG_REPO,
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
@@ -160,13 +160,13 @@ class TestPullrequestsController(TestController):
         pull_request_id = m.group(1)
 
         # update it
-        response = self.app.post(url(controller='pullrequests', action='post',
-                                     repo_name=HG_REPO, pull_request_id=pull_request_id),
+        response = self.app.post(base.url(controller='pullrequests', action='post',
+                                     repo_name=base.HG_REPO, pull_request_id=pull_request_id),
                                  {
                                   'updaterev': '4f7e2131323e0749a740c0a56ab68ae9269c562a',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  'owner': base.TEST_USER_ADMIN_LOGIN,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'review_members': [str(invalid_user_id)],
                                  },
@@ -177,12 +177,12 @@ class TestPullrequestsController(TestController):
         invalid_user_id = 99999
         self.log_user()
         # create a valid pull request
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
+        response = self.app.post(base.url(controller='pullrequests', action='create',
+                                     repo_name=base.HG_REPO),
                                  {
-                                  'org_repo': HG_REPO,
+                                  'org_repo': base.HG_REPO,
                                   'org_ref': 'branch:stable:4f7e2131323e0749a740c0a56ab68ae9269c562a',
-                                  'other_repo': HG_REPO,
+                                  'other_repo': base.HG_REPO,
                                   'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
@@ -196,12 +196,12 @@ class TestPullrequestsController(TestController):
         pull_request_id = m.group(1)
 
         # edit it
-        response = self.app.post(url(controller='pullrequests', action='post',
-                                     repo_name=HG_REPO, pull_request_id=pull_request_id),
+        response = self.app.post(base.url(controller='pullrequests', action='post',
+                                     repo_name=base.HG_REPO, pull_request_id=pull_request_id),
                                  {
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
-                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  'owner': base.TEST_USER_ADMIN_LOGIN,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                   'review_members': [str(invalid_user_id)],
                                  },
@@ -226,11 +226,11 @@ class TestPullrequestsController(TestController):
 
         # create initial PR
         response = self.app.post(
-            url(controller='pullrequests', action='create', repo_name=HG_REPO),
+            base.url(controller='pullrequests', action='create', repo_name=base.HG_REPO),
             {
-                'org_repo': HG_REPO,
+                'org_repo': base.HG_REPO,
                 'org_ref': 'rev:9e6119747791:9e6119747791ff886a5abe1193a730b6bf874e1c',
-                'other_repo': HG_REPO,
+                'other_repo': base.HG_REPO,
                 'other_ref': 'branch:default:3d1091ee5a533b1f4577ec7d8a226bb315fb1336',
                 'pullrequest_title': 'title',
                 'pullrequest_desc': 'description',
@@ -247,12 +247,12 @@ class TestPullrequestsController(TestController):
 
         # create PR 2 (new iteration with same ancestor)
         response = self.app.post(
-            url(controller='pullrequests', action='post', repo_name=HG_REPO, pull_request_id=pr1_id),
+            base.url(controller='pullrequests', action='post', repo_name=base.HG_REPO, pull_request_id=pr1_id),
             {
                 'updaterev': '5ec21f21aafe95220f1fc4843a4a57c378498b71',
                 'pullrequest_title': 'title',
                 'pullrequest_desc': 'description',
-                'owner': TEST_USER_REGULAR_LOGIN,
+                'owner': base.TEST_USER_REGULAR_LOGIN,
                 '_session_csrf_secret_token': self.session_csrf_secret_token(),
              },
              status=302)
@@ -269,12 +269,12 @@ class TestPullrequestsController(TestController):
 
         # create PR 3 (new iteration with new ancestor)
         response = self.app.post(
-            url(controller='pullrequests', action='post', repo_name=HG_REPO, pull_request_id=pr2_id),
+            base.url(controller='pullrequests', action='post', repo_name=base.HG_REPO, pull_request_id=pr2_id),
             {
                 'updaterev': 'fb95b340e0d03fa51f33c56c991c08077c99303e',
                 'pullrequest_title': 'title',
                 'pullrequest_desc': 'description',
-                'owner': TEST_USER_REGULAR_LOGIN,
+                'owner': base.TEST_USER_REGULAR_LOGIN,
                 '_session_csrf_secret_token': self.session_csrf_secret_token(),
              },
              status=302)
@@ -289,7 +289,7 @@ class TestPullrequestsController(TestController):
 
 
 @pytest.mark.usefixtures("test_context_fixture") # apply fixture for all test methods
-class TestPullrequestsGetRepoRefs(TestController):
+class TestPullrequestsGetRepoRefs(base.TestController):
 
     def setup_method(self, method):
         self.repo_name = u'main'

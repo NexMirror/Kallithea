@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -12,7 +12,7 @@ def _commit_ref(repo_name, sha, msg):
     return '''<div class="message-firstline"><a class="message-link" href="/%s/changeset/%s">%s</a></div>''' % (repo_name, sha, msg)
 
 
-class TestCompareController(TestController):
+class TestCompareController(base.TestController):
 
     def setup_method(self, method):
         self.r1_id = None
@@ -30,7 +30,7 @@ class TestCompareController(TestController):
         self.log_user()
         repo1 = fixture.create_repo(u'one', repo_type='hg',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
         # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
@@ -53,7 +53,7 @@ class TestCompareController(TestController):
         rev1 = 'default'
         rev2 = 'default'
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=repo1.repo_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev2,
@@ -81,7 +81,7 @@ class TestCompareController(TestController):
         self.log_user()
         repo1 = fixture.create_repo(u'one-git', repo_type='git',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
         # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
@@ -104,7 +104,7 @@ class TestCompareController(TestController):
         rev1 = 'master'
         rev2 = 'master'
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=repo1.repo_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev2,
@@ -133,7 +133,7 @@ class TestCompareController(TestController):
 
         repo1 = fixture.create_repo(u'one', repo_type='hg',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
 
         self.r1_id = repo1.repo_id
 
@@ -163,7 +163,7 @@ class TestCompareController(TestController):
         rev1 = 'default'
         rev2 = 'default'
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=repo1.repo_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev2,
@@ -192,7 +192,7 @@ class TestCompareController(TestController):
 
         repo1 = fixture.create_repo(u'one-git', repo_type='git',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
 
         self.r1_id = repo1.repo_id
 
@@ -222,7 +222,7 @@ class TestCompareController(TestController):
         rev1 = 'master'
         rev2 = 'master'
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=repo1.repo_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev2,
@@ -263,7 +263,7 @@ class TestCompareController(TestController):
 
         repo1 = fixture.create_repo(u'repo1', repo_type='hg',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
 
         # commit something !
@@ -290,7 +290,7 @@ class TestCompareController(TestController):
                 content='line1\nline2\nline3\nline4\nline5\nline6\n',
                 message='commit6', vcs_type='hg', parent=cs4)
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=repo2.repo_name,
                                     org_ref_type="rev",
                                     org_ref_name=cs1.short_id,  # parent of cs2, in repo2
@@ -331,7 +331,7 @@ class TestCompareController(TestController):
         self.log_user()
         repo1 = fixture.create_repo(u'repo1', repo_type='hg',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
 
         # commit something !
@@ -358,7 +358,7 @@ class TestCompareController(TestController):
                 content='line1\nline2\nline3\nline4\nline5\nline6\n',
                 message='commit6', vcs_type='hg', parent=cs4)
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=repo1.repo_name,
                                     org_ref_type="rev",
                                     org_ref_name=cs2.short_id, # parent of cs3, not in repo2
@@ -388,27 +388,27 @@ class TestCompareController(TestController):
     def test_compare_remote_branches_hg(self):
         self.log_user()
 
-        repo2 = fixture.create_fork(HG_REPO, HG_FORK)
+        repo2 = fixture.create_fork(base.HG_REPO, base.HG_FORK)
         self.r2_id = repo2.repo_id
         rev1 = '56349e29c2af'
         rev2 = '7d4bc8ec6be5'
 
-        response = self.app.get(url('compare_url',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url('compare_url',
+                                    repo_name=base.HG_REPO,
                                     org_ref_type="rev",
                                     org_ref_name=rev1,
                                     other_ref_type="rev",
                                     other_ref_name=rev2,
-                                    other_repo=HG_FORK,
+                                    other_repo=base.HG_FORK,
                                     merge='1',))
 
-        response.mustcontain('%s@%s' % (HG_REPO, rev1))
-        response.mustcontain('%s@%s' % (HG_FORK, rev2))
+        response.mustcontain('%s@%s' % (base.HG_REPO, rev1))
+        response.mustcontain('%s@%s' % (base.HG_FORK, rev2))
         ## outgoing changesets between those revisions
 
-        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/2dda4e345facb0ccff1a191052dd1606dba6781d">r4:2dda4e345fac</a>""" % (HG_FORK))
-        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/6fff84722075f1607a30f436523403845f84cd9e">r5:6fff84722075</a>""" % (HG_FORK))
-        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/7d4bc8ec6be56c0f10425afb40b6fc315a4c25e7">r6:%s</a>""" % (HG_FORK, rev2))
+        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/2dda4e345facb0ccff1a191052dd1606dba6781d">r4:2dda4e345fac</a>""" % (base.HG_FORK))
+        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/6fff84722075f1607a30f436523403845f84cd9e">r5:6fff84722075</a>""" % (base.HG_FORK))
+        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/7d4bc8ec6be56c0f10425afb40b6fc315a4c25e7">r6:%s</a>""" % (base.HG_FORK, rev2))
 
         ## files
         response.mustcontain("""<a href="#C--9c390eb52cd6">vcs/backends/hg.py</a>""")
@@ -418,27 +418,27 @@ class TestCompareController(TestController):
     def test_compare_remote_branches_git(self):
         self.log_user()
 
-        repo2 = fixture.create_fork(GIT_REPO, GIT_FORK)
+        repo2 = fixture.create_fork(base.GIT_REPO, base.GIT_FORK)
         self.r2_id = repo2.repo_id
         rev1 = '102607b09cdd60e2793929c4f90478be29f85a17'
         rev2 = 'd7e0d30fbcae12c90680eb095a4f5f02505ce501'
 
-        response = self.app.get(url('compare_url',
-                                    repo_name=GIT_REPO,
+        response = self.app.get(base.url('compare_url',
+                                    repo_name=base.GIT_REPO,
                                     org_ref_type="rev",
                                     org_ref_name=rev1,
                                     other_ref_type="rev",
                                     other_ref_name=rev2,
-                                    other_repo=GIT_FORK,
+                                    other_repo=base.GIT_FORK,
                                     merge='1',))
 
-        response.mustcontain('%s@%s' % (GIT_REPO, rev1))
-        response.mustcontain('%s@%s' % (GIT_FORK, rev2))
+        response.mustcontain('%s@%s' % (base.GIT_REPO, rev1))
+        response.mustcontain('%s@%s' % (base.GIT_FORK, rev2))
         ## outgoing changesets between those revisions
 
-        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/49d3fd156b6f7db46313fac355dca1a0b94a0017">r4:49d3fd156b6f</a>""" % (GIT_FORK))
-        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/2d1028c054665b962fa3d307adfc923ddd528038">r5:2d1028c05466</a>""" % (GIT_FORK))
-        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/d7e0d30fbcae12c90680eb095a4f5f02505ce501">r6:%s</a>""" % (GIT_FORK, rev2[:12]))
+        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/49d3fd156b6f7db46313fac355dca1a0b94a0017">r4:49d3fd156b6f</a>""" % (base.GIT_FORK))
+        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/2d1028c054665b962fa3d307adfc923ddd528038">r5:2d1028c05466</a>""" % (base.GIT_FORK))
+        response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/d7e0d30fbcae12c90680eb095a4f5f02505ce501">r6:%s</a>""" % (base.GIT_FORK, rev2[:12]))
 
         ## files
         response.mustcontain("""<a href="#C--9c390eb52cd6">vcs/backends/hg.py</a>""")
@@ -450,7 +450,7 @@ class TestCompareController(TestController):
 
         repo1 = fixture.create_repo(u'one', repo_type='hg',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
 
         self.r1_id = repo1.repo_id
         r1_name = repo1.repo_name
@@ -461,7 +461,7 @@ class TestCompareController(TestController):
         assert repo1.scm_instance.revisions == [cs0.raw_id]
         # fork the repo1
         repo2 = fixture.create_fork(r1_name, u'one-fork',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
         Session().commit()
         assert repo2.scm_instance.revisions == [cs0.raw_id]
         self.r2_id = repo2.repo_id
@@ -482,7 +482,7 @@ class TestCompareController(TestController):
         rev1 = 'default'
         rev2 = 'default'
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=r2_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev2,
@@ -500,7 +500,7 @@ class TestCompareController(TestController):
         # compare !
         rev1 = 'default'
         rev2 = 'default'
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=r2_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev2,
@@ -522,7 +522,7 @@ class TestCompareController(TestController):
 
         repo1 = fixture.create_repo(u'one-git', repo_type='git',
                                     repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
 
         self.r1_id = repo1.repo_id
         r1_name = repo1.repo_name
@@ -534,7 +534,7 @@ class TestCompareController(TestController):
         assert repo1.scm_instance.revisions == [cs0.raw_id]
         # fork the repo1
         repo2 = fixture.create_fork(r1_name, u'one-git-fork',
-                                    cur_user=TEST_USER_ADMIN_LOGIN)
+                                    cur_user=base.TEST_USER_ADMIN_LOGIN)
         Session().commit()
         assert repo2.scm_instance.revisions == [cs0.raw_id]
         self.r2_id = repo2.repo_id
@@ -556,7 +556,7 @@ class TestCompareController(TestController):
         rev1 = 'master'
         rev2 = 'master'
 
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=r2_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev1,
@@ -574,7 +574,7 @@ class TestCompareController(TestController):
         # compare !
         rev1 = 'master'
         rev2 = 'master'
-        response = self.app.get(url('compare_url',
+        response = self.app.get(base.url('compare_url',
                                     repo_name=r2_name,
                                     org_ref_type="branch",
                                     org_ref_name=rev1,

@@ -33,7 +33,7 @@ from tg.util.webtest import test_context
 
 from kallithea.lib.utils2 import AttributeDict
 from kallithea.model.db import Repository
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
 proto = 'http'
@@ -91,19 +91,19 @@ class FakeUrlGenerator(object):
         return self.current_url % kwargs
 
 
-class TestLibs(TestController):
+class TestLibs(base.TestController):
 
-    @parametrize('test_url,expected,expected_creds', TEST_URLS)
+    @base.parametrize('test_url,expected,expected_creds', TEST_URLS)
     def test_uri_filter(self, test_url, expected, expected_creds):
         from kallithea.lib.utils2 import uri_filter
         assert uri_filter(test_url) == expected
 
-    @parametrize('test_url,expected,expected_creds', TEST_URLS)
+    @base.parametrize('test_url,expected,expected_creds', TEST_URLS)
     def test_credentials_filter(self, test_url, expected, expected_creds):
         from kallithea.lib.utils2 import credentials_filter
         assert credentials_filter(test_url) == expected_creds
 
-    @parametrize('str_bool,expected', [
+    @base.parametrize('str_bool,expected', [
                            ('t', True),
                            ('true', True),
                            ('y', True),
@@ -141,7 +141,7 @@ class TestLibs(TestController):
             'marian.user', 'marco-polo', 'marco_polo', 'world'])
         assert expected == set(extract_mentioned_usernames(sample))
 
-    @parametrize('age_args,expected', [
+    @base.parametrize('age_args,expected', [
         (dict(), u'just now'),
         (dict(seconds= -1), u'1 second ago'),
         (dict(seconds= -60 * 2), u'2 minutes ago'),
@@ -165,7 +165,7 @@ class TestLibs(TestController):
             delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
             assert age(n + delt(**age_args), now=n) == expected
 
-    @parametrize('age_args,expected', [
+    @base.parametrize('age_args,expected', [
         (dict(), u'just now'),
         (dict(seconds= -1), u'1 second ago'),
         (dict(seconds= -60 * 2), u'2 minutes ago'),
@@ -190,7 +190,7 @@ class TestLibs(TestController):
             delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
             assert age(n + delt(**age_args), show_short_version=True, now=n) == expected
 
-    @parametrize('age_args,expected', [
+    @base.parametrize('age_args,expected', [
         (dict(), u'just now'),
         (dict(seconds=1), u'in 1 second'),
         (dict(seconds=60 * 2), u'in 2 minutes'),
@@ -270,7 +270,7 @@ class TestLibs(TestController):
                 grav = gravatar_url(email_address=em, size=24)
                 assert grav == 'https://example.com/%s/%s' % (_md5(em), 24)
 
-    @parametrize('clone_uri_tmpl,repo_name,username,prefix,expected', [
+    @base.parametrize('clone_uri_tmpl,repo_name,username,prefix,expected', [
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', None, '', 'http://vps1:8000/group/repo1'),
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', 'username', '', 'http://username@vps1:8000/group/repo1'),
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', None, '/prefix', 'http://vps1:8000/prefix/group/repo1'),
@@ -307,7 +307,7 @@ class TestLibs(TestController):
             return tmpl % (url_ or '/repo_name/changeset/%s' % _url, _url)
         return url_pattern.sub(url_func, text)
 
-    @parametrize('sample,expected', [
+    @base.parametrize('sample,expected', [
       ("",
        ""),
       ("git-svn-id: https://svn.apache.org/repos/asf/libcloud/trunk@1441655 13f79535-47bb-0310-9956-ffa450edef68",
@@ -341,7 +341,7 @@ class TestLibs(TestController):
             from kallithea.lib.helpers import urlify_text
             assert urlify_text(sample, 'repo_name') == expected
 
-    @parametrize('sample,expected,url_', [
+    @base.parametrize('sample,expected,url_', [
       ("",
        "",
        ""),
@@ -396,7 +396,7 @@ class TestLibs(TestController):
             from kallithea.lib.helpers import urlify_text
             assert urlify_text(sample, 'repo_name', stylize=True) == expected
 
-    @parametrize('sample,expected', [
+    @base.parametrize('sample,expected', [
       ("deadbeefcafe @mention, and http://foo.bar/ yo",
        """<a class="changeset_hash" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a>"""
        """<a class="message-link" href="#the-link"> <b>@mention</b>, and </a>"""
@@ -409,7 +409,7 @@ class TestLibs(TestController):
             from kallithea.lib.helpers import urlify_text
             assert urlify_text(sample, 'repo_name', link_='#the-link') == expected
 
-    @parametrize('issue_pat,issue_server,issue_sub,sample,expected', [
+    @base.parametrize('issue_pat,issue_server,issue_sub,sample,expected', [
         (r'#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             'issue #123 and issue#456',
             """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
@@ -500,7 +500,7 @@ class TestLibs(TestController):
             with mock.patch('kallithea.CONFIG', config_stub):
                 assert urlify_text(sample, 'repo_name') == expected
 
-    @parametrize('sample,expected', [
+    @base.parametrize('sample,expected', [
         ('abc X5', 'abc <a class="issue-tracker-link" href="http://main/repo_name/main/5/">#5</a>'),
         ('abc pullrequest #6 xyz', 'abc <a class="issue-tracker-link" href="http://pr/repo_name/pr/6">PR#6</a> xyz'),
         ('pull request7 #', '<a class="issue-tracker-link" href="http://pr/repo_name/pr/7">PR#7</a> #'),
@@ -533,7 +533,7 @@ class TestLibs(TestController):
             with mock.patch('kallithea.CONFIG', config_stub):
                 assert urlify_text(sample, 'repo_name') == expected
 
-    @parametrize('test,expected', [
+    @base.parametrize('test,expected', [
       ("", None),
       ("/_2", None),
       ("_2", 2),
@@ -542,9 +542,9 @@ class TestLibs(TestController):
     def test_get_permanent_id(self, test, expected):
         from kallithea.lib.utils import _get_permanent_id
         extracted = _get_permanent_id(test)
-        assert extracted == expected, 'url:%s, got:`%s` expected: `%s`' % (test, _test, expected)
+        assert extracted == expected, 'url:%s, got:`%s` expected: `%s`' % (test, base._test, expected)
 
-    @parametrize('test,expected', [
+    @base.parametrize('test,expected', [
       ("", ""),
       ("/", "/"),
       ("/_ID", '/_ID'),
@@ -555,14 +555,14 @@ class TestLibs(TestController):
       ("_IDa", '_IDa'),
     ])
     def test_fix_repo_id_name(self, test, expected):
-        repo = Repository.get_by_repo_name(HG_REPO)
+        repo = Repository.get_by_repo_name(base.HG_REPO)
         test = test.replace('ID', str(repo.repo_id))
         expected = expected.replace('NAME', repo.repo_name).replace('ID', str(repo.repo_id))
         from kallithea.lib.utils import fix_repo_id_name
         replaced = fix_repo_id_name(test)
         assert replaced == expected, 'url:%s, got:`%s` expected: `%s`' % (test, replaced, expected)
 
-    @parametrize('canonical,test,expected', [
+    @base.parametrize('canonical,test,expected', [
         ('http://www.example.org/', '/abc/xyz', 'http://www.example.org/abc/xyz'),
         ('http://www.example.org', '/abc/xyz', 'http://www.example.org/abc/xyz'),
         ('http://www.example.org', '/abc/xyz/', 'http://www.example.org/abc/xyz/'),
@@ -590,7 +590,7 @@ class TestLibs(TestController):
             with mock.patch('kallithea.CONFIG', config_mock):
                 assert canonical_url(test) == expected
 
-    @parametrize('canonical,expected', [
+    @base.parametrize('canonical,expected', [
         ('http://www.example.org', 'www.example.org'),
         ('http://www.example.org/repos/', 'www.example.org'),
         ('http://www.example.org/kallithea/repos/', 'www.example.org'),

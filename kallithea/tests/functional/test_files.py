@@ -5,7 +5,7 @@ import posixpath
 
 from kallithea.model.db import Repository
 from kallithea.model.meta import Session
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -27,51 +27,51 @@ def _set_downloads(repo_name, set_to):
     Session().commit()
 
 
-class TestFilesController(TestController):
+class TestFilesController(base.TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='index',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='index',
+                                    repo_name=base.HG_REPO,
                                     revision='tip',
                                     f_path='/'))
         # Test response...
-        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/docs"><i class="icon-folder-open"></i><span>docs</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/vcs"><i class="icon-folder-open"></i><span>vcs</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.gitignore"><i class="icon-doc"></i><span>.gitignore</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.hgignore"><i class="icon-doc"></i><span>.hgignore</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.hgtags"><i class="icon-doc"></i><span>.hgtags</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.travis.yml"><i class="icon-doc"></i><span>.travis.yml</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/MANIFEST.in"><i class="icon-doc"></i><span>MANIFEST.in</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/README.rst"><i class="icon-doc"></i><span>README.rst</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/run_test_and_report.sh"><i class="icon-doc"></i><span>run_test_and_report.sh</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/setup.cfg"><i class="icon-doc"></i><span>setup.cfg</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/setup.py"><i class="icon-doc"></i><span>setup.py</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/test_and_report.sh"><i class="icon-doc"></i><span>test_and_report.sh</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/tox.ini"><i class="icon-doc"></i><span>tox.ini</span></a>' % HG_REPO)
+        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/docs"><i class="icon-folder-open"></i><span>docs</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/vcs"><i class="icon-folder-open"></i><span>vcs</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.gitignore"><i class="icon-doc"></i><span>.gitignore</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.hgignore"><i class="icon-doc"></i><span>.hgignore</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.hgtags"><i class="icon-doc"></i><span>.hgtags</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/.travis.yml"><i class="icon-doc"></i><span>.travis.yml</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/MANIFEST.in"><i class="icon-doc"></i><span>MANIFEST.in</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/README.rst"><i class="icon-doc"></i><span>README.rst</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/run_test_and_report.sh"><i class="icon-doc"></i><span>run_test_and_report.sh</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/setup.cfg"><i class="icon-doc"></i><span>setup.cfg</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/setup.py"><i class="icon-doc"></i><span>setup.py</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/test_and_report.sh"><i class="icon-doc"></i><span>test_and_report.sh</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/96507bd11ecc815ebc6270fdf6db110928c09c1e/tox.ini"><i class="icon-doc"></i><span>tox.ini</span></a>' % base.HG_REPO)
 
     def test_index_revision(self):
         self.log_user()
 
         response = self.app.get(
-            url(controller='files', action='index',
-                repo_name=HG_REPO,
+            base.url(controller='files', action='index',
+                repo_name=base.HG_REPO,
                 revision='7ba66bec8d6dbba14a2155be32408c435c5f4492',
                 f_path='/')
         )
 
         # Test response...
 
-        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/docs"><i class="icon-folder-open"></i><span>docs</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/tests"><i class="icon-folder-open"></i><span>tests</span></a>' % HG_REPO)
-        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/README.rst"><i class="icon-doc"></i><span>README.rst</span></a>' % HG_REPO)
+        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/docs"><i class="icon-folder-open"></i><span>docs</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/tests"><i class="icon-folder-open"></i><span>tests</span></a>' % base.HG_REPO)
+        response.mustcontain('<a class="browser-file ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/README.rst"><i class="icon-doc"></i><span>README.rst</span></a>' % base.HG_REPO)
         response.mustcontain('1.1 KiB')
 
     def test_index_different_branch(self):
         self.log_user()
 
-        response = self.app.get(url(controller='files', action='index',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='index',
+                                    repo_name=base.HG_REPO,
                                     revision='97e8b885c04894463c51898e14387d80c30ed1ee',
                                     f_path='/'))
 
@@ -86,8 +86,8 @@ class TestFilesController(TestController):
                   (1, '3d8f361e72ab303da48d799ff1ac40d5ac37c67e'),
                   (0, 'b986218ba1c9b0d6a259fac9b050b1724ed8e545')]:
 
-            response = self.app.get(url(controller='files', action='index',
-                                    repo_name=HG_REPO,
+            response = self.app.get(base.url(controller='files', action='index',
+                                    repo_name=base.HG_REPO,
                                     revision=r[1],
                                     f_path='/'))
 
@@ -99,8 +99,8 @@ class TestFilesController(TestController):
         import kallithea.lib.helpers
         kallithea.lib.helpers._urlify_issues_f = None
         self.log_user()
-        response = self.app.get(url(controller='files', action='index',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='index',
+                                    repo_name=base.HG_REPO,
                                     revision='8911406ad776fdd3d0b9932a2e89677e57405a48',
                                     f_path='vcs/nodes.py'))
 
@@ -115,8 +115,8 @@ class TestFilesController(TestController):
 
     def test_file_source_history(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='history',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='history',
+                                    repo_name=base.HG_REPO,
                                     revision='tip',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
@@ -124,8 +124,8 @@ class TestFilesController(TestController):
 
     def test_file_source_history_git(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='history',
-                                    repo_name=GIT_REPO,
+        response = self.app.get(base.url(controller='files', action='history',
+                                    repo_name=base.GIT_REPO,
                                     revision='master',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
@@ -133,8 +133,8 @@ class TestFilesController(TestController):
 
     def test_file_annotation(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='index',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='index',
+                                    repo_name=base.HG_REPO,
                                     revision='tip',
                                     f_path='vcs/nodes.py',
                                     annotate='1'))
@@ -143,8 +143,8 @@ class TestFilesController(TestController):
 
     def test_file_annotation_git(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='index',
-                                    repo_name=GIT_REPO,
+        response = self.app.get(base.url(controller='files', action='index',
+                                    repo_name=base.GIT_REPO,
                                     revision='master',
                                     f_path='vcs/nodes.py',
                                     annotate='1'))
@@ -152,8 +152,8 @@ class TestFilesController(TestController):
 
     def test_file_annotation_history(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='history',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='history',
+                                    repo_name=base.HG_REPO,
                                     revision='tip',
                                     f_path='vcs/nodes.py',
                                     annotate='1'),
@@ -163,8 +163,8 @@ class TestFilesController(TestController):
 
     def test_file_annotation_history_git(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='history',
-                                    repo_name=GIT_REPO,
+        response = self.app.get(base.url(controller='files', action='history',
+                                    repo_name=base.GIT_REPO,
                                     revision='master',
                                     f_path='vcs/nodes.py',
                                     annotate=True),
@@ -174,8 +174,8 @@ class TestFilesController(TestController):
 
     def test_file_authors(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='authors',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='authors',
+                                    repo_name=base.HG_REPO,
                                     revision='tip',
                                     f_path='vcs/nodes.py',
                                     annotate='1'))
@@ -184,8 +184,8 @@ class TestFilesController(TestController):
 
     def test_file_authors_git(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='authors',
-                                    repo_name=GIT_REPO,
+        response = self.app.get(base.url(controller='files', action='authors',
+                                    repo_name=base.GIT_REPO,
                                     revision='master',
                                     f_path='vcs/nodes.py',
                                     annotate='1'))
@@ -194,14 +194,14 @@ class TestFilesController(TestController):
 
     def test_archival(self):
         self.log_user()
-        _set_downloads(HG_REPO, set_to=True)
+        _set_downloads(base.HG_REPO, set_to=True)
         for arch_ext, info in ARCHIVE_SPECS.items():
             short = '27cd5cce30c9%s' % arch_ext
             fname = '27cd5cce30c96924232dffcd24178a07ffeb5dfc%s' % arch_ext
-            filename = '%s-%s' % (HG_REPO, short)
-            response = self.app.get(url(controller='files',
+            filename = '%s-%s' % (base.HG_REPO, short)
+            response = self.app.get(base.url(controller='files',
                                         action='archivefile',
-                                        repo_name=HG_REPO,
+                                        repo_name=base.HG_REPO,
                                         fname=fname))
 
             assert response.status == '200 OK'
@@ -215,25 +215,25 @@ class TestFilesController(TestController):
 
     def test_archival_wrong_ext(self):
         self.log_user()
-        _set_downloads(HG_REPO, set_to=True)
+        _set_downloads(base.HG_REPO, set_to=True)
         for arch_ext in ['tar', 'rar', 'x', '..ax', '.zipz']:
             fname = '27cd5cce30c96924232dffcd24178a07ffeb5dfc%s' % arch_ext
 
-            response = self.app.get(url(controller='files',
+            response = self.app.get(base.url(controller='files',
                                         action='archivefile',
-                                        repo_name=HG_REPO,
+                                        repo_name=base.HG_REPO,
                                         fname=fname))
             response.mustcontain('Unknown archive type')
 
     def test_archival_wrong_revision(self):
         self.log_user()
-        _set_downloads(HG_REPO, set_to=True)
+        _set_downloads(base.HG_REPO, set_to=True)
         for rev in ['00x000000', 'tar', 'wrong', '@##$@$42413232', '232dffcd']:
             fname = '%s.zip' % rev
 
-            response = self.app.get(url(controller='files',
+            response = self.app.get(base.url(controller='files',
                                         action='archivefile',
-                                        repo_name=HG_REPO,
+                                        repo_name=base.HG_REPO,
                                         fname=fname))
             response.mustcontain('Unknown revision')
 
@@ -242,8 +242,8 @@ class TestFilesController(TestController):
     #==========================================================================
     def test_raw_file_ok(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='rawfile',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='rawfile',
+                                    repo_name=base.HG_REPO,
                                     revision='27cd5cce30c96924232dffcd24178a07ffeb5dfc',
                                     f_path='vcs/nodes.py'))
 
@@ -255,8 +255,8 @@ class TestFilesController(TestController):
         rev = u'ERRORce30c96924232dffcd24178a07ffeb5dfc'
         f_path = 'vcs/nodes.py'
 
-        response = self.app.get(url(controller='files', action='rawfile',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='rawfile',
+                                    repo_name=base.HG_REPO,
                                     revision=rev,
                                     f_path=f_path), status=404)
 
@@ -267,8 +267,8 @@ class TestFilesController(TestController):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         f_path = 'vcs/ERRORnodes.py'
-        response = self.app.get(url(controller='files', action='rawfile',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='rawfile',
+                                    repo_name=base.HG_REPO,
                                     revision=rev,
                                     f_path=f_path), status=404)
 
@@ -280,8 +280,8 @@ class TestFilesController(TestController):
     #==========================================================================
     def test_raw_ok(self):
         self.log_user()
-        response = self.app.get(url(controller='files', action='raw',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='raw',
+                                    repo_name=base.HG_REPO,
                                     revision='27cd5cce30c96924232dffcd24178a07ffeb5dfc',
                                     f_path='vcs/nodes.py'))
 
@@ -292,8 +292,8 @@ class TestFilesController(TestController):
         rev = u'ERRORcce30c96924232dffcd24178a07ffeb5dfc'
         f_path = 'vcs/nodes.py'
 
-        response = self.app.get(url(controller='files', action='raw',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='raw',
+                                    repo_name=base.HG_REPO,
                                     revision=rev,
                                     f_path=f_path), status=404)
 
@@ -304,8 +304,8 @@ class TestFilesController(TestController):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         f_path = 'vcs/ERRORnodes.py'
-        response = self.app.get(url(controller='files', action='raw',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url(controller='files', action='raw',
+                                    repo_name=base.HG_REPO,
                                     revision=rev,
                                     f_path=f_path), status=404)
         msg = "There is no file nor directory at the given path: &apos;%s&apos; at revision %s" % (f_path, rev[:12])
@@ -315,7 +315,7 @@ class TestFilesController(TestController):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         response = self.app.get(
-            url('files_nodelist_home', repo_name=HG_REPO, f_path='/',
+            base.url('files_nodelist_home', repo_name=base.HG_REPO, f_path='/',
                 revision=rev),
             extra_environ={'HTTP_X_PARTIAL_XHR': '1'},
         )
@@ -324,14 +324,14 @@ class TestFilesController(TestController):
     # Hg - ADD FILE
     def test_add_file_view_hg(self):
         self.log_user()
-        response = self.app.get(url('files_add_home',
-                                      repo_name=HG_REPO,
+        response = self.app.get(base.url('files_add_home',
+                                      repo_name=base.HG_REPO,
                                       revision='tip', f_path='/'))
 
     def test_add_file_into_hg_missing_content(self):
         self.log_user()
-        response = self.app.post(url('files_add_home',
-                                      repo_name=HG_REPO,
+        response = self.app.post(base.url('files_add_home',
+                                      repo_name=base.HG_REPO,
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': '',
@@ -343,8 +343,8 @@ class TestFilesController(TestController):
 
     def test_add_file_into_hg_missing_filename(self):
         self.log_user()
-        response = self.app.post(url('files_add_home',
-                                      repo_name=HG_REPO,
+        response = self.app.post(base.url('files_add_home',
+                                      repo_name=base.HG_REPO,
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': "foo",
@@ -354,15 +354,15 @@ class TestFilesController(TestController):
 
         self.checkSessionFlash(response, 'No filename')
 
-    @parametrize('location,filename', [
+    @base.parametrize('location,filename', [
         ('/abs', 'foo'),
         ('../rel', 'foo'),
         ('file/../foo', 'foo'),
     ])
     def test_add_file_into_hg_bad_filenames(self, location, filename):
         self.log_user()
-        response = self.app.post(url('files_add_home',
-                                      repo_name=HG_REPO,
+        response = self.app.post(base.url('files_add_home',
+                                      repo_name=base.HG_REPO,
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': "foo",
@@ -374,7 +374,7 @@ class TestFilesController(TestController):
 
         self.checkSessionFlash(response, 'Location must be relative path and must not contain .. in path')
 
-    @parametrize('cnt,location,filename', [
+    @base.parametrize('cnt,location,filename', [
         (1, '', 'foo.txt'),
         (2, 'dir', 'foo.rst'),
         (3, 'rel/dir', 'foo.bar'),
@@ -382,7 +382,7 @@ class TestFilesController(TestController):
     def test_add_file_into_hg(self, cnt, location, filename):
         self.log_user()
         repo = fixture.create_repo(u'commit-test-%s' % cnt, repo_type='hg')
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
                                  params={
@@ -401,14 +401,14 @@ class TestFilesController(TestController):
     # Git - add file
     def test_add_file_view_git(self):
         self.log_user()
-        response = self.app.get(url('files_add_home',
-                                      repo_name=GIT_REPO,
+        response = self.app.get(base.url('files_add_home',
+                                      repo_name=base.GIT_REPO,
                                       revision='tip', f_path='/'))
 
     def test_add_file_into_git_missing_content(self):
         self.log_user()
-        response = self.app.post(url('files_add_home',
-                                      repo_name=GIT_REPO,
+        response = self.app.post(base.url('files_add_home',
+                                      repo_name=base.GIT_REPO,
                                       revision='tip', f_path='/'),
                                  params={
                                      'content': '',
@@ -419,8 +419,8 @@ class TestFilesController(TestController):
 
     def test_add_file_into_git_missing_filename(self):
         self.log_user()
-        response = self.app.post(url('files_add_home',
-                                      repo_name=GIT_REPO,
+        response = self.app.post(base.url('files_add_home',
+                                      repo_name=base.GIT_REPO,
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': "foo",
@@ -430,15 +430,15 @@ class TestFilesController(TestController):
 
         self.checkSessionFlash(response, 'No filename')
 
-    @parametrize('location,filename', [
+    @base.parametrize('location,filename', [
         ('/abs', 'foo'),
         ('../rel', 'foo'),
         ('file/../foo', 'foo'),
     ])
     def test_add_file_into_git_bad_filenames(self, location, filename):
         self.log_user()
-        response = self.app.post(url('files_add_home',
-                                      repo_name=GIT_REPO,
+        response = self.app.post(base.url('files_add_home',
+                                      repo_name=base.GIT_REPO,
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': "foo",
@@ -450,7 +450,7 @@ class TestFilesController(TestController):
 
         self.checkSessionFlash(response, 'Location must be relative path and must not contain .. in path')
 
-    @parametrize('cnt,location,filename', [
+    @base.parametrize('cnt,location,filename', [
         (1, '', 'foo.txt'),
         (2, 'dir', 'foo.rst'),
         (3, 'rel/dir', 'foo.bar'),
@@ -458,7 +458,7 @@ class TestFilesController(TestController):
     def test_add_file_into_git(self, cnt, location, filename):
         self.log_user()
         repo = fixture.create_repo(u'commit-test-%s' % cnt, repo_type='git')
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
                                  params={
@@ -477,16 +477,16 @@ class TestFilesController(TestController):
     # Hg - EDIT
     def test_edit_file_view_hg(self):
         self.log_user()
-        response = self.app.get(url('files_edit_home',
-                                      repo_name=HG_REPO,
+        response = self.app.get(base.url('files_edit_home',
+                                      repo_name=base.HG_REPO,
                                       revision='tip', f_path='vcs/nodes.py'))
         # Odd error when on tip ...
         self.checkSessionFlash(response, "You can only edit files with revision being a valid branch")
         assert "Commit Message" not in response.body
 
         # Specify branch head revision to avoid "valid branch" error and get coverage of edit form
-        response = self.app.get(url('files_edit_home',
-                                      repo_name=HG_REPO,
+        response = self.app.get(base.url('files_edit_home',
+                                      repo_name=base.HG_REPO,
                                       revision='96507bd11ecc815ebc6270fdf6db110928c09c1e', f_path='vcs/nodes.py'))
         assert "Commit Message" in response.body
 
@@ -497,7 +497,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
                                  params={
@@ -511,7 +511,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.get(url('files_edit_home',
+            response = self.app.get(base.url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
@@ -527,7 +527,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip',
                                       f_path='/'),
@@ -542,7 +542,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.post(url('files_edit_home',
+            response = self.app.post(base.url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
                                           f_path=posixpath.join(location, filename)),
@@ -560,8 +560,8 @@ class TestFilesController(TestController):
     # Git - edit
     def test_edit_file_view_git(self):
         self.log_user()
-        response = self.app.get(url('files_edit_home',
-                                      repo_name=GIT_REPO,
+        response = self.app.get(base.url('files_edit_home',
+                                      repo_name=base.GIT_REPO,
                                       revision='tip', f_path='vcs/nodes.py'))
 
     def test_edit_file_view_not_on_branch_git(self):
@@ -571,7 +571,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
                                  params={
@@ -585,7 +585,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.get(url('files_edit_home',
+            response = self.app.get(base.url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
@@ -601,7 +601,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip',
                                       f_path='/'),
@@ -616,7 +616,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.post(url('files_edit_home',
+            response = self.app.post(base.url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
                                           f_path=posixpath.join(location, filename)),
@@ -634,8 +634,8 @@ class TestFilesController(TestController):
     # Hg - delete
     def test_delete_file_view_hg(self):
         self.log_user()
-        response = self.app.get(url('files_delete_home',
-                                     repo_name=HG_REPO,
+        response = self.app.get(base.url('files_delete_home',
+                                     repo_name=base.HG_REPO,
                                      revision='tip', f_path='vcs/nodes.py'))
 
     def test_delete_file_view_not_on_branch_hg(self):
@@ -645,7 +645,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
                                  params={
@@ -659,7 +659,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.get(url('files_delete_home',
+            response = self.app.get(base.url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
@@ -675,7 +675,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip',
                                       f_path='/'),
@@ -690,7 +690,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.post(url('files_delete_home',
+            response = self.app.post(base.url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
                                           f_path=posixpath.join(location, filename)),
@@ -707,8 +707,8 @@ class TestFilesController(TestController):
     # Git - delete
     def test_delete_file_view_git(self):
         self.log_user()
-        response = self.app.get(url('files_delete_home',
-                                     repo_name=HG_REPO,
+        response = self.app.get(base.url('files_delete_home',
+                                     repo_name=base.HG_REPO,
                                      revision='tip', f_path='vcs/nodes.py'))
 
     def test_delete_file_view_not_on_branch_git(self):
@@ -718,7 +718,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
                                  params={
@@ -732,7 +732,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.get(url('files_delete_home',
+            response = self.app.get(base.url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
@@ -748,7 +748,7 @@ class TestFilesController(TestController):
         ## add file
         location = 'vcs'
         filename = 'nodes.py'
-        response = self.app.post(url('files_add_home',
+        response = self.app.post(base.url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip',
                                       f_path='/'),
@@ -763,7 +763,7 @@ class TestFilesController(TestController):
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
                                    % posixpath.join(location, filename))
-            response = self.app.post(url('files_delete_home',
+            response = self.app.post(base.url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
                                           f_path=posixpath.join(location, filename)),
@@ -779,16 +779,16 @@ class TestFilesController(TestController):
 
     def test_png_diff_no_crash_hg(self):
         self.log_user()
-        response = self.app.get(url('files_diff_home',
-                                    repo_name=HG_REPO,
+        response = self.app.get(base.url('files_diff_home',
+                                    repo_name=base.HG_REPO,
                                     f_path='docs/theme/ADC/static/documentation.png',
                                     diff1='tip', diff2='tip'))
         response.mustcontain("""<pre>Binary file</pre>""")
 
     def test_png_diff_no_crash_git(self):
         self.log_user()
-        response = self.app.get(url('files_diff_home',
-                                    repo_name=GIT_REPO,
+        response = self.app.get(base.url('files_diff_home',
+                                    repo_name=base.GIT_REPO,
                                     f_path='docs/theme/ADC/static/documentation.png',
                                     diff1='master', diff2='master'))
         response.mustcontain("""<pre>Binary file</pre>""")

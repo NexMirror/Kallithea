@@ -1,12 +1,12 @@
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestChangelogController(TestController):
+class TestChangelogController(base.TestController):
 
     def test_index_hg(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
-                                    repo_name=HG_REPO))
+        response = self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.HG_REPO))
 
         response.mustcontain('''id="chg_20" class="mergerow"''')
         response.mustcontain(
@@ -17,7 +17,7 @@ class TestChangelogController(TestController):
         )
         # rev 640: code garden
         response.mustcontain(
-            """<a class="changeset_hash" href="/%s/changeset/0a4e54a4460401d6dbbd6a3604b17cd2b3606b82">r640:0a4e54a44604</a>""" % HG_REPO
+            """<a class="changeset_hash" href="/%s/changeset/0a4e54a4460401d6dbbd6a3604b17cd2b3606b82">r640:0a4e54a44604</a>""" % base.HG_REPO
         )
         response.mustcontain("""code garden""")
 
@@ -26,18 +26,18 @@ class TestChangelogController(TestController):
     def test_index_pagination_hg(self):
         self.log_user()
         # pagination
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=HG_REPO), {'page': 1})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=HG_REPO), {'page': 2})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=HG_REPO), {'page': 3})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=HG_REPO), {'page': 4})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=HG_REPO), {'page': 5})
-        response = self.app.get(url(controller='changelog', action='index',
-                                    repo_name=HG_REPO), {'page': 6, 'size': 20})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.HG_REPO), {'page': 1})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.HG_REPO), {'page': 2})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.HG_REPO), {'page': 3})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.HG_REPO), {'page': 4})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.HG_REPO), {'page': 5})
+        response = self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.HG_REPO), {'page': 6, 'size': 20})
 
         # Test response after pagination...
         response.mustcontain(
@@ -53,8 +53,8 @@ class TestChangelogController(TestController):
 
     def test_index_git(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
-                                    repo_name=GIT_REPO))
+        response = self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.GIT_REPO))
 
         response.mustcontain('''id="chg_20" class=""''') # why no mergerow for git?
         response.mustcontain(
@@ -82,18 +82,18 @@ class TestChangelogController(TestController):
     def test_index_pagination_git(self):
         self.log_user()
         # pagination
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=GIT_REPO), {'page': 1})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=GIT_REPO), {'page': 2})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=GIT_REPO), {'page': 3})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=GIT_REPO), {'page': 4})
-        self.app.get(url(controller='changelog', action='index',
-                                    repo_name=GIT_REPO), {'page': 5})
-        response = self.app.get(url(controller='changelog', action='index',
-                                    repo_name=GIT_REPO), {'page': 6, 'size': 20})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.GIT_REPO), {'page': 1})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.GIT_REPO), {'page': 2})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.GIT_REPO), {'page': 3})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.GIT_REPO), {'page': 4})
+        self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.GIT_REPO), {'page': 5})
+        response = self.app.get(base.url(controller='changelog', action='index',
+                                    repo_name=base.GIT_REPO), {'page': 6, 'size': 20})
 
         # Test response after pagination...
         response.mustcontain(
@@ -109,9 +109,9 @@ class TestChangelogController(TestController):
 
     def test_index_hg_with_filenode(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
+        response = self.app.get(base.url(controller='changelog', action='index',
                                     revision='tip', f_path='/vcs/exceptions.py',
-                                    repo_name=HG_REPO))
+                                    repo_name=base.HG_REPO))
         # history commits messages
         response.mustcontain('Added exceptions module, this time for real')
         response.mustcontain('Added not implemented hg backend test case')
@@ -120,9 +120,9 @@ class TestChangelogController(TestController):
 
     def test_index_git_with_filenode(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
+        response = self.app.get(base.url(controller='changelog', action='index',
                                     revision='tip', f_path='/vcs/exceptions.py',
-                                    repo_name=GIT_REPO))
+                                    repo_name=base.GIT_REPO))
         # history commits messages
         response.mustcontain('Added exceptions module, this time for real')
         response.mustcontain('Added not implemented hg backend test case')
@@ -130,28 +130,28 @@ class TestChangelogController(TestController):
 
     def test_index_hg_with_filenode_that_is_dirnode(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
+        response = self.app.get(base.url(controller='changelog', action='index',
                                     revision='tip', f_path='/tests',
-                                    repo_name=HG_REPO))
+                                    repo_name=base.HG_REPO))
         assert response.status == '302 Found'
 
     def test_index_git_with_filenode_that_is_dirnode(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
+        response = self.app.get(base.url(controller='changelog', action='index',
                                     revision='tip', f_path='/tests',
-                                    repo_name=GIT_REPO))
+                                    repo_name=base.GIT_REPO))
         assert response.status == '302 Found'
 
     def test_index_hg_with_filenode_not_existing(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
+        response = self.app.get(base.url(controller='changelog', action='index',
                                     revision='tip', f_path='/wrong_path',
-                                    repo_name=HG_REPO))
+                                    repo_name=base.HG_REPO))
         assert response.status == '302 Found'
 
     def test_index_git_with_filenode_not_existing(self):
         self.log_user()
-        response = self.app.get(url(controller='changelog', action='index',
+        response = self.app.get(base.url(controller='changelog', action='index',
                                     revision='tip', f_path='/wrong_path',
-                                    repo_name=GIT_REPO))
+                                    repo_name=base.GIT_REPO))
         assert response.status == '302 Found'

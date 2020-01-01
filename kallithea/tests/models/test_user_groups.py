@@ -1,14 +1,14 @@
 from kallithea.model.db import User, UserGroup
 from kallithea.model.meta import Session
 from kallithea.model.user_group import UserGroupModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
 fixture = Fixture()
 
 
-class TestUserGroups(TestController):
+class TestUserGroups(base.TestController):
 
     def teardown_method(self, method):
         # delete all groups
@@ -16,7 +16,7 @@ class TestUserGroups(TestController):
             fixture.destroy_user_group(gr)
         Session().commit()
 
-    @parametrize('pre_existing,regular_should_be,external_should_be,groups,expected', [
+    @base.parametrize('pre_existing,regular_should_be,external_should_be,groups,expected', [
         ([], [], [], [], []),
         ([], [u'regular'], [], [], [u'regular']),  # no changes of regular
         ([u'some_other'], [], [], [u'some_other'], []),   # not added to regular group
@@ -32,7 +32,7 @@ class TestUserGroups(TestController):
             fixture.destroy_user_group(gr)
         Session().commit()
 
-        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        user = User.get_by_username(base.TEST_USER_REGULAR_LOGIN)
         for gr in pre_existing:
             gr = fixture.create_user_group(gr)
         Session().commit()
@@ -54,6 +54,6 @@ class TestUserGroups(TestController):
         UserGroupModel().enforce_groups(user, groups, 'container')
         Session().commit()
 
-        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        user = User.get_by_username(base.TEST_USER_REGULAR_LOGIN)
         in_groups = user.group_member
         assert sorted(expected) == sorted(x.users_group.users_group_name for x in in_groups)

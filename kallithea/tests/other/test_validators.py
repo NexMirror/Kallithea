@@ -6,7 +6,7 @@ from kallithea.model import validators as v
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user_group import UserGroupModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -14,7 +14,7 @@ fixture = Fixture()
 
 
 @pytest.mark.usefixtures("test_context_fixture") # apply fixture for all test methods
-class TestRepoGroups(TestController):
+class TestRepoGroups(base.TestController):
 
     def teardown_method(self, method):
         Session.remove()
@@ -40,7 +40,7 @@ class TestRepoGroups(TestController):
         with pytest.raises(formencode.Invalid):
             validator.to_python('.,')
         with pytest.raises(formencode.Invalid):
-            validator.to_python(TEST_USER_ADMIN_LOGIN)
+            validator.to_python(base.TEST_USER_ADMIN_LOGIN)
         assert 'test' == validator.to_python('test')
 
         validator = v.ValidUsername(edit=True, old_data={'user_id': 1})
@@ -49,7 +49,7 @@ class TestRepoGroups(TestController):
         validator = v.ValidRepoUser()
         with pytest.raises(formencode.Invalid):
             validator.to_python('nouser')
-        assert TEST_USER_ADMIN_LOGIN == validator.to_python(TEST_USER_ADMIN_LOGIN)
+        assert base.TEST_USER_ADMIN_LOGIN == validator.to_python(base.TEST_USER_ADMIN_LOGIN)
 
     def test_ValidUserGroup(self):
         validator = v.ValidUserGroup()
@@ -82,11 +82,11 @@ class TestRepoGroups(TestController):
         validator = v.ValidRepoGroup()
         model = RepoGroupModel()
         with pytest.raises(formencode.Invalid):
-            validator.to_python({'group_name': HG_REPO, })
+            validator.to_python({'group_name': base.HG_REPO, })
         gr = model.create(group_name=u'test_gr', group_description=u'desc',
                           parent=None,
                           just_db=True,
-                          owner=TEST_USER_ADMIN_LOGIN)
+                          owner=base.TEST_USER_ADMIN_LOGIN)
         with pytest.raises(formencode.Invalid):
             validator.to_python({'group_name': gr.group_name, })
 
@@ -127,8 +127,8 @@ class TestRepoGroups(TestController):
     def test_ValidAuth(self):
         validator = v.ValidAuth()
         valid_creds = {
-            'username': TEST_USER_REGULAR2_LOGIN,
-            'password': TEST_USER_REGULAR2_PASS,
+            'username': base.TEST_USER_REGULAR2_LOGIN,
+            'password': base.TEST_USER_REGULAR2_PASS,
         }
         invalid_creds = {
             'username': 'err',
@@ -145,12 +145,12 @@ class TestRepoGroups(TestController):
             validator.to_python({'repo_name': ''})
 
         with pytest.raises(formencode.Invalid):
-            validator.to_python({'repo_name': HG_REPO})
+            validator.to_python({'repo_name': base.HG_REPO})
 
         gr = RepoGroupModel().create(group_name=u'group_test',
                                       group_description=u'desc',
                                       parent=None,
-                                      owner=TEST_USER_ADMIN_LOGIN)
+                                      owner=base.TEST_USER_ADMIN_LOGIN)
         with pytest.raises(formencode.Invalid):
             validator.to_python({'repo_name': gr.group_name})
 
@@ -163,7 +163,7 @@ class TestRepoGroups(TestController):
         # this uses ValidRepoName validator
         assert True
 
-    @parametrize('name,expected', [
+    @base.parametrize('name,expected', [
         ('test', 'test'), ('lolz!', 'lolz'), ('  aavv', 'aavv'),
         ('ala ma kota', 'ala-ma-kota'), ('@nooo', 'nooo'),
         ('$!haha lolz !', 'haha-lolz'), ('$$$$$', ''), ('{}OK!', 'OK'),
@@ -196,7 +196,7 @@ class TestRepoGroups(TestController):
 
     def test_ValidPath(self):
             validator = v.ValidPath()
-            assert TESTS_TMP_PATH == validator.to_python(TESTS_TMP_PATH)
+            assert base.TESTS_TMP_PATH == validator.to_python(base.TESTS_TMP_PATH)
             with pytest.raises(formencode.Invalid):
                 validator.to_python('/no_such_dir')
 
@@ -205,20 +205,20 @@ class TestRepoGroups(TestController):
 
         assert 'mail@python.org' == validator.to_python('MaiL@Python.org')
 
-        email = TEST_USER_REGULAR2_EMAIL
+        email = base.TEST_USER_REGULAR2_EMAIL
         with pytest.raises(formencode.Invalid):
             validator.to_python(email)
 
     def test_ValidSystemEmail(self):
         validator = v.ValidSystemEmail()
-        email = TEST_USER_REGULAR2_EMAIL
+        email = base.TEST_USER_REGULAR2_EMAIL
 
         assert email == validator.to_python(email)
         with pytest.raises(formencode.Invalid):
             validator.to_python('err')
 
     def test_LdapLibValidator(self):
-        if ldap_lib_installed:
+        if base.ldap_lib_installed:
             validator = v.LdapLibValidator()
             assert "DN" == validator.to_python('DN')
         else:

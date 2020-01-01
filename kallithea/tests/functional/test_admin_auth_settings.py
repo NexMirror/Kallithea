@@ -1,10 +1,10 @@
 from kallithea.model.db import Setting
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestAuthSettingsController(TestController):
+class TestAuthSettingsController(base.TestController):
     def _enable_plugins(self, plugins_list):
-        test_url = url(controller='admin/auth_settings',
+        test_url = base.url(controller='admin/auth_settings',
                        action='auth_settings')
         params={'auth_plugins': plugins_list, '_session_csrf_secret_token': self.session_csrf_secret_token()}
 
@@ -17,11 +17,11 @@ class TestAuthSettingsController(TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url(controller='admin/auth_settings',
+        response = self.app.get(base.url(controller='admin/auth_settings',
                                     action='index'))
         response.mustcontain('Authentication Plugins')
 
-    @skipif(not ldap_lib_installed, reason='skipping due to missing ldap lib')
+    @base.skipif(not base.ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_save_settings(self):
         self.log_user()
 
@@ -41,7 +41,7 @@ class TestAuthSettingsController(TestController):
                        'auth_ldap_attr_lastname': 'tester',
                        'auth_ldap_attr_email': 'test@example.com'})
 
-        test_url = url(controller='admin/auth_settings',
+        test_url = base.url(controller='admin/auth_settings',
                        action='auth_settings')
 
         response = self.app.post(url=test_url, params=params)
@@ -50,7 +50,7 @@ class TestAuthSettingsController(TestController):
         new_settings = Setting.get_auth_settings()
         assert new_settings['auth_ldap_host'] == u'dc.example.com', 'fail db write compare'
 
-    @skipif(not ldap_lib_installed, reason='skipping due to missing ldap lib')
+    @base.skipif(not base.ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_error_form_wrong_port_number(self):
         self.log_user()
 
@@ -68,7 +68,7 @@ class TestAuthSettingsController(TestController):
                        'auth_ldap_attr_firstname': '',
                        'auth_ldap_attr_lastname': '',
                        'auth_ldap_attr_email': ''})
-        test_url = url(controller='admin/auth_settings',
+        test_url = base.url(controller='admin/auth_settings',
                        action='auth_settings')
 
         response = self.app.post(url=test_url, params=params)
@@ -76,7 +76,7 @@ class TestAuthSettingsController(TestController):
         response.mustcontain("""<span class="error-message">"""
                              """Please enter a number</span>""")
 
-    @skipif(not ldap_lib_installed, reason='skipping due to missing ldap lib')
+    @base.skipif(not base.ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_error_form(self):
         self.log_user()
 
@@ -95,7 +95,7 @@ class TestAuthSettingsController(TestController):
                        'auth_ldap_attr_lastname': '',
                        'auth_ldap_attr_email': ''})
 
-        test_url = url(controller='admin/auth_settings',
+        test_url = base.url(controller='admin/auth_settings',
                        action='auth_settings')
 
         response = self.app.post(url=test_url, params=params)
@@ -115,7 +115,7 @@ class TestAuthSettingsController(TestController):
         params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_container')
         params.update(settings)
 
-        test_url = url(controller='admin/auth_settings',
+        test_url = base.url(controller='admin/auth_settings',
                        action='auth_settings')
 
         response = self.app.post(url=test_url, params=params)
@@ -124,7 +124,7 @@ class TestAuthSettingsController(TestController):
 
     def _container_auth_verify_login(self, resulting_username, **get_kwargs):
         response = self.app.get(
-            url=url(controller='admin/my_account', action='my_account'),
+            url=base.url(controller='admin/my_account', action='my_account'),
             **get_kwargs
         )
         response.mustcontain('My Account %s' % resulting_username)
@@ -153,7 +153,7 @@ class TestAuthSettingsController(TestController):
             auth_container_clean_username='False',
         )
         response = self.app.get(
-            url=url(controller='admin/my_account', action='my_account'),
+            url=base.url(controller='admin/my_account', action='my_account'),
             extra_environ={'THE_USER_NAME': 'johnd',
                            'THE_USER_EMAIL': 'john@example.org',
                            'THE_USER_FIRSTNAME': 'John',
@@ -216,7 +216,7 @@ class TestAuthSettingsController(TestController):
             auth_container_clean_username='True',
         )
         response = self.app.get(
-            url=url(controller='admin/my_account', action='my_account'),
+            url=base.url(controller='admin/my_account', action='my_account'),
             extra_environ={'REMOTE_USER': 'john'},
         )
         assert b'Log Out' not in response.normal_body
@@ -232,7 +232,7 @@ class TestAuthSettingsController(TestController):
                        'auth_crowd_method': 'https',
                        'auth_crowd_app_name': 'xyzzy'})
 
-        test_url = url(controller='admin/auth_settings',
+        test_url = base.url(controller='admin/auth_settings',
                        action='auth_settings')
 
         response = self.app.post(url=test_url, params=params)
@@ -241,7 +241,7 @@ class TestAuthSettingsController(TestController):
         new_settings = Setting.get_auth_settings()
         assert new_settings['auth_crowd_host'] == u'hostname', 'fail db write compare'
 
-    @skipif(not pam_lib_installed, reason='skipping due to missing pam lib')
+    @base.skipif(not base.pam_lib_installed, reason='skipping due to missing pam lib')
     def test_pam_save_settings(self):
         self.log_user()
 
@@ -249,7 +249,7 @@ class TestAuthSettingsController(TestController):
         params.update({'auth_pam_service': 'kallithea',
                        'auth_pam_gecos': '^foo-.*'})
 
-        test_url = url(controller='admin/auth_settings',
+        test_url = base.url(controller='admin/auth_settings',
                        action='auth_settings')
 
         response = self.app.post(url=test_url, params=params)

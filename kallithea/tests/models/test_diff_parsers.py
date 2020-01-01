@@ -1,5 +1,5 @@
 from kallithea.lib.diffs import BIN_FILENODE, CHMOD_FILENODE, COPIED_FILENODE, DEL_FILENODE, MOD_FILENODE, NEW_FILENODE, RENAMED_FILENODE, DiffProcessor
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -271,9 +271,9 @@ DIFF_FIXTURES = {
 }
 
 
-class TestDiffLib(TestController):
+class TestDiffLib(base.TestController):
 
-    @parametrize('diff_fixture', DIFF_FIXTURES)
+    @base.parametrize('diff_fixture', DIFF_FIXTURES)
     def test_diff(self, diff_fixture):
         raw_diff = fixture.load_resource(diff_fixture, strip=False)
         vcs = 'hg'

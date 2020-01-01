@@ -11,10 +11,10 @@ from kallithea.model.db import User
 from kallithea.model.meta import Session
 from kallithea.model.notification import EmailNotificationModel, NotificationModel
 from kallithea.model.user import UserModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestNotifications(TestController):
+class TestNotifications(base.TestController):
 
     def setup_method(self, method):
         Session.remove()

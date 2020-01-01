@@ -1,13 +1,13 @@
 import mock
 
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestSearchController(TestController):
+class TestSearchController(base.TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'))
+        response = self.app.get(base.url(controller='search', action='index'))
 
         response.mustcontain('class="form-control" id="q" name="q" type="text"')
         # Test response...
@@ -20,33 +20,33 @@ class TestSearchController(TestController):
             'index_dir': str(tmpdir),
         }
         with mock.patch('kallithea.controllers.search.config', config_mock):
-            response = self.app.get(url(controller='search', action='index'),
-                                    {'q': HG_REPO})
+            response = self.app.get(base.url(controller='search', action='index'),
+                                    {'q': base.HG_REPO})
             response.mustcontain('The server has no search index.')
 
     def test_normal_search(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': 'def repo'})
         response.mustcontain('58 results')
 
     def test_repo_search(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
-                                {'q': 'repository:%s def test' % HG_REPO})
+        response = self.app.get(base.url(controller='search', action='index'),
+                                {'q': 'repository:%s def test' % base.HG_REPO})
 
         response.mustcontain('18 results')
 
     def test_search_last(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': 'last:t', 'type': 'commit'})
 
         response.mustcontain('2 results')
 
     def test_search_commit_message(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                     {'q': 'bother to ask where to fetch repo during tests',
                      'type': 'commit'})
 
@@ -56,8 +56,8 @@ class TestSearchController(TestController):
 
     def test_search_commit_message_hg_repo(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index',
-                                    repo_name=HG_REPO),
+        response = self.app.get(base.url(controller='search', action='index',
+                                    repo_name=base.HG_REPO),
                     {'q': 'bother to ask where to fetch repo during tests',
                      'type': 'commit'})
 
@@ -66,7 +66,7 @@ class TestSearchController(TestController):
 
     def test_search_commit_changed_file(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': 'changed:tests/utils.py',
                                  'type': 'commit'})
 
@@ -74,7 +74,7 @@ class TestSearchController(TestController):
 
     def test_search_commit_changed_files_get_commit(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': 'changed:vcs/utils/archivers.py',
                                  'type': 'commit'})
 
@@ -90,7 +90,7 @@ class TestSearchController(TestController):
 
     def test_search_commit_added_file(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': 'added:README.rst',
                                  'type': 'commit'})
 
@@ -102,7 +102,7 @@ class TestSearchController(TestController):
 
     def test_search_author(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                     {'q': 'author:marcin@python-blog.com raw_id:b986218ba1c9b0d6a259fac9b050b1724ed8e545',
                      'type': 'commit'})
 
@@ -110,7 +110,7 @@ class TestSearchController(TestController):
 
     def test_search_file_name(self):
         self.log_user()
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                     {'q': 'README.rst', 'type': 'path'})
 
         response.mustcontain('2 results')

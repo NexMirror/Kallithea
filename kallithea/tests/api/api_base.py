@@ -34,7 +34,7 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.scm import ScmModel
 from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -75,15 +75,15 @@ def api_call(test_obj, params):
 
 ## helpers
 def make_user_group(name=TEST_USER_GROUP):
-    gr = fixture.create_user_group(name, cur_user=TEST_USER_ADMIN_LOGIN)
+    gr = fixture.create_user_group(name, cur_user=base.TEST_USER_ADMIN_LOGIN)
     UserGroupModel().add_user_to_group(user_group=gr,
-                                       user=TEST_USER_ADMIN_LOGIN)
+                                       user=base.TEST_USER_ADMIN_LOGIN)
     Session().commit()
     return gr
 
 
 def make_repo_group(name=TEST_REPO_GROUP):
-    gr = fixture.create_repo_group(name, cur_user=TEST_USER_ADMIN_LOGIN)
+    gr = fixture.create_repo_group(name, cur_user=base.TEST_USER_ADMIN_LOGIN)
     Session().commit()
     return gr
 
@@ -94,7 +94,7 @@ class _BaseTestApi(object):
 
     @classmethod
     def setup_class(cls):
-        cls.usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        cls.usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         cls.apikey = cls.usr.api_key
         cls.test_user = UserModel().create_or_update(
             username='test-api',
@@ -230,10 +230,10 @@ class _BaseTestApi(object):
 
     def test_api_get_user(self):
         id_, params = _build_data(self.apikey, 'get_user',
-                                  userid=TEST_USER_ADMIN_LOGIN)
+                                  userid=base.TEST_USER_ADMIN_LOGIN)
         response = api_call(self, params)
 
-        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
         ret['permissions'] = AuthUser(dbuser=usr).permissions
 
@@ -252,7 +252,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_user')
         response = api_call(self, params)
 
-        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
         ret['permissions'] = AuthUser(dbuser=usr).permissions
 
@@ -394,22 +394,22 @@ class _BaseTestApi(object):
 
     def test_api_create_existing_user(self):
         id_, params = _build_data(self.apikey, 'create_user',
-                                  username=TEST_USER_ADMIN_LOGIN,
+                                  username=base.TEST_USER_ADMIN_LOGIN,
                                   email='test@example.com',
                                   password='trololo')
         response = api_call(self, params)
 
-        expected = "user `%s` already exist" % TEST_USER_ADMIN_LOGIN
+        expected = "user `%s` already exist" % base.TEST_USER_ADMIN_LOGIN
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_create_user_with_existing_email(self):
         id_, params = _build_data(self.apikey, 'create_user',
-                                  username=TEST_USER_ADMIN_LOGIN + 'new',
-                                  email=TEST_USER_REGULAR_EMAIL,
+                                  username=base.TEST_USER_ADMIN_LOGIN + 'new',
+                                  email=base.TEST_USER_REGULAR_EMAIL,
                                   password='trololo')
         response = api_call(self, params)
 
-        expected = "email `%s` already exist" % TEST_USER_REGULAR_EMAIL
+        expected = "email `%s` already exist" % base.TEST_USER_REGULAR_EMAIL
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_create_user(self):
@@ -525,7 +525,7 @@ class _BaseTestApi(object):
         expected = ret
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('name,expected', [
+    @base.parametrize('name,expected', [
         ('firstname', 'new_username'),
         ('lastname', 'new_username'),
         ('email', 'new_username'),
@@ -558,22 +558,22 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_update_user_no_changed_params(self):
-        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
-                                  userid=TEST_USER_ADMIN_LOGIN)
+                                  userid=base.TEST_USER_ADMIN_LOGIN)
 
         response = api_call(self, params)
         ret = {
             'msg': 'updated user ID:%s %s' % (
-                usr.user_id, TEST_USER_ADMIN_LOGIN),
+                usr.user_id, base.TEST_USER_ADMIN_LOGIN),
             'user': ret
         }
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_update_user_by_user_id(self):
-        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=usr.user_id)
@@ -581,7 +581,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         ret = {
             'msg': 'updated user ID:%s %s' % (
-                usr.user_id, TEST_USER_ADMIN_LOGIN),
+                usr.user_id, base.TEST_USER_ADMIN_LOGIN),
             'user': ret
         }
         expected = ret
@@ -598,7 +598,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(UserModel, 'update_user', crash)
     def test_api_update_user_when_exception_happens(self):
-        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=usr.user_id)
@@ -658,7 +658,7 @@ class _BaseTestApi(object):
         assert u"v0.2.0" in response.json[u'result'][u'tags']
         assert u'pull_requests' in response.json[u'result']
 
-    @parametrize('grant_perm', [
+    @base.parametrize('grant_perm', [
         ('repository.admin'),
         ('repository.write'),
         ('repository.read'),
@@ -755,7 +755,7 @@ class _BaseTestApi(object):
 
         self._compare_ok(id_, expected, given=response.body)
 
-    @parametrize('name,ret_type', [
+    @base.parametrize('name,ret_type', [
         ('all', 'all'),
         ('dirs', 'dirs'),
         ('files', 'files'),
@@ -810,7 +810,7 @@ class _BaseTestApi(object):
                     % (','.join(sorted(['files', 'dirs', 'all']))))
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('name,ret_type,grant_perm', [
+    @base.parametrize('name,ret_type,grant_perm', [
         ('all', 'all', 'repository.write'),
         ('dirs', 'dirs', 'repository.admin'),
         ('files', 'files', 'repository.read'),
@@ -841,7 +841,7 @@ class _BaseTestApi(object):
         repo_name = u'api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,
         )
         response = api_call(self, params)
@@ -857,7 +857,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
 
-    @parametrize('repo_name', [
+    @base.parametrize('repo_name', [
         u'',
         u'.',
         u'..',
@@ -868,7 +868,7 @@ class _BaseTestApi(object):
     def test_api_create_repo_bad_names(self, repo_name):
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,
         )
         response = api_call(self, params)
@@ -883,11 +883,11 @@ class _BaseTestApi(object):
     def test_api_create_repo_clone_uri_local(self):
         # cloning from local repos was a mis-feature - it would bypass access control
         # TODO: introduce other test coverage of actual remote cloning
-        clone_uri = os.path.join(TESTS_TMP_PATH, self.REPO)
+        clone_uri = os.path.join(base.TESTS_TMP_PATH, self.REPO)
         repo_name = u'api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,
                                   clone_uri=clone_uri,
         )
@@ -903,7 +903,7 @@ class _BaseTestApi(object):
         # repo creation can no longer also create repo group
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,)
         response = api_call(self, params)
         expected = u'repo group `%s` not found' % repo_group_name
@@ -916,7 +916,7 @@ class _BaseTestApi(object):
 
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,)
         response = api_call(self, params)
         expected = {
@@ -1036,7 +1036,7 @@ class _BaseTestApi(object):
         repo_name = self.REPO
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,)
         response = api_call(self, params)
         expected = "repo `%s` already exist" % repo_name
@@ -1048,7 +1048,7 @@ class _BaseTestApi(object):
         repo_name = '%s/%s' % (group_name, 'could-be-outside')
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,)
         response = api_call(self, params)
         expected = u'repo group `%s` not found' % group_name
@@ -1060,14 +1060,14 @@ class _BaseTestApi(object):
         repo_name = u'api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,)
         response = api_call(self, params)
         expected = 'failed to create repository `%s`' % repo_name
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('changing_attr,updates', [
-        ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
+    @base.parametrize('changing_attr,updates', [
+        ('owner', {'owner': base.TEST_USER_REGULAR_LOGIN}),
         ('description', {'description': u'new description'}),
         ('clone_uri', {'clone_uri': 'http://example.com/repo'}), # will fail - pulling from non-existing repo should fail
         ('clone_uri', {'clone_uri': '/repo'}), # will fail - pulling from local repo was a mis-feature - it would bypass access control
@@ -1106,8 +1106,8 @@ class _BaseTestApi(object):
             if changing_attr == 'repo_group':
                 fixture.destroy_repo_group(updates['group'])
 
-    @parametrize('changing_attr,updates', [
-        ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
+    @base.parametrize('changing_attr,updates', [
+        ('owner', {'owner': base.TEST_USER_REGULAR_LOGIN}),
         ('description', {'description': u'new description'}),
         ('clone_uri', {'clone_uri': 'http://example.com/repo'}), # will fail - pulling from non-existing repo should fail
         ('clone_uri', {'clone_uri': '/repo'}), # will fail - pulling from local repo was a mis-feature - it would bypass access control
@@ -1180,7 +1180,7 @@ class _BaseTestApi(object):
         repo_name = u'api_update_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         id_, params = _build_data(self.apikey, 'update_repo',
-                                  repoid=repo_name, owner=TEST_USER_ADMIN_LOGIN,)
+                                  repoid=repo_name, owner=base.TEST_USER_ADMIN_LOGIN,)
         response = api_call(self, params)
         try:
             expected = 'failed to update repo `%s`' % repo_name
@@ -1237,7 +1237,7 @@ class _BaseTestApi(object):
         RepoModel().grant_user_permission(repo=repo_name,
                                           user=self.TEST_USER_LOGIN,
                                           perm='repository.admin')
-        updates = {'owner': TEST_USER_ADMIN_LOGIN}
+        updates = {'owner': base.TEST_USER_ADMIN_LOGIN}
         id_, params = _build_data(self.apikey_regular, 'update_repo',
                                   repoid=repo_name, **updates)
         response = api_call(self, params)
@@ -1314,7 +1314,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
         )
         response = api_call(self, params)
 
@@ -1328,7 +1328,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(fork_name)
 
-    @parametrize('fork_name', [
+    @base.parametrize('fork_name', [
         u'api-repo-fork',
         u'%s/api-repo-fork' % TEST_REPO_GROUP,
     ])
@@ -1354,7 +1354,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey_regular, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
         )
         response = api_call(self, params)
         expected = 'Only Kallithea admin can specify `owner` param'
@@ -1380,7 +1380,7 @@ class _BaseTestApi(object):
                                               perm='repository.read')
             fixture.destroy_repo(fork_name)
 
-    @parametrize('name,perm', [
+    @base.parametrize('name,perm', [
         ('read', 'repository.read'),
         ('write', 'repository.write'),
         ('admin', 'repository.admin'),
@@ -1425,7 +1425,7 @@ class _BaseTestApi(object):
             id_, params = _build_data(self.apikey, 'fork_repo',
                                       repoid=self.REPO,
                                       fork_name=fork_name,
-                                      owner=TEST_USER_ADMIN_LOGIN,
+                                      owner=base.TEST_USER_ADMIN_LOGIN,
             )
             response = api_call(self, params)
 
@@ -1440,7 +1440,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
         )
         response = api_call(self, params)
 
@@ -1453,7 +1453,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
-                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  owner=base.TEST_USER_ADMIN_LOGIN,
         )
         response = api_call(self, params)
 
@@ -1529,10 +1529,10 @@ class _BaseTestApi(object):
         expected = 'failed to create group `%s`' % group_name
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('changing_attr,updates', [
+    @base.parametrize('changing_attr,updates', [
         ('group_name', {'group_name': u'new_group_name'}),
         ('group_name', {'group_name': u'test_group_for_update'}),
-        ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
+        ('owner', {'owner': base.TEST_USER_REGULAR_LOGIN}),
         ('active', {'active': False}),
         ('active', {'active': True}),
     ])
@@ -1574,11 +1574,11 @@ class _BaseTestApi(object):
         try:
             id_, params = _build_data(self.apikey, 'add_user_to_user_group',
                                       usergroupid=gr_name,
-                                      userid=TEST_USER_ADMIN_LOGIN)
+                                      userid=base.TEST_USER_ADMIN_LOGIN)
             response = api_call(self, params)
             expected = {
             'msg': 'added member `%s` to user group `%s`' % (
-                    TEST_USER_ADMIN_LOGIN, gr_name),
+                    base.TEST_USER_ADMIN_LOGIN, gr_name),
             'success': True
             }
             self._compare_ok(id_, expected, given=response.body)
@@ -1588,7 +1588,7 @@ class _BaseTestApi(object):
     def test_api_add_user_to_user_group_that_doesnt_exist(self):
         id_, params = _build_data(self.apikey, 'add_user_to_user_group',
                                   usergroupid='false-group',
-                                  userid=TEST_USER_ADMIN_LOGIN)
+                                  userid=base.TEST_USER_ADMIN_LOGIN)
         response = api_call(self, params)
 
         expected = 'user group `%s` does not exist' % 'false-group'
@@ -1601,7 +1601,7 @@ class _BaseTestApi(object):
         try:
             id_, params = _build_data(self.apikey, 'add_user_to_user_group',
                                       usergroupid=gr_name,
-                                      userid=TEST_USER_ADMIN_LOGIN)
+                                      userid=base.TEST_USER_ADMIN_LOGIN)
             response = api_call(self, params)
             expected = 'failed to add member to user group `%s`' % gr_name
             self._compare_error(id_, expected, given=response.body)
@@ -1611,16 +1611,16 @@ class _BaseTestApi(object):
     def test_api_remove_user_from_user_group(self):
         gr_name = u'test_group_3'
         gr = fixture.create_user_group(gr_name)
-        UserGroupModel().add_user_to_group(gr, user=TEST_USER_ADMIN_LOGIN)
+        UserGroupModel().add_user_to_group(gr, user=base.TEST_USER_ADMIN_LOGIN)
         Session().commit()
         try:
             id_, params = _build_data(self.apikey, 'remove_user_from_user_group',
                                       usergroupid=gr_name,
-                                      userid=TEST_USER_ADMIN_LOGIN)
+                                      userid=base.TEST_USER_ADMIN_LOGIN)
             response = api_call(self, params)
             expected = {
                 'msg': 'removed member `%s` from user group `%s`' % (
-                    TEST_USER_ADMIN_LOGIN, gr_name
+                    base.TEST_USER_ADMIN_LOGIN, gr_name
                 ),
                 'success': True}
             self._compare_ok(id_, expected, given=response.body)
@@ -1631,12 +1631,12 @@ class _BaseTestApi(object):
     def test_api_remove_user_from_user_group_exception_occurred(self):
         gr_name = u'test_group_3'
         gr = fixture.create_user_group(gr_name)
-        UserGroupModel().add_user_to_group(gr, user=TEST_USER_ADMIN_LOGIN)
+        UserGroupModel().add_user_to_group(gr, user=base.TEST_USER_ADMIN_LOGIN)
         Session().commit()
         try:
             id_, params = _build_data(self.apikey, 'remove_user_from_user_group',
                                       usergroupid=gr_name,
-                                      userid=TEST_USER_ADMIN_LOGIN)
+                                      userid=base.TEST_USER_ADMIN_LOGIN)
             response = api_call(self, params)
             expected = 'failed to remove member from user group `%s`' % gr_name
             self._compare_error(id_, expected, given=response.body)
@@ -1693,7 +1693,7 @@ class _BaseTestApi(object):
         finally:
             fixture.destroy_user_group(gr_name)
 
-    @parametrize('name,perm', [
+    @base.parametrize('name,perm', [
         ('none', 'repository.none'),
         ('read', 'repository.read'),
         ('write', 'repository.write'),
@@ -1703,13 +1703,13 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'grant_user_permission',
                                   repoid=self.REPO,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   perm=perm)
         response = api_call(self, params)
 
         ret = {
             'msg': 'Granted perm: `%s` for user: `%s` in repo: `%s`' % (
-                perm, TEST_USER_ADMIN_LOGIN, self.REPO
+                perm, base.TEST_USER_ADMIN_LOGIN, self.REPO
             ),
             'success': True
         }
@@ -1721,7 +1721,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'grant_user_permission',
                                   repoid=self.REPO,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   perm=perm)
         response = api_call(self, params)
 
@@ -1734,12 +1734,12 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'grant_user_permission',
                                   repoid=self.REPO,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   perm=perm)
         response = api_call(self, params)
 
         expected = 'failed to edit permission for user: `%s` in repo: `%s`' % (
-            TEST_USER_ADMIN_LOGIN, self.REPO
+            base.TEST_USER_ADMIN_LOGIN, self.REPO
         )
         self._compare_error(id_, expected, given=response.body)
 
@@ -1747,12 +1747,12 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'revoke_user_permission',
                                   repoid=self.REPO,
-                                  userid=TEST_USER_ADMIN_LOGIN, )
+                                  userid=base.TEST_USER_ADMIN_LOGIN, )
         response = api_call(self, params)
 
         expected = {
             'msg': 'Revoked perm for user: `%s` in repo: `%s`' % (
-                TEST_USER_ADMIN_LOGIN, self.REPO
+                base.TEST_USER_ADMIN_LOGIN, self.REPO
             ),
             'success': True
         }
@@ -1763,15 +1763,15 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'revoke_user_permission',
                                   repoid=self.REPO,
-                                  userid=TEST_USER_ADMIN_LOGIN, )
+                                  userid=base.TEST_USER_ADMIN_LOGIN, )
         response = api_call(self, params)
 
         expected = 'failed to edit permission for user: `%s` in repo: `%s`' % (
-            TEST_USER_ADMIN_LOGIN, self.REPO
+            base.TEST_USER_ADMIN_LOGIN, self.REPO
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('name,perm', [
+    @base.parametrize('name,perm', [
         ('none', 'repository.none'),
         ('read', 'repository.read'),
         ('write', 'repository.write'),
@@ -1853,7 +1853,7 @@ class _BaseTestApi(object):
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('name,perm,apply_to_children', [
+    @base.parametrize('name,perm,apply_to_children', [
         ('none', 'group.none', 'none'),
         ('read', 'group.read', 'none'),
         ('write', 'group.write', 'none'),
@@ -1878,20 +1878,20 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'grant_user_permission_to_repo_group',
                                   repogroupid=TEST_REPO_GROUP,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   perm=perm, apply_to_children=apply_to_children)
         response = api_call(self, params)
 
         ret = {
             'msg': 'Granted perm: `%s` (recursive:%s) for user: `%s` in repo group: `%s`' % (
-                perm, apply_to_children, TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
+                perm, apply_to_children, base.TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
             ),
             'success': True
         }
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
-    @parametrize('name,perm,apply_to_children,grant_admin,access_ok', [
+    @base.parametrize('name,perm,apply_to_children,grant_admin,access_ok', [
         ('none_fails', 'group.none', 'none', False, False),
         ('read_fails', 'group.read', 'none', False, False),
         ('write_fails', 'group.write', 'none', False, False),
@@ -1914,13 +1914,13 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey_regular,
                                   'grant_user_permission_to_repo_group',
                                   repogroupid=TEST_REPO_GROUP,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   perm=perm, apply_to_children=apply_to_children)
         response = api_call(self, params)
         if access_ok:
             ret = {
                 'msg': 'Granted perm: `%s` (recursive:%s) for user: `%s` in repo group: `%s`' % (
-                    perm, apply_to_children, TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
+                    perm, apply_to_children, base.TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
                 ),
                 'success': True
             }
@@ -1935,7 +1935,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'grant_user_permission_to_repo_group',
                                   repogroupid=TEST_REPO_GROUP,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   perm=perm)
         response = api_call(self, params)
 
@@ -1948,16 +1948,16 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'grant_user_permission_to_repo_group',
                                   repogroupid=TEST_REPO_GROUP,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   perm=perm)
         response = api_call(self, params)
 
         expected = 'failed to edit permission for user: `%s` in repo group: `%s`' % (
-            TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
+            base.TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('name,apply_to_children', [
+    @base.parametrize('name,apply_to_children', [
         ('none', 'none'),
         ('all', 'all'),
         ('repos', 'repos'),
@@ -1965,26 +1965,26 @@ class _BaseTestApi(object):
     ])
     def test_api_revoke_user_permission_from_repo_group(self, name, apply_to_children):
         RepoGroupModel().grant_user_permission(repo_group=TEST_REPO_GROUP,
-                                               user=TEST_USER_ADMIN_LOGIN,
+                                               user=base.TEST_USER_ADMIN_LOGIN,
                                                perm='group.read',)
         Session().commit()
 
         id_, params = _build_data(self.apikey,
                                   'revoke_user_permission_from_repo_group',
                                   repogroupid=TEST_REPO_GROUP,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   apply_to_children=apply_to_children,)
         response = api_call(self, params)
 
         expected = {
             'msg': 'Revoked perm (recursive:%s) for user: `%s` in repo group: `%s`' % (
-                apply_to_children, TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
+                apply_to_children, base.TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
             ),
             'success': True
         }
         self._compare_ok(id_, expected, given=response.body)
 
-    @parametrize('name,apply_to_children,grant_admin,access_ok', [
+    @base.parametrize('name,apply_to_children,grant_admin,access_ok', [
         ('none', 'none', False, False),
         ('all', 'all', False, False),
         ('repos', 'repos', False, False),
@@ -1999,7 +1999,7 @@ class _BaseTestApi(object):
     def test_api_revoke_user_permission_from_repo_group_by_regular_user(
             self, name, apply_to_children, grant_admin, access_ok):
         RepoGroupModel().grant_user_permission(repo_group=TEST_REPO_GROUP,
-                                               user=TEST_USER_ADMIN_LOGIN,
+                                               user=base.TEST_USER_ADMIN_LOGIN,
                                                perm='group.read',)
         Session().commit()
 
@@ -2012,13 +2012,13 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey_regular,
                                   'revoke_user_permission_from_repo_group',
                                   repogroupid=TEST_REPO_GROUP,
-                                  userid=TEST_USER_ADMIN_LOGIN,
+                                  userid=base.TEST_USER_ADMIN_LOGIN,
                                   apply_to_children=apply_to_children,)
         response = api_call(self, params)
         if access_ok:
             expected = {
                 'msg': 'Revoked perm (recursive:%s) for user: `%s` in repo group: `%s`' % (
-                    apply_to_children, TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
+                    apply_to_children, base.TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
                 ),
                 'success': True
             }
@@ -2032,15 +2032,15 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey,
                                   'revoke_user_permission_from_repo_group',
                                   repogroupid=TEST_REPO_GROUP,
-                                  userid=TEST_USER_ADMIN_LOGIN, )
+                                  userid=base.TEST_USER_ADMIN_LOGIN, )
         response = api_call(self, params)
 
         expected = 'failed to edit permission for user: `%s` in repo group: `%s`' % (
-            TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
+            base.TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('name,perm,apply_to_children', [
+    @base.parametrize('name,perm,apply_to_children', [
         ('none', 'group.none', 'none'),
         ('read', 'group.read', 'none'),
         ('write', 'group.write', 'none'),
@@ -2079,7 +2079,7 @@ class _BaseTestApi(object):
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
-    @parametrize('name,perm,apply_to_children,grant_admin,access_ok', [
+    @base.parametrize('name,perm,apply_to_children,grant_admin,access_ok', [
         ('none_fails', 'group.none', 'none', False, False),
         ('read_fails', 'group.read', 'none', False, False),
         ('write_fails', 'group.write', 'none', False, False),
@@ -2146,7 +2146,7 @@ class _BaseTestApi(object):
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parametrize('name,apply_to_children', [
+    @base.parametrize('name,apply_to_children', [
         ('none', 'none'),
         ('all', 'all'),
         ('repos', 'repos'),
@@ -2172,7 +2172,7 @@ class _BaseTestApi(object):
         }
         self._compare_ok(id_, expected, given=response.body)
 
-    @parametrize('name,apply_to_children,grant_admin,access_ok', [
+    @base.parametrize('name,apply_to_children,grant_admin,access_ok', [
         ('none', 'none', False, False),
         ('all', 'all', False, False),
         ('repos', 'repos', False, False),
@@ -2187,7 +2187,7 @@ class _BaseTestApi(object):
     def test_api_revoke_user_group_permission_from_repo_group_by_regular_user(
             self, name, apply_to_children, grant_admin, access_ok):
         RepoGroupModel().grant_user_permission(repo_group=TEST_REPO_GROUP,
-                                               user=TEST_USER_ADMIN_LOGIN,
+                                               user=base.TEST_USER_ADMIN_LOGIN,
                                                perm='group.read',)
         Session().commit()
 
@@ -2206,7 +2206,7 @@ class _BaseTestApi(object):
         if access_ok:
             expected = {
                 'msg': 'Revoked perm (recursive:%s) for user group: `%s` in repo group: `%s`' % (
-                    apply_to_children, TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
+                    apply_to_children, base.TEST_USER_ADMIN_LOGIN, TEST_REPO_GROUP
                 ),
                 'success': True
             }
@@ -2310,7 +2310,7 @@ class _BaseTestApi(object):
 
     def test_api_get_gists_regular_user_with_different_userid(self):
         id_, params = _build_data(self.apikey_regular, 'get_gists',
-                                  userid=TEST_USER_ADMIN_LOGIN)
+                                  userid=base.TEST_USER_ADMIN_LOGIN)
         response = api_call(self, params)
         expected = 'userid is not the same as your user'
         self._compare_error(id_, expected, given=response.body)
@@ -2501,10 +2501,10 @@ class _BaseTestApi(object):
             "org_repo_url": "http://localhost:80/%s" % self.REPO,
             "org_ref_parts": ["branch", "stable", self.TEST_PR_SRC],
             "other_ref_parts": ["branch", "default", self.TEST_PR_DST],
-            "comments": [{"username": TEST_USER_ADMIN_LOGIN, "text": "",
+            "comments": [{"username": base.TEST_USER_ADMIN_LOGIN, "text": "",
                          "comment_id": pullrequest.comments[0].comment_id}],
-            "owner": TEST_USER_ADMIN_LOGIN,
-            "statuses": [{"status": "under_review", "reviewer": TEST_USER_ADMIN_LOGIN, "modified_at": "2000-01-01T00:00:00"} for i in range(0, len(self.TEST_PR_REVISIONS))],
+            "owner": base.TEST_USER_ADMIN_LOGIN,
+            "statuses": [{"status": "under_review", "reviewer": base.TEST_USER_ADMIN_LOGIN, "modified_at": "2000-01-01T00:00:00"} for i in range(0, len(self.TEST_PR_REVISIONS))],
             "title": "get test",
             "revisions": self.TEST_PR_REVISIONS,
         }
@@ -2534,7 +2534,7 @@ class _BaseTestApi(object):
         random_id = random.randrange(1, 9999)
         params = json.dumps({
             "id": random_id,
-            "api_key": User.get_by_username(TEST_USER_REGULAR2_LOGIN).api_key,
+            "api_key": User.get_by_username(base.TEST_USER_REGULAR2_LOGIN).api_key,
             "method": "comment_pullrequest",
             "args": {"pull_request_id": pull_request_id, "status": ChangesetStatus.STATUS_APPROVED},
         })
@@ -2544,7 +2544,7 @@ class _BaseTestApi(object):
         assert ChangesetStatus.STATUS_UNDER_REVIEW == ChangesetStatusModel().calculate_pull_request_result(pullrequest)[2]
         params = json.dumps({
             "id": random_id,
-            "api_key": User.get_by_username(TEST_USER_REGULAR_LOGIN).api_key,
+            "api_key": User.get_by_username(base.TEST_USER_REGULAR_LOGIN).api_key,
             "method": "comment_pullrequest",
             "args": {"pull_request_id": pull_request_id, "status": ChangesetStatus.STATUS_APPROVED},
         })
