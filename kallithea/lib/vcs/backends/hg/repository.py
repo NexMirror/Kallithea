@@ -20,7 +20,7 @@ from collections import OrderedDict
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
-from kallithea.lib.vcs.utils import author_email, author_name, date_fromtimestamp, makedate, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.hgcompat import (
     Abort, RepoError, RepoLookupError, clone, diffopts, get_contact, hex, hg_url, httpbasicauthhandler, httpdigestauthhandler, httppeer, localrepo, match_exact, nullid, patch, peer, scmutil, sshpeer, tag, ui)
 from kallithea.lib.vcs.utils.lazy import LazyProperty
@@ -405,19 +405,17 @@ class MercurialRepository(BaseRepository):
 
     def _get_revision(self, revision):
         """
-        Gets an ID revision given as str. This will always return a full
-        40 char revision number
+        Given any revision identifier, returns a 40 char string with revision hash.
 
         :param revision: str or int or None
         """
-        if isinstance(revision, unicode):
-            revision = safe_str(revision)
-
         if self._empty:
             raise EmptyRepositoryError("There are no changesets yet")
 
         if revision in [-1, None]:
             revision = 'tip'
+        elif isinstance(revision, unicode):
+            revision = safe_bytes(revision)
 
         try:
             if isinstance(revision, int):

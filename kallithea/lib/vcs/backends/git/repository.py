@@ -257,52 +257,50 @@ class GitRepository(BaseRepository):
 
     def _get_revision(self, revision):
         """
-        For git backend we always return integer here. This way we ensure
-        that changeset's revision attribute would become integer.
+        Given any revision identifier, returns a 40 char string with revision hash.
         """
-
-        is_null = lambda o: len(o) == revision.count('0')
-
         if self._empty:
             raise EmptyRepositoryError("There are no changesets yet")
 
         if revision in (None, '', 'tip', 'HEAD', 'head', -1):
-            return self.revisions[-1]
+            revision = -1
 
-        is_bstr = isinstance(revision, (str, unicode))
-        if ((is_bstr and revision.isdigit() and len(revision) < 12)
-            or isinstance(revision, int) or is_null(revision)
-        ):
+        if isinstance(revision, int):
             try:
-                revision = self.revisions[int(revision)]
+                return self.revisions[revision]
             except IndexError:
                 msg = ("Revision %s does not exist for %s" % (revision, self))
                 raise ChangesetDoesNotExistError(msg)
 
-        elif is_bstr:
+        if isinstance(revision, (str, unicode)):
+            if revision.isdigit() and (len(revision) < 12 or len(revision) == revision.count('0')):
+                try:
+                    return self.revisions[int(revision)]
+                except IndexError:
+                    msg = "Revision %r does not exist for %s" % (revision, self)
+                    raise ChangesetDoesNotExistError(msg)
+
             # get by branch/tag name
             _ref_revision = self._parsed_refs.get(revision)
             if _ref_revision:  # and _ref_revision[1] in ['H', 'RH', 'T']:
                 return _ref_revision[0]
 
-            _tags_shas = self.tags.values()
-            # maybe it's a tag ? we don't have them in self.revisions
-            if revision in _tags_shas:
-                return _tags_shas[_tags_shas.index(revision)]
+            if revision in self.revisions:
+                return revision
 
-            elif not SHA_PATTERN.match(revision) or revision not in self.revisions:
+            # maybe it's a tag ? we don't have them in self.revisions
+            if revision in self.tags.values():
+                return revision
+
+            if SHA_PATTERN.match(revision):
                 msg = ("Revision %s does not exist for %s" % (revision, self))
                 raise ChangesetDoesNotExistError(msg)
 
-        # Ensure we return full id
-        if not SHA_PATTERN.match(str(revision)):
-            raise ChangesetDoesNotExistError("Given revision %s not recognized"
-                % revision)
-        return revision
+        raise ChangesetDoesNotExistError("Given revision %r not recognized" % revision)
 
     def get_ref_revision(self, ref_type, ref_name):
         """
-        Returns ``MercurialChangeset`` object representing repository's
+        Returns ``GitChangeset`` object representing repository's
         changeset at the given ``revision``.
         """
         return self._get_revision(ref_name)
