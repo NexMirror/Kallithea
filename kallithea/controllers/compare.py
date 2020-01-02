@@ -42,7 +42,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.utils2 import safe_int, safe_str
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_int, safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.db import Repository
 
@@ -107,26 +107,26 @@ class CompareController(BaseRepoController):
             else:
                 hgrepo = other_repo._repo
 
-            ancestors = [hgrepo[ancestor].hex() for ancestor in
-                         hgrepo.revs(b"id(%s) & ::id(%s)", other_rev, org_rev)]
+            ancestors = [ascii_str(hgrepo[ancestor].hex()) for ancestor in
+                         hgrepo.revs(b"id(%s) & ::id(%s)", ascii_bytes(other_rev), ascii_bytes(org_rev))]
             if ancestors:
                 log.debug("shortcut found: %s is already an ancestor of %s", other_rev, org_rev)
             else:
                 log.debug("no shortcut found: %s is not an ancestor of %s", other_rev, org_rev)
-                ancestors = [hgrepo[ancestor].hex() for ancestor in
-                             hgrepo.revs(b"heads(::id(%s) & ::id(%s))", org_rev, other_rev)] # FIXME: expensive!
+                ancestors = [ascii_str(hgrepo[ancestor].hex()) for ancestor in
+                             hgrepo.revs(b"heads(::id(%s) & ::id(%s))", ascii_bytes(org_rev), ascii_bytes(other_rev))] # FIXME: expensive!
 
             other_changesets = [
                 other_repo.get_changeset(rev)
                 for rev in hgrepo.revs(
                     b"ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
-                     other_rev, org_rev, org_rev)
+                    ascii_bytes(other_rev), ascii_bytes(org_rev), ascii_bytes(org_rev))
             ]
             org_changesets = [
-                org_repo.get_changeset(hgrepo[rev].hex())
+                org_repo.get_changeset(ascii_str(hgrepo[rev].hex()))
                 for rev in hgrepo.revs(
                     b"ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
-                    org_rev, other_rev, other_rev)
+                    ascii_bytes(org_rev), ascii_bytes(other_rev), ascii_bytes(other_rev))
             ]
 
         elif alias == 'git':
@@ -141,9 +141,9 @@ class CompareController(BaseRepoController):
                 SubprocessGitClient(thin_packs=False).fetch(safe_str(org_repo.path), gitrepo_remote)
 
                 revs = [
-                    x.commit.id
-                    for x in gitrepo_remote.get_walker(include=[other_rev],
-                                                       exclude=[org_rev])
+                    ascii_str(x.commit.id)
+                    for x in gitrepo_remote.get_walker(include=[ascii_bytes(other_rev)],
+                                                       exclude=[ascii_bytes(org_rev)])
                 ]
                 other_changesets = [other_repo.get_changeset(rev) for rev in reversed(revs)]
                 if other_changesets:

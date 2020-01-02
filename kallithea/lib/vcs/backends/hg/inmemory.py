@@ -2,7 +2,7 @@ import datetime
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils import safe_bytes
+from kallithea.lib.vcs.utils import ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.hgcompat import hex, memctx, memfilectx
 
 
@@ -97,9 +97,8 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
         self._commit_ctx = commit_ctx  # For reference
         # Update vcs repository object & recreate mercurial _repo
         # new_ctx = self.repository._repo[node]
-        # new_tip = self.repository.get_changeset(new_ctx.hex())
-        new_id = hex(n)
-        self.repository.revisions.append(new_id)
+        # new_tip = ascii_str(self.repository.get_changeset(new_ctx.hex()))
+        self.repository.revisions.append(ascii_str(hex(n)))
         self._repo = self.repository._get_repo(create=False)
         self.repository.branches = self.repository._get_branches()
         tip = self.repository.get_changeset()

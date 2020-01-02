@@ -42,9 +42,8 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_int
+from kallithea.lib.utils2 import ascii_bytes, safe_int, safe_str
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
-from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.comment import ChangesetCommentsModel
@@ -90,7 +89,6 @@ class PullrequestsController(BaseRepoController):
             branch = safe_str(branch)
 
         if branch_rev:
-            branch_rev = safe_str(branch_rev)
             # a revset not restricting to merge() would be better
             # (especially because it would get the branch point)
             # ... but is currently too expensive
@@ -98,7 +96,7 @@ class PullrequestsController(BaseRepoController):
             peerbranches = set()
             for i in repo._repo.revs(
                 b"sort(parents(branch(id(%s)) and merge()) - branch(id(%s)), -rev)",
-                branch_rev, branch_rev
+                ascii_bytes(branch_rev), ascii_bytes(branch_rev),
             ):
                 for abranch in repo.get_changeset(i).branches:
                     if abranch not in peerbranches:

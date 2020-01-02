@@ -22,7 +22,7 @@ import time
 import pytest
 from webtest import TestApp
 
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import ascii_str, safe_str
 from kallithea.model.db import User
 
 
@@ -176,7 +176,7 @@ class TestController(object):
         assert user == expected_username
 
     def session_csrf_secret_token(self):
-        return self.app.get(url('session_csrf_secret_token')).body
+        return ascii_str(self.app.get(url('session_csrf_secret_token')).body)
 
     def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:

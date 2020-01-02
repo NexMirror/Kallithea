@@ -25,14 +25,13 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import binascii
 import os
 import time
 
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import action_logger, make_ui, setup_cache_regions
-from kallithea.lib.utils2 import get_hook_environment, safe_str, safe_unicode
+from kallithea.lib.utils2 import ascii_str, get_hook_environment, safe_str, safe_unicode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.hgcompat import revrange
 from kallithea.model.db import Repository, User
@@ -72,7 +71,7 @@ def repo_size(ui, repo, hooktype=None, **kwargs):
 
     msg = ('Repository size .hg: %s Checkout: %s Total: %s\n'
            'Last revision is now r%s:%s\n') % (
-        size_hg_f, size_root_f, size_total_f, last_cs.rev(), last_cs.hex()[:12]
+        size_hg_f, size_root_f, size_total_f, last_cs.rev(), ascii_str(last_cs.hex())[:12]
     )
     ui.status(msg)
 
@@ -109,8 +108,7 @@ def log_push_action(ui, repo, node, node_last, **kwargs):
     Note: This hook is not only logging, but also the side effect invalidating
     cahes! The function should perhaps be renamed.
     """
-    _h = binascii.hexlify
-    revs = [_h(repo[r].node()) for r in revrange(repo, [b'%s:%s' % (node, node_last)])]
+    revs = [ascii_str(repo[r].hex()) for r in revrange(repo, [b'%s:%s' % (node, node_last)])]
     process_pushed_raw_ids(revs)
     return 0
 

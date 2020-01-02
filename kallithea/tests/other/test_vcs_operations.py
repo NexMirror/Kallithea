@@ -39,6 +39,7 @@ from tempfile import _RandomNameSequence
 import pytest
 
 from kallithea import CONFIG
+from kallithea.lib.utils2 import ascii_bytes
 from kallithea.model.db import CacheInvalidation, Repository, Ui, User, UserIpMap, UserLog
 from kallithea.model.meta import Session
 from kallithea.model.ssh_key import SshKeyModel
@@ -330,7 +331,7 @@ class TestVCSOperations(TestController):
         }
         req = urllib2.Request(
             'http://%s:%s/_admin/api' % webserver.server_address,
-            data=json.dumps(params),
+            data=ascii_bytes(json.dumps(params)),
             headers={'content-type': 'application/json'})
         response = urllib2.urlopen(req)
         result = json.loads(response.read())

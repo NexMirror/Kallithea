@@ -7,7 +7,7 @@ from dulwich import objects
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils import safe_bytes, safe_str
+from kallithea.lib.vcs.utils import ascii_str, safe_bytes, safe_str
 
 
 class GitInMemoryChangeset(BaseInMemoryChangeset):
@@ -149,7 +149,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         # Update vcs repository object & recreate dulwich repo
         ref = b'refs/heads/%s' % branch
         repo.refs[ref] = commit.id
-        self.repository.revisions.append(commit.id)
+        self.repository.revisions.append(ascii_str(commit.id))
         # invalidate parsed refs after commit
         self.repository._parsed_refs = self.repository._get_parsed_refs()
         tip = self.repository.get_changeset()

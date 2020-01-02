@@ -141,7 +141,7 @@ def generate_api_key():
         unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
     """
     # Hexadecimal certainly qualifies as URL-safe.
-    return binascii.hexlify(os.urandom(20))
+    return ascii_str(binascii.hexlify(os.urandom(20)))
 
 
 def safe_int(val, default=None):

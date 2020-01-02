@@ -33,7 +33,7 @@ from tg import request
 from tg.i18n import ugettext as _
 
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import extract_mentioned_users, safe_str, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, extract_mentioned_users, safe_unicode
 from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, User
 from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel
@@ -261,7 +261,7 @@ class CreatePullRequestAction(object):
 
         if self.org_repo.scm_instance.alias == 'git':
             # create a ref under refs/pull/ so that commits don't get garbage-collected
-            self.org_repo.scm_instance._repo[b"refs/pull/%d/head" % pr.pull_request_id] = safe_str(self.org_rev)
+            self.org_repo.scm_instance._repo[b"refs/pull/%d/head" % pr.pull_request_id] = ascii_bytes(self.org_rev)
 
         # reset state to under-review
         from kallithea.model.changeset_status import ChangesetStatusModel

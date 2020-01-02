@@ -41,7 +41,7 @@ from kallithea import __platform__, is_unix, is_windows
 from kallithea.config.routing import url
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.model.db import (
     Permission, RepoGroup, Repository, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
@@ -95,7 +95,7 @@ def get_crypt_password(password):
         return hashlib.sha256(password).hexdigest()
     elif is_unix:
         import bcrypt
-        return bcrypt.hashpw(safe_str(password), bcrypt.gensalt(10))
+        return ascii_str(bcrypt.hashpw(safe_str(password), bcrypt.gensalt(10)))
     else:
         raise Exception('Unknown or unsupported platform %s'
                         % __platform__)
@@ -115,7 +115,7 @@ def check_password(password, hashed):
     elif is_unix:
         import bcrypt
         try:
-            return bcrypt.checkpw(safe_str(password), safe_str(hashed))
+            return bcrypt.checkpw(safe_str(password), ascii_bytes(hashed))
         except ValueError as e:
             # bcrypt will throw ValueError 'Invalid hashed_password salt' on all password errors
             log.error('error from bcrypt checking password: %s', e)

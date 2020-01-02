@@ -11,7 +11,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, RepositoryError, VCSError
 from kallithea.lib.vcs.nodes import (
     AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
-from kallithea.lib.vcs.utils import date_fromtimestamp, safe_int, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_int, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -25,16 +25,16 @@ class GitChangeset(BaseChangeset):
         self.repository = repository
         revision = safe_str(revision)
         try:
-            commit = self.repository._repo[revision]
+            commit = self.repository._repo[ascii_bytes(revision)]
             if isinstance(commit, objects.Tag):
                 revision = safe_str(commit.object[1])
                 commit = self.repository._repo.get_object(commit.object[1])
         except KeyError:
             raise RepositoryError("Cannot get object with id %s" % revision)
-        self.raw_id = revision
+        self.raw_id = ascii_str(commit.id)
         self.id = self.raw_id
         self.short_id = self.raw_id[:12]
-        self._commit = commit
+        self._commit = commit  # a Dulwich Commmit with .id
         self._tree_id = commit.tree
         self._committer_property = 'committer'
         self._author_property = 'author'
@@ -185,8 +185,8 @@ class GitChangeset(BaseChangeset):
         """
         Returns list of parents changesets.
         """
-        return [self.repository.get_changeset(parent)
-                for parent in self._commit.parents]
+        return [self.repository.get_changeset(ascii_str(parent_id))
+                for parent_id in self._commit.parents]
 
     @LazyProperty
     def children(self):
@@ -314,8 +314,8 @@ class GitChangeset(BaseChangeset):
         include = [self.id]
         walker = Walker(self.repository._repo.object_store, include,
                         paths=[path], max_entries=1)
-        return [self.repository.get_changeset(sha)
-                for sha in (x.commit.id for x in walker)]
+        return [self.repository.get_changeset(ascii_str(x.commit.id.decode))
+                for x in walker]
 
     def get_file_annotate(self, path):
         """
@@ -419,8 +419,8 @@ class GitChangeset(BaseChangeset):
             if objects.S_ISGITLINK(stat):
                 root_tree = self.repository._repo[self._tree_id]
                 cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(root_tree[b'.gitmodules'][1]).data))
-                url = cf.get(('submodule', obj_path), 'url')
-                dirnodes.append(SubModuleNode(obj_path, url=url, changeset=id,
+                url = ascii_str(cf.get(('submodule', obj_path), 'url'))
+                dirnodes.append(SubModuleNode(obj_path, url=url, changeset=ascii_str(id),
                                               alias=als))
                 continue
 
@@ -458,8 +458,8 @@ class GitChangeset(BaseChangeset):
             if _GL(self._stat_modes.get(path)):
                 tree = self.repository._repo[self._tree_id]
                 cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree[b'.gitmodules'][1]).data))
-                url = cf.get(('submodule', path), 'url')
-                node = SubModuleNode(path, url=url, changeset=id_,
+                url = ascii_str(cf.get(('submodule', path), 'url'))
+                node = SubModuleNode(path, url=url, changeset=ascii_str(id_),
                                      alias=self.repository.alias)
             else:
                 obj = self.repository._repo.get_object(id_)

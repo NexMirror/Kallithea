@@ -33,7 +33,7 @@ import traceback
 from webob import Request, Response, exc
 
 import kallithea
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, safe_unicode
 from kallithea.lib.vcs import subprocessio
 
 
@@ -113,14 +113,14 @@ class GitRepository(object):
         #                     ref_list
         #                     "0000"
         server_advert = '# service=%s\n' % git_command
-        packet_len = str(hex(len(server_advert) + 4)[2:].rjust(4, '0')).lower()
+        packet_len = hex(len(server_advert) + 4)[2:].rjust(4, '0').lower()
         _git_path = kallithea.CONFIG.get('git_path', 'git')
         cmd = [_git_path, git_command[4:],
                '--stateless-rpc', '--advertise-refs', self.content_path]
         log.debug('handling cmd %s', cmd)
         try:
             out = subprocessio.SubprocessIOChunker(cmd,
-                starting_values=[packet_len + server_advert + '0000']
+                starting_values=[ascii_bytes(packet_len + server_advert + '0000')]
             )
         except EnvironmentError as e:
             log.error(traceback.format_exc())

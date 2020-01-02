@@ -6,7 +6,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, VCSError
 from kallithea.lib.vcs.nodes import (
     AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
-from kallithea.lib.vcs.utils import date_fromtimestamp, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.hgcompat import archival, hex, obsutil
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
@@ -20,8 +20,8 @@ class MercurialChangeset(BaseChangeset):
     def __init__(self, repository, revision):
         self.repository = repository
         assert isinstance(revision, basestring), repr(revision)
-        self.raw_id = revision
-        self._ctx = repository._repo[revision]
+        self._ctx = repository._repo[ascii_bytes(revision)]
+        self.raw_id = ascii_str(self._ctx.hex())
         self.revision = self._ctx._rev
         self.nodes = {}
 
@@ -285,7 +285,7 @@ class MercurialChangeset(BaseChangeset):
         annotations = self._get_filectx(path).annotate()
         annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
         for i, (fctx, l) in enumerate(annotation_lines):
-            sha = fctx.hex()
+            sha = ascii_str(fctx.hex())
             yield (i + 1, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)
 
     def fill_archive(self, stream=None, kind='tgz', prefix=None,
@@ -320,7 +320,7 @@ class MercurialChangeset(BaseChangeset):
         elif prefix.strip() == '':
             raise VCSError("Prefix cannot be empty")
 
-        archival.archive(self.repository._repo, stream, self.raw_id,
+        archival.archive(self.repository._repo, stream, ascii_bytes(self.raw_id),
                          kind, prefix=prefix, subrepos=subrepos)
 
     def get_nodes(self, path):

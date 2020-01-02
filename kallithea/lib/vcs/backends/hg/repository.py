@@ -20,7 +20,7 @@ from collections import OrderedDict
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
-from kallithea.lib.vcs.utils import author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_str, author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.hgcompat import (
     Abort, RepoError, RepoLookupError, clone, diffopts, get_contact, hex, hg_url, httpbasicauthhandler, httpdigestauthhandler, httppeer, localrepo, match_exact, nullid, patch, peer, scmutil, sshpeer, tag, ui)
 from kallithea.lib.vcs.utils.lazy import LazyProperty
@@ -115,14 +115,13 @@ class MercurialRepository(BaseRepository):
             return {}
 
         bt = OrderedDict()
-        for bn, _heads, tip, isclosed in sorted(self._repo.branchmap().iterbranches()):
+        for bn, _heads, node, isclosed in sorted(self._repo.branchmap().iterbranches()):
             if isclosed:
                 if closed:
-                    bt[safe_unicode(bn)] = hex(tip)
+                    bt[safe_unicode(bn)] = ascii_str(hex(node))
             else:
                 if normal:
-                    bt[safe_unicode(bn)] = hex(tip)
-
+                    bt[safe_unicode(bn)] = ascii_str(hex(node))
         return bt
 
     @LazyProperty
@@ -137,7 +136,7 @@ class MercurialRepository(BaseRepository):
             return {}
 
         return OrderedDict(sorted(
-            ((safe_unicode(n), hex(h)) for n, h in self._repo.tags().items()),
+            ((safe_unicode(n), ascii_str(hex(h))) for n, h in self._repo.tags().items()),
             reverse=True,
             key=lambda x: x[0],  # sort by name
         ))
@@ -215,13 +214,13 @@ class MercurialRepository(BaseRepository):
             return {}
 
         return OrderedDict(sorted(
-            ((safe_unicode(n), hex(h)) for n, h in self._repo._bookmarks.items()),
+            ((safe_unicode(n), ascii_str(h)) for n, h in self._repo._bookmarks.items()),
             reverse=True,
             key=lambda x: x[0],  # sort by name
         ))
 
     def _get_all_revisions(self):
-        return [self._repo[x].hex() for x in self._repo.filtered(b'visible').changelog.revs()]
+        return [ascii_str(self._repo[x].hex()) for x in self._repo.filtered(b'visible').changelog.revs()]
 
     def get_diff(self, rev1, rev2, path='', ignore_whitespace=False,
                   context=3):
@@ -416,8 +415,8 @@ class MercurialRepository(BaseRepository):
 
         try:
             if isinstance(revision, int):
-                return self._repo[revision].hex()
-            return scmutil.revsymbol(self._repo, revision).hex()
+                return ascii_str(self._repo[revision].hex())
+            return ascii_str(scmutil.revsymbol(self._repo, revision).hex())
         except (IndexError, ValueError, RepoLookupError, TypeError):
             msg = ("Revision %s does not exist for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)

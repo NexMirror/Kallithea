@@ -27,7 +27,7 @@ from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
-from kallithea.lib.vcs.utils import date_fromtimestamp, makedate, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.hgcompat import hg_url, httpbasicauthhandler, httpdigestauthhandler
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
@@ -251,7 +251,7 @@ class GitRepository(BaseRepository):
 
     def _get_all_revisions2(self):
         # alternate implementation using dulwich
-        includes = [x[1][0] for x in self._parsed_refs.iteritems()
+        includes = [ascii_str(x[1][0]) for x in self._parsed_refs.iteritems()
                     if x[1][1] != b'T']
         return [c.commit.id for c in self._repo.get_walker(include=includes)]
 
@@ -283,7 +283,7 @@ class GitRepository(BaseRepository):
             # get by branch/tag name
             _ref_revision = self._parsed_refs.get(revision)
             if _ref_revision:  # and _ref_revision[1] in [b'H', b'RH', b'T']:
-                return _ref_revision[0]
+                return ascii_str(_ref_revision[0])
 
             if revision in self.revisions:
                 return revision
@@ -367,7 +367,7 @@ class GitRepository(BaseRepository):
         if not self.revisions:
             return {}
         sortkey = lambda ctx: ctx[0]
-        _branches = [(x[0], x[1][0])
+        _branches = [(x[0], ascii_str(x[1][0]))
                      for x in self._parsed_refs.iteritems() if x[1][1] == b'H']
         return OrderedDict(sorted(_branches, key=sortkey, reverse=False))
 
@@ -384,7 +384,7 @@ class GitRepository(BaseRepository):
             return {}
 
         sortkey = lambda ctx: ctx[0]
-        _tags = [(x[0], x[1][0])
+        _tags = [(x[0], ascii_str(x[1][0]))
                  for x in self._parsed_refs.iteritems() if x[1][1] == b'T']
         return OrderedDict(sorted(_tags, key=sortkey, reverse=True))
 

@@ -39,7 +39,7 @@ from tg.i18n import ugettext as _
 
 import kallithea.config.conf
 from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.lib.utils2 import aslist, get_current_authuser, safe_str, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.backends.git.repository import GitRepository
 from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
 from kallithea.lib.vcs.conf import settings
@@ -340,7 +340,7 @@ def make_ui(repo_path=None):
             ui_val = b'' if ui_.ui_value is None else safe_str(ui_.ui_value)
             log.debug('config from db: [%s] %s=%r', ui_.ui_section,
                       ui_.ui_key, ui_val)
-            baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
+            baseui.setconfig(ascii_bytes(ui_.ui_section), ascii_bytes(ui_.ui_key),
                              ui_val)
 
     # force set push_ssl requirement to False, Kallithea handles that
@@ -362,7 +362,7 @@ def make_ui(repo_path=None):
             for section in ui_sections:
                 for k, v in cfg.items(section):
                     log.debug('config from file: [%s] %s=%s', section, k, v)
-                    baseui.setconfig(safe_str(section), safe_str(k), safe_str(v))
+                    baseui.setconfig(ascii_bytes(section), ascii_bytes(k), safe_bytes(v))
         else:
             log.debug('hgrc file is not present at %s, skipping...', hgrc_path)
 

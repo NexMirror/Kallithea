@@ -27,6 +27,8 @@ import re
 
 from tg.i18n import ugettext as _
 
+from kallithea.lib.utils2 import ascii_bytes, ascii_str
+
 
 log = logging.getLogger(__name__)
 
@@ -84,14 +86,14 @@ def parse_pub_key(ssh_key):
         raise SshKeyParseError(_("Incorrect SSH key - unexpected characters in base64 part %r") % keyvalue)
 
     try:
-        decoded = base64.b64decode(keyvalue)
+        key_bytes = base64.b64decode(keyvalue)
     except TypeError:
         raise SshKeyParseError(_("Incorrect SSH key - failed to decode base64 part %r") % keyvalue)
 
-    if not decoded.startswith(b'\x00\x00\x00' + chr(len(keytype)) + str(keytype) + b'\x00'):
-        raise SshKeyParseError(_("Incorrect SSH key - base64 part is not %r as claimed but %r") % (str(keytype), str(decoded[4:].split(b'\0', 1)[0])))
+    if not key_bytes.startswith(b'\x00\x00\x00%c%s\x00' % (len(keytype), ascii_bytes(keytype))):
+        raise SshKeyParseError(_("Incorrect SSH key - base64 part is not %r as claimed but %r") % (keytype, ascii_str(key_bytes[4:].split(b'\0', 1)[0])))
 
-    return keytype, decoded, comment
+    return keytype, key_bytes, comment
 
 
 SSH_OPTIONS = 'no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding'
@@ -112,7 +114,7 @@ def authorized_keys_line(kallithea_cli_path, config_file, key):
         keytype, key_bytes, comment = parse_pub_key(key.public_key)
     except SshKeyParseError:
         return '# Invalid Kallithea SSH key: %s %s\n' % (key.user.user_id, key.user_ssh_key_id)
-    base64_key = base64.b64encode(key_bytes)
+    base64_key = ascii_str(base64.b64encode(key_bytes))
     assert '\n' not in base64_key
     return '%s,command="%s ssh-serve -c %s %s %s" %s %s\n' % (
         SSH_OPTIONS, kallithea_cli_path, config_file,
