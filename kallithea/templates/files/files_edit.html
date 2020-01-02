@@ -59,7 +59,7 @@ ${self.repo_context_bar('files')}
                     </span>
               </div>
               <div class="panel-body no-padding">
-                <textarea id="editor" name="content" style="display:none">${h.escape(h.safe_unicode(c.file.content))|n}</textarea>
+                <textarea id="editor" name="content" style="display:none">${h.escape(h.safe_str(c.file.content))|n}</textarea>
               </div>
             </div>
             <div>

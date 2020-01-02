@@ -41,7 +41,7 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import ascii_str, safe_unicode
+from kallithea.lib.utils2 import ascii_str, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
@@ -405,7 +405,7 @@ class ChangesetController(BaseRepoController):
             return raw_diff
         elif method == 'patch':
             response.content_type = 'text/plain'
-            c.diff = safe_unicode(raw_diff)
+            c.diff = safe_str(raw_diff)
             return render('changeset/patch_changeset.html')
         elif method == 'raw':
             response.content_type = 'text/plain'

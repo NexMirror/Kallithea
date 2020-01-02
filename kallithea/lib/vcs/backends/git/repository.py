@@ -30,7 +30,7 @@ from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
-from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_bytes, safe_unicode
+from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
 
@@ -145,7 +145,7 @@ class GitRepository(BaseRepository):
         if os.path.isdir(self.path):
             cwd = self.path
         stdout, _stderr = self._run_git_command(cmd, cwd=cwd)
-        return safe_unicode(stdout)
+        return safe_str(stdout)
 
     @classmethod
     def _check_url(cls, url):
@@ -347,7 +347,7 @@ class GitRepository(BaseRepository):
 
     @LazyProperty
     def description(self):
-        return safe_unicode(self._repo.get_description() or b'unknown')
+        return safe_str(self._repo.get_description() or b'unknown')
 
     @LazyProperty
     def contact(self):

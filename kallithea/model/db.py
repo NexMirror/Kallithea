@@ -49,7 +49,7 @@ from kallithea.lib import ext_json
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.utils2 import (
-    Optional, ascii_bytes, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_unicode, str2bool, urlreadable)
+    Optional, ascii_bytes, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_str, str2bool, urlreadable)
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
@@ -187,7 +187,7 @@ class Setting(Base, BaseDbModel):
     SETTINGS_TYPES = {
         'str': safe_bytes,
         'int': safe_int,
-        'unicode': safe_unicode,
+        'unicode': safe_str,
         'bool': str2bool,
         'list': functools.partial(aslist, sep=',')
     }
@@ -222,7 +222,7 @@ class Setting(Base, BaseDbModel):
 
         :param val:
         """
-        self._app_settings_value = safe_unicode(val)
+        self._app_settings_value = safe_str(val)
 
     @hybrid_property
     def app_settings_type(self):

@@ -40,7 +40,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, jsonify, render
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
+from kallithea.lib.utils2 import safe_int, safe_str, time_to_datetime
 from kallithea.lib.vcs.exceptions import NodeNotChangedError, VCSError
 from kallithea.model.db import Gist
 from kallithea.model.forms import GistForm
@@ -183,7 +183,7 @@ class GistsController(BaseController):
             raise HTTPNotFound()
         if format == 'raw':
             content = '\n\n'.join(
-                safe_unicode(f.content)
+                safe_str(f.content)
                 for f in c.files if (f_path is None or f.path == f_path)
             )
             response.content_type = 'text/plain'

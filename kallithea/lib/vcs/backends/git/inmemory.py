@@ -39,7 +39,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         repo = self.repository._repo
         object_store = repo.object_store
 
-        ENCODING = b"UTF-8"  # TODO: should probably be kept in sync with safe_unicode/safe_bytes and vcs/conf/settings.py DEFAULT_ENCODINGS
+        ENCODING = b"UTF-8"  # TODO: should probably be kept in sync with safe_str/safe_bytes and vcs/conf/settings.py DEFAULT_ENCODINGS
 
         # Create tree and populates it with blobs
         commit_tree = self.parents[0] and repo[self.parents[0]._commit.tree] or \

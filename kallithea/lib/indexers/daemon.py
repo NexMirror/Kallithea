@@ -39,7 +39,7 @@ from whoosh.qparser import QueryParser
 
 from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
 from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.exceptions import ChangesetError, NodeDoesNotExistError, RepositoryError
 from kallithea.model.db import Repository
 from kallithea.model.scm import ScmModel
@@ -184,7 +184,7 @@ class WhooshIndexingDaemon(object):
                 u_content = u''
             else:
                 log.debug('    >> %s', path)
-                u_content = safe_unicode(bytes_content)
+                u_content = safe_str(bytes_content)
                 indexed_w_content += 1
 
         else:

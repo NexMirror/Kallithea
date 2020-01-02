@@ -16,7 +16,7 @@ import stat
 
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import NodeError, RemovedFileNodeError
-from kallithea.lib.vcs.utils import safe_bytes, safe_unicode
+from kallithea.lib.vcs.utils import safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -353,7 +353,7 @@ class FileNode(Node):
         """
         from pygments import lexers
         try:
-            lexer = lexers.guess_lexer_for_filename(self.name, safe_unicode(self.content), stripnl=False)
+            lexer = lexers.guess_lexer_for_filename(self.name, safe_str(self.content), stripnl=False)
         except lexers.ClassNotFound:
             lexer = lexers.TextLexer(stripnl=False)
         # returns first alias

@@ -68,7 +68,7 @@ def safe_int(val, default=None):
     return val
 
 
-def safe_unicode(s):
+def safe_str(s):
     """
     Safe unicode str function. Use a few tricks to turn s into str:
     In case of UnicodeDecodeError with configured default encodings, try to
@@ -118,9 +118,6 @@ def safe_bytes(s):
             pass
 
     return s.encode(settings.DEFAULT_ENCODINGS[0], 'replace')
-
-
-safe_str = safe_unicode
 
 
 def ascii_bytes(s):

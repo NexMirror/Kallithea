@@ -39,7 +39,7 @@ import mercurial.util
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
-from kallithea.lib.vcs.utils import ascii_str, author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_unicode
+from kallithea.lib.vcs.utils import ascii_str, author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath
 
@@ -134,10 +134,10 @@ class MercurialRepository(BaseRepository):
         for bn, _heads, node, isclosed in sorted(self._repo.branchmap().iterbranches()):
             if isclosed:
                 if closed:
-                    bt[safe_unicode(bn)] = ascii_str(mercurial.node.hex(node))
+                    bt[safe_str(bn)] = ascii_str(mercurial.node.hex(node))
             else:
                 if normal:
-                    bt[safe_unicode(bn)] = ascii_str(mercurial.node.hex(node))
+                    bt[safe_str(bn)] = ascii_str(mercurial.node.hex(node))
         return bt
 
     @LazyProperty
@@ -152,7 +152,7 @@ class MercurialRepository(BaseRepository):
             return {}
 
         return OrderedDict(sorted(
-            ((safe_unicode(n), ascii_str(mercurial.node.hex(h))) for n, h in self._repo.tags().items()),
+            ((safe_str(n), ascii_str(mercurial.node.hex(h))) for n, h in self._repo.tags().items()),
             reverse=True,
             key=lambda x: x[0],  # sort by name
         ))
@@ -230,7 +230,7 @@ class MercurialRepository(BaseRepository):
             return {}
 
         return OrderedDict(sorted(
-            ((safe_unicode(n), ascii_str(h)) for n, h in self._repo._bookmarks.items()),
+            ((safe_str(n), ascii_str(h)) for n, h in self._repo._bookmarks.items()),
             reverse=True,
             key=lambda x: x[0],  # sort by name
         ))
@@ -391,11 +391,11 @@ class MercurialRepository(BaseRepository):
     @LazyProperty
     def description(self):
         _desc = self._repo.ui.config(b'web', b'description', None, untrusted=True)
-        return safe_unicode(_desc or b'unknown')
+        return safe_str(_desc or b'unknown')
 
     @LazyProperty
     def contact(self):
-        return safe_unicode(mercurial.hgweb.common.get_contact(self._repo.ui.config)
+        return safe_str(mercurial.hgweb.common.get_contact(self._repo.ui.config)
                             or b'Unknown')
 
     @LazyProperty
@@ -436,10 +436,10 @@ class MercurialRepository(BaseRepository):
                 return ascii_str(self._repo[revision].hex())
             return ascii_str(mercurial.scmutil.revsymbol(self._repo, revision).hex())
         except (IndexError, ValueError, mercurial.error.RepoLookupError, TypeError):
-            msg = "Revision %r does not exist for %s" % (safe_unicode(revision), self.name)
+            msg = "Revision %r does not exist for %s" % (safe_str(revision), self.name)
             raise ChangesetDoesNotExistError(msg)
         except (LookupError, ):
-            msg = "Ambiguous identifier `%s` for %s" % (safe_unicode(revision), self.name)
+            msg = "Ambiguous identifier `%s` for %s" % (safe_str(revision), self.name)
             raise ChangesetDoesNotExistError(msg)
 
     def get_ref_revision(self, ref_type, ref_name):

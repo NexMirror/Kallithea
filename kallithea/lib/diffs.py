@@ -32,7 +32,7 @@ import re
 from tg.i18n import ugettext as _
 
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode, SubModuleNode
@@ -477,7 +477,7 @@ def _escaper(string):
             return ' <i></i>'
         assert False
 
-    return _escape_re.sub(substitute, safe_unicode(string))
+    return _escape_re.sub(substitute, safe_str(string))
 
 
 _git_header_re = re.compile(br"""

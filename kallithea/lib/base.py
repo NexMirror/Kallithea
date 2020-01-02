@@ -49,7 +49,7 @@ from kallithea.lib import auth_modules, ext_json
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import get_repo_slug, is_valid_repo
-from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_unicode, set_hook_environment, str2bool
+from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_str, set_hook_environment, str2bool
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model import meta
 from kallithea.model.db import PullRequest, Repository, Setting, User
@@ -102,7 +102,7 @@ def get_path_info(environ):
     org_req = environ.get('tg.original_request')
     if org_req is not None:
         environ = org_req.environ
-    return safe_unicode(environ['PATH_INFO'])
+    return safe_str(environ['PATH_INFO'])
 
 
 def log_in_user(user, remember, is_external_auth, ip_addr):

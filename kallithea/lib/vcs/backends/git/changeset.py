@@ -11,7 +11,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, RepositoryError, VCSError
 from kallithea.lib.vcs.nodes import (
     AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
-from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_int, safe_unicode
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_int, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -49,15 +49,15 @@ class GitChangeset(BaseChangeset):
 
     @LazyProperty
     def message(self):
-        return safe_unicode(self._commit.message)
+        return safe_str(self._commit.message)
 
     @LazyProperty
     def committer(self):
-        return safe_unicode(getattr(self._commit, self._committer_property))
+        return safe_str(getattr(self._commit, self._committer_property))
 
     @LazyProperty
     def author(self):
-        return safe_unicode(getattr(self._commit, self._author_property))
+        return safe_str(getattr(self._commit, self._author_property))
 
     @LazyProperty
     def date(self):
@@ -91,7 +91,7 @@ class GitChangeset(BaseChangeset):
         heads = self.repository._heads(reverse=False)
         ref = heads.get(self._commit.id)
         if ref:
-            return safe_unicode(ref)
+            return safe_str(ref)
 
     @LazyProperty
     def branches(self):

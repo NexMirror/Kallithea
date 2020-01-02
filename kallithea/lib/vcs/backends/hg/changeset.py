@@ -10,7 +10,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, VCSError
 from kallithea.lib.vcs.nodes import (
     AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
-from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_bytes, safe_unicode
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 
@@ -30,15 +30,15 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def tags(self):
-        return [safe_unicode(tag) for tag in self._ctx.tags()]
+        return [safe_str(tag) for tag in self._ctx.tags()]
 
     @LazyProperty
     def branch(self):
-        return safe_unicode(self._ctx.branch())
+        return safe_str(self._ctx.branch())
 
     @LazyProperty
     def branches(self):
-        return [safe_unicode(self._ctx.branch())]
+        return [safe_str(self._ctx.branch())]
 
     @LazyProperty
     def closesbranch(self):
@@ -89,19 +89,19 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def bookmarks(self):
-        return [safe_unicode(bookmark) for bookmark in self._ctx.bookmarks()]
+        return [safe_str(bookmark) for bookmark in self._ctx.bookmarks()]
 
     @LazyProperty
     def message(self):
-        return safe_unicode(self._ctx.description())
+        return safe_str(self._ctx.description())
 
     @LazyProperty
     def committer(self):
-        return safe_unicode(self.author)
+        return safe_str(self.author)
 
     @LazyProperty
     def author(self):
-        return safe_unicode(self._ctx.user())
+        return safe_str(self._ctx.user())
 
     @LazyProperty
     def date(self):

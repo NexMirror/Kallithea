@@ -43,7 +43,7 @@ from kallithea.lib.auth import HasPermissionAnyDecorator, HasUserGroupPermission
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.exceptions import RepoGroupAssignmentError, UserGroupsAssignedException
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import safe_int, safe_unicode
+from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.model.db import User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm
 from kallithea.model.forms import CustomDefaultPermissionsForm, UserGroupForm, UserGroupPermsForm
 from kallithea.model.meta import Session
@@ -161,7 +161,7 @@ class UserGroupsController(BaseController):
         c.active = 'settings'
         self.__load_data(id)
 
-        available_members = [safe_unicode(x[0]) for x in c.available_members]
+        available_members = [safe_str(x[0]) for x in c.available_members]
 
         users_group_form = UserGroupForm(edit=True,
                                          old_data=c.user_group.get_dict(),
