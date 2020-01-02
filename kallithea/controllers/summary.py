@@ -139,12 +139,10 @@ class SummaryController(BaseRepoController):
 
         if stats and stats.languages:
             lang_stats_d = ext_json.loads(stats.languages)
-
             lang_stats = [(x, {"count": y,
                                "desc": LANGUAGES_EXTENSIONS_MAP.get(x, '?')})
                           for x, y in lang_stats_d.items()]
             lang_stats.sort(key=lambda k: (-k[1]['count'], k[0]))
-
             c.trending_languages = lang_stats[:10]
         else:
             c.trending_languages = []
@@ -188,17 +186,16 @@ class SummaryController(BaseRepoController):
             .scalar()
         c.stats_percentage = 0
         if stats and stats.languages:
-            lang_stats_d = ext_json.loads(stats.languages)
             c.commit_data = ext_json.loads(stats.commit_activity)
             c.overview_data = ext_json.loads(stats.commit_activity_combined)
 
-            lang_stats = ((x, {"count": y,
-                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})
-                          for x, y in lang_stats_d.items())
+            lang_stats_d = ext_json.loads(stats.languages)
+            lang_stats = [(x, {"count": y,
+                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x, '?')})
+                          for x, y in lang_stats_d.items()]
+            lang_stats.sort(key=lambda k: (-k[1]['count'], k[0]))
+            c.trending_languages = lang_stats[:10]
 
-            c.trending_languages = (
-                sorted(lang_stats, reverse=True, key=lambda k: k[1])[:10]
-            )
             last_rev = stats.stat_on_revision + 1
             c.repo_last_rev = c.db_repo_scm_instance.count() \
                 if c.db_repo_scm_instance.revisions else 0
