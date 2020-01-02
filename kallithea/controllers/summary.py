@@ -138,7 +138,6 @@ class SummaryController(BaseRepoController):
         c.stats_percentage = 0
 
         if stats and stats.languages:
-            c.no_data = False is c.db_repo.enable_statistics
             lang_stats_d = ext_json.loads(stats.languages)
 
             lang_stats = [(x, {"count": y,
@@ -148,7 +147,6 @@ class SummaryController(BaseRepoController):
 
             c.trending_languages = lang_stats[:10]
         else:
-            c.no_data = True
             c.trending_languages = []
 
         c.enable_downloads = c.db_repo.enable_downloads
@@ -190,7 +188,6 @@ class SummaryController(BaseRepoController):
             .scalar()
         c.stats_percentage = 0
         if stats and stats.languages:
-            c.no_data = False is c.db_repo.enable_statistics
             lang_stats_d = ext_json.loads(stats.languages)
             c.commit_data = ext_json.loads(stats.commit_activity)
             c.overview_data = ext_json.loads(stats.commit_activity_combined)
@@ -213,8 +210,7 @@ class SummaryController(BaseRepoController):
         else:
             c.commit_data = {}
             c.overview_data = ([[ts_min_y, 0], [ts_max_y, 10]])
-            c.trending_languages = {}
-            c.no_data = True
+            c.trending_languages = []
 
         recurse_limit = 500  # don't recurse more than 500 times when parsing
         get_commits_stats(c.db_repo.repo_name, ts_min_y, ts_max_y, recurse_limit)

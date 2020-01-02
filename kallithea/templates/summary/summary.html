@@ -338,7 +338,6 @@ $(document).ready(function(){
 $(document).ready(function(){
     var data = ${h.js(c.trending_languages)};
     var total = 0;
-    var no_data = true;
     var tbl = document.createElement('table');
     tbl.setAttribute('class','table');
     var cnt = 0;
@@ -347,7 +346,6 @@ $(document).ready(function(){
     }
     for (var i=0;i<data.length;i++){
         cnt += 1;
-        no_data = false;
 
         var hide = cnt>2;
         var tr = document.createElement('tr');

@@ -28,8 +28,8 @@ ${self.repo_context_bar('summary')}
     </div>
 
     <div class="graph panel-body">
-         <div>
-         %if c.no_data:
+        <div>
+        %if not c.stats_percentage:
            ${c.no_data_msg}
            %if h.HasPermissionAny('hg.admin')('enable stats on from summary'):
                 ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name),class_="btn btn-default btn-xs")}
@@ -54,7 +54,6 @@ ${self.repo_context_bar('summary')}
 <script type="text/javascript">
 var data = ${h.js(c.trending_languages)};
 var total = 0;
-var no_data = true;
 var tbl = document.createElement('table');
 tbl.setAttribute('class','trending_language_tbl');
 var cnt = 0;
@@ -63,7 +62,6 @@ for (var i=0;i<data.length;i++){
 }
 for (var i=0;i<data.length;i++){
     cnt += 1;
-    no_data = false;
 
     var hide = cnt>2;
     var tr = document.createElement('tr');
