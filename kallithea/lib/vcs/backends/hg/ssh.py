@@ -14,8 +14,8 @@
 
 import logging
 
-from mercurial import hg
-from mercurial.wireprotoserver import sshserver
+import mercurial.hg
+import mercurial.wireprotoserver
 
 from kallithea.lib.utils import make_ui
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
@@ -61,6 +61,6 @@ class MercurialSshHandler(BaseSshHandler):
             baseui.setconfig(b'hooks', b'pretxnopen._ssh_reject', b'python:kallithea.lib.hooks.rejectpush')
             baseui.setconfig(b'hooks', b'prepushkey._ssh_reject', b'python:kallithea.lib.hooks.rejectpush')
 
-        repo = hg.repository(baseui, safe_bytes(self.db_repo.repo_full_path))
+        repo = mercurial.hg.repository(baseui, safe_bytes(self.db_repo.repo_full_path))
         log.debug("Starting Mercurial sshserver for %s", self.db_repo.repo_full_path)
-        sshserver(baseui, repo).serve_forever()
+        mercurial.wireprotoserver.sshserver(baseui, repo).serve_forever()

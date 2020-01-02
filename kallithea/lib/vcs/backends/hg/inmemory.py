@@ -1,9 +1,11 @@
 import datetime
 
+import mercurial.context
+import mercurial.node
+
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
 from kallithea.lib.vcs.utils import ascii_str, safe_bytes
-from kallithea.lib.vcs.utils.hgcompat import hex, memctx, memfilectx
 
 
 class MercurialInMemoryChangeset(BaseInMemoryChangeset):
@@ -51,7 +53,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             # check if this path is added
             for node in self.added:
                 if node.path == path:
-                    return memfilectx(_repo, memctx, path=node.path,
+                    return mercurial.context.memfilectx(_repo, memctx, path=node.path,
                         data=node.content,
                         islink=False,
                         isexec=node.is_executable,
@@ -60,7 +62,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             # or changed
             for node in self.changed:
                 if node.path == path:
-                    return memfilectx(_repo, memctx, path=node.path,
+                    return mercurial.context.memfilectx(_repo, memctx, path=node.path,
                         data=node.content,
                         islink=False,
                         isexec=node.is_executable,
@@ -77,7 +79,8 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
         if date and isinstance(date, datetime.datetime):
             date = date.strftime('%a, %d %b %Y %H:%M:%S')
 
-        commit_ctx = memctx(repo=self.repository._repo,
+        commit_ctx = mercurial.context.memctx(
+            repo=self.repository._repo,
             parents=parents,
             text=b'',
             files=self.get_paths(),
@@ -98,7 +101,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
         # Update vcs repository object & recreate mercurial _repo
         # new_ctx = self.repository._repo[node]
         # new_tip = ascii_str(self.repository.get_changeset(new_ctx.hex()))
-        self.repository.revisions.append(ascii_str(hex(n)))
+        self.repository.revisions.append(ascii_str(mercurial.node.hex(n)))
         self._repo = self.repository._get_repo(create=False)
         self.repository.branches = self.repository._get_branches()
         tip = self.repository.get_changeset()

@@ -1,13 +1,16 @@
 import os
 import posixpath
 
+import mercurial.archival
+import mercurial.node
+import mercurial.obsutil
+
 from kallithea.lib.vcs.backends.base import BaseChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, VCSError
 from kallithea.lib.vcs.nodes import (
     AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
 from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_str, safe_unicode
-from kallithea.lib.vcs.utils.hgcompat import archival, hex, obsutil
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 
@@ -72,17 +75,17 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def successors(self):
-        successors = obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
+        successors = mercurial.obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
         if successors:
             # flatten the list here handles both divergent (len > 1)
             # and the usual case (len = 1)
-            successors = [hex(n)[:12] for sub in successors for n in sub if n != self._ctx.node()]
+            successors = [mercurial.node.hex(n)[:12] for sub in successors for n in sub if n != self._ctx.node()]
 
         return successors
 
     @LazyProperty
     def predecessors(self):
-        return [hex(n)[:12] for n in obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
+        return [mercurial.node.hex(n)[:12] for n in mercurial.obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
 
     @LazyProperty
     def bookmarks(self):
@@ -271,7 +274,7 @@ class MercurialChangeset(BaseChangeset):
         cnt = 0
         for cs in reversed([x for x in fctx.filelog()]):
             cnt += 1
-            hist.append(hex(fctx.filectx(cs).node()))
+            hist.append(mercurial.node.hex(fctx.filectx(cs).node()))
             if limit is not None and cnt == limit:
                 break
 
@@ -320,7 +323,7 @@ class MercurialChangeset(BaseChangeset):
         elif prefix.strip() == '':
             raise VCSError("Prefix cannot be empty")
 
-        archival.archive(self.repository._repo, stream, ascii_bytes(self.raw_id),
+        mercurial.archival.archive(self.repository._repo, stream, ascii_bytes(self.raw_id),
                          kind, prefix=prefix, subrepos=subrepos)
 
     def get_nodes(self, path):

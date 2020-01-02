@@ -18,6 +18,8 @@ import urllib
 import urllib2
 from collections import OrderedDict
 
+import mercurial.url  # import httpbasicauthhandler, httpdigestauthhandler
+import mercurial.util  # import url as hg_url
 from dulwich.config import ConfigFile
 from dulwich.objects import Tag
 from dulwich.repo import NotGitRepository, Repo
@@ -28,7 +30,6 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
 from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_str, safe_unicode
-from kallithea.lib.vcs.utils.hgcompat import hg_url, httpbasicauthhandler, httpdigestauthhandler
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
 
@@ -168,7 +169,7 @@ class GitRepository(BaseRepository):
             url = url[url.find('+') + 1:]
 
         handlers = []
-        url_obj = hg_url(url)
+        url_obj = mercurial.util.url(url)
         test_uri, authinfo = url_obj.authinfo()
         if not test_uri.endswith('info/refs'):
             test_uri = test_uri.rstrip('/') + '/info/refs'
@@ -181,8 +182,8 @@ class GitRepository(BaseRepository):
             passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
-            handlers.extend((httpbasicauthhandler(passmgr),
-                             httpdigestauthhandler(passmgr)))
+            handlers.extend((mercurial.url.httpbasicauthhandler(passmgr),
+                             mercurial.url.httpdigestauthhandler(passmgr)))
 
         o = urllib2.build_opener(*handlers)
         o.addheaders = [('User-Agent', 'git/1.7.8.0')]  # fake some git

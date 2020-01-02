@@ -29,6 +29,7 @@ import logging
 import traceback
 
 import formencode
+import mercurial.unionrepo
 from tg import request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
@@ -44,7 +45,6 @@ from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import ascii_bytes, safe_bytes, safe_int, safe_str
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
-from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, Repository, User
@@ -533,7 +533,7 @@ class PullrequestsController(BaseRepoController):
                             # Note: org_scm_instance.path must come first so all
                             # valid revision numbers are 100% org_scm compatible
                             # - both for avail_revs and for revset results
-                            hgrepo = unionrepo.makeunionrepository(org_scm_instance.baseui,
+                            hgrepo = mercurial.unionrepo.makeunionrepository(org_scm_instance.baseui,
                                                                    org_scm_instance.path,
                                                                    other_scm_instance.path)
                         else:

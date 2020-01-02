@@ -34,6 +34,8 @@ import traceback
 from distutils.version import StrictVersion
 
 import beaker
+import mercurial.config
+import mercurial.ui
 from beaker.cache import _cache_decorate
 from tg.i18n import ugettext as _
 
@@ -46,7 +48,6 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError
 from kallithea.lib.vcs.utils.fakemod import create_module
 from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.utils.hgcompat import config, ui
 from kallithea.model import meta
 from kallithea.model.db import RepoGroup, Repository, Setting, Ui, User, UserGroup, UserLog
 
@@ -327,12 +328,12 @@ def make_ui(repo_path=None):
     Create an Mercurial 'ui' object based on database Ui settings, possibly
     augmenting with content from a hgrc file.
     """
-    baseui = ui.ui()
+    baseui = mercurial.ui.ui()
 
     # clean the baseui object
-    baseui._ocfg = config.config()
-    baseui._ucfg = config.config()
-    baseui._tcfg = config.config()
+    baseui._ocfg = mercurial.config.config()
+    baseui._ucfg = mercurial.config.config()
+    baseui._tcfg = mercurial.config.config()
 
     sa = meta.Session()
     for ui_ in sa.query(Ui).all():
@@ -356,7 +357,7 @@ def make_ui(repo_path=None):
         hgrc_path = os.path.join(repo_path, '.hg', 'hgrc')
         if os.path.isfile(hgrc_path):
             log.debug('reading hgrc from %s', hgrc_path)
-            cfg = config.config()
+            cfg = mercurial.config.config()
             cfg.read(hgrc_path)
             for section in ui_sections:
                 for k, v in cfg.items(section):

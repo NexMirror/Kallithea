@@ -17,12 +17,27 @@ import urllib
 import urllib2
 from collections import OrderedDict
 
+import mercurial.commands
+import mercurial.error
+import mercurial.exchange
+import mercurial.hg
+import mercurial.hgweb
+import mercurial.httppeer
+import mercurial.match
+import mercurial.mdiff
+import mercurial.node
+import mercurial.patch
+import mercurial.scmutil
+import mercurial.sshpeer
+import mercurial.tags
+import mercurial.ui
+import mercurial.url
+import mercurial.util
+
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
 from kallithea.lib.vcs.utils import ascii_str, author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_str, safe_unicode
-from kallithea.lib.vcs.utils.hgcompat import (
-    Abort, RepoError, RepoLookupError, clone, diffopts, get_contact, hex, hg_url, httpbasicauthhandler, httpdigestauthhandler, httppeer, localrepo, match_exact, nullid, patch, peer, scmutil, sshpeer, tag, ui)
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath
 
@@ -62,7 +77,7 @@ class MercurialRepository(BaseRepository):
                            type(repo_path))
 
         self.path = abspath(repo_path)
-        self.baseui = baseui or ui.ui()
+        self.baseui = baseui or mercurial.ui.ui()
         # We've set path and ui, now we can set _repo itself
         self._repo = self._get_repo(create, src_url, update_after_clone)
 
@@ -118,10 +133,10 @@ class MercurialRepository(BaseRepository):
         for bn, _heads, node, isclosed in sorted(self._repo.branchmap().iterbranches()):
             if isclosed:
                 if closed:
-                    bt[safe_unicode(bn)] = ascii_str(hex(node))
+                    bt[safe_unicode(bn)] = ascii_str(mercurial.node.hex(node))
             else:
                 if normal:
-                    bt[safe_unicode(bn)] = ascii_str(hex(node))
+                    bt[safe_unicode(bn)] = ascii_str(mercurial.node.hex(node))
         return bt
 
     @LazyProperty
@@ -136,7 +151,7 @@ class MercurialRepository(BaseRepository):
             return {}
 
         return OrderedDict(sorted(
-            ((safe_unicode(n), ascii_str(hex(h))) for n, h in self._repo.tags().items()),
+            ((safe_unicode(n), ascii_str(mercurial.node.hex(h))) for n, h in self._repo.tags().items()),
             reverse=True,
             key=lambda x: x[0],  # sort by name
         ))
@@ -167,8 +182,8 @@ class MercurialRepository(BaseRepository):
             date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
 
         try:
-            tag(self._repo, name, changeset._ctx.node(), message, local, user, date)
-        except Abort as e:
+            mercurial.tags.tag(self._repo, name, changeset._ctx.node(), message, local, user, date)
+        except mercurial.error.Abort as e:
             raise RepositoryError(e.message)
 
         # Reinitialize tags
@@ -197,9 +212,9 @@ class MercurialRepository(BaseRepository):
         local = False
 
         try:
-            tag(self._repo, name, nullid, message, local, user, date)
+            mercurial.tags.tag(self._repo, name, mercurial.commands.nullid, message, local, user, date)
             self.tags = self._get_tags()
-        except Abort as e:
+        except mercurial.error.Abort as e:
             raise RepositoryError(e.message)
 
     @LazyProperty
@@ -256,12 +271,12 @@ class MercurialRepository(BaseRepository):
             self.get_changeset(rev1)
         self.get_changeset(rev2)
         if path:
-            file_filter = match_exact(path)
+            file_filter = mercurial.match.exact(path)
         else:
             file_filter = None
 
-        return b''.join(patch.diff(self._repo, rev1, rev2, match=file_filter,
-                          opts=diffopts(git=True,
+        return b''.join(mercurial.patch.diff(self._repo, rev1, rev2, match=file_filter,
+                          opts=mercurial.mdiff.diffopts(git=True,
                                         showfunc=True,
                                         ignorews=ignore_whitespace,
                                         context=context)))
@@ -284,7 +299,7 @@ class MercurialRepository(BaseRepository):
         if url.startswith(b'ssh:'):
             # in case of invalid uri or authentication issues, sshpeer will
             # throw an exception.
-            sshpeer.instance(repoui or ui.ui(), url, False).lookup(b'tip')
+            mercurial.sshpeer.instance(repoui or mercurial.ui.ui(), url, False).lookup(b'tip')
             return True
 
         url_prefix = None
@@ -292,7 +307,7 @@ class MercurialRepository(BaseRepository):
             url_prefix, url = url.split(b'+', 1)
 
         handlers = []
-        url_obj = hg_url(url)
+        url_obj = mercurial.util.url(url)
         test_uri, authinfo = url_obj.authinfo()
         url_obj.passwd = b'*****'
         cleaned_uri = str(url_obj)
@@ -302,8 +317,8 @@ class MercurialRepository(BaseRepository):
             passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
-            handlers.extend((httpbasicauthhandler(passmgr),
-                             httpdigestauthhandler(passmgr)))
+            handlers.extend((mercurial.url.httpbasicauthhandler(passmgr),
+                             mercurial.url.httpdigestauthhandler(passmgr)))
 
         o = urllib2.build_opener(*handlers)
         o.addheaders = [('Content-Type', 'application/mercurial-0.1'),
@@ -326,7 +341,7 @@ class MercurialRepository(BaseRepository):
         if not url_prefix: # skip svn+http://... (and git+... too)
             # now check if it's a proper hg repo
             try:
-                httppeer.instance(repoui or ui.ui(), url, False).lookup(b'tip')
+                mercurial.httppeer.instance(repoui or mercurial.ui.ui(), url, False).lookup(b'tip')
             except Exception as e:
                 raise urllib2.URLError(
                     "url [%s] does not look like an hg repo org_exc: %s"
@@ -352,12 +367,12 @@ class MercurialRepository(BaseRepository):
                 if not update_after_clone:
                     opts.update({'noupdate': True})
                 MercurialRepository._check_url(url, self.baseui)
-                clone(self.baseui, url, self.path, **opts)
+                mercurial.commands.clone(self.baseui, url, self.path, **opts)
 
                 # Don't try to create if we've already cloned repo
                 create = False
-            return localrepo.instance(self.baseui, self.path, create=create)
-        except (Abort, RepoError) as err:
+            return mercurial.localrepo.instance(self.baseui, self.path, create=create)
+        except (mercurial.error.Abort, mercurial.error.RepoError) as err:
             if create:
                 msg = "Cannot create repository at %s. Original error was %s" \
                     % (self.path, err)
@@ -377,7 +392,7 @@ class MercurialRepository(BaseRepository):
 
     @LazyProperty
     def contact(self):
-        return safe_unicode(get_contact(self._repo.ui.config)
+        return safe_unicode(mercurial.hgweb.common.get_contact(self._repo.ui.config)
                             or b'Unknown')
 
     @LazyProperty
@@ -416,8 +431,8 @@ class MercurialRepository(BaseRepository):
         try:
             if isinstance(revision, int):
                 return ascii_str(self._repo[revision].hex())
-            return ascii_str(scmutil.revsymbol(self._repo, revision).hex())
-        except (IndexError, ValueError, RepoLookupError, TypeError):
+            return ascii_str(mercurial.scmutil.revsymbol(self._repo, revision).hex())
+        except (IndexError, ValueError, mercurial.error.RepoLookupError, TypeError):
             msg = ("Revision %s does not exist for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)
         except (LookupError, ):
@@ -445,7 +460,7 @@ class MercurialRepository(BaseRepository):
         except LookupError:
             msg = ("Ambiguous identifier %s:%s for %s" % (ref_type, ref_name, self.name))
             raise ChangesetDoesNotExistError(msg)
-        except RepoLookupError:
+        except mercurial.error.RepoLookupError:
             msg = ("Revision %s:%s does not exist for %s" % (ref_type, ref_name, self.name))
             raise ChangesetDoesNotExistError(msg)
         if revs:
@@ -533,7 +548,7 @@ class MercurialRepository(BaseRepository):
                 revspec = b'all()'
             if max_revisions:
                 revspec = b'limit(%s, %d)' % (revspec, max_revisions)
-            revisions = scmutil.revrange(self._repo, [revspec])
+            revisions = mercurial.scmutil.revrange(self._repo, [revspec])
         else:
             revisions = self.revisions
 
@@ -550,11 +565,10 @@ class MercurialRepository(BaseRepository):
         Tries to pull changes from external location.
         """
         url = self._get_url(url)
-        other = peer(self._repo, {}, url)
+        other = mercurial.hg.peer(self._repo, {}, url)
         try:
-            from mercurial import exchange
-            exchange.pull(self._repo, other, heads=None, force=None)
-        except Abort as err:
+            mercurial.exchange.pull(self._repo, other, heads=None, force=None)
+        except mercurial.error.Abort as err:
             # Propagate error but with vcs's type
             raise RepositoryError(str(err))
 
@@ -581,7 +595,7 @@ class MercurialRepository(BaseRepository):
 
         config = self._repo.ui
         if config_file:
-            config = ui.ui()
+            config = mercurial.ui.ui()
             for path in config_file:
                 config.readconfig(path)
         return config.config(section, name)

@@ -1,7 +1,8 @@
+import mercurial.merge
+
 from kallithea.lib.vcs.backends.base import BaseWorkdir
 from kallithea.lib.vcs.exceptions import BranchDoesNotExistError
 from kallithea.lib.vcs.utils import ascii_bytes, ascii_str
-from kallithea.lib.vcs.utils.hgcompat import hg_merge
 
 
 class MercurialWorkdir(BaseWorkdir):
@@ -20,4 +21,4 @@ class MercurialWorkdir(BaseWorkdir):
             raise BranchDoesNotExistError
 
         raw_id = self.repository.branches[branch]
-        hg_merge.update(self.repository._repo, ascii_bytes(raw_id), False, False, None)
+        mercurial.merge.update(self.repository._repo, ascii_bytes(raw_id), False, False, None)

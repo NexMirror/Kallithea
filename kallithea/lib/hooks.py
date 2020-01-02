@@ -28,12 +28,13 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import time
 
+import mercurial.scmutil
+
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import action_logger, make_ui, setup_cache_regions
 from kallithea.lib.utils2 import ascii_str, get_hook_environment, safe_str, safe_unicode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.vcs.utils.hgcompat import revrange
 from kallithea.model.db import Repository, User
 
 
@@ -108,7 +109,7 @@ def log_push_action(ui, repo, node, node_last, **kwargs):
     Note: This hook is not only logging, but also the side effect invalidating
     cahes! The function should perhaps be renamed.
     """
-    revs = [ascii_str(repo[r].hex()) for r in revrange(repo, [b'%s:%s' % (node, node_last)])]
+    revs = [ascii_str(repo[r].hex()) for r in mercurial.scmutil.revrange(repo, [b'%s:%s' % (node, node_last)])]
     process_pushed_raw_ids(revs)
     return 0
 

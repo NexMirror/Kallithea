@@ -235,7 +235,7 @@ TODO: To be written...
         assert node.kind == NodeKind.FILE
         assert node.content == readme
 
-    @mock.patch('kallithea.lib.vcs.backends.hg.repository.diffopts')
+    @mock.patch('mercurial.mdiff.diffopts')
     def test_get_diff_does_not_sanitize_zero_context(self, mock_diffopts):
         zero_context = 0
 
@@ -243,7 +243,7 @@ TODO: To be written...
 
         mock_diffopts.assert_called_once_with(git=True, showfunc=True, ignorews=False, context=zero_context)
 
-    @mock.patch('kallithea.lib.vcs.backends.hg.repository.diffopts')
+    @mock.patch('mercurial.mdiff.diffopts')
     def test_get_diff_sanitizes_negative_context(self, mock_diffopts):
         negative_context = -10
         zero_context = 0
