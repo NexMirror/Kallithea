@@ -333,55 +333,55 @@ def pygmentize(filenode, **kwargs):
         code_highlight(safe_unicode(filenode.content), lexer, CodeHtmlFormatter(**kwargs))))
 
 
+def hsv_to_rgb(h, s, v):
+    if s == 0.0:
+        return v, v, v
+    i = int(h * 6.0)  # XXX assume int() truncates!
+    f = (h * 6.0) - i
+    p = v * (1.0 - s)
+    q = v * (1.0 - s * f)
+    t = v * (1.0 - s * (1.0 - f))
+    i = i % 6
+    if i == 0:
+        return v, t, p
+    if i == 1:
+        return q, v, p
+    if i == 2:
+        return p, v, t
+    if i == 3:
+        return p, q, v
+    if i == 4:
+        return t, p, v
+    if i == 5:
+        return v, p, q
+
+
+def gen_color(n=10000):
+    """generator for getting n of evenly distributed colors using
+    hsv color and golden ratio. It always return same order of colors
+
+    :returns: RGB tuple
+    """
+
+    golden_ratio = 0.618033988749895
+    h = 0.22717784590367374
+
+    for _unused in xrange(n):
+        h += golden_ratio
+        h %= 1
+        HSV_tuple = [h, 0.95, 0.95]
+        RGB_tuple = hsv_to_rgb(*HSV_tuple)
+        yield [str(int(x * 256)) for x in RGB_tuple]
+
+
 def pygmentize_annotation(repo_name, filenode, **kwargs):
     """
     pygmentize function for annotation
 
     :param filenode:
     """
-
-    color_dict = {}
-
-    def gen_color(n=10000):
-        """generator for getting n of evenly distributed colors using
-        hsv color and golden ratio. It always return same order of colors
-
-        :returns: RGB tuple
-        """
-
-        def hsv_to_rgb(h, s, v):
-            if s == 0.0:
-                return v, v, v
-            i = int(h * 6.0)  # XXX assume int() truncates!
-            f = (h * 6.0) - i
-            p = v * (1.0 - s)
-            q = v * (1.0 - s * f)
-            t = v * (1.0 - s * (1.0 - f))
-            i = i % 6
-            if i == 0:
-                return v, t, p
-            if i == 1:
-                return q, v, p
-            if i == 2:
-                return p, v, t
-            if i == 3:
-                return p, q, v
-            if i == 4:
-                return t, p, v
-            if i == 5:
-                return v, p, q
-
-        golden_ratio = 0.618033988749895
-        h = 0.22717784590367374
-
-        for _unused in xrange(n):
-            h += golden_ratio
-            h %= 1
-            HSV_tuple = [h, 0.95, 0.95]
-            RGB_tuple = hsv_to_rgb(*HSV_tuple)
-            yield [str(int(x * 256)) for x in RGB_tuple]
-
     cgenerator = gen_color()
+    color_dict = {}
 
     def get_color_string(cs):
         if cs in color_dict:
@@ -390,31 +390,28 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
             col = color_dict[cs] = cgenerator.next()
         return "color: rgb(%s)! important;" % (', '.join(col))
 
-    def url_func(repo_name):
+    def url_func(changeset):
+        author = escape(changeset.author)
+        date = changeset.date
+        message = escape(changeset.message)
+        tooltip_html = ("<b>Author:</b> %s<br/>"
+                        "<b>Date:</b> %s</b><br/>"
+                        "<b>Message:</b> %s") % (author, date, message)
 
-        def _url_func(changeset):
-            author = escape(changeset.author)
-            date = changeset.date
-            message = escape(changeset.message)
-            tooltip_html = ("<b>Author:</b> %s<br/>"
-                            "<b>Date:</b> %s</b><br/>"
-                            "<b>Message:</b> %s") % (author, date, message)
+        lnk_format = show_id(changeset)
+        uri = link_to(
+                lnk_format,
+                url('changeset_home', repo_name=repo_name,
+                    revision=changeset.raw_id),
+                style=get_color_string(changeset.raw_id),
+                **{'data-toggle': 'popover',
+                   'data-content': tooltip_html}
+              )
 
-            lnk_format = show_id(changeset)
-            uri = link_to(
-                    lnk_format,
-                    url('changeset_home', repo_name=repo_name,
-                        revision=changeset.raw_id),
-                    style=get_color_string(changeset.raw_id),
-                    **{'data-toggle': 'popover',
-                       'data-content': tooltip_html}
-                  )
+        uri += '\n'
+        return uri
 
-            uri += '\n'
-            return uri
-        return _url_func
-
-    return literal(markup_whitespace(annotate_highlight(filenode, url_func(repo_name), **kwargs)))
+    return literal(markup_whitespace(annotate_highlight(filenode, url_func, **kwargs)))
 
 
 class _Message(object):

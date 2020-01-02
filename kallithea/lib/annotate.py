@@ -33,7 +33,7 @@ from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.utils import safe_unicode
 
 
-def annotate_highlight(filenode, annotate_from_changeset_func=None,
+def annotate_highlight(filenode, annotate_from_changeset_func,
         order=None, headers=None, **options):
     """
     Returns html portion containing annotated table with 3 columns: line
@@ -50,9 +50,9 @@ def annotate_highlight(filenode, annotate_from_changeset_func=None,
     """
     from kallithea.lib.pygmentsutils import get_custom_lexer
     options['linenos'] = True
-    formatter = AnnotateHtmlFormatter(filenode=filenode, order=order,
-        headers=headers,
-        annotate_from_changeset_func=annotate_from_changeset_func, **options)
+    formatter = AnnotateHtmlFormatter(filenode=filenode,
+        annotate_from_changeset_func=annotate_from_changeset_func, order=order,
+        headers=headers, **options)
     lexer = get_custom_lexer(filenode.extension) or filenode.lexer
     highlighted = highlight(safe_unicode(filenode.content), lexer, formatter)
     return highlighted
@@ -60,10 +60,10 @@ def annotate_highlight(filenode, annotate_from_changeset_func=None,
 
 class AnnotateHtmlFormatter(HtmlFormatter):
 
-    def __init__(self, filenode, annotate_from_changeset_func=None,
+    def __init__(self, filenode, annotate_from_changeset_func,
             order=None, **options):
         """
-        If ``annotate_from_changeset_func`` is passed it should be a function
+        ``annotate_from_changeset_func`` must be a function
         which returns string from the given changeset. For example, we may pass
         following function as ``annotate_from_changeset_func``::
 
@@ -99,15 +99,6 @@ class AnnotateHtmlFormatter(HtmlFormatter):
         else:
             raise VCSError("This formatter expect FileNode parameter, not %r"
                 % type(filenode))
-
-    def annotate_from_changeset(self, changeset):
-        """
-        Returns full html line for single changeset per annotated line.
-        """
-        if self.annotate_from_changeset_func:
-            return self.annotate_from_changeset_func(changeset)
-        else:
-            return ''.join((changeset.id, '\n'))
 
     def _wrap_tablelinenos(self, inner):
         inner_lines = []
@@ -165,7 +156,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
 #        ln_ = len(ls.splitlines())
 #        if  ln_cs > ln_:
 #            annotate_changesets = annotate_changesets[:ln_ - ln_cs]
-        annotate = ''.join((self.annotate_from_changeset(el[2]())
+        annotate = ''.join((self.annotate_from_changeset_func(el[2]())
                             for el in self.filenode.annotate))
         # in case you wonder about the seemingly redundant <div> here:
         # since the content in the other cell also is wrapped in a div,
