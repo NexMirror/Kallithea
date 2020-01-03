@@ -40,7 +40,7 @@ __platform__ = platform.system()
 is_windows = __platform__ in ['Windows']
 
 requirements = [
-    "alembic >= 0.8.0, < 1.1",
+    "alembic >= 1.0.10, < 1.1",
     "gearbox >= 0.1.0, < 1",
     "waitress >= 0.8.8, < 1.4",
     "WebOb >= 1.8, < 1.9",
