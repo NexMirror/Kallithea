@@ -303,7 +303,6 @@ def _hook_environment(repo_path):
     """
     import paste.deploy
     import kallithea.config.middleware
-    import kallithea.lib.utils
 
     extras = get_hook_environment()
 
@@ -311,7 +310,6 @@ def _hook_environment(repo_path):
     kallithea.CONFIG = paste.deploy.appconfig('config:' + path_to_ini_file)
     #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
     kallithea.config.middleware.make_app_without_logging(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
-    kallithea.lib.utils.setup_cache_regions(kallithea.CONFIG)
 
     repo_path = safe_unicode(repo_path)
     # fix if it's not a bare repo

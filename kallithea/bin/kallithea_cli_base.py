@@ -75,7 +75,6 @@ def register_command(config_file=False, config_file_initialize_app=False, hidden
                 logging.config.fileConfig(io.StringIO(config_string))
                 if config_file_initialize_app:
                     kallithea.config.middleware.make_app_without_logging(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
-                    kallithea.lib.utils.setup_cache_regions(kallithea.CONFIG)
                 return annotated(*args, **kwargs)
             return cli_command(runtime_wrapper)
         return annotator

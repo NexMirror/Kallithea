@@ -33,10 +33,9 @@ import sys
 import traceback
 from distutils.version import StrictVersion
 
-import beaker
+import beaker.cache
 import mercurial.config
 import mercurial.ui
-from beaker.cache import _cache_decorate
 from tg.i18n import ugettext as _
 
 import kallithea.config.conf
@@ -622,36 +621,6 @@ def check_git_version():
 # CACHE RELATED METHODS
 #===============================================================================
 
-# set cache regions for beaker so celery can utilise it
-def setup_cache_regions(settings):
-    # Create dict with just beaker cache configs with prefix stripped
-    cache_settings = {'regions': None}
-    prefix = 'beaker.cache.'
-    for key in settings:
-        if key.startswith(prefix):
-            name = key[len(prefix):]
-            cache_settings[name] = settings[key]
-    # Find all regions, apply defaults, and apply to beaker
-    if cache_settings['regions']:
-        for region in cache_settings['regions'].split(','):
-            region = region.strip()
-            prefix = region + '.'
-            region_settings = {}
-            for key in cache_settings:
-                if key.startswith(prefix):
-                    name = key[len(prefix):]
-                    region_settings[name] = cache_settings[key]
-            region_settings.setdefault('expire',
-                                       cache_settings.get('expire', '60'))
-            region_settings.setdefault('lock_dir',
-                                       cache_settings.get('lock_dir'))
-            region_settings.setdefault('data_dir',
-                                       cache_settings.get('data_dir'))
-            region_settings.setdefault('type',
-                                       cache_settings.get('type', 'memory'))
-            beaker.cache.cache_regions[region] = region_settings
-
-
 def conditional_cache(region, prefix, condition, func):
     """
 
@@ -674,6 +643,6 @@ def conditional_cache(region, prefix, condition, func):
     if condition:
         log.debug('conditional_cache: True, wrapping call of '
                   'func: %s into %s region cache' % (region, func))
-        wrapped = _cache_decorate((prefix,), None, None, region)(func)
+        wrapped = beaker.cache._cache_decorate((prefix,), None, None, region)(func)
 
     return wrapped

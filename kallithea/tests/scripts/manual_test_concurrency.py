@@ -41,7 +41,6 @@ from sqlalchemy import engine_from_config
 
 from kallithea.config.environment import load_environment
 from kallithea.lib.auth import get_crypt_password
-from kallithea.lib.utils import setup_cache_regions
 from kallithea.model import meta
 from kallithea.model.base import init_model
 from kallithea.model.db import Repository, Ui, User
@@ -51,8 +50,6 @@ from kallithea.tests.base import HG_REPO, TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN
 rel_path = dirname(dirname(dirname(dirname(os.path.abspath(__file__)))))
 conf = appconfig('config:development.ini', relative_to=rel_path)
 load_environment(conf.global_conf, conf.local_conf)
-
-setup_cache_regions(conf)
 
 USER = TEST_USER_ADMIN_LOGIN
 PASS = TEST_USER_ADMIN_PASS
