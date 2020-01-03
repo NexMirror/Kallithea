@@ -32,7 +32,7 @@ import mercurial.scmutil
 
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
-from kallithea.lib.utils import action_logger, make_ui, setup_cache_regions
+from kallithea.lib.utils import action_logger, make_ui
 from kallithea.lib.utils2 import ascii_str, get_hook_environment, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.model.db import Repository, User
@@ -301,21 +301,17 @@ def _hook_environment(repo_path):
     they thus need enough info to be able to create an app environment and
     connect to the database.
     """
-    from paste.deploy import appconfig
-    from sqlalchemy import engine_from_config
-    from kallithea.config.environment import load_environment
-    from kallithea.model.base import init_model
+    import paste.deploy
+    import kallithea.config.middleware
+    import kallithea.lib.utils
 
     extras = get_hook_environment()
-    ini_file_path = extras['config']
+
+    path_to_ini_file = extras['config']
+    kallithea.CONFIG = paste.deploy.appconfig('config:' + path_to_ini_file)
     #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
-    app_conf = appconfig('config:%s' % ini_file_path)
-    conf = load_environment(app_conf.global_conf, app_conf.local_conf)
-
-    setup_cache_regions(conf)
-
-    engine = engine_from_config(conf, 'sqlalchemy.')
-    init_model(engine)
+    kallithea.config.middleware.make_app_without_logging(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
+    kallithea.lib.utils.setup_cache_regions(kallithea.CONFIG)
 
     repo_path = safe_unicode(repo_path)
     # fix if it's not a bare repo
