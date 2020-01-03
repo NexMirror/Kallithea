@@ -41,7 +41,7 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import ascii_str, safe_unicode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
@@ -396,8 +396,8 @@ class ChangesetController(BaseRepoController):
             c.changeset = c.cs_ranges[0]
             c.parent_tmpl = ''.join(['# Parent  %s\n' % x.raw_id
                                      for x in c.changeset.parents])
-            c.changeset_graft_source_hash = c.changeset.extra.get(b'source', b'')
-            c.changeset_transplant_source_hash = binascii.hexlify(c.changeset.extra.get(b'transplant_source', b''))
+            c.changeset_graft_source_hash = ascii_str(c.changeset.extra.get(b'source', b''))
+            c.changeset_transplant_source_hash = ascii_str(binascii.hexlify(c.changeset.extra.get(b'transplant_source', b'')))
         if method == 'download':
             response.content_type = 'text/plain'
             response.content_disposition = 'attachment; filename=%s.diff' \
