@@ -185,10 +185,12 @@ full_stack = true
 static_files = true
 
 <%text>## Internationalization (see setup documentation for details)</%text>
-<%text>## By default, the language requested by the browser is used if available.</%text>
-#i18n.enabled = false
-<%text>## Fallback language, empty for English (valid values are the names of subdirectories in kallithea/i18n):</%text>
-i18n.lang =
+<%text>## By default, the languages requested by the browser are used if available, with English as default.</%text>
+<%text>## Set i18n.enabled=false to disable automatic language choice.</%text>
+#i18n.enabled = true
+<%text>## To Force a language, set i18n.enabled=false and specify the language in i18n.lang.</%text>
+<%text>## Valid values are the names of subdirectories in kallithea/i18n with a LC_MESSAGES/kallithea.mo</%text>
+#i18n.lang = en
 
 cache_dir = %(here)s/data
 index_dir = %(here)s/data/index
