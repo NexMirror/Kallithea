@@ -480,6 +480,15 @@ class TestFilesController(TestController):
         response = self.app.get(url('files_edit_home',
                                       repo_name=HG_REPO,
                                       revision='tip', f_path='vcs/nodes.py'))
+        # Odd error when on tip ...
+        self.checkSessionFlash(response, "You can only edit files with revision being a valid branch")
+        assert "Commit Message" not in response.body
+
+        # Specify branch head revision to avoid "valid branch" error and get coverage of edit form
+        response = self.app.get(url('files_edit_home',
+                                      repo_name=HG_REPO,
+                                      revision='96507bd11ecc815ebc6270fdf6db110928c09c1e', f_path='vcs/nodes.py'))
+        assert "Commit Message" in response.body
 
     def test_edit_file_view_not_on_branch_hg(self):
         self.log_user()
