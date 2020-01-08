@@ -337,11 +337,10 @@ def make_ui(repo_path=None):
     sa = meta.Session()
     for ui_ in sa.query(Ui).all():
         if ui_.ui_active:
-            ui_val = b'' if ui_.ui_value is None else safe_bytes(ui_.ui_value)
             log.debug('config from db: [%s] %s=%r', ui_.ui_section,
-                      ui_.ui_key, ui_val)
+                      ui_.ui_key, ui_.ui_value)
             baseui.setconfig(ascii_bytes(ui_.ui_section), ascii_bytes(ui_.ui_key),
-                             ui_val)
+                             b'' if ui_.ui_value is None else safe_bytes(ui_.ui_value))
 
     # force set push_ssl requirement to False, Kallithea handles that
     baseui.setconfig(b'web', b'push_ssl', False)
