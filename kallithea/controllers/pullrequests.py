@@ -534,8 +534,8 @@ class PullrequestsController(BaseRepoController):
                             # valid revision numbers are 100% org_scm compatible
                             # - both for avail_revs and for revset results
                             hgrepo = mercurial.unionrepo.makeunionrepository(org_scm_instance.baseui,
-                                                                   org_scm_instance.path,
-                                                                   other_scm_instance.path)
+                                                                   safe_bytes(org_scm_instance.path),
+                                                                   safe_bytes(other_scm_instance.path))
                         else:
                             hgrepo = org_scm_instance._repo
                         show = set(hgrepo.revs('::%ld & !::parents(%s) & !::%s',

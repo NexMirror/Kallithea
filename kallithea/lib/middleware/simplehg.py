@@ -36,7 +36,7 @@ import mercurial.hgweb
 
 from kallithea.lib.base import BaseVCSController, get_path_info
 from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_bytes, safe_str, safe_unicode
 
 
 log = logging.getLogger(__name__)
@@ -140,7 +140,7 @@ class SimpleHg(BaseVCSController):
         str_repo_name = safe_str(parsed_request.repo_name)
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         baseui = make_ui(repo_path=repo_path)
-        hgweb_app = mercurial.hgweb.hgweb(repo_path, name=str_repo_name, baseui=baseui)
+        hgweb_app = mercurial.hgweb.hgweb(safe_bytes(repo_path), name=str_repo_name, baseui=baseui)
 
         def wrapper_app(environ, start_response):
             environ['REPO_NAME'] = str_repo_name # used by mercurial.hgweb.hgweb

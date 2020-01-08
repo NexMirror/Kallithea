@@ -358,7 +358,7 @@ def make_ui(repo_path=None):
         if os.path.isfile(hgrc_path):
             log.debug('reading hgrc from %s', hgrc_path)
             cfg = mercurial.config.config()
-            cfg.read(hgrc_path)
+            cfg.read(safe_bytes(hgrc_path))
             for section in ui_sections:
                 for k, v in cfg.items(section):
                     log.debug('config from file: [%s] %s=%s', section, k, v)

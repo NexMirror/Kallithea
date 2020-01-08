@@ -100,7 +100,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             for tree in new_trees:
                 object_store.add_object(tree)
         for node in self.removed:
-            paths = node.path.split(b'/')
+            paths = safe_bytes(node.path).split(b'/')
             tree = commit_tree
             trees = [tree]
             # Traverse deep into the forest...
@@ -147,7 +147,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         object_store.add_object(commit)
 
         # Update vcs repository object & recreate dulwich repo
-        ref = b'refs/heads/%s' % branch
+        ref = b'refs/heads/%s' % safe_bytes(branch)
         repo.refs[ref] = commit.id
         self.repository.revisions.append(ascii_str(commit.id))
         # invalidate parsed refs after commit

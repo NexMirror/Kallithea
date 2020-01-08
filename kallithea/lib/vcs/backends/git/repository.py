@@ -29,7 +29,7 @@ from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
-from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
 
@@ -168,7 +168,7 @@ class GitRepository(BaseRepository):
             url = url[url.find('+') + 1:]
 
         handlers = []
-        url_obj = mercurial.util.url(url)
+        url_obj = mercurial.util.url(safe_bytes(url))
         test_uri, authinfo = url_obj.authinfo()
         if not test_uri.endswith('info/refs'):
             test_uri = test_uri.rstrip('/') + '/info/refs'
@@ -282,7 +282,7 @@ class GitRepository(BaseRepository):
                     raise ChangesetDoesNotExistError(msg)
 
             # get by branch/tag name
-            _ref_revision = self._parsed_refs.get(revision)
+            _ref_revision = self._parsed_refs.get(safe_bytes(revision))
             if _ref_revision:  # and _ref_revision[1] in [b'H', b'RH', b'T']:
                 return ascii_str(_ref_revision[0])
 
@@ -407,7 +407,7 @@ class GitRepository(BaseRepository):
         changeset = self.get_changeset(revision)
         message = message or "Added tag %s for commit %s" % (name,
             changeset.raw_id)
-        self._repo.refs[b"refs/tags/%s" % name] = changeset._commit.id
+        self._repo.refs[b"refs/tags/%s" % safe_bytes(name)] = changeset._commit.id
 
         self._parsed_refs = self._get_parsed_refs()
         self.tags = self._get_tags()

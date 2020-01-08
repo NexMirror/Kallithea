@@ -10,7 +10,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, VCSError
 from kallithea.lib.vcs.nodes import (
     AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
-from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_str, safe_unicode
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 
@@ -219,7 +219,7 @@ class MercurialChangeset(BaseChangeset):
         if self._get_kind(path) != NodeKind.FILE:
             raise ChangesetError("File does not exist for revision %s at "
                 " '%s'" % (self.raw_id, path))
-        return self._ctx.filectx(path)
+        return self._ctx.filectx(safe_bytes(path))
 
     def _extract_submodules(self):
         """
@@ -318,7 +318,7 @@ class MercurialChangeset(BaseChangeset):
             raise VCSError("Prefix cannot be empty")
 
         mercurial.archival.archive(self.repository._repo, stream, ascii_bytes(self.raw_id),
-                         kind, prefix=prefix, subrepos=subrepos)
+                         safe_bytes(kind), prefix=safe_bytes(prefix), subrepos=subrepos)
 
     def get_nodes(self, path):
         """

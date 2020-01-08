@@ -111,7 +111,7 @@ def check_password(password, hashed):
     """
 
     if is_windows:
-        return hashlib.sha256(password).hexdigest() == hashed
+        return hashlib.sha256(safe_bytes(password)).hexdigest() == hashed
     elif is_unix:
         import bcrypt
         try:

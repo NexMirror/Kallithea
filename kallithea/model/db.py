@@ -2549,5 +2549,5 @@ class UserSshKeys(Base, BaseDbModel):
         # the full public key is too long to be suitable as database key - instead,
         # use fingerprints similar to 'ssh-keygen -E sha256 -lf ~/.ssh/id_rsa.pub'
         self._public_key = full_key
-        enc_key = full_key.split(" ")[1]
+        enc_key = safe_bytes(full_key.split(" ")[1])
         self.fingerprint = base64.b64encode(hashlib.sha256(base64.b64decode(enc_key)).digest()).replace(b'\n', b'').rstrip(b'=').decode()

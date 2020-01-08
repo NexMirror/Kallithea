@@ -33,7 +33,7 @@ import mercurial.scmutil
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import action_logger, make_ui, setup_cache_regions
-from kallithea.lib.utils2 import ascii_str, get_hook_environment, safe_str, safe_unicode
+from kallithea.lib.utils2 import ascii_str, get_hook_environment, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.model.db import Repository, User
 
@@ -74,7 +74,7 @@ def repo_size(ui, repo, hooktype=None, **kwargs):
            'Last revision is now r%s:%s\n') % (
         size_hg_f, size_root_f, size_total_f, last_cs.rev(), ascii_str(last_cs.hex())[:12]
     )
-    ui.status(msg)
+    ui.status(safe_bytes(msg))
 
 
 def log_pull_action(ui, repo, **kwargs):
@@ -364,7 +364,7 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
                 if scm_repo.is_empty():
                     scm_repo._repo.refs.set_symbolic_ref(
                         b'HEAD',
-                        b'refs/heads/%s' % push_ref['name'])
+                        b'refs/heads/%s' % safe_bytes(push_ref['name']))
 
                 # build exclude list without the ref
                 cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
@@ -399,5 +399,5 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
 def rejectpush(ui, **kwargs):
     """Mercurial hook to be installed as pretxnopen and prepushkey for read-only repos"""
     ex = get_hook_environment()
-    ui.warn((b"Push access to %r denied\n") % safe_str(ex.repository))
+    ui.warn(safe_bytes("Push access to %r denied\n" % safe_str(ex.repository)))
     return 1

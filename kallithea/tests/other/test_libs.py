@@ -31,7 +31,7 @@ import hashlib
 import mock
 from tg.util.webtest import test_context
 
-from kallithea.lib.utils2 import AttributeDict
+from kallithea.lib.utils2 import AttributeDict, safe_bytes
 from kallithea.model.db import Repository
 from kallithea.tests import base
 
@@ -227,7 +227,7 @@ class TestLibs(base.TestController):
 
     def test_alternative_gravatar(self):
         from kallithea.lib.helpers import gravatar_url
-        _md5 = lambda s: hashlib.md5(s).hexdigest()
+        _md5 = lambda s: hashlib.md5(safe_bytes(s)).hexdigest()
 
         # mock tg.tmpl_context
         def fake_tmpl_context(_url):

@@ -38,7 +38,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
 
         if branch is None:
             branch = MercurialRepository.DEFAULT_BRANCH_NAME
-        kwargs[b'branch'] = branch
+        kwargs[b'branch'] = safe_bytes(branch)
 
         def filectxfn(_repo, memctx, bytes_path):
             """
@@ -78,15 +78,15 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
                 parents[i] = parent._ctx.node()
 
         if date and isinstance(date, datetime.datetime):
-            date = date.strftime('%a, %d %b %Y %H:%M:%S')
+            date = safe_bytes(date.strftime('%a, %d %b %Y %H:%M:%S'))
 
         commit_ctx = mercurial.context.memctx(
             repo=self.repository._repo,
             parents=parents,
             text=b'',
-            files=self.get_paths(),
+            files=[safe_bytes(x) for x in self.get_paths()],
             filectxfn=filectxfn,
-            user=author,
+            user=safe_bytes(author),
             date=date,
             extra=kwargs)
 

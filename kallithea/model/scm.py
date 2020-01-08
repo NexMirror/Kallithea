@@ -41,7 +41,7 @@ from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, Ha
 from kallithea.lib.exceptions import IMCCommitError, NonRelativePathError
 from kallithea.lib.hooks import process_pushed_raw_ids
 from kallithea.lib.utils import action_logger, get_filesystem_repos, make_ui
-from kallithea.lib.utils2 import safe_str, safe_unicode, set_hook_environment
+from kallithea.lib.utils2 import safe_bytes, safe_str, safe_unicode, set_hook_environment
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
@@ -716,11 +716,11 @@ class ScmModel(object):
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
-        tmpl_post = b"#!%s\n" % self._get_git_hook_interpreter()
+        tmpl_post = b"#!%s\n" % safe_bytes(self._get_git_hook_interpreter())
         tmpl_post += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'post_receive_tmpl.py')
         )
-        tmpl_pre = b"#!%s\n" % self._get_git_hook_interpreter()
+        tmpl_pre = b"#!%s\n" % safe_bytes(self._get_git_hook_interpreter())
         tmpl_pre += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'pre_receive_tmpl.py')
         )
@@ -750,7 +750,7 @@ class ScmModel(object):
                 log.debug('writing %s hook file !', h_type)
                 try:
                     with open(_hook_file, 'wb') as f:
-                        tmpl = tmpl.replace(b'_TMPL_', kallithea.__version__)
+                        tmpl = tmpl.replace(b'_TMPL_', safe_bytes(kallithea.__version__))
                         f.write(tmpl)
                     os.chmod(_hook_file, 0o755)
                 except IOError as e:

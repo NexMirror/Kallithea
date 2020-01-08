@@ -43,7 +43,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_int, safe_str
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes, safe_int, safe_str
 from kallithea.model.db import Repository
 
 
@@ -98,8 +98,8 @@ class CompareController(BaseRepoController):
             # case two independent repos
             if org_repo != other_repo:
                 hgrepo = mercurial.unionrepo.makeunionrepository(other_repo.baseui,
-                                                       other_repo.path,
-                                                       org_repo.path)
+                                                       safe_bytes(other_repo.path),
+                                                       safe_bytes(org_repo.path))
                 # all ancestors of other_rev will be in other_repo and
                 # rev numbers from hgrepo can be used in other_repo - org_rev ancestors cannot
 

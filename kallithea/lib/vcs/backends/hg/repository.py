@@ -178,10 +178,10 @@ class MercurialRepository(BaseRepository):
                 changeset.short_id)
 
         if date is None:
-            date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
+            date = safe_bytes(datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S'))
 
         try:
-            mercurial.tags.tag(self._repo, name, changeset._ctx.node(), message, local, user, date)
+            mercurial.tags.tag(self._repo, safe_bytes(name), changeset._ctx.node(), safe_bytes(message), local, safe_bytes(user), date)
         except mercurial.error.Abort as e:
             raise RepositoryError(e.message)
 
@@ -207,11 +207,11 @@ class MercurialRepository(BaseRepository):
         if message is None:
             message = "Removed tag %s" % name
         if date is None:
-            date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
+            date = safe_bytes(datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S'))
         local = False
 
         try:
-            mercurial.tags.tag(self._repo, name, mercurial.commands.nullid, message, local, user, date)
+            mercurial.tags.tag(self._repo, safe_bytes(name), mercurial.commands.nullid, safe_bytes(message), local, safe_bytes(user), date)
             self.tags = self._get_tags()
         except mercurial.error.Abort as e:
             raise RepositoryError(e.message)
@@ -368,11 +368,11 @@ class MercurialRepository(BaseRepository):
                 if not update_after_clone:
                     opts.update({'noupdate': True})
                 MercurialRepository._check_url(url, self.baseui)
-                mercurial.commands.clone(self.baseui, url, self.path, **opts)
+                mercurial.commands.clone(self.baseui, url, safe_bytes(self.path), **opts)
 
                 # Don't try to create if we've already cloned repo
                 create = False
-            return mercurial.localrepo.instance(self.baseui, self.path, create=create)
+            return mercurial.localrepo.instance(self.baseui, safe_bytes(self.path), create=create)
         except (mercurial.error.Abort, mercurial.error.RepoError) as err:
             if create:
                 msg = "Cannot create repository at %s. Original error was %s" \
@@ -537,9 +537,9 @@ class MercurialRepository(BaseRepository):
         if branch_name:
             filter_.append(b'branch("%s")' % safe_bytes(branch_name))
         if start_date:
-            filter_.append(b'date(">%s")' % start_date)
+            filter_.append(b'date(">%s")' % safe_bytes(str(start_date)))
         if end_date:
-            filter_.append(b'date("<%s")' % end_date)
+            filter_.append(b'date("<%s")' % safe_bytes(str(end_date)))
         if filter_ or max_revisions:
             if filter_:
                 revspec = b' and '.join(filter_)
@@ -563,8 +563,7 @@ class MercurialRepository(BaseRepository):
         """
         Tries to pull changes from external location.
         """
-        url = self._get_url(url)
-        other = mercurial.hg.peer(self._repo, {}, url)
+        other = mercurial.hg.peer(self._repo, {}, safe_bytes(self._get_url(url)))
         try:
             mercurial.exchange.pull(self._repo, other, heads=None, force=None)
         except mercurial.error.Abort as err:
@@ -596,8 +595,8 @@ class MercurialRepository(BaseRepository):
         if config_file:
             config = mercurial.ui.ui()
             for path in config_file:
-                config.readconfig(path)
-        return config.config(section, name)
+                config.readconfig(safe_bytes(path))
+        return config.config(safe_bytes(section), safe_bytes(name))
 
     def get_user_name(self, config_file=None):
         """
