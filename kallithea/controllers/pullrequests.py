@@ -42,7 +42,7 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import ascii_bytes, safe_int, safe_str
+from kallithea.lib.utils2 import ascii_bytes, safe_bytes, safe_int, safe_str
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.changeset_status import ChangesetStatusModel
@@ -588,7 +588,7 @@ class PullrequestsController(BaseRepoController):
             raw_diff = diffs.get_diff(org_scm_instance, rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
                                       ignore_whitespace=ignore_whitespace, context=line_context)
         except ChangesetDoesNotExistError:
-            raw_diff = _("The diff can't be shown - the PR revisions could not be found.")
+            raw_diff = safe_bytes(_("The diff can't be shown - the PR revisions could not be found."))
         diff_processor = diffs.DiffProcessor(raw_diff, diff_limit=diff_limit)
         c.limited_diff = diff_processor.limited_diff
         c.file_diff_data = []
