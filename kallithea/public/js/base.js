@@ -344,7 +344,7 @@ var _run_callbacks = function(callbacks){
             if(typeof(func)=='function'){
                 try{
                     func();
-                }catch (err){};
+                }catch (err){}
             }
         }
     }
@@ -393,7 +393,7 @@ function asynchtml(url, $target, success, args){
                 $target.css('opacity','1.0');
             })
         ;
-};
+}
 
 function ajaxGET(url, success, failure) {
     if(failure === undefined) {
@@ -1346,7 +1346,7 @@ function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data)
     }
 
     ajaxPOST(url, query_params, success, failure);
-};
+}
 
 /* Multi selectors */
 
