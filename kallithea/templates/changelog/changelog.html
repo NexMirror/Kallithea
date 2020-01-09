@@ -90,7 +90,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 pyroutes.register('changeset_home', ${h.js(h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s'))}, ['repo_name', 'revision']);
 
-                var checkbox_checker = function(e) {
+                function checkbox_checker(e) {
                     var $checked_checkboxes = $checkboxes.filter(':checked');
                     var $singlerange = $('#singlerange');
 
@@ -163,7 +163,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         $('#compare_fork').show();
                         $checkboxes.closest('tr').removeClass('out-of-range');
                     }
-                };
+                }
                 checkbox_checker();
                 $checkboxes.click(function() {
                     checkbox_checker();

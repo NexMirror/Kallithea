@@ -112,10 +112,10 @@ $(document).ready(function(){
         $('#'+e.currentTarget.id+'-img-a.img-diff-swapable')
           .before($('#'+e.currentTarget.id+'-img-b.img-diff-swapable'));
     });
-    var reset = function(e){
+    function reset(e){
         $('#'+e.currentTarget.id+'-img-a.img-diff-swapable')
           .after($('#'+e.currentTarget.id+'-img-b.img-diff-swapable'));
-    };
+    }
     $('.btn-image-diff-swap').mouseup(reset);
     $('.btn-image-diff-swap').mouseleave(reset);
 

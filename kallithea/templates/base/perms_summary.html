@@ -99,7 +99,7 @@
 </div>
 <script>'use strict';
     $(document).ready(function(){
-        var show_empty = function(section){
+        function show_empty(section){
             var visible = $('.section_{0} tr.perm_row:visible'.format(section)).length;
             if(visible == 0){
                 $('#empty_{0}'.format(section)).show();
@@ -108,7 +108,7 @@
                 $('#empty_{0}'.format(section)).hide();
             }
         }
-        var update_show = function($checkbox){
+        function update_show($checkbox){
             var section = $checkbox.data('section');
 
             var elems = $('.filter_' + section).each(function(el){

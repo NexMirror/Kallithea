@@ -171,12 +171,12 @@ var pyroutes = (function() {
             return output.join('');
         }
 
-        var str_format = function() {
+        function str_format() {
             if (!str_format.cache.hasOwnProperty(arguments[0])) {
                 str_format.cache[arguments[0]] = str_format.parse(arguments[0]);
             }
             return str_format.format.call(null, str_format.cache[arguments[0]], arguments);
-        };
+        }
 
         str_format.format = function(parse_tree, argv) {
             var cursor = 1, tree_length = parse_tree.length, node_type = '', arg, output = [], i, k, match, pad, pad_character, pad_length;
@@ -727,7 +727,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
             'save_close': pr_close,
             'save_delete': pr_delete
         };
-        var success = function(json_data) {
+        function success(json_data) {
             if (pr_delete) {
                 location = json_data['location'];
             } else {
@@ -740,8 +740,8 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
                     location.reload(true);
                 }
             }
-        };
-        var failure = function(x, s, e) {
+        }
+        function failure(x, s, e) {
             $preview.removeClass('submitting').addClass('failed');
             var $status = $preview.find('.comment-submission-status');
             $('<span>', {
@@ -766,7 +766,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
                     comment_div_state($comment_div, f_path, line_no);
                 })
             ).appendTo($status);
-        };
+        }
         ajaxPOST(AJAX_COMMENT_URL, postData, success, failure);
     });
 
@@ -788,7 +788,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
 function deleteComment(comment_id) {
     var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
     var postData = {};
-    var success = function(o) {
+    function success(o) {
         $('#comment-'+comment_id).remove();
         // Ignore that this might leave a stray Add button (or have a pending form with another comment) ...
     }
@@ -831,7 +831,7 @@ function fileBrowserListeners(node_list_url, url_base){
     var filterTimeout = null;
     var nodes = null;
 
-    var initFilter = function(){
+    function initFilter(){
         $('#node_filter_box_loading').show();
         $('#search_activate_id').hide();
         $('#add_node_id').hide();
@@ -852,7 +852,7 @@ function fileBrowserListeners(node_list_url, url_base){
         ;
     }
 
-    var updateFilter = function(e) {
+    function updateFilter(e) {
         return function(){
             // Reset timeout
             filterTimeout = null;
@@ -899,7 +899,7 @@ function fileBrowserListeners(node_list_url, url_base){
                 $('#tbody_filtered').hide();
             }
         }
-    };
+    }
 
     $('#filter_activate').click(function(){
             initFilter();
@@ -1322,12 +1322,12 @@ function addPermAction(perm_type) {
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {
-    var success = function (o) {
+    function success(o) {
             $('#' + field_id).remove();
-        };
-    var failure = function (o) {
+        }
+    function failure(o) {
             alert(_TM['Failed to revoke permission'] + ": " + o.status);
-        };
+        }
     var query_params = {};
     // put extra data into POST
     if (extra_data !== undefined && (typeof extra_data === 'object')){

@@ -49,9 +49,9 @@
             $jfilter.val('');
         }
     });
-    var fix_j_filter_width = function(len){
+    function fix_j_filter_width(len){
         $('#j_filter').css('width', Math.max(80, len*6.50)+'px');
-    };
+    }
     $('#j_filter').keyup(function(){
         fix_j_filter_width($('#j_filter').val().length);
     });

@@ -404,7 +404,7 @@
             var visual_show_public_icon = ${h.js(c.visual.show_public_icon)};
             var cache = {}
             /*format the look of items in the list*/
-            var format = function(state){
+            function format(state){
                 if (!state.id){
                   return state.text.html_escape(); // optgroup
                 }

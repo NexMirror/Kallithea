@@ -154,7 +154,7 @@ ${self.repo_context_bar('changelog')}
     make_revision_dropdown("#compare_org",   ${h.js(c.a_repo.repo_name)},  ${h.js(c.a_ref_name)},  'cache');
     make_revision_dropdown("#compare_other", ${h.js(c.cs_repo.repo_name)}, ${h.js(c.cs_ref_name)}, 'cache2');
 
-    var values_changed = function() {
+    function values_changed() {
         var values = $('#compare_org').select2('data') && $('#compare_other').select2('data');
         if (values) {
              $('#compare_revs').removeClass("disabled");
