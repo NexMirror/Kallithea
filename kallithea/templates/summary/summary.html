@@ -341,10 +341,10 @@ $(document).ready(function(){
     var tbl = document.createElement('table');
     tbl.setAttribute('class','table');
     var cnt = 0;
-    for (var i=0;i<data.length;i++){
+    for (let i=0;i<data.length;i++){
         total+= data[i][1].count;
     }
-    for (var i=0;i<data.length;i++){
+    for (let i=0;i<data.length;i++){
         cnt += 1;
 
         var hide = cnt>2;

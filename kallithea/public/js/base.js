@@ -409,14 +409,13 @@ function ajaxGET(url, success, failure) {
 
 function ajaxPOST(url, postData, success, failure) {
     postData['_session_csrf_secret_token'] = _session_csrf_secret_token;
-    var postData = _toQueryString(postData);
     if(failure === undefined) {
         failure = function(jqXHR, textStatus) {
                 if (textStatus != "abort")
                     alert("Error posting to server: " + textStatus);
             };
     }
-    return $.ajax({url: url, data: postData, type: 'POST', headers: {'X-PARTIAL-XHR': '1'}, cache: false})
+    return $.ajax({url: url, data: _toQueryString(postData), type: 'POST', headers: {'X-PARTIAL-XHR': '1'}, cache: false})
         .done(success)
         .fail(failure);
 }
@@ -443,14 +442,14 @@ function _onSuccessFollow(target){
         $target.removeClass('follow').addClass('following');
         $target.prop('title', _TM['Stop following this repository']);
         if ($f_cnt.html()) {
-            var cnt = Number($f_cnt.html())+1;
+            const cnt = Number($f_cnt.html())+1;
             $f_cnt.html(cnt);
         }
     } else {
         $target.removeClass('following').addClass('follow');
         $target.prop('title', _TM['Start following this repository']);
         if ($f_cnt.html()) {
-            var cnt = Number($f_cnt.html())-1;
+            const cnt = Number($f_cnt.html())-1;
             $f_cnt.html(cnt);
         }
     }
@@ -551,7 +550,6 @@ var q_filter = (function() {
         return _namespace[target];
     };
     return function (target, $nodes, display_element) {
-        var $nodes = $nodes;
         var $q_filter_field = $('#' + target);
         var F = namespace(target);
 

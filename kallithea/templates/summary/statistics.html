@@ -57,10 +57,10 @@ var total = 0;
 var tbl = document.createElement('table');
 tbl.setAttribute('class','trending_language_tbl');
 var cnt = 0;
-for (var i=0;i<data.length;i++){
+for (let i=0;i<data.length;i++){
     total+= data[i][1].count;
 }
-for (var i=0;i<data.length;i++){
+for (let i=0;i<data.length;i++){
     cnt += 1;
 
     var hide = cnt>2;
@@ -136,13 +136,13 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             "to":to
         }
     };
-    for(var key in dataset){
-      var data = dataset[key].data;
+    for(let key in dataset){
+      let data = dataset[key].data;
       for(var d in data){
         data[d].time *= 1000;
       }
     }
-    for(var key in overview_dataset){
+    for(let key in overview_dataset){
       overview_dataset[key][0] *= 1000;
     }
     var choiceContainer = $("#legend_choices")[0];
@@ -377,7 +377,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             if (previousPoint != item.datapoint) {
                 previousPoint = item.datapoint;
 
-                var tooltip = $("#tooltip")[0];
+                let tooltip = $("#tooltip")[0];
                 if(tooltip) {
                       tooltip.parentNode.removeChild(tooltip);
                 }
@@ -414,7 +414,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             }
         }
         else {
-              var tooltip = $("#tooltip")[0];
+              let tooltip = $("#tooltip")[0];
 
               if(tooltip) {
                     tooltip.parentNode.removeChild(tooltip);
@@ -427,7 +427,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
      * MAIN EXECUTION
      */
 
-    var data = getDataAccordingToRanges(initial_ranges);
+    let data = getDataAccordingToRanges(initial_ranges);
     generateCheckboxes(data);
 
     //main plot

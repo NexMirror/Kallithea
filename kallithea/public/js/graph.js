@@ -82,7 +82,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 		}
 
 		var lineCount = 1;
-		for (var i=0;i<data.length;i++) {
+		for (let i=0;i<data.length;i++) {
 			var in_l = data[i][1];
 			for (var j in in_l) {
 				var m = in_l[j][0];
@@ -95,7 +95,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 		var box_size = Math.min(18, (canvasWidth - edge_pad * 2) / lineCount);
 		var base_x = canvasWidth - edge_pad;
 
-		for (var i=0; i < data.length; ++i) {
+		for (let i=0; i < data.length; ++i) {
 			var row = document.getElementById(row_id_prefix+idx);
 			if (row == null) {
 				console.log("error: row "+row_id_prefix+idx+" not found");
@@ -120,7 +120,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			var rowY = Math.floor(row.offsetTop + firstincell.offsetTop + firstincell.offsetHeight/2);
 			var nextY = Math.floor((next == null) ? rowY + row.offsetHeight/2 : next.offsetTop + nextFirstincell.offsetTop + nextFirstincell.offsetHeight/2);
 
-			for (var j in in_l) {
+			for (let j in in_l) {
 				const line = in_l[j];
 				const start = line[0];
 				const end = line[1];
@@ -146,7 +146,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				}
 
 				if (dead_end) {
-					var gradient = this.ctx.createLinearGradient(x,rowY,x,nextY);
+					let gradient = this.ctx.createLinearGradient(x,rowY,x,nextY);
 					gradient.addColorStop(0,this.calcColor(color, 0.0, 0.65));
 					gradient.addColorStop(1,this.calcColor(color, 1.0, 0.0));
 					this.ctx.strokeStyle = gradient;
@@ -157,7 +157,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				// the merged color
 				else if (color != node[1] && start == node[0])
 				{
-					var gradient = this.ctx.createLinearGradient(x,rowY,x,nextY);
+					let gradient = this.ctx.createLinearGradient(x,rowY,x,nextY);
 					gradient.addColorStop(0,this.calcColor(node[1], 0.0, 0.65));
 					gradient.addColorStop(1,this.calcColor(color, 0.0, 0.65));
 					this.ctx.strokeStyle = gradient;
