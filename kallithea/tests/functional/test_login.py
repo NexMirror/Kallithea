@@ -459,12 +459,12 @@ class TestLoginController(TestController):
         assert response.status == '200 OK'
         response.mustcontain("You are about to set a new password for the email address %s" % email)
         response.mustcontain('<form action="%s" method="post">' % url(controller='login', action='password_reset_confirmation'))
-        response.mustcontain(no='value="%s"' % self.session_csrf_secret_token())  # BUG making actual password_reset_confirmation POST fail
+        response.mustcontain('value="%s"' % self.session_csrf_secret_token())
         response.mustcontain('value="%s"' % token)
         response.mustcontain('value="%s"' % timestamp)
         response.mustcontain('value="username@example.com"')
 
-        # fake a submit of that form (*with* csrf token)
+        # fake a submit of that form
         response = self.app.post(url(controller='login',
                                      action='password_reset_confirmation'),
                                  {'email': email,
