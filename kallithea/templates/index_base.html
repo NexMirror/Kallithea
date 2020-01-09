@@ -51,7 +51,7 @@
                 columns: [
                     {data: "raw_name", visible: false, searchable: false},
                     {title: ${h.jshtml(_('Repository'))}, data: "name", orderData: [0,], render: {
-                        filter: function(data, type, row, meta) {
+                        filter: function(data, type, row) {
                             return row.just_name;
                         }
                     }},

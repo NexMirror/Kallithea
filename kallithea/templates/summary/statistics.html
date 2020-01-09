@@ -156,8 +156,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
         bars: {show:true, align: 'center', lineWidth: 4},
         legend: {show:true,
                 container: "#legend_container",
-                labelFormatter: function(label, series) {
-                        // series is the series object for the label
+                labelFormatter: function(label) {
                         return '<a href="javascript:void(0)"> ' + label + '</a>';
                     }
         },
@@ -205,8 +204,6 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
 
     /**
      * generate checkboxes accordingly to data
-     * @param keys
-     * @returns
      */
     function generateCheckboxes(data) {
         //append checkboxes

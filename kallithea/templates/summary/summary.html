@@ -240,7 +240,7 @@ hg push ${c.clone_repo_url}
 
 <script>'use strict';
 $(document).ready(function(){
-    $('#clone-url input').click(function(e){
+    $('#clone-url input').click(function(){
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
             return ;
@@ -254,17 +254,17 @@ $(document).ready(function(){
     var $clone_by_name = $('#clone_by_name');
     var $clone_by_id = $('#clone_by_id');
     var $clone_ssh = $('#clone_ssh');
-    $clone_url.on('click', '.btn.use-name', function(e){
+    $clone_url.on('click', '.btn.use-name', function(){
         $clone_by_name.show();
         $clone_by_id.hide();
         $clone_ssh.hide();
     });
-    $clone_url.on('click', '.btn.use-id', function(e){
+    $clone_url.on('click', '.btn.use-id', function(){
         $clone_by_id.show();
         $clone_by_name.hide();
         $clone_ssh.hide();
     });
-    $clone_url.on('click', '.btn.use-ssh', function(e){
+    $clone_url.on('click', '.btn.use-ssh', function(){
         $clone_by_id.hide();
         $clone_by_name.hide();
         $clone_ssh.show();

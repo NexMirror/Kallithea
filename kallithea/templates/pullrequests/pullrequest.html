@@ -170,7 +170,7 @@ ${self.repo_context_bar('showpullrequest')}
           pendingajax.abort();
           pendingajax = undefined;
       }
-      pendingajax = asynchtml(url, $('#pull_request_overview'), function(o){
+      pendingajax = asynchtml(url, $('#pull_request_overview'), function(){
           pendingajax = undefined;
       });
   }
@@ -186,14 +186,14 @@ ${self.repo_context_bar('showpullrequest')}
           maxResults: 50,
           sortResults: branchSort
       });
-      $("#org_ref").on("change", function(e){
+      $("#org_ref").on("change", function(){
           loadPreview();
       });
 
       $("#other_repo").select2({
           dropdownAutoWidth: true
       });
-      $("#other_repo").on("change", function(e){
+      $("#other_repo").on("change", function(){
           otherrepoChanged();
       });
 
@@ -202,7 +202,7 @@ ${self.repo_context_bar('showpullrequest')}
           maxResults: 50,
           sortResults: branchSort
       });
-      $("#other_ref").on("change", function(e){
+      $("#other_ref").on("change", function(){
           loadPreview();
       });
 

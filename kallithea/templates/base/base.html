@@ -192,7 +192,7 @@
           formatSelection: function(obj) {
               return obj.text.html_escape();
           },
-          formatNoMatches: function(term) {
+          formatNoMatches: function() {
               return ${h.jshtml(_('No matches found'))};
           },
           escapeMarkup: function(m) {
@@ -441,7 +441,7 @@
                 sortResults: prefixFirstSort,
                 formatResult: format,
                 formatSelection: format,
-                formatNoMatches: function(term){
+                formatNoMatches: function(){
                     return ${h.jshtml(_('No matches found'))};
                 },
                 containerCssClass: "repo-switcher",

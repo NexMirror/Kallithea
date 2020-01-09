@@ -52,7 +52,7 @@
           window.location = ${h.js(h.url('summary_home', repo_name = c.repo))};
       }
     },
-    complete: function(resp, status) {
+    complete: function(resp) {
       if (resp.status == 200){
           // Schedule the next request when the current one's complete
           setTimeout(worker, 1000);

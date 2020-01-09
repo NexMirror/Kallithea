@@ -167,7 +167,7 @@ ${self.repo_context_bar('changelog')}
     values_changed();
     $('#compare_org').change(values_changed);
     $('#compare_other').change(values_changed);
-    $('#compare_revs').on('click', function(e){
+    $('#compare_revs').on('click', function(){
         var org = $('#compare_org').select2('data');
         var other = $('#compare_other').select2('data');
         if (!org || !other) {

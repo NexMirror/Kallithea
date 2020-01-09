@@ -386,7 +386,7 @@ function asynchtml(url, $target, success, args){
                     success();
                 }
             })
-        .fail(function(jqXHR, textStatus, errorThrown) {
+        .fail(function(jqXHR, textStatus) {
                 if (textStatus == "abort")
                     return;
                 $target.html('<span class="bg-danger">ERROR: {0}</span>'.format(textStatus));
@@ -397,7 +397,7 @@ function asynchtml(url, $target, success, args){
 
 function ajaxGET(url, success, failure) {
     if(failure === undefined) {
-        failure = function(jqXHR, textStatus, errorThrown) {
+        failure = function(jqXHR, textStatus) {
                 if (textStatus != "abort")
                     alert("Ajax GET error: " + textStatus);
             };
@@ -411,7 +411,7 @@ function ajaxPOST(url, postData, success, failure) {
     postData['_session_csrf_secret_token'] = _session_csrf_secret_token;
     var postData = _toQueryString(postData);
     if(failure === undefined) {
-        failure = function(jqXHR, textStatus, errorThrown) {
+        failure = function(jqXHR, textStatus) {
                 if (textStatus != "abort")
                     alert("Error posting to server: " + textStatus);
             };
@@ -461,7 +461,7 @@ function toggleFollowingRepo(target, follows_repository_id){
         'follows_repository_id': follows_repository_id,
         '_session_csrf_secret_token': _session_csrf_secret_token
     }
-    $.post(TOGGLE_FOLLOW_URL, args, function(data){
+    $.post(TOGGLE_FOLLOW_URL, args, function(){
             _onSuccessFollow(target);
         });
     return false;
@@ -555,7 +555,7 @@ var q_filter = (function() {
         var $q_filter_field = $('#' + target);
         var F = namespace(target);
 
-        $q_filter_field.keyup(function (e) {
+        $q_filter_field.keyup(function () {
             clearTimeout(F.filterTimeout);
             F.filterTimeout = setTimeout(F.updateFilter, 600);
         });
@@ -663,7 +663,7 @@ function _comment_div_append_add($comment_div, f_path, line_no) {
     var addlabel = TRANSLATION_MAP['Add Another Comment'];
     var $add = $('<div class="add-button-row"><span class="btn btn-default btn-xs add-button">{0}</span></div>'.format(addlabel));
     $comment_div.append($add);
-    $add.children('.add-button').click(function(e) {
+    $add.children('.add-button').click(function() {
         comment_div_state($comment_div, f_path, line_no, true);
     });
 }
@@ -771,7 +771,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
     });
 
     // add event handler for hide/cancel buttons
-    $form.find('.hide-inline-form').click(function(e) {
+    $form.find('.hide-inline-form').click(function() {
         comment_div_state($comment_div, f_path, line_no);
     });
 
@@ -788,7 +788,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
 function deleteComment(comment_id) {
     var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
     var postData = {};
-    function success(o) {
+    function success() {
         $('#comment-'+comment_id).remove();
         // Ignore that this might leave a stray Add button (or have a pending form with another comment) ...
     }
@@ -807,7 +807,7 @@ function linkInlineComments($firstlinks, $comments){
         return;
     }
 
-    $comments.each(function(i, e){
+    $comments.each(function(i){
             var prev = '';
             if (i > 0){
                 var prev_anchor = $($comments.get(i-1)).prop('id');
@@ -926,7 +926,7 @@ function initCodeMirror(textarea_id, baseUrl, resetUrl){
         });
     CodeMirror.modeURL = baseUrl + "/codemirror/mode/%N/%N.js";
 
-    $('#reset').click(function(e){
+    $('#reset').click(function(){
             window.location=resetUrl;
         });
 
@@ -967,7 +967,7 @@ function _getIdentNode(n){
 
 /* generate links for multi line selects that can be shown by files.html page_highlights.
  * This is a mouseup handler for hlcode from CodeHtmlFormatter and pygmentize */
-function getSelectionLink(e) {
+function getSelectionLink() {
     //get selection from start/to nodes
     if (typeof window.getSelection != "undefined") {
         var s = window.getSelection();
@@ -1136,12 +1136,12 @@ function SimpleUserAutoComplete($inputElement) {
         ajax: {
             url: pyroutes.url('users_and_groups_data'),
             dataType: 'json',
-            data: function(term, page){
+            data: function(term){
               return {
                 query: term
               };
             },
-            results: function (data, page){
+            results: function (data){
               return data;
             },
             cache: true
@@ -1160,13 +1160,13 @@ function MembersAutoComplete($inputElement, $typeElement) {
         ajax: {
             url: pyroutes.url('users_and_groups_data'),
             dataType: 'json',
-            data: function(term, page){
+            data: function(term){
               return {
                 query: term,
                 types: 'users,groups'
               };
             },
-            results: function (data, page){
+            results: function (data){
               return data;
             },
             cache: true
@@ -1196,7 +1196,7 @@ function MentionsAutoComplete($inputElement) {
           }
         );
       },
-      sorter: function(query, items, searchKey) {
+      sorter: function(query, items) {
         return items;
       }
     },
@@ -1267,7 +1267,7 @@ function addReviewMember(id,fname,lname,nname,gravatar_link,gravatar_size){
     }
 }
 
-function removeReviewMember(reviewer_id, repo_name, pull_request_id){
+function removeReviewMember(reviewer_id){
     var $li = $('#reviewer_{0}'.format(reviewer_id));
     $li.find('div div').css("text-decoration", "line-through");
     $li.find('input').prop('name', 'review_members_removed');
@@ -1283,12 +1283,12 @@ function PullRequestAutoComplete($inputElement) {
         ajax: {
             url: pyroutes.url('users_and_groups_data'),
             dataType: 'json',
-            data: function(term, page){
+            data: function(term){
               return {
                 query: term
               };
             },
-            results: function (data, page){
+            results: function (data){
               return data;
             },
             cache: true
@@ -1322,7 +1322,7 @@ function addPermAction(perm_type) {
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {
-    function success(o) {
+    function success() {
             $('#' + field_id).remove();
         }
     function failure(o) {
@@ -1365,10 +1365,10 @@ function MultiSelectWidget(selected_id, available_id, form_id){
             return false;
         }).remove();
 
-    $('#add_element').click(function(e){
+    $('#add_element').click(function(){
             $selectedselect.append($availableselect.children('option:selected'));
         });
-    $('#remove_element').click(function(e){
+    $('#remove_element').click(function(){
             $availableselect.append($selectedselect.children('option:selected'));
         });
 

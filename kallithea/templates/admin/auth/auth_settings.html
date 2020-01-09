@@ -108,7 +108,7 @@
 <script>'use strict';
     $('.toggle-plugin').click(function(e){
         var $auth_plugins_input = $('#auth_plugins');
-        function notEmpty(element, index, array) {
+        function notEmpty(element) {
             return (element != "");
         }
         var elems = $auth_plugins_input.val().split(',').filter(notEmpty);

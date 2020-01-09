@@ -348,7 +348,7 @@ ${self.repo_context_bar('showpullrequest')}
           PullRequestAutoComplete($('#user'));
           SimpleUserAutoComplete($('#owner'));
 
-          $('.code-difftable').on('click', '.add-bubble', function(e){
+          $('.code-difftable').on('click', '.add-bubble', function(){
               show_comment_form($(this));
           });
 
@@ -368,7 +368,7 @@ ${self.repo_context_bar('showpullrequest')}
               $('#pr-form-clone').prop('disabled',!update);
           });
           var $org_review_members = $('#review_members').clone();
-          $('#pr-form-reset').click(function(e){
+          $('#pr-form-reset').click(function(){
               $('.pr-do-edit').hide();
               $('.pr-not-edit').show();
               $('#pr-form-save').prop('disabled',false);

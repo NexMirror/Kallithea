@@ -73,7 +73,7 @@
     $(document).ready(function(){
         graph.render(jsdata);
 
-        $('.expand_commit').click(function(e){
+        $('.expand_commit').click(function(){
             $(this).next('.mid').find('.message').toggleClass('expanded');
             graph.render(jsdata);
         });

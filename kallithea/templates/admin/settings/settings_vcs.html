@@ -71,7 +71,7 @@ ${h.form(url('admin_settings'), method='post')}
 
     <script>'use strict';
         $(document).ready(function(){
-            $('#path_unlock').on('click', function(e){
+            $('#path_unlock').on('click', function(){
                 $('#path_unlock_icon').removeClass('icon-lock');
                 $('#path_unlock_icon').addClass('icon-lock-open-alt');
                 $('#paths_root_path').removeAttr('readonly');

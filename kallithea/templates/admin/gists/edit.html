@@ -117,7 +117,7 @@
                         });
 
                         // on type the new filename set mode
-                        $filename_input.keyup(function(e){
+                        $filename_input.keyup(function(){
                             var file_data = CodeMirror.getFilenameAndExt(this.value);
                             if(file_data['ext'] != null){
                                 var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
