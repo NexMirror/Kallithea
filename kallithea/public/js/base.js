@@ -239,7 +239,7 @@ var pyroutes = (function() {
                 else if ((match = /^\x25{2}/.exec(_fmt)) !== null) {
                     parse_tree.push('%');
                 }
-                else if ((match = /^\x25(?:([1-9]\d*)\$|\(([^\)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/.exec(_fmt)) !== null) {
+                else if ((match = /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/.exec(_fmt)) !== null) {
                     if (match[2]) {
                         arg_names |= 1;
                         var field_list = [], replacement_field = match[2], field_match = [];
