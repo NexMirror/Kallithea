@@ -46,7 +46,7 @@ ls -l $(pwd)/dist/$namerel.tar.gz
 echo "Releasing Kallithea $version in directory $namerel"
 
 echo "Verify dist file content"
-diff -u <((hg mani | grep -v '^\.hg') | LANG=C sort) <(tar tf dist/Kallithea-$version.tar.gz | sed "s|^$namerel/||" | grep . | grep -v '^kallithea/i18n/.*/LC_MESSAGES/kallithea.mo$\|^Kallithea.egg-info/\|^PKG-INFO$\|/$' | LANG=C sort)
+diff -u <((hg mani | grep -v '^\.hg\|^kallithea/i18n/en/LC_MESSAGES/kallithea.mo$') | LANG=C sort) <(tar tf dist/Kallithea-$version.tar.gz | sed "s|^$namerel/||" | grep . | grep -v '^kallithea/i18n/.*/LC_MESSAGES/kallithea.mo$\|^Kallithea.egg-info/\|^PKG-INFO$\|/$' | LANG=C sort)
 
 echo "Verify docs build"
 python2 setup.py build_sphinx # the results are not actually used, but we want to make sure it builds
