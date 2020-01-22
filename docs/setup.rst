@@ -80,13 +80,12 @@ The Kallithea web interface is automatically displayed in the user's preferred
 language, as indicated by the browser. Thus, different users may see the
 application in different languages. If the requested language is not available
 (because the translation file for that language does not yet exist or is
-incomplete), the language specified in setting ``i18n.lang`` in the Kallithea
-configuration file is used as fallback. If no fallback language is explicitly
-specified, English is used.
+incomplete), English is used.
 
 If you want to disable automatic language detection and instead configure a
 fixed language regardless of user preference, set ``i18n.enabled = false`` and
-set ``i18n.lang`` to the desired language (or leave empty for English).
+specify another language by setting ``i18n.lang`` in the Kallithea
+configuration file.
 
 
 Using Kallithea with SSH
@@ -562,7 +561,7 @@ that, you'll need to:
 
       ini = '/srv/kallithea/my.ini'
       from logging.config import fileConfig
-      fileConfig(ini)
+      fileConfig(ini, {'__file__': ini, 'here': '/srv/kallithea'})
       from paste.deploy import loadapp
       application = loadapp('config:' + ini)
 
@@ -578,7 +577,7 @@ that, you'll need to:
 
       ini = '/srv/kallithea/kallithea.ini'
       from logging.config import fileConfig
-      fileConfig(ini)
+      fileConfig(ini, {'__file__': ini, 'here': '/srv/kallithea'})
       from paste.deploy import loadapp
       application = loadapp('config:' + ini)
 

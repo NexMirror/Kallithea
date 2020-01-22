@@ -23,7 +23,7 @@
             </td>
             <td>
                 ${h.form(url('edit_user_ssh_keys_delete', id=c.user.user_id))}
-                    ${h.hidden('del_public_key', ssh_key.public_key)}
+                    ${h.hidden('del_public_key_fingerprint', ssh_key.fingerprint)}
                     <button class="btn btn-danger btn-xs" type="submit"
                             onclick="return confirm('${_('Confirm to remove this SSH key: %s') % ssh_key.fingerprint}');">
                         <i class="icon-trashcan"></i>

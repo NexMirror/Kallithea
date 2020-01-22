@@ -30,6 +30,7 @@ from tg.i18n import ugettext as _
 
 from kallithea.lib import ssh
 from kallithea.lib.utils2 import str2bool
+from kallithea.lib.vcs.exceptions import RepositoryError
 from kallithea.model.db import User, UserSshKeys
 from kallithea.model.meta import Session
 
@@ -37,7 +38,7 @@ from kallithea.model.meta import Session
 log = logging.getLogger(__name__)
 
 
-class SshKeyModelException(Exception):
+class SshKeyModelException(RepositoryError):
     """Exception raised by SshKeyModel methods to report errors"""
 
 
@@ -72,21 +73,19 @@ class SshKeyModel(object):
 
         return new_ssh_key
 
-    def delete(self, public_key, user=None):
+    def delete(self, fingerprint, user):
         """
-        Deletes given public_key, if user is set it also filters the object for
-        deletion by given user.
+        Deletes ssh key with given fingerprint for the given user.
         Will raise SshKeyModelException on errors
         """
-        ssh_key = UserSshKeys.query().filter(UserSshKeys._public_key == public_key)
+        ssh_key = UserSshKeys.query().filter(UserSshKeys.fingerprint == fingerprint)
 
-        if user:
-            user = User.guess_instance(user)
-            ssh_key = ssh_key.filter(UserSshKeys.user_id == user.user_id)
+        user = User.guess_instance(user)
+        ssh_key = ssh_key.filter(UserSshKeys.user_id == user.user_id)
 
         ssh_key = ssh_key.scalar()
         if ssh_key is None:
-            raise SshKeyModelException(_('SSH key %r not found') % public_key)
+            raise SshKeyModelException(_('SSH key with fingerprint %r found') % fingerprint)
         Session().delete(ssh_key)
 
     def get_ssh_keys(self, user):
@@ -116,7 +115,7 @@ class SshKeyModel(object):
         # Now, test that the directory is or was created in a readable way by previous.
         if not (os.path.isdir(authorized_keys_dir) and
                 os.access(authorized_keys_dir, os.W_OK)):
-            raise Exception("Directory of authorized_keys cannot be written to so authorized_keys file %s cannot be written" % (authorized_keys))
+            raise SshKeyModelException("Directory of authorized_keys cannot be written to so authorized_keys file %s cannot be written" % (authorized_keys))
 
         # Make sure we don't overwrite a key file with important content
         if os.path.exists(authorized_keys):
@@ -127,10 +126,11 @@ class SshKeyModel(object):
                     elif ssh.SSH_OPTIONS in l and ' ssh-serve ' in l:
                         pass # Kallithea entries are ok to overwrite
                     else:
-                        raise Exception("Safety check failed, found %r in %s - please review and remove it" % (l.strip(), authorized_keys))
+                        raise SshKeyModelException("Safety check failed, found %r line in %s - please remove it if Kallithea should manage the file" % (l.strip(), authorized_keys))
 
         fh, tmp_authorized_keys = tempfile.mkstemp('.authorized_keys', dir=os.path.dirname(authorized_keys))
         with os.fdopen(fh, 'w') as f:
+            f.write("# WARNING: This .ssh/authorized_keys file is managed by Kallithea. Manual editing or adding new entries will make Kallithea back off.\n")
             for key in UserSshKeys.query().join(UserSshKeys.user).filter(User.active == True):
                 f.write(ssh.authorized_keys_line(kallithea_cli_path, config['__file__'], key))
         os.chmod(tmp_authorized_keys, stat.S_IRUSR | stat.S_IWUSR)

@@ -100,6 +100,9 @@ def insert_entries(
     for year, name in all_entries:
         if name in no_entries or (name, year) in no_entries:
             continue
+        parts = name.split(' <', 1)
+        if len(parts) == 2:
+            name = parts[0] + ' <' + parts[1].lower()
         domain = name.split('@', 1)[-1].rstrip('>')
         if domain in domain_extra:
             name_years[domain_extra[domain]].add(year)

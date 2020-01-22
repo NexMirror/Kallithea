@@ -460,9 +460,9 @@ class UsersController(BaseController):
     def ssh_keys_delete(self, id):
         c.user = self._get_user_or_raise_if_default(id)
 
-        public_key = request.POST.get('del_public_key')
+        fingerprint = request.POST.get('del_public_key_fingerprint')
         try:
-            SshKeyModel().delete(public_key, c.user.user_id)
+            SshKeyModel().delete(fingerprint, c.user.user_id)
             Session().commit()
             SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key successfully deleted"), category='success')

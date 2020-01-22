@@ -28,6 +28,7 @@ import hashlib
 import itertools
 import logging
 import os
+import string
 
 import ipaddr
 from decorator import decorator
@@ -109,8 +110,9 @@ def check_password(password, hashed):
     :param password: password
     :param hashed: password in hashed form
     """
-
-    if is_windows:
+    # sha256 hashes will always be 64 hex chars
+    # bcrypt hashes will always contain $ (and be shorter)
+    if is_windows or len(hashed) == 64 and all(x in string.hexdigits for x in hashed):
         return hashlib.sha256(safe_bytes(password)).hexdigest() == hashed
     elif is_unix:
         import bcrypt

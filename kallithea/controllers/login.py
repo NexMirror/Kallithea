@@ -210,12 +210,10 @@ class LoginController(BaseController):
 
         # The template needs the email address outside of the form.
         c.email = request.params.get('email')
-
+        c.timestamp = request.params.get('timestamp') or ''
+        c.token = request.params.get('token') or ''
         if not request.POST:
-            return htmlfill.render(
-                render('/password_reset_confirmation.html'),
-                defaults=dict(request.params),
-                encoding='UTF-8')
+            return render('/password_reset_confirmation.html')
 
         form = PasswordResetConfirmationForm()()
         try:

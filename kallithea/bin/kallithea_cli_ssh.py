@@ -24,7 +24,7 @@ import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.backends.git.ssh import GitSshHandler
 from kallithea.lib.vcs.backends.hg.ssh import MercurialSshHandler
-from kallithea.model.ssh_key import SshKeyModel
+from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
 
 
 log = logging.getLogger(__name__)
@@ -82,5 +82,8 @@ def ssh_update_authorized_keys():
 
     The file is usually maintained automatically, but this command will also re-write it.
     """
-
-    SshKeyModel().write_authorized_keys()
+    try:
+        SshKeyModel().write_authorized_keys()
+    except SshKeyModelException as e:
+        sys.stderr.write("%s\n" % e)
+        sys.exit(1)

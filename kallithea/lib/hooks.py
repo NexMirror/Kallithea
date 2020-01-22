@@ -26,6 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
+import sys
 import time
 
 import mercurial.scmutil
@@ -33,7 +34,7 @@ import mercurial.scmutil
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import action_logger, make_ui
-from kallithea.lib.utils2 import ascii_str, get_hook_environment, safe_bytes, safe_str, safe_unicode
+from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes, safe_str, safe_unicode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.model.db import Repository, User
 
@@ -333,7 +334,11 @@ def handle_git_pre_receive(repo_path, git_stdin_lines):
 
 def handle_git_post_receive(repo_path, git_stdin_lines):
     """Called from Git post-receive hook"""
-    baseui, repo = _hook_environment(repo_path)
+    try:
+        baseui, repo = _hook_environment(repo_path)
+    except HookEnvironmentError as e:
+        sys.stderr.write("Skipping Kallithea Git post-recieve hook %r.\nGit was apparently not invoked by Kallithea: %s\n" % (sys.argv[0], e))
+        return 0
 
     # the post push hook should never use the cached instance
     scm_repo = repo.scm_instance_no_cache()

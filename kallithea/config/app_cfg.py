@@ -98,6 +98,11 @@ class KallitheaAppConfig(AppConfig):
         # Disable transaction manager -- currently Kallithea takes care of transactions itself
         self['tm.enabled'] = False
 
+        # Set the i18n source language so TG doesn't search beyond 'en' in Accept-Language.
+        # Don't force the default here if configuration force something else.
+        if not self.get('i18n.lang'):
+            self['i18n.lang'] = 'en'
+
 
 base_config = KallitheaAppConfig()
 

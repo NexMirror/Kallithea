@@ -3,8 +3,10 @@ import re
 import time
 import urlparse
 
+import mock
 from tg.util.webtest import test_context
 
+import kallithea.lib.celerylib.tasks
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import check_password
 from kallithea.lib.utils2 import generate_api_key
@@ -404,18 +406,38 @@ class TestLoginController(base.TestController):
         Session().add(new)
         Session().commit()
 
-        response = self.app.post(base.url(controller='login',
-                                     action='password_reset'),
-                                 {'email': email,
-                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
+        token = UserModel().get_reset_password_token(
+            User.get_by_username(username), timestamp, self.session_csrf_secret_token())
+
+        collected = []
+        def mock_send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+            collected.append((recipients, subject, body, html_body))
+
+        with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', mock_send_email):
+            response = self.app.post(base.url(controller='login',
+                                         action='password_reset'),
+                                     {'email': email,
+                                      '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         self.checkSessionFlash(response, 'A password reset confirmation code has been sent')
+
+        ((recipients, subject, body, html_body),) = collected
+        assert recipients == ['username@example.com']
+        assert subject == 'Password reset link'
+        assert '\n%s\n' % token in body
+        (confirmation_url,) = (line for line in body.splitlines() if line.startswith('http://'))
+        assert ' href="%s"' % confirmation_url.replace('&', '&amp;').replace('@', '%40') in html_body
+
+        d = urlparse.parse_qs(urlparse.urlparse(confirmation_url).query)
+        assert d['token'] == [token]
+        assert d['timestamp'] == [str(timestamp)]
+        assert d['email'] == [email]
 
         response = response.follow()
 
         # BAD TOKEN
 
-        token = "bad"
+        bad_token = "bad"
 
         response = self.app.post(base.url(controller='login',
                                      action='password_reset_confirmation'),
@@ -423,7 +445,7 @@ class TestLoginController(base.TestController):
                                   'timestamp': timestamp,
                                   'password': "p@ssw0rd",
                                   'password_confirm': "p@ssw0rd",
-                                  'token': token,
+                                  'token': bad_token,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  })
         assert response.status == '200 OK'
@@ -431,20 +453,16 @@ class TestLoginController(base.TestController):
 
         # GOOD TOKEN
 
-        # TODO: The token should ideally be taken from the mail sent
-        # above, instead of being recalculated.
-
-        token = UserModel().get_reset_password_token(
-            User.get_by_username(username), timestamp, self.session_csrf_secret_token())
-
-        response = self.app.get(base.url(controller='login',
-                                    action='password_reset_confirmation',
-                                    email=email,
-                                    timestamp=timestamp,
-                                    token=token))
+        response = self.app.get(confirmation_url)
         assert response.status == '200 OK'
         response.mustcontain("You are about to set a new password for the email address %s" % email)
+        response.mustcontain('<form action="%s" method="post">' % base.url(controller='login', action='password_reset_confirmation'))
+        response.mustcontain('value="%s"' % self.session_csrf_secret_token())
+        response.mustcontain('value="%s"' % token)
+        response.mustcontain('value="%s"' % timestamp)
+        response.mustcontain('value="username@example.com"')
 
+        # fake a submit of that form
         response = self.app.post(base.url(controller='login',
                                      action='password_reset_confirmation'),
                                  {'email': email,
