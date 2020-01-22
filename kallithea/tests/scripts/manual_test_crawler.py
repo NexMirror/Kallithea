@@ -32,7 +32,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 from __future__ import print_function
 
-import cookielib
+import http.cookiejar
 import os
 import sys
 import tempfile
@@ -72,7 +72,7 @@ PROJECTS = [
 ]
 
 
-cj = cookielib.FileCookieJar(os.path.join(tempfile.gettempdir(), 'rc_test_cookie.txt'))
+cj = http.cookiejar.FileCookieJar(os.path.join(tempfile.gettempdir(), 'rc_test_cookie.txt'))
 o = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 o.addheaders = [
     ('User-agent', 'kallithea-crawler'),

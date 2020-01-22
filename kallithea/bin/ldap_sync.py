@@ -29,7 +29,7 @@ from __future__ import print_function
 
 import urllib2
 import uuid
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 import ldap
 

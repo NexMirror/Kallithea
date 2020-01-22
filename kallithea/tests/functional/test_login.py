@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import time
-import urlparse
+import urllib.parse
 
 import mock
 from tg.util.webtest import test_context
@@ -172,8 +172,8 @@ class TestLoginController(base.TestController):
                                         repo_name=base.HG_REPO,
                                         **args))
             assert response.status == '302 Found'
-            came_from = urlparse.parse_qs(urlparse.urlparse(response.location).query)['came_from'][0]
-            came_from_qs = urlparse.parse_qsl(urlparse.urlparse(came_from).query)
+            came_from = urllib.parse.parse_qs(urllib.parse.urlparse(response.location).query)['came_from'][0]
+            came_from_qs = urllib.parse.parse_qsl(urllib.parse.urlparse(came_from).query)
             assert sorted(came_from_qs) == sorted((k, v.encode('utf-8')) for k, v in args.items())
 
     @base.parametrize('args,args_encoded', [
@@ -184,7 +184,7 @@ class TestLoginController(base.TestController):
     def test_login_form_preserves_get_args(self, args, args_encoded):
         response = self.app.get(base.url(controller='login', action='index',
                                     came_from=base.url('/_admin/users', **args)))
-        came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
+        came_from = urllib.parse.parse_qs(urllib.parse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
             assert encoded in came_from
 
@@ -216,7 +216,7 @@ class TestLoginController(base.TestController):
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('Invalid username or password')
-        came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
+        came_from = urllib.parse.parse_qs(urllib.parse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
             assert encoded in came_from
 
@@ -429,7 +429,7 @@ class TestLoginController(base.TestController):
         (confirmation_url,) = (line for line in body.splitlines() if line.startswith('http://'))
         assert ' href="%s"' % confirmation_url.replace('&', '&amp;').replace('@', '%40') in html_body
 
-        d = urlparse.parse_qs(urlparse.urlparse(confirmation_url).query)
+        d = urllib.parse.parse_qs(urllib.parse.urlparse(confirmation_url).query)
         assert d['token'] == [token]
         assert d['timestamp'] == [str(timestamp)]
         assert d['email'] == [email]

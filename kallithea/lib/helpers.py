@@ -23,7 +23,7 @@ import logging
 import random
 import re
 import textwrap
-import urlparse
+import urllib.parse
 
 from beaker.cache import cache_region
 from pygments import highlight as code_highlight
@@ -932,7 +932,7 @@ def gravatar_url(email_address, size=30, default=''):
     if email_address == _def:
         return default
 
-    parsed_url = urlparse.urlparse(url.current(qualified=True))
+    parsed_url = urllib.parse.urlparse(url.current(qualified=True))
     url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL) \
                .replace('{email}', email_address) \
                .replace('{md5email}', hashlib.md5(safe_bytes(email_address).lower()).hexdigest()) \
