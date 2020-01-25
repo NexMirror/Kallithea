@@ -67,7 +67,7 @@ def db_create(user, password, email, repos, force_yes, force_no, public_access):
     Session().commit()
 
     # initial repository scan
-    kallithea.config.middleware.make_app_without_logging(
+    kallithea.config.middleware.make_app(
             kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
     added, _ = kallithea.lib.utils.repo2db_mapper(kallithea.model.scm.ScmModel().repo_scan())
     if added:

@@ -310,7 +310,7 @@ def _hook_environment(repo_path):
     path_to_ini_file = extras['config']
     kallithea.CONFIG = paste.deploy.appconfig('config:' + path_to_ini_file)
     #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
-    kallithea.config.middleware.make_app_without_logging(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
+    kallithea.config.middleware.make_app(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
 
     repo_path = safe_unicode(repo_path)
     # fix if it's not a bare repo
