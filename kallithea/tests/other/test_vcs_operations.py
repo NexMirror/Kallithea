@@ -425,25 +425,19 @@ class TestVCSOperations(TestController):
         else:
             assert issubclass(vt, SshVcsTest)
             if vt.repo_type == 'git':
-                assert "abort: Access to './%s/' denied" % vt.repo_name in stderr
+                assert "abort: Access to './%s' denied" % vt.repo_name in stderr
             else:
-                assert "abort: Access to './%s/' denied" % vt.repo_name in stdout
+                assert "abort: Access to './%s' denied" % vt.repo_name in stdout
 
         stdout, stderr = Command(dest_dir).execute(vt.repo_type, 'pull', clone_url.replace('/' + vt.repo_name, '/%s/' % vt.repo_name), ignoreReturnCode=True)
-        if issubclass(vt, HttpVcsTest):
-            if vt.repo_type == 'git':
-                assert 'Already up to date.' in stdout
-            else:
-                assert vt.repo_type == 'hg'
-                assert "no changes found" in stdout
-            assert "denied" not in stderr
-            assert "denied" not in stdout
-            assert "404" not in stdout
+        if vt.repo_type == 'git':
+            assert 'Already up to date.' in stdout
         else:
-            if vt.repo_type == 'git':
-                assert "denied" in stderr
-            else:
-                assert "denied" in stdout
+            assert vt.repo_type == 'hg'
+            assert "no changes found" in stdout
+        assert "denied" not in stderr
+        assert "denied" not in stdout
+        assert "404" not in stdout
 
     @parametrize_vcs_test
     def test_push_invalidates_cache(self, webserver, testfork, vt):
