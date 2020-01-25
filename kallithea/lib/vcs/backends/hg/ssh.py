@@ -34,11 +34,11 @@ class MercurialSshHandler(BaseSshHandler):
         >>> import shlex
 
         >>> MercurialSshHandler.make(shlex.split('hg -R "foo bar" serve --stdio')).repo_name
-        u'foo bar'
+        'foo bar'
         >>> MercurialSshHandler.make(shlex.split(' hg -R blåbærgrød serve --stdio ')).repo_name
-        u'bl\xe5b\xe6rgr\xf8d'
+        'bl\xe5b\xe6rgr\xf8d'
         >>> MercurialSshHandler.make(shlex.split('''hg -R 'foo"bar' serve --stdio''')).repo_name
-        u'foo"bar'
+        'foo"bar'
 
         >>> MercurialSshHandler.make(shlex.split('/bin/hg -R "foo" serve --stdio'))
         >>> MercurialSshHandler.make(shlex.split('''hg -R "foo"bar" serve --stdio''')) # ssh-serve will report: Error parsing SSH command "...": invalid syntax

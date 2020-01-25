@@ -32,15 +32,15 @@ class GitSshHandler(BaseSshHandler):
         >>> import shlex
 
         >>> GitSshHandler.make(shlex.split("git-upload-pack '/foo bar'")).repo_name
-        u'foo bar'
+        'foo bar'
         >>> GitSshHandler.make(shlex.split("git-upload-pack '/foo bar'")).verb
         'git-upload-pack'
         >>> GitSshHandler.make(shlex.split(" git-upload-pack /blåbærgrød ")).repo_name # might not be necessary to support no quoting ... but we can
-        u'bl\xe5b\xe6rgr\xf8d'
+        'bl\xe5b\xe6rgr\xf8d'
         >>> GitSshHandler.make(shlex.split('''git-upload-pack "/foo'bar"''')).repo_name
-        u"foo'bar"
+        "foo'bar"
         >>> GitSshHandler.make(shlex.split("git-receive-pack '/foo'")).repo_name
-        u'foo'
+        'foo'
         >>> GitSshHandler.make(shlex.split("git-receive-pack '/foo'")).verb
         'git-receive-pack'
 

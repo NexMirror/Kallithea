@@ -131,7 +131,7 @@ def parse_changesets(text):
         >>> parse_changesets('aaabbb')
         {'start': None, 'main': 'aaabbb', 'end': None}
         >>> parse_changesets('aaabbb..cccddd')
-        {'start': 'aaabbb', 'main': None, 'end': 'cccddd'}
+        {'start': 'aaabbb', 'end': 'cccddd', 'main': None}
 
     """
     text = text.strip()

@@ -72,7 +72,7 @@ def expand(template, mako_variable_values, settings):
     ...     '[third-section]': {'third_extra': ' 3'},
     ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
     ... }
-    >>> print expand(template, mako_variable_values, settings)
+    >>> print(expand(template, mako_variable_values, settings))
     <BLANKLINE>
     [first-section]
     <BLANKLINE>
