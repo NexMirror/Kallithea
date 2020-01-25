@@ -55,6 +55,9 @@ class BaseSshHandler(object):
         """
         raise NotImplementedError
 
+    def __init__(self, repo_name):
+        self.repo_name = repo_name
+
     def serve(self, user_id, key_id, client_ip):
         """Verify basic sanity of the repository, and that the user is
         valid and has access - then serve the native VCS protocol for
