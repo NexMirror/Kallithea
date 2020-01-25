@@ -780,9 +780,11 @@ class TestGitHooks(object):
         self.repo = GitRepository(self.repo_directory, create=True)
 
         # Create a dictionary where keys are hook names, and values are paths to
-        # them. Deduplicates code in tests a bit.
-        self.hook_directory = self.repo.get_hook_location()
-        self.kallithea_hooks = dict((h, os.path.join(self.hook_directory, h)) for h in ("pre-receive", "post-receive"))
+        # them in the non-bare repo. Deduplicates code in tests a bit.
+        self.kallithea_hooks = {
+            "pre-receive": os.path.join(self.repo.path, '.git', 'hooks', "pre-receive"),
+            "post-receive": os.path.join(self.repo.path, '.git', 'hooks', "post-receive"),
+        }
 
     def test_hooks_created_if_missing(self):
         """

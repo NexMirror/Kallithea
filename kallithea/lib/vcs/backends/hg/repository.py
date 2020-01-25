@@ -492,12 +492,6 @@ class MercurialRepository(BaseRepository):
             url = "file:" + urllib.pathname2url(url)
         return url
 
-    def get_hook_location(self):
-        """
-        returns absolute path to location where hooks are stored
-        """
-        return os.path.join(self.path, '.hg', '.hgrc')
-
     def get_changeset(self, revision=None):
         """
         Returns ``MercurialChangeset`` object representing repository's
