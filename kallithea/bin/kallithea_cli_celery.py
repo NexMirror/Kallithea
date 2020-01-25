@@ -16,6 +16,7 @@ import click
 
 import kallithea
 import kallithea.bin.kallithea_cli_base as cli_base
+from kallithea.lib import celerypylons
 
 
 @cli_base.register_command(config_file_initialize_app=True)
@@ -35,6 +36,6 @@ def celery_run(celery_args):
         raise Exception('Please set use_celery = true in .ini config '
                         'file before running this command')
 
-    from kallithea.lib import celerypylons
-    cmd = celerypylons.worker.worker(celerypylons.app)
+    app = celerypylons.make_app()
+    cmd = celerypylons.worker.worker(app)
     return cmd.run_from_argv(None, command='celery-run -c CONFIG_FILE --', argv=list(celery_args))

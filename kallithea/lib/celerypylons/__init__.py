@@ -53,6 +53,8 @@ def celery_config(config):
     return celery_config
 
 
-# Create celery app from the TurboGears configuration file
-app = celery.Celery()
-app.config_from_object(celery_config(tg.config))
+def make_app():
+    """Create celery app from the TurboGears configuration file"""
+    app = celery.Celery()
+    app.config_from_object(celery_config(tg.config))
+    return app
