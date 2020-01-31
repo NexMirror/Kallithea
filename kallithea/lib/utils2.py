@@ -485,10 +485,10 @@ def get_current_authuser():
     defined, else returns None.
     """
     from tg import tmpl_context
-    if hasattr(tmpl_context, 'authuser'):
-        return tmpl_context.authuser
-
-    return None
+    try:
+        return getattr(tmpl_context, 'authuser', None)
+    except TypeError:  # No object (name: context) has been registered for this thread
+        return None
 
 
 class OptionalAttr(object):
