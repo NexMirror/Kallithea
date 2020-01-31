@@ -2,9 +2,18 @@ import os
 
 import mock
 import pytest
+import tg
 
 
 here = os.path.dirname(__file__)
+
+# HACK:
+def pytest_configure():
+    # Register global dummy tg.context to avoid "TypeError: No object (name: context) has been registered for this thread"
+    tg.request_local.context._push_object(tg.util.bunch.Bunch())
+    # could be removed again after use with
+    # tg.request_local.context._pop_object ... but we keep it around forever as
+    # a reasonable sentinel
 
 def pytest_ignore_collect(path):
     # ignore all files outside the 'kallithea' directory
