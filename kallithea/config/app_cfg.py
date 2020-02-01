@@ -28,7 +28,6 @@ import tg
 from alembic.migration import MigrationContext
 from alembic.script.base import ScriptDirectory
 from sqlalchemy import create_engine
-from tg import hooks
 from tg.configuration import AppConfig
 from tg.support.converters import asbool
 
@@ -187,7 +186,7 @@ def setup_configuration(app):
     kallithea.model.meta.Session.remove()
 
 
-hooks.register('configure_new_app', setup_configuration)
+tg.hooks.register('configure_new_app', setup_configuration)
 
 
 def setup_application(app):
@@ -211,4 +210,4 @@ def setup_application(app):
     return app
 
 
-hooks.register('before_config', setup_application)
+tg.hooks.register('before_config', setup_application)
