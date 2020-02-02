@@ -36,7 +36,10 @@ header_comment_strip_re = re.compile(r'''
     |
     ^
     [#][ ]FIRST[ ]AUTHOR[ ]<EMAIL@ADDRESS>,[ ]\d+[.] \n
-    [#] \n
+    (?:[#] \n)?
+    |
+    ^
+    (?:[#] \n)?
     [#],[ ]fuzzy \n
     ''',
     re.MULTILINE|re.VERBOSE)
