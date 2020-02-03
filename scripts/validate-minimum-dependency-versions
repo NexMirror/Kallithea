@@ -28,7 +28,7 @@ mkdir -p "$venv"
 sed -n 's/.*"\(.*\)>=\(.*\)".*/\1==\2/p' setup.py > "$min_requirements"
 sed 's/>=/==/p' dev_requirements.txt >> "$min_requirements"
 
-virtualenv -p "$(command -v python3)" "$venv"
+python3 -m venv "$venv"
 source "$venv/bin/activate"
 pip install --upgrade pip setuptools
 pip install -e . -r "$min_requirements" python-ldap python-pam 2> >(tee "$log" >&2)

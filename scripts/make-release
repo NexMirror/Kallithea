@@ -15,7 +15,7 @@ venv=$(mktemp -d --tmpdir kallithea-release-XXXXX)
 trap cleanup EXIT
 
 echo "Setting up a fresh virtualenv in $venv"
-virtualenv -p python3 "$venv"
+python3 -m venv "$venv"
 . "$venv/bin/activate"
 
 echo "Install/verify tools needed for building and uploading stuff"

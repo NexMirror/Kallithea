@@ -108,15 +108,9 @@ Step 6 -- Install virtualenv
    A python virtual environment will allow for isolation between the Python packages of your system and those used for Kallithea.
    It is strongly recommended to use it to ensure that Kallithea does not change a dependency that other software uses or vice versa.
 
-In a command prompt type::
-
-  pip install virtualenv
-
-Virtualenv will now be inside your Python Scripts path (C:\\Python27\\Scripts or similar).
-
 To create a virtual environment, run::
 
-  virtualenv C:\Kallithea\Env
+  python3 -m venv C:\Kallithea\Env
 
 Step 7 -- Install Kallithea
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

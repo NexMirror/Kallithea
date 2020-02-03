@@ -9,10 +9,10 @@ node {
                               daysToKeepStr: '',
                               numToKeepStr: '']]]);
     if (isUnix()) {
-        createvirtualenv = 'rm -r $JENKINS_HOME/venv/$JOB_NAME || true && virtualenv $JENKINS_HOME/venv/$JOB_NAME'
+        createvirtualenv = 'rm -r $JENKINS_HOME/venv/$JOB_NAME || true && python3 -m venv $JENKINS_HOME/venv/$JOB_NAME'
         activatevirtualenv = '. $JENKINS_HOME/venv/$JOB_NAME/bin/activate'
     } else {
-        createvirtualenv = 'rmdir /s /q %JENKINS_HOME%\\venv\\%JOB_NAME% || true && virtualenv %JENKINS_HOME%\\venv\\%JOB_NAME%'
+        createvirtualenv = 'rmdir /s /q %JENKINS_HOME%\\venv\\%JOB_NAME% || true && python3 -m venv %JENKINS_HOME%\\venv\\%JOB_NAME%'
         activatevirtualenv = 'call %JENKINS_HOME%\\venv\\%JOB_NAME%\\Scripts\\activate.bat'
     }
 

@@ -139,22 +139,10 @@ Create the following folder structure::
 Step 6 -- Install virtualenv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install Virtual Env for Python
-
-Navigate to: http://www.virtualenv.org/en/latest/index.html#installation
-Right click on "virtualenv.py" file and choose "Save link as...".
-Download to C:\\Kallithea (or whatever you want)
-(the file is located at
-https://raw.github.com/pypa/virtualenv/master/virtualenv.py)
-
 Create a virtual Python environment in C:\\Kallithea\\Env (or similar). To
-do so, open a CMD (Python Path should be included in Step3), navigate
-where you downloaded "virtualenv.py", and write::
+do so, open a CMD (Python Path should be included in Step3), and write::
 
-  python2 virtualenv.py C:\Kallithea\Env
-
-(--no-site-packages is now the default behaviour of virtualenv, no need
-to include it)
+  python3 -m venv C:\Kallithea\Env
 
 Step 7 -- Install Kallithea
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

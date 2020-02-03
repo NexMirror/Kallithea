@@ -32,7 +32,7 @@ To get started with Kallithea development::
 
         hg clone https://kallithea-scm.org/repos/kallithea
         cd kallithea
-        virtualenv ../kallithea-venv
+        python3 -m venv ../kallithea-venv
         source ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install --upgrade -e . -r dev_requirements.txt python-ldap python-pam

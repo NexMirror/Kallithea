@@ -30,7 +30,7 @@ environment used for running Kallithea.
 - Packages could also be installed in ``~/.local`` ... but that is probably
   only a good idea if using a dedicated user per application or instance.
 
-- Finally, it can be installed in a virtualenv_. That is a very lightweight
+- Finally, it can be installed in a virtualenv. That is a very lightweight
   "container" where each Kallithea instance can get its own dedicated and
   self-contained virtual environment.
 
@@ -165,7 +165,6 @@ continuous hammering from the internet.
 .. _Python: http://www.python.org/
 .. _Gunicorn: http://gunicorn.org/
 .. _Waitress: http://waitress.readthedocs.org/en/latest/
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _Gearbox: http://turbogears.readthedocs.io/en/latest/turbogears/gearbox.html
 .. _PyPI: https://pypi.python.org/pypi
 .. _Apache httpd: http://httpd.apache.org/

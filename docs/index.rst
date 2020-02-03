@@ -78,7 +78,6 @@ Developer guide
    dev/dbmigrations
 
 
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
 .. _django: http://www.djangoproject.com/
 .. _mercurial: https://www.mercurial-scm.org/

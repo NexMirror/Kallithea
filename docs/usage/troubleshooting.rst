@@ -67,7 +67,6 @@ Troubleshooting
     you have installed the latest Windows patches (especially KB2789397).
 
 
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
 .. _mercurial: https://www.mercurial-scm.org/
 .. _celery: http://celeryproject.org/

@@ -624,7 +624,6 @@ the ``init.d`` directory of the Kallithea source.
 .. __: https://kallithea-scm.org/repos/kallithea/files/tip/init.d/ .
 
 
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
 .. _Python regular expression documentation: https://docs.python.org/2/library/re.html
 .. _Mercurial: https://www.mercurial-scm.org/
