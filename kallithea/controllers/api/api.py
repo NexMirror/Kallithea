@@ -2339,7 +2339,7 @@ class ApiController(JSONRPCController):
                                                  branch_name,
                                                  reverse, max_revisions)]
         except EmptyRepositoryError as e:
-            raise JSONRPCError(e.message)
+            raise JSONRPCError('Repository is empty')
 
     # permission check inside
     def get_changeset(self, repoid, raw_id, with_reviews=Optional(False)):

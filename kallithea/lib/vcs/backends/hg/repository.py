@@ -184,7 +184,7 @@ class MercurialRepository(BaseRepository):
         try:
             mercurial.tags.tag(self._repo, safe_bytes(name), changeset._ctx.node(), safe_bytes(message), local, safe_bytes(user), date)
         except mercurial.error.Abort as e:
-            raise RepositoryError(e.message)
+            raise RepositoryError(e.args[0])
 
         # Reinitialize tags
         self.tags = self._get_tags()
@@ -215,7 +215,7 @@ class MercurialRepository(BaseRepository):
             mercurial.tags.tag(self._repo, safe_bytes(name), mercurial.commands.nullid, safe_bytes(message), local, safe_bytes(user), date)
             self.tags = self._get_tags()
         except mercurial.error.Abort as e:
-            raise RepositoryError(e.message)
+            raise RepositoryError(e.args[0])
 
     @LazyProperty
     def bookmarks(self):

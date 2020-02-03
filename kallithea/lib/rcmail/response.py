@@ -339,10 +339,10 @@ def to_message(mail, separator="; "):
 
     try:
         out = MIMEPart(ctype, **params)
-    except TypeError as exc:  # pragma: no cover
+    except TypeError as e:  # pragma: no cover
         raise EncodingError("Content-Type malformed, not allowed: %r; "
-                            "%r (Python ERROR: %s" %
-                            (ctype, params, exc.message))
+                            "%r (Python ERROR: %s)" %
+                            (ctype, params, e.args[0]))
 
     for k in mail.keys():
         if k in ADDRESS_HEADERS_WHITELIST:
