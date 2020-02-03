@@ -31,7 +31,7 @@ import platform
 import sys
 
 
-VERSION = (0, 5, 1)
+VERSION = (0, 5, 2)
 BACKENDS = {
     'hg': 'Mercurial repository',
     'git': 'Git repository',
