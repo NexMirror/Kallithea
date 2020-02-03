@@ -51,9 +51,6 @@ class MercurialSshHandler(BaseSshHandler):
 
         return None
 
-    def __init__(self, repo_name):
-        self.repo_name = repo_name
-
     def _serve(self):
         # Note: we want a repo with config based on .hg/hgrc and can thus not use self.db_repo.scm_instance._repo.ui
         baseui = make_ui(repo_path=self.db_repo.repo_full_path)

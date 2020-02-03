@@ -321,8 +321,8 @@ class FileNode(Node):
                 encoding = None
 
                 # try with pygments
+                from pygments import lexers
                 try:
-                    from pygments import lexers
                     mt = lexers.get_lexer_for_filename(self.name).mimetypes
                 except lexers.ClassNotFound:
                     mt = None

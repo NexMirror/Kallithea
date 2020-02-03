@@ -282,7 +282,7 @@ def uri_filter(uri):
     :returns: filtered list of strings
     """
     if not uri:
-        return ''
+        return []
 
     proto = ''
 
@@ -449,11 +449,11 @@ def get_hook_environment():
         raise HookEnvironmentError("Environment variable KALLITHEA_EXTRAS not found")
 
     extras = json.loads(kallithea_extras)
-    try:
-        for k in ['username', 'repository', 'scm', 'action', 'ip', 'config']:
+    for k in ['username', 'repository', 'scm', 'action', 'ip', 'config']:
+        try:
             extras[k]
-    except KeyError:
-        raise HookEnvironmentError('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
+        except KeyError:
+            raise HookEnvironmentError('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
 
     return AttributeDict(extras)
 

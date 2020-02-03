@@ -414,6 +414,32 @@ class TestVCSOperations(base.TestController):
         action_parts = [ul.action for ul in UserLog.query().order_by(UserLog.user_log_id)]
         assert action_parts == [u'pull']
 
+        # Test handling of URLs with extra '/' around repo_name
+        stdout, stderr = Command(dest_dir).execute(vt.repo_type, 'pull', clone_url.replace('/' + vt.repo_name, '/./%s/' % vt.repo_name), ignoreReturnCode=True)
+        if issubclass(vt, HttpVcsTest):
+            if vt.repo_type == 'git':
+                # NOTE: when pulling from http://hostname/./vcs_test_git/ , the git client will normalize that and issue an HTTP request to /vcs_test_git/info/refs
+                assert 'Already up to date.' in stdout
+            else:
+                assert vt.repo_type == 'hg'
+                assert "abort: HTTP Error 404: Not Found" in stderr
+        else:
+            assert issubclass(vt, SshVcsTest)
+            if vt.repo_type == 'git':
+                assert "abort: Access to './%s' denied" % vt.repo_name in stderr
+            else:
+                assert "abort: Access to './%s' denied" % vt.repo_name in stdout
+
+        stdout, stderr = Command(dest_dir).execute(vt.repo_type, 'pull', clone_url.replace('/' + vt.repo_name, '/%s/' % vt.repo_name), ignoreReturnCode=True)
+        if vt.repo_type == 'git':
+            assert 'Already up to date.' in stdout
+        else:
+            assert vt.repo_type == 'hg'
+            assert "no changes found" in stdout
+        assert "denied" not in stderr
+        assert "denied" not in stdout
+        assert "404" not in stdout
+
     @parametrize_vcs_test
     def test_push_invalidates_cache(self, webserver, testfork, vt):
         pre_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == testfork[vt.repo_type])]

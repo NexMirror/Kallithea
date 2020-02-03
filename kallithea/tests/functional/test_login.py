@@ -413,7 +413,8 @@ class TestLoginController(base.TestController):
         def mock_send_email(recipients, subject, body='', html_body='', headers=None, author=None):
             collected.append((recipients, subject, body, html_body))
 
-        with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', mock_send_email):
+        with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', mock_send_email), \
+                mock.patch.object(time, 'time', lambda: timestamp):
             response = self.app.post(base.url(controller='login',
                                          action='password_reset'),
                                      {'email': email,

@@ -473,14 +473,15 @@ class PullrequestsController(BaseRepoController):
          c.a_rev) = c.pull_request.other_ref.split(':') # a_rev is ancestor
 
         org_scm_instance = c.cs_repo.scm_instance # property with expensive cache invalidation check!!!
-        try:
-            c.cs_ranges = []
-            for x in c.pull_request.revisions:
+        c.cs_ranges = []
+        for x in c.pull_request.revisions:
+            try:
                 c.cs_ranges.append(org_scm_instance.get_changeset(x))
-        except ChangesetDoesNotExistError:
-            c.cs_ranges = []
-            h.flash(_('Revision %s not found in %s') % (x, c.cs_repo.repo_name),
-                'error')
+            except ChangesetDoesNotExistError:
+                c.cs_ranges = []
+                h.flash(_('Revision %s not found in %s') % (x, c.cs_repo.repo_name),
+                    'error')
+                break
         c.cs_ranges_org = None # not stored and not important and moving target - could be calculated ...
         revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
         c.jsdata = graph_data(org_scm_instance, revs)

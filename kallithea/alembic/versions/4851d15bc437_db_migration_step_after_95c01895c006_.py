@@ -45,6 +45,7 @@ def upgrade():
 
 
 def downgrade():
+    meta = sa.MetaData()
     if any(i.name == 'usk_public_key_idx' for i in meta.tables['user_ssh_keys'].indexes):
         with op.batch_alter_table('user_ssh_keys', schema=None) as batch_op:
             batch_op.drop_index('usk_public_key_idx')

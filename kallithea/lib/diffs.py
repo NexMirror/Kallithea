@@ -558,8 +558,8 @@ def _parse_lines(diff_lines):
     added = deleted = 0
     old_line = old_end = new_line = new_end = None
 
+    chunks = []
     try:
-        chunks = []
         line = diff_lines.next()
 
         while True:

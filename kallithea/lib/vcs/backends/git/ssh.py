@@ -61,7 +61,7 @@ class GitSshHandler(BaseSshHandler):
         return None
 
     def __init__(self, repo_name, verb):
-        self.repo_name = repo_name
+        BaseSshHandler.__init__(self, repo_name)
         self.verb = verb
 
     def _serve(self):
