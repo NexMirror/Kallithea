@@ -148,6 +148,7 @@ class RepoGroupsController(BaseController):
         # permissions for can create group based on parent_id are checked
         # here in the Form
         repo_group_form = RepoGroupForm(repo_groups=c.repo_groups)
+        form_result = None
         try:
             form_result = repo_group_form.to_python(dict(request.POST))
             gr = RepoGroupModel().create(
@@ -171,6 +172,8 @@ class RepoGroupsController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during creation of repository group %s')
                     % request.POST.get('group_name'), category='error')
+            if form_result is None:
+                raise
             parent_group_id = form_result['parent_group_id']
             # TODO: maybe we should get back to the main view, not the admin one
             raise HTTPFound(location=url('repos_groups', parent_group=parent_group_id))
