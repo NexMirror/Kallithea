@@ -362,11 +362,11 @@ class CreatePullRequestIterationAction(object):
             infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
             # TODO: fail?
 
-        try:
-            title, old_v = re.match(r'(.*)\(v(\d+)\)\s*$', title).groups()
-            v = int(old_v) + 1
-        except (AttributeError, ValueError):
-            v = 2
+        v = 2
+        m = re.match(r'(.*)\(v(\d+)\)\s*$', title)
+        if m is not None:
+            title = m.group(1)
+            v = int(m.group(2)) + 1
         self.create_action.title = '%s (v%s)' % (title.strip(), v)
 
         # using a mail-like separator, insert new iteration info in description with latest first
