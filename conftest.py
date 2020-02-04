@@ -36,3 +36,10 @@ def doctest_mock_ugettext(request):
     m = __import__(request.module.__name__, globals(), locals(), [None], 0)
     with mock.patch.object(m, '_', lambda s: s):
         yield
+
+if getattr(pytest, 'register_assert_rewrite', None):
+    # make sure that all asserts under kallithea/tests benefit from advanced
+    # assert reporting with pytest-3.0.0+, including api/api_base.py,
+    # models/common.py etc.
+    # See also: https://docs.pytest.org/en/latest/assert.html#advanced-assertion-introspection
+    pytest.register_assert_rewrite('kallithea.tests')
