@@ -172,7 +172,7 @@ class SummaryController(BaseRepoController):
             c.no_data_msg = _('Statistics are disabled for this repository')
 
         td = date.today() + timedelta(days=1)
-        td_1m = td - timedelta(days=calendar.mdays[td.month])
+        td_1m = td - timedelta(days=calendar.monthrange(td.year, td.month)[1])
         td_1y = td - timedelta(days=365)
 
         ts_min_m = mktime(td_1m.timetuple())
