@@ -23,6 +23,7 @@ import click
 import paste.deploy
 
 import kallithea
+import kallithea.config.middleware
 
 
 # kallithea_cli is usually invoked through the 'kallithea-cli' wrapper script
