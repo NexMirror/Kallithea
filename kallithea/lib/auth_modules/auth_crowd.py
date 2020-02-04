@@ -32,7 +32,7 @@ import urllib2
 
 from kallithea.lib import auth_modules, ext_json
 from kallithea.lib.compat import formatted_json, hybrid_property
-from kallithea.lib.utils2 import ascii_bytes
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 
 
 log = logging.getLogger(__name__)
@@ -83,7 +83,7 @@ class CrowdServer(object):
         _headers = {"Content-type": "application/json",
                     "Accept": "application/json"}
         if self.user and self.passwd:
-            authstring = base64.b64encode("%s:%s" % (self.user, self.passwd))
+            authstring = ascii_str(base64.b64encode(safe_bytes("%s:%s" % (self.user, self.passwd))))
             _headers["Authorization"] = "Basic %s" % authstring
         if headers:
             _headers.update(headers)
