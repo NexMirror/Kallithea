@@ -23,6 +23,7 @@ import mercurial.exchange
 import mercurial.hg
 import mercurial.hgweb
 import mercurial.httppeer
+import mercurial.localrepo
 import mercurial.match
 import mercurial.mdiff
 import mercurial.node
