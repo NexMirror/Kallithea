@@ -34,7 +34,7 @@ def submit(g_recaptcha_response, private_key, remoteip):
         'secret': encode_if_necessary(private_key),
         'remoteip': encode_if_necessary(remoteip),
         'response': encode_if_necessary(g_recaptcha_response),
-    })
+    }).encode('ascii')
 
     req = urllib2.Request(
         url="https://www.google.com/recaptcha/api/siteverify",
