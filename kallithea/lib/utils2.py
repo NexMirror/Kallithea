@@ -602,7 +602,7 @@ def repo_name_slug(value):
 
 def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
     while True:
-        ok = raw_input(prompt)
+        ok = input(prompt)
         if ok in ('y', 'ye', 'yes'):
             return True
         if ok in ('n', 'no', 'nop', 'nope'):
