@@ -343,7 +343,7 @@ class TestGitChangeset(object):
         start = offset
         end = limit and offset + limit or None
         sliced = list(self.repo[start:end])
-        pytest.failUnlessEqual(result, sliced,
+        pytest.assertEqual(result, sliced,
             msg="Comparison failed for limit=%s, offset=%s"
             "(get_changeset returned: %s and sliced: %s"
             % (limit, offset, result, sliced))
