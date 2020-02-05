@@ -9,5 +9,5 @@ def create_module(name, path):
     """
     module = imp.new_module(name)
     module.__file__ = path
-    execfile(path, module.__dict__)
+    exec(compile(open(path, "rb").read(), path, 'exec'), module.__dict__)
     return module
