@@ -172,7 +172,7 @@ class JSONRPCController(TGController):
         default_empty = type(NotImplemented)
 
         # kw arguments required by this method
-        func_kwargs = dict(itertools.izip_longest(reversed(arglist), reversed(defaults),
+        func_kwargs = dict(itertools.zip_longest(reversed(arglist), reversed(defaults),
                                                   fillvalue=default_empty))
 
         # This attribute will need to be first param of a method that uses
