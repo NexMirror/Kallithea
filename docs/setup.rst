@@ -557,7 +557,7 @@ that, you'll need to:
       os.chdir('/srv/kallithea/')
 
       import site
-      site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
+      site.addsitedir("/srv/kallithea/venv/lib/python3.7/site-packages")
 
       ini = '/srv/kallithea/my.ini'
       from logging.config import fileConfig

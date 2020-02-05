@@ -135,10 +135,10 @@ Certificate Checks : optional
 .. _Custom CA Certificates:
 
 Custom CA Certificates : optional
-    Directory used by OpenSSL to find CAs for validating the LDAP server certificate.
-    Python 2.7.10 and later default to using the system certificate store, and
-    this should thus not be necessary when using certificates signed by a CA
-    trusted by the system.
+    Directory used by OpenSSL to find CAs for validating the LDAP server
+    certificate. It defaults to using the system certificate store, and it
+    should thus not be necessary to specify *Custom CA Certificates* when using
+    certificates signed by a CA trusted by the system.
     It can be set to something like `/etc/openldap/cacerts` on older systems or
     if using self-signed certificates.
 

@@ -35,12 +35,12 @@ Git and development packages for the database of your choice.
 For Debian and Ubuntu, the following command will ensure that a reasonable
 set of dependencies is installed::
 
-    sudo apt-get install build-essential git python-pip python-virtualenv libffi-dev python-dev
+    sudo apt-get install build-essential git libffi-dev python3-dev
 
 For Fedora and RHEL-derivatives, the following command will ensure that a
 reasonable set of dependencies is installed::
 
-    sudo yum install gcc git python-pip python-virtualenv libffi-devel python-devel
+    sudo yum install gcc git libffi-devel python3-devel
 
 .. _installation-source:
 
@@ -57,7 +57,7 @@ repository, follow the instructions below::
         . ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install --upgrade -e .
-        python2 setup.py compile_catalog   # for translation of the UI
+        python3 setup.py compile_catalog   # for translation of the UI
 
 You can now proceed to :ref:`setup`.
 

@@ -55,9 +55,9 @@ the translation files (`*.po`).
 
 First update the translation strings::
 
-    python2 setup.py extract_messages
+    python3 setup.py extract_messages
 
-Then regenerate the translation files. This could either be done with `python2
+Then regenerate the translation files. This could either be done with `python3
 setup.py update_catalog` or with `msgmerge` from the `gettext` package. As
 Weblate is also touching these translation files, it is preferred to use the
 same tools (`msgmerge`) and settings as Weblate to minimize the diff::
@@ -73,11 +73,11 @@ Manual creation of a new language translation
 In the prepared development environment, run the following to ensure
 all translation strings are extracted and up-to-date::
 
-    python2 setup.py extract_messages
+    python3 setup.py extract_messages
 
 Create new language by executing following command::
 
-    python2 setup.py init_catalog -l <new_language_code>
+    python3 setup.py init_catalog -l <new_language_code>
 
 This creates a new translation under directory `kallithea/i18n/<new_language_code>`
 based on the translation template file, `kallithea/i18n/kallithea.pot`.
@@ -90,7 +90,7 @@ translation file for errors by executing::
 
 Finally, compile the translations::
 
-    python2 setup.py compile_catalog -l <new_language_code>
+    python3 setup.py compile_catalog -l <new_language_code>
 
 
 Manually updating translations
@@ -98,11 +98,11 @@ Manually updating translations
 
 Extract the latest versions of strings for translation by running::
 
-    python2 setup.py extract_messages
+    python3 setup.py extract_messages
 
 Update the PO file by doing::
 
-    python2 setup.py update_catalog -l <new_language_code>
+    python3 setup.py update_catalog -l <new_language_code>
 
 Edit the newly updated translation file. Repeat all steps after the
 `init_catalog` step from the 'new translation' instructions above.

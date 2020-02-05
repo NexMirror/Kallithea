@@ -12,7 +12,7 @@ Python environment
 ------------------
 
 **Kallithea** is written entirely in Python_ and requires Python version
-2.7 or higher. Python 3.x is currently not supported.
+3.6 or higher.
 
 Given a Python installation, there are different ways of providing the
 environment for running Python applications. Each of them pretty much
@@ -98,7 +98,7 @@ installed.
   installed with all dependencies using ``pip install kallithea``.
 
   With this method, Kallithea is installed in the Python environment as any
-  other package, usually as a ``.../site-packages/Kallithea-X-py2.7.egg/``
+  other package, usually as a ``.../site-packages/Kallithea-X-py3.8.egg/``
   directory with Python files and everything else that is needed.
 
   (``pip install kallithea`` from a source tree will do pretty much the same

@@ -1,5 +1,7 @@
 .. _installation_iis:
 
+.. warning:: This section is outdated and needs updating for Python 3.
+
 =====================================================================
 Installing Kallithea on Microsoft Internet Information Services (IIS)
 =====================================================================
@@ -66,7 +68,7 @@ the necessary components to finalize an installation into IIS. Once this file
 has been generated, it is necessary to run the following command due to the way
 that ISAPI-WSGI is made::
 
-    python2 dispatch.py install
+    python3 dispatch.py install
 
 This accomplishes two things: generating an ISAPI compliant DLL file,
 ``_dispatch.dll``, and installing a script map handler into IIS for the
@@ -119,7 +121,7 @@ ISAPI-WSGI wrapper above uses ``win32traceutil``, which is part of ``pywin32``.
 In order to dump output from WSGI using ``win32traceutil`` it is sufficient to
 type the following in a console window::
 
-    python2 -m win32traceutil
+    python3 -m win32traceutil
 
 and any exceptions occurring in the WSGI layer and below (i.e. in the Kallithea
 application itself) that are uncaught, will be printed here complete with stack

@@ -9,9 +9,6 @@ import setuptools
 from setuptools.command import sdist
 
 
-if sys.version_info < (2, 6) or sys.version_info >= (3,):
-    raise Exception('Kallithea requires python 2.7')
-# But temporarily, at the same time:
 if sys.version_info < (3, 6):
     raise Exception('Kallithea requires Python 3.6 or later')
 
@@ -88,8 +85,9 @@ classifiers = [
     'Intended Audience :: Developers',
     'License :: OSI Approved :: GNU General Public License (GPL)',
     'Operating System :: OS Independent',
-    'Programming Language :: Python',
-    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
     'Topic :: Software Development :: Version Control',
 ]
 

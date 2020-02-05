@@ -125,11 +125,7 @@ class InputStreamChunker(threading.Thread):
             if len(t) > ccm:
                 kr.clear()
                 kr.wait(2)
-                # # this only works on 2.7.x and up
-                # if not kr.wait(10):
-                #     raise Exception("Timed out while waiting for input to be read.")
-                # instead we'll use this
-                if len(t) > ccm + 3:
+                if not kr.wait(10):
                     raise IOError(
                         "Timed out while waiting for input from subprocess.")
             t.append(b)

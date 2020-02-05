@@ -92,8 +92,7 @@ Note that on unix systems, the temporary directory (``/tmp`` or where
 and the test suite creates repositories in the temporary directory. Linux
 systems with /tmp mounted noexec will thus fail.
 
-You can also use ``tox`` to run the tests with all supported Python versions
-(currently only Python 2.7).
+You can also use ``tox`` to run the tests with all supported Python versions.
 
 When running tests, Kallithea generates a `test.ini` based on template values
 in `kallithea/tests/conftest.py` and populates the SQLite database specified
@@ -199,8 +198,7 @@ of Mercurial's (https://www.mercurial-scm.org/wiki/CodingStyle), pep8, and
 consistency with existing code. Run ``scripts/run-all-cleanup`` before
 committing to ensure some basic code formatting consistency.
 
-We currently only support Python 2.7.x and nothing else. For now we don't care
-about Python 3 compatibility.
+We support Python 3.6 and later.
 
 We try to support the most common modern web browsers. IE9 is still supported
 to the extent it is feasible, IE8 is not.

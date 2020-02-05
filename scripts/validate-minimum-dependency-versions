@@ -33,9 +33,6 @@ source "$venv/bin/activate"
 pip install --upgrade pip setuptools
 pip install -e . -r "$min_requirements" python-ldap python-pam 2> >(tee "$log" >&2)
 
-# Strip out the known Python 2.7 deprecation message.
-sed -i '/DEPRECATION: Python 2\.7 /d' "$log"
-
 # Treat any message on stderr as a problem, for the caller to interpret.
 if [ -s "$log" ]; then
     echo

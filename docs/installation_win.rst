@@ -1,5 +1,7 @@
 .. _installation_win:
 
+.. warning:: This section is outdated and needs updating for Python 3.
+
 ====================================================
 Installation on Windows (7/Server 2008 R2 and newer)
 ====================================================
@@ -17,18 +19,16 @@ To install on an older version of Windows, see `<installation_win_old.html>`_
 Step 1 -- Install Python
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install Python 2.7.x. Latest version is recommended. If you need another version, they can run side by side.
+Install Python 3. Latest version is recommended. If you need another version, they can run side by side.
 
-.. warning:: Python 3.x is not supported.
-
-- Download Python 2.7.x from http://www.python.org/download/
+- Download Python 3 from http://www.python.org/download/
 - Choose and click on the version
 - Click on "Windows X86-64 Installer" for x64 or "Windows x86 MSI installer" for Win32.
 - Disable UAC or run the installer with admin privileges. If you chose to disable UAC, do not forget to reboot afterwards.
 
-While writing this guide, the latest version was v2.7.9.
+While writing this guide, the latest version was v3.8.1.
 Remember the specific major and minor versions installed, because they will
-be needed in the next step. In this case, it is "2.7".
+be needed in the next step. In this case, it is "3.8".
 
 Step 2 -- Python BIN
 ^^^^^^^^^^^^^^^^^^^^
@@ -42,7 +42,7 @@ Open a CMD and type::
   SETX PATH "%PATH%;[your-python-path]" /M
 
 Please substitute [your-python-path] with your Python installation
-path. Typically this is ``C:\\Python27``.
+path. Typically this is ``C:\\Python38``.
 
 Step 3 -- Install pywin32 extensions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -52,37 +52,13 @@ http://sourceforge.net/projects/pywin32/files/
 
 - Click on "pywin32" folder
 - Click on the first folder (in this case, Build 219, maybe newer when you try)
-- Choose the file ending with ".amd64-py2.x.exe" (".win32-py2.x.exe"
+- Choose the file ending with ".amd64-py3.x.exe" (".win32-py3.x.exe"
   for Win32) where x is the minor version of Python you installed.
   When writing this guide, the file was:
-  http://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win-amd64-py2.7.exe/download
+  http://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win-amd64-py3.8.exe/download
   (x64)
-  http://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download
+  http://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py3.8.exe/download
   (Win32)
-
-Step 4 -- Install pip
-^^^^^^^^^^^^^^^^^^^^^
-
-pip is a package management system for Python. You will need it to install Kallithea and its dependencies.
-
-If you installed Python 2.7.9+, you already have it (as long as you ran the installer with admin privileges or disabled UAC).
-
-If it was not installed or if you are using Python < 2.7.9:
-
-- Go to https://bootstrap.pypa.io
-- Right-click on get-pip.py and choose Saves as...
-- Run "python2 get-pip.py" in the folder where you downloaded get-pip.py (may require admin access).
-
-.. note::
-
-   See http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows
-   for details and alternative methods.
-
-Note that pip.exe will be placed inside your Python installation's
-Scripts folder, which is likely not on your path. To correct this,
-open a CMD and type::
-
-  SETX PATH "%PATH%;[your-python-path]\Scripts" /M
 
 Step 5 -- Kallithea folder structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -117,9 +93,9 @@ Step 7 -- Install Kallithea
 
 In order to install Kallithea, you need to be able to run "pip install kallithea". It will use pip to install the Kallithea Python package and its dependencies.
 Some Python packages use managed code and need to be compiled.
-This can be done on Linux without any special steps. On Windows, you will need to install Microsoft Visual C++ compiler for Python 2.7.
+This can be done on Linux without any special steps. On Windows, you will need to install Microsoft Visual C++ compiler for Python 3.8.
 
-Download and install "Microsoft Visual C++ Compiler for Python 2.7" from http://aka.ms/vcpython27
+Download and install "Microsoft Visual C++ Compiler for Python 3.8" from http://aka.ms/vcpython27
 
 .. note::
   You can also install the dependencies using already compiled Windows binaries packages. A good source of compiled Python packages is http://www.lfd.uci.edu/~gohlke/pythonlibs/. However, not all of the necessary packages for Kallithea are on this site and some are hard to find, so we will stick with using the compiler.
