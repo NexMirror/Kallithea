@@ -9,7 +9,7 @@ class GetitemTestCaseMixin(_BackendTestMixin):
     @classmethod
     def _get_commits(cls):
         start_date = datetime.datetime(2010, 1, 1, 20)
-        for x in xrange(5):
+        for x in range(5):
             yield {
                 'message': 'Commit %d' % x,
                 'author': 'Joe Doe <joe.doe@example.com>',
@@ -23,7 +23,7 @@ class GetitemTestCaseMixin(_BackendTestMixin):
         assert self.repo[-1] == self.repo.get_changeset()
 
     def test__getitem__returns_correct_items(self):
-        changesets = [self.repo[x] for x in xrange(len(self.repo.revisions))]
+        changesets = [self.repo[x] for x in range(len(self.repo.revisions))]
         assert changesets == list(self.repo.get_changesets())
 
 

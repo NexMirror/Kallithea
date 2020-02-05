@@ -366,7 +366,7 @@ def gen_color(n=10000):
     golden_ratio = 0.618033988749895
     h = 0.22717784590367374
 
-    for _unused in xrange(n):
+    for _unused in range(n):
         h += golden_ratio
         h %= 1
         HSV_tuple = [h, 0.95, 0.95]

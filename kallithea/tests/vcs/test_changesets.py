@@ -45,7 +45,7 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
     @classmethod
     def _get_commits(cls):
         start_date = datetime.datetime(2010, 1, 1, 20)
-        for x in xrange(5):
+        for x in range(5):
             yield {
                 'message': 'Commit %d' % x,
                 'author': 'Joe Doe <joe.doe@example.com>',
@@ -143,7 +143,7 @@ class _ChangesetsTestCaseMixin(_BackendTestMixin):
     @classmethod
     def _get_commits(cls):
         start_date = datetime.datetime(2010, 1, 1, 20)
-        for x in xrange(5):
+        for x in range(5):
             yield {
                 'message': u'Commit %d' % x,
                 'author': u'Joe Doe <joe.doe@example.com>',
@@ -238,7 +238,7 @@ class _ChangesetsTestCaseMixin(_BackendTestMixin):
     def test_get_filenodes_generator(self):
         tip = self.repo.get_changeset()
         filepaths = [node.path for node in tip.get_filenodes_generator()]
-        assert filepaths == ['file_%d.txt' % x for x in xrange(5)]
+        assert filepaths == ['file_%d.txt' % x for x in range(5)]
 
     def test_size(self):
         tip = self.repo.get_changeset()

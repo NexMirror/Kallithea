@@ -43,7 +43,7 @@ class ProgressBar(object):
     def __iter__(self):
         start = self.step
         end = self.steps + 1
-        for x in xrange(start, end):
+        for x in range(start, end):
             self.render(x)
             yield x
 
@@ -359,7 +359,7 @@ def main():
 
     print("Standard progress bar...")
     bar = ProgressBar(30)
-    for x in xrange(1, 31):
+    for x in range(1, 31):
         bar.render(x)
         time.sleep(0.02)
     bar.stream.write('\n')
@@ -410,7 +410,7 @@ def main():
     bar.width = 50
     bar.elements.remove('steps')
     bar.elements += ['transfer', 'time', 'eta', 'speed']
-    for x in xrange(0, bar.steps, 1024):
+    for x in range(0, bar.steps, 1024):
         bar.render(x)
         time.sleep(0.01)
         now = datetime.datetime.now()

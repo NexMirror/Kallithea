@@ -187,7 +187,7 @@ def _add_files(vcs, dest_dir, files_no=3):
         author_str = 'User <%s>' % email
     else:
         author_str = 'User ǝɯɐᴎ <%s>' % email
-    for i in xrange(files_no):
+    for i in range(files_no):
         cmd = """echo "added_line%s" >> %s""" % (i, added_file)
         Command(dest_dir).execute(cmd)
         if vcs == 'hg':

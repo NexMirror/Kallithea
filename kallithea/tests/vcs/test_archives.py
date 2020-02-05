@@ -18,7 +18,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
     @classmethod
     def _get_commits(cls):
         start_date = datetime.datetime(2010, 1, 1, 20)
-        for x in xrange(5):
+        for x in range(5):
             yield {
                 'message': 'Commit %d' % x,
                 'author': 'Joe Doe <joe.doe@example.com>',
@@ -35,7 +35,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
             self.tip.fill_archive(stream=f, kind='zip', prefix='repo')
         out = zipfile.ZipFile(path)
 
-        for x in xrange(5):
+        for x in range(5):
             node_path = '%d/file_%d.txt' % (x, x)
             decompressed = out.read('repo/' + node_path)
             assert decompressed == self.tip.get_node(node_path).content
@@ -49,7 +49,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
         outfile = tarfile.open(path, 'r|gz')
         outfile.extractall(outdir)
 
-        for x in xrange(5):
+        for x in range(5):
             node_path = '%d/file_%d.txt' % (x, x)
             assert open(os.path.join(outdir, 'repo/' + node_path), 'rb').read() == self.tip.get_node(node_path).content
 
@@ -62,7 +62,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
         outfile = tarfile.open(path, 'r|bz2')
         outfile.extractall(outdir)
 
-        for x in xrange(5):
+        for x in range(5):
             node_path = '%d/file_%d.txt' % (x, x)
             assert open(os.path.join(outdir, 'repo/' + node_path), 'rb').read() == self.tip.get_node(node_path).content
 

@@ -300,7 +300,7 @@ class InMemoryChangesetTestMixin(_BackendTestMixin):
     def test_multiple_commits(self):
         N = 3  # number of commits to perform
         last = None
-        for x in xrange(N):
+        for x in range(N):
             fname = 'file%s' % str(x).rjust(5, '0')
             content = 'foobar\n' * x
             node = FileNode(fname, content=content)

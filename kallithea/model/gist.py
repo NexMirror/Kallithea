@@ -50,7 +50,7 @@ def make_gist_access_id():
     rnd = random.SystemRandom() # use cryptographically secure system PRNG
     alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz'
     length = 20
-    return u''.join(rnd.choice(alphabet) for _ in xrange(length))
+    return u''.join(rnd.choice(alphabet) for _ in range(length))
 
 
 class GistModel(object):
