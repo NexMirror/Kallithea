@@ -141,7 +141,7 @@ class ScmModel(object):
             return instance
         elif isinstance(instance, int):
             return cls.get(instance)
-        elif isinstance(instance, basestring):
+        elif isinstance(instance, str):
             if instance.isdigit():
                 return cls.get(int(instance))
             return cls.get_by_repo_name(instance)
@@ -485,7 +485,7 @@ class ScmModel(object):
             f_path = safe_str(f_path)
             # decoding here will force that we have proper encoded values
             # in any other case this will throw exceptions and deny commit
-            if isinstance(content, (basestring,)):
+            if isinstance(content, (str,)):
                 content = safe_str(content)
             else:
                 content = content.read()

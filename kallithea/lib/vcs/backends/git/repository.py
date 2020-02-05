@@ -700,7 +700,7 @@ class GitRepository(BaseRepository):
         """
         if config_file is None:
             config_file = []
-        elif isinstance(config_file, basestring):
+        elif isinstance(config_file, str):
             config_file = [config_file]
 
         def gen_configs():

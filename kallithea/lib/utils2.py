@@ -72,7 +72,7 @@ def aslist(obj, sep=None, strip=True):
     :param sep:
     :param strip:
     """
-    if isinstance(obj, (basestring)):
+    if isinstance(obj, (str)):
         lst = obj.split(sep)
         if strip:
             lst = [v.strip() for v in lst]
@@ -376,7 +376,7 @@ def datetime_to_time(dt):
 
 def time_to_datetime(tm):
     if tm:
-        if isinstance(tm, basestring):
+        if isinstance(tm, str):
             try:
                 tm = float(tm)
             except ValueError:

@@ -126,7 +126,7 @@ class UserGroupModel(object):
                 if k == 'users_group_members':
                     members_list = []
                     if v:
-                        v = [v] if isinstance(v, basestring) else v
+                        v = [v] if isinstance(v, str) else v
                         for u_id in set(v):
                             member = UserGroupMember(user_group.users_group_id, u_id)
                             members_list.append(member)

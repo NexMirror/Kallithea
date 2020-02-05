@@ -132,7 +132,7 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
 
     if getattr(user, 'user_id', None):
         user_obj = User.get(user.user_id)
-    elif isinstance(user, basestring):
+    elif isinstance(user, str):
         user_obj = User.get_by_username(user)
     else:
         raise Exception('You have to provide a user object or a username')
@@ -140,7 +140,7 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
     if getattr(repo, 'repo_id', None):
         repo_obj = Repository.get(repo.repo_id)
         repo_name = repo_obj.repo_name
-    elif isinstance(repo, basestring):
+    elif isinstance(repo, str):
         repo_name = repo.lstrip('/')
         repo_obj = Repository.get_by_repo_name(repo_name)
     else:

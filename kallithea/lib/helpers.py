@@ -166,7 +166,7 @@ def select(name, selected_values, options, id=NotGiven, **attrs):
         for x in option_list:
             if isinstance(x, tuple) and len(x) == 2:
                 value, label = x
-            elif isinstance(x, basestring):
+            elif isinstance(x, str):
                 value = label = x
             else:
                 log.error('invalid select option %r', x)
@@ -176,7 +176,7 @@ def select(name, selected_values, options, id=NotGiven, **attrs):
                 for x in value:
                     if isinstance(x, tuple) and len(x) == 2:
                         group_value, group_label = x
-                    elif isinstance(x, basestring):
+                    elif isinstance(x, str):
                         group_value = group_label = x
                     else:
                         log.error('invalid select option %r', x)

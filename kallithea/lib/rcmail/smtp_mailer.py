@@ -64,7 +64,7 @@ class SmtpMailer(object):
     def send(self, recipients=None, subject='', body='', html='',
              attachment_files=None, headers=None):
         recipients = recipients or []
-        if isinstance(recipients, basestring):
+        if isinstance(recipients, str):
             recipients = [recipients]
         if headers is None:
             headers = {}

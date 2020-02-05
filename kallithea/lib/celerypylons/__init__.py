@@ -39,7 +39,7 @@ def celery_config(config):
         celery_key = config_key.replace('.', '_').upper()
         if celery_key.split('_', 1)[0] not in PREFIXES:
             continue
-        if not isinstance(config_value, basestring):
+        if not isinstance(config_value, str):
             continue
         if celery_key in LIST_PARAMS:
             celery_value = config_value.split()

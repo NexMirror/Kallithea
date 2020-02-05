@@ -25,7 +25,7 @@ class Attachment(object):
 
     @property
     def data(self):
-        if isinstance(self._data, basestring):
+        if isinstance(self._data, str):
             return self._data
         self._data = self._data.read()
         return self._data

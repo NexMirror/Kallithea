@@ -22,7 +22,7 @@ class MercurialChangeset(BaseChangeset):
 
     def __init__(self, repository, revision):
         self.repository = repository
-        assert isinstance(revision, basestring), repr(revision)
+        assert isinstance(revision, str), repr(revision)
         self._ctx = repository._repo[ascii_bytes(revision)]
         self.raw_id = ascii_str(self._ctx.hex())
         self.revision = self._ctx._rev
