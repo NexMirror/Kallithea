@@ -111,7 +111,7 @@ class TestSummaryController(base.TestController):
 
     def test_index_by_repo_having_id_path_in_name_hg(self):
         self.log_user()
-        fixture.create_repo(name=u'repo_1')
+        fixture.create_repo(name='repo_1')
         response = self.app.get(base.url(controller='summary',
                                     action='index',
                                     repo_name='repo_1'))
@@ -119,7 +119,7 @@ class TestSummaryController(base.TestController):
         try:
             response.mustcontain("repo_1")
         finally:
-            RepoModel().delete(Repository.get_by_repo_name(u'repo_1'))
+            RepoModel().delete(Repository.get_by_repo_name('repo_1'))
             Session().commit()
 
     def test_index_by_id_git(self):

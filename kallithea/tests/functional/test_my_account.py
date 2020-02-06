@@ -161,8 +161,8 @@ class TestMyAccountController(base.TestController):
                                     username=base.TEST_USER_ADMIN_LOGIN,
                                     new_password=base.TEST_USER_ADMIN_PASS,
                                     password_confirmation='test122',
-                                    firstname=u'NewName',
-                                    lastname=u'NewLastname',
+                                    firstname='NewName',
+                                    lastname='NewLastname',
                                     email=new_email,
                                     _session_csrf_secret_token=self.session_csrf_secret_token())
                                 )
@@ -178,8 +178,8 @@ class TestMyAccountController(base.TestController):
                                             username=base.TEST_USER_ADMIN_LOGIN,
                                             new_password=base.TEST_USER_ADMIN_PASS,
                                             password_confirmation='test122',
-                                            firstname=u'NewName',
-                                            lastname=u'NewLastname',
+                                            firstname='NewName',
+                                            lastname='NewLastname',
                                             email=new_email,
                                             _session_csrf_secret_token=self.session_csrf_secret_token()))
 
@@ -252,9 +252,9 @@ class TestMyAccountController(base.TestController):
         response.mustcontain(no=[api_key])
 
     def test_my_account_add_ssh_key(self):
-        description = u'something'
-        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
-        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+        description = 'something'
+        public_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = 'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
 
         self.log_user(base.TEST_USER_REGULAR2_LOGIN, base.TEST_USER_REGULAR2_PASS)
         response = self.app.post(base.url('my_account_ssh_keys'),
@@ -273,9 +273,9 @@ class TestMyAccountController(base.TestController):
         Session().commit()
 
     def test_my_account_remove_ssh_key(self):
-        description = u''
-        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
-        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+        description = ''
+        public_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = 'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
 
         self.log_user(base.TEST_USER_REGULAR2_LOGIN, base.TEST_USER_REGULAR2_PASS)
         response = self.app.post(base.url('my_account_ssh_keys'),
@@ -286,7 +286,7 @@ class TestMyAccountController(base.TestController):
         response.follow()
         user_id = response.session['authuser']['user_id']
         ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
-        assert ssh_key.description == u'me@localhost'
+        assert ssh_key.description == 'me@localhost'
 
         response = self.app.post(base.url('my_account_ssh_keys_delete'),
                                  {'del_public_key_fingerprint': ssh_key.fingerprint,

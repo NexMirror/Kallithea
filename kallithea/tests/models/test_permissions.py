@@ -24,21 +24,21 @@ class TestPermissions(base.TestController):
 
     def setup_method(self, method):
         self.u1 = UserModel().create_or_update(
-            username=u'u1', password=u'qweqwe',
-            email=u'u1@example.com', firstname=u'u1', lastname=u'u1'
+            username='u1', password='qweqwe',
+            email='u1@example.com', firstname='u1', lastname='u1'
         )
         self.u2 = UserModel().create_or_update(
-            username=u'u2', password=u'qweqwe',
-            email=u'u2@example.com', firstname=u'u2', lastname=u'u2'
+            username='u2', password='qweqwe',
+            email='u2@example.com', firstname='u2', lastname='u2'
         )
         self.u3 = UserModel().create_or_update(
-            username=u'u3', password=u'qweqwe',
-            email=u'u3@example.com', firstname=u'u3', lastname=u'u3'
+            username='u3', password='qweqwe',
+            email='u3@example.com', firstname='u3', lastname='u3'
         )
         self.anon = User.get_default_user()
         self.a1 = UserModel().create_or_update(
-            username=u'a1', password=u'qweqwe',
-            email=u'a1@example.com', firstname=u'a1', lastname=u'a1', admin=True
+            username='a1', password='qweqwe',
+            email='a1@example.com', firstname='a1', lastname='a1', admin=True
         )
         Session().commit()
 
@@ -100,11 +100,11 @@ class TestPermissions(base.TestController):
         assert u1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
 
     def test_default_group_perms(self):
-        self.g1 = fixture.create_repo_group(u'test1', skip_if_exists=True)
-        self.g2 = fixture.create_repo_group(u'test2', skip_if_exists=True)
+        self.g1 = fixture.create_repo_group('test1', skip_if_exists=True)
+        self.g2 = fixture.create_repo_group('test2', skip_if_exists=True)
         u1_auth = AuthUser(user_id=self.u1.user_id)
         perms = {
-            'repositories_groups': {u'test1': 'group.read', u'test2': 'group.read'},
+            'repositories_groups': {'test1': 'group.read', 'test2': 'group.read'},
             'global': set(Permission.DEFAULT_USER_PERMISSIONS),
             'repositories': {base.HG_REPO: 'repository.read'}
         }
@@ -113,11 +113,11 @@ class TestPermissions(base.TestController):
         assert u1_auth.permissions['global'] == perms['global']
 
     def test_default_admin_group_perms(self):
-        self.g1 = fixture.create_repo_group(u'test1', skip_if_exists=True)
-        self.g2 = fixture.create_repo_group(u'test2', skip_if_exists=True)
+        self.g1 = fixture.create_repo_group('test1', skip_if_exists=True)
+        self.g2 = fixture.create_repo_group('test2', skip_if_exists=True)
         a1_auth = AuthUser(user_id=self.a1.user_id)
         perms = {
-            'repositories_groups': {u'test1': 'group.admin', u'test2': 'group.admin'},
+            'repositories_groups': {'test1': 'group.admin', 'test2': 'group.admin'},
             'global': set(['hg.admin', 'hg.create.write_on_repogroup.true']),
             'repositories': {base.HG_REPO: 'repository.admin'}
         }
@@ -127,7 +127,7 @@ class TestPermissions(base.TestController):
 
     def test_propagated_permission_from_users_group_by_explicit_perms_exist(self):
         # make group
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
 
         # set user permission none
@@ -147,7 +147,7 @@ class TestPermissions(base.TestController):
 
     def test_propagated_permission_from_users_group(self):
         # make group
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         UserGroupModel().add_user_to_group(self.ug1, self.u3)
 
         # grant perm for group this should override default permission from user
@@ -168,7 +168,7 @@ class TestPermissions(base.TestController):
 
     def test_propagated_permission_from_users_group_lower_weight(self):
         # make group
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         # add user to group
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
 
@@ -198,14 +198,14 @@ class TestPermissions(base.TestController):
         assert u1_auth.permissions['repositories_groups'] == perms['repositories_groups']
 
     def test_repo_in_group_permissions(self):
-        self.g1 = fixture.create_repo_group(u'group1', skip_if_exists=True)
-        self.g2 = fixture.create_repo_group(u'group2', skip_if_exists=True)
+        self.g1 = fixture.create_repo_group('group1', skip_if_exists=True)
+        self.g2 = fixture.create_repo_group('group2', skip_if_exists=True)
         # both perms should be read !
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.read', u'group2': u'group.read'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.read', 'group2': 'group.read'}
 
         a1_auth = AuthUser(user_id=self.anon.user_id)
-        assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.read', u'group2': u'group.read'}
+        assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.read', 'group2': 'group.read'}
 
         # Change perms to none for both groups
         RepoGroupModel().grant_user_permission(repo_group=self.g1,
@@ -216,10 +216,10 @@ class TestPermissions(base.TestController):
                                                perm='group.none')
 
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.none', 'group2': 'group.none'}
 
         a1_auth = AuthUser(user_id=self.anon.user_id)
-        assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
+        assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.none', 'group2': 'group.none'}
 
         # add repo to group
         name = RepoGroup.url_sep().join([self.g1.group_name, 'test_perm'])
@@ -229,10 +229,10 @@ class TestPermissions(base.TestController):
                                              cur_user=self.u1,)
 
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.none', 'group2': 'group.none'}
 
         a1_auth = AuthUser(user_id=self.anon.user_id)
-        assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
+        assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.none', 'group2': 'group.none'}
 
         # grant permission for u2 !
         RepoGroupModel().grant_user_permission(repo_group=self.g1, user=self.u2,
@@ -243,27 +243,27 @@ class TestPermissions(base.TestController):
         assert self.u1 != self.u2
         # u1 and anon should have not change perms while u2 should !
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.none', 'group2': 'group.none'}
 
         u2_auth = AuthUser(user_id=self.u2.user_id)
-        assert u2_auth.permissions['repositories_groups'] == {u'group1': u'group.read', u'group2': u'group.read'}
+        assert u2_auth.permissions['repositories_groups'] == {'group1': 'group.read', 'group2': 'group.read'}
 
         a1_auth = AuthUser(user_id=self.anon.user_id)
-        assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
+        assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.none', 'group2': 'group.none'}
 
     def test_repo_group_user_as_user_group_member(self):
         # create Group1
-        self.g1 = fixture.create_repo_group(u'group1', skip_if_exists=True)
+        self.g1 = fixture.create_repo_group('group1', skip_if_exists=True)
         a1_auth = AuthUser(user_id=self.anon.user_id)
 
-        assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.read'}
+        assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.read'}
 
         # set default permission to none
         RepoGroupModel().grant_user_permission(repo_group=self.g1,
                                                user=self.anon,
                                                perm='group.none')
         # make group
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         # add user to group
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
         Session().commit()
@@ -275,10 +275,10 @@ class TestPermissions(base.TestController):
 
         # check his permissions
         a1_auth = AuthUser(user_id=self.anon.user_id)
-        assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.none'}
+        assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.none'}
 
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.none'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.none'}
 
         # grant ug1 read permissions for
         RepoGroupModel().grant_user_group_permission(repo_group=self.g1,
@@ -294,10 +294,10 @@ class TestPermissions(base.TestController):
 
         a1_auth = AuthUser(user_id=self.anon.user_id)
 
-        assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.none'}
+        assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.none'}
 
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.read'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.read'}
 
     def test_inherit_nice_permissions_from_default_user(self):
         user_model = UserModel()
@@ -388,7 +388,7 @@ class TestPermissions(base.TestController):
     def test_inactive_user_group_does_not_affect_global_permissions(self):
         # Add user to inactive user group, set specific permissions on user
         # group and and verify it really is inactive.
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -420,7 +420,7 @@ class TestPermissions(base.TestController):
     def test_inactive_user_group_does_not_affect_global_permissions_inverse(self):
         # Add user to inactive user group, set specific permissions on user
         # group and and verify it really is inactive.
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
@@ -450,14 +450,14 @@ class TestPermissions(base.TestController):
                               'hg.create.write_on_repogroup.true'])
 
     def test_inactive_user_group_does_not_affect_repo_permissions(self):
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
 
         # note: make u2 repo owner rather than u1, because the owner always has
         # admin permissions
-        self.test_repo = fixture.create_repo(name=u'myownrepo',
+        self.test_repo = fixture.create_repo(name='myownrepo',
                                              repo_type='hg',
                                              cur_user=self.u2)
 
@@ -474,14 +474,14 @@ class TestPermissions(base.TestController):
         assert u1_auth.permissions['repositories']['myownrepo'] == 'repository.write'
 
     def test_inactive_user_group_does_not_affect_repo_permissions_inverse(self):
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
 
         # note: make u2 repo owner rather than u1, because the owner always has
         # admin permissions
-        self.test_repo = fixture.create_repo(name=u'myownrepo',
+        self.test_repo = fixture.create_repo(name='myownrepo',
                                              repo_type='hg',
                                              cur_user=self.u2)
 
@@ -498,12 +498,12 @@ class TestPermissions(base.TestController):
         assert u1_auth.permissions['repositories']['myownrepo'] == 'repository.admin'
 
     def test_inactive_user_group_does_not_affect_repo_group_permissions(self):
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
 
-        self.g1 = fixture.create_repo_group(u'group1', skip_if_exists=True)
+        self.g1 = fixture.create_repo_group('group1', skip_if_exists=True)
 
         # enable admin access for user group on repo group
         RepoGroupModel().grant_user_group_permission(self.g1,
@@ -515,15 +515,15 @@ class TestPermissions(base.TestController):
                                                perm='group.write')
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.write'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.write'}
 
     def test_inactive_user_group_does_not_affect_repo_group_permissions_inverse(self):
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
 
-        self.g1 = fixture.create_repo_group(u'group1', skip_if_exists=True)
+        self.g1 = fixture.create_repo_group('group1', skip_if_exists=True)
 
         # enable only write access for user group on repo group
         RepoGroupModel().grant_user_group_permission(self.g1,
@@ -535,15 +535,15 @@ class TestPermissions(base.TestController):
                                                perm='group.admin')
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.admin'}
+        assert u1_auth.permissions['repositories_groups'] == {'group1': 'group.admin'}
 
     def test_inactive_user_group_does_not_affect_user_group_permissions(self):
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
 
-        self.ug2 = fixture.create_user_group(u'G2')
+        self.ug2 = fixture.create_user_group('G2')
 
         # enable admin access for user group on user group
         UserGroupModel().grant_user_group_permission(self.ug2,
@@ -555,16 +555,16 @@ class TestPermissions(base.TestController):
                                                perm='usergroup.write')
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['user_groups'][u'G1'] == u'usergroup.read'
-        assert u1_auth.permissions['user_groups'][u'G2'] == u'usergroup.write'
+        assert u1_auth.permissions['user_groups']['G1'] == 'usergroup.read'
+        assert u1_auth.permissions['user_groups']['G2'] == 'usergroup.write'
 
     def test_inactive_user_group_does_not_affect_user_group_permissions_inverse(self):
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         user_group_model = UserGroupModel()
         user_group_model.add_user_to_group(self.ug1, self.u1)
         user_group_model.update(self.ug1, {'users_group_active': False})
 
-        self.ug2 = fixture.create_user_group(u'G2')
+        self.ug2 = fixture.create_user_group('G2')
 
         # enable only write access for user group on user group
         UserGroupModel().grant_user_group_permission(self.ug2,
@@ -576,12 +576,12 @@ class TestPermissions(base.TestController):
                                                perm='usergroup.admin')
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['user_groups'][u'G1'] == u'usergroup.read'
-        assert u1_auth.permissions['user_groups'][u'G2'] == u'usergroup.admin'
+        assert u1_auth.permissions['user_groups']['G1'] == 'usergroup.read'
+        assert u1_auth.permissions['user_groups']['G2'] == 'usergroup.admin'
 
     def test_owner_permissions_doesnot_get_overwritten_by_group(self):
         # create repo as USER,
-        self.test_repo = fixture.create_repo(name=u'myownrepo',
+        self.test_repo = fixture.create_repo(name='myownrepo',
                                              repo_type='hg',
                                              cur_user=self.u1)
 
@@ -589,7 +589,7 @@ class TestPermissions(base.TestController):
         u1_auth = AuthUser(user_id=self.u1.user_id)
         assert u1_auth.permissions['repositories']['myownrepo'] == 'repository.admin'
         # set his permission as user group, he should still be admin
-        self.ug1 = fixture.create_user_group(u'G1')
+        self.ug1 = fixture.create_user_group('G1')
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
         RepoModel().grant_user_group_permission(self.test_repo,
                                                  group_name=self.ug1,
@@ -601,7 +601,7 @@ class TestPermissions(base.TestController):
 
     def test_owner_permissions_doesnot_get_overwritten_by_others(self):
         # create repo as USER,
-        self.test_repo = fixture.create_repo(name=u'myownrepo',
+        self.test_repo = fixture.create_repo(name='myownrepo',
                                              repo_type='hg',
                                              cur_user=self.u1)
 

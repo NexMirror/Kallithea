@@ -27,7 +27,7 @@ class TestMercurialRepository(object):
 
     def test_unicode_path_repo(self):
         with pytest.raises(VCSError):
-            MercurialRepository(u'iShouldFail')
+            MercurialRepository('iShouldFail')
 
     def test_repo_clone(self):
         self.__check_for_existing_repo()

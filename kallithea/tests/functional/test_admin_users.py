@@ -34,7 +34,7 @@ fixture = Fixture()
 @pytest.fixture
 def user_and_repo_group_fail():
     username = 'repogrouperr'
-    groupname = u'repogroup_fail'
+    groupname = 'repogroup_fail'
     user = fixture.create_user(name=username)
     repo_group = fixture.create_repo_group(name=groupname, cur_user=username)
     yield user, repo_group
@@ -62,8 +62,8 @@ class TestAdminUsersController(base.TestController):
         username = 'newtestuser'
         password = 'test12'
         password_confirmation = password
-        name = u'name'
-        lastname = u'lastname'
+        name = 'name'
+        lastname = 'lastname'
         email = 'mail@example.com'
 
         response = self.app.post(base.url('new_user'),
@@ -98,8 +98,8 @@ class TestAdminUsersController(base.TestController):
         self.log_user()
         username = 'new_user'
         password = ''
-        name = u'name'
-        lastname = u'lastname'
+        name = 'name'
+        lastname = 'lastname'
         email = 'errmail.example.com'
 
         response = self.app.post(base.url('new_user'),
@@ -194,7 +194,7 @@ class TestAdminUsersController(base.TestController):
     def test_delete_repo_err(self):
         self.log_user()
         username = 'repoerr'
-        reponame = u'repoerr_fail'
+        reponame = 'repoerr_fail'
 
         fixture.create_user(name=username)
         fixture.create_repo(name=reponame, cur_user=username)
@@ -245,7 +245,7 @@ class TestAdminUsersController(base.TestController):
     def test_delete_user_group_err(self):
         self.log_user()
         username = 'usergrouperr'
-        groupname = u'usergroup_fail'
+        groupname = 'usergroup_fail'
 
         fixture.create_user(name=username)
         ug = fixture.create_user_group(name=groupname, cur_user=username)
@@ -280,8 +280,8 @@ class TestAdminUsersController(base.TestController):
         perm_create = Permission.get_by_key('hg.create.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname=u'a',
-                                            lastname=u'b')
+                                            email='dummy', firstname='a',
+                                            lastname='b')
         Session().commit()
         uid = user.user_id
 
@@ -310,8 +310,8 @@ class TestAdminUsersController(base.TestController):
         perm_create = Permission.get_by_key('hg.create.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname=u'a',
-                                            lastname=u'b')
+                                            email='dummy', firstname='a',
+                                            lastname='b')
         Session().commit()
         uid = user.user_id
 
@@ -339,8 +339,8 @@ class TestAdminUsersController(base.TestController):
         perm_fork = Permission.get_by_key('hg.fork.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname=u'a',
-                                            lastname=u'b')
+                                            email='dummy', firstname='a',
+                                            lastname='b')
         Session().commit()
         uid = user.user_id
 
@@ -369,8 +369,8 @@ class TestAdminUsersController(base.TestController):
         perm_fork = Permission.get_by_key('hg.fork.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname=u'a',
-                                            lastname=u'b')
+                                            email='dummy', firstname='a',
+                                            lastname='b')
         Session().commit()
         uid = user.user_id
 
@@ -515,9 +515,9 @@ class TestAdminUsersController(base.TestController):
         response.mustcontain(no=[api_key])
 
     def test_add_ssh_key(self):
-        description = u'something'
-        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
-        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+        description = 'something'
+        public_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = 'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
 
         self.log_user()
         user = User.get_by_username(base.TEST_USER_REGULAR_LOGIN)
@@ -538,9 +538,9 @@ class TestAdminUsersController(base.TestController):
         Session().commit()
 
     def test_remove_ssh_key(self):
-        description = u''
-        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
-        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+        description = ''
+        public_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = 'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
 
         self.log_user()
         user = User.get_by_username(base.TEST_USER_REGULAR_LOGIN)
@@ -553,7 +553,7 @@ class TestAdminUsersController(base.TestController):
         self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
         response.follow()
         ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
-        assert ssh_key.description == u'me@localhost'
+        assert ssh_key.description == 'me@localhost'
 
         response = self.app.post(base.url('edit_user_ssh_keys_delete', id=user_id),
                                  {'del_public_key_fingerprint': ssh_key.fingerprint,

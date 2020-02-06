@@ -8,7 +8,7 @@ from kallithea.tests.vcs.base import _BackendTestMixin
 
 class FileNodeUnicodePathTestsMixin(_BackendTestMixin):
 
-    fname = u'ąśðąęłąć.txt'
+    fname = 'ąśðąęłąć.txt'
 
     @classmethod
     def _get_commits(cls):

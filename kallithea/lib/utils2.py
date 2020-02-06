@@ -239,12 +239,12 @@ def age(prevdate, show_short_version=False, now=None):
 
     # Format the result
     fmt_funcs = {
-        'year': lambda d: ungettext(u'%d year', '%d years', d) % d,
-        'month': lambda d: ungettext(u'%d month', '%d months', d) % d,
-        'day': lambda d: ungettext(u'%d day', '%d days', d) % d,
-        'hour': lambda d: ungettext(u'%d hour', '%d hours', d) % d,
-        'minute': lambda d: ungettext(u'%d minute', '%d minutes', d) % d,
-        'second': lambda d: ungettext(u'%d second', '%d seconds', d) % d,
+        'year': lambda d: ungettext('%d year', '%d years', d) % d,
+        'month': lambda d: ungettext('%d month', '%d months', d) % d,
+        'day': lambda d: ungettext('%d day', '%d days', d) % d,
+        'hour': lambda d: ungettext('%d hour', '%d hours', d) % d,
+        'minute': lambda d: ungettext('%d minute', '%d minutes', d) % d,
+        'second': lambda d: ungettext('%d second', '%d seconds', d) % d,
     }
 
     for i, part in enumerate(order):

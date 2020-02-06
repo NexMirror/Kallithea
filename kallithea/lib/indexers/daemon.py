@@ -181,7 +181,7 @@ class WhooshIndexingDaemon(object):
             bytes_content = node.content
             if b'\0' in bytes_content:
                 log.warning('    >> %s - no text content', path)
-                u_content = u''
+                u_content = ''
             else:
                 log.debug('    >> %s', path)
                 u_content = safe_str(bytes_content)
@@ -190,7 +190,7 @@ class WhooshIndexingDaemon(object):
         else:
             log.debug('    >> %s - not indexable', path)
             # just index file name without it's content
-            u_content = u''
+            u_content = ''
             indexed += 1
 
         writer.add_document(
@@ -241,10 +241,10 @@ class WhooshIndexingDaemon(object):
                 author=cs.author,
                 message=cs.message,
                 last=cs.last,
-                added=u' '.join(node.path for node in cs.added).lower(),
-                removed=u' '.join(node.path for node in cs.removed).lower(),
-                changed=u' '.join(node.path for node in cs.changed).lower(),
-                parents=u' '.join(cs.raw_id for cs in cs.parents),
+                added=' '.join(node.path for node in cs.added).lower(),
+                removed=' '.join(node.path for node in cs.removed).lower(),
+                changed=' '.join(node.path for node in cs.changed).lower(),
+                parents=' '.join(cs.raw_id for cs in cs.parents),
             )
 
         return indexed
@@ -287,7 +287,7 @@ class WhooshIndexingDaemon(object):
                         continue
 
                     qp = QueryParser('repository', schema=CHGSETS_SCHEMA)
-                    q = qp.parse(u"last:t AND %s" % repo_name)
+                    q = qp.parse("last:t AND %s" % repo_name)
 
                     results = searcher.search(q)
 
@@ -306,7 +306,7 @@ class WhooshIndexingDaemon(object):
                         # delete the docs in the index for the previous
                         # last changeset(s)
                         for hit in results:
-                            q = qp.parse(u"last:t AND %s AND raw_id:%s" %
+                            q = qp.parse("last:t AND %s AND raw_id:%s" %
                                             (repo_name, hit['raw_id']))
                             writer.delete_by_query(q)
 
@@ -326,7 +326,7 @@ class WhooshIndexingDaemon(object):
                     log.debug('>> NOTHING TO COMMIT TO CHANGESET INDEX<<')
 
     def update_file_index(self):
-        log.debug(u'STARTING INCREMENTAL INDEXING UPDATE FOR EXTENSIONS %s '
+        log.debug('STARTING INCREMENTAL INDEXING UPDATE FOR EXTENSIONS %s '
                   'AND REPOS %s', INDEX_EXTENSIONS, ' and '.join(self.repo_paths))
 
         idx = open_dir(self.index_location, indexname=self.indexname)

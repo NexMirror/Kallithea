@@ -145,7 +145,7 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
         repo_obj = Repository.get_by_repo_name(repo_name)
     else:
         repo_obj = None
-        repo_name = u''
+        repo_name = ''
 
     user_log = UserLog()
     user_log.user_id = user_obj.user_id
@@ -428,7 +428,7 @@ def map_groups(path):
     rgm = RepoGroupModel()
     owner = User.get_first_admin()
     for lvl, group_name in enumerate(groups):
-        group_name = u'/'.join(groups[:lvl] + [group_name])
+        group_name = '/'.join(groups[:lvl] + [group_name])
         group = RepoGroup.get_by_group_name(group_name)
         desc = '%s group' % group_name
 

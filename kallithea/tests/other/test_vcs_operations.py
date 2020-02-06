@@ -65,8 +65,8 @@ class HttpVcsTest(object):
 
 class SshVcsTest(object):
     public_keys = {
-        base.TEST_USER_REGULAR_LOGIN: u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== kallithea@localhost',
-        base.TEST_USER_ADMIN_LOGIN: u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUq== kallithea@localhost',
+        base.TEST_USER_REGULAR_LOGIN: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== kallithea@localhost',
+        base.TEST_USER_ADMIN_LOGIN: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUq== kallithea@localhost',
     }
 
     @classmethod
@@ -76,7 +76,7 @@ class SshVcsTest(object):
             ssh_key = user.ssh_keys[0]
         else:
             sshkeymodel = SshKeyModel()
-            ssh_key = sshkeymodel.create(user, u'test key', cls.public_keys[user.username])
+            ssh_key = sshkeymodel.create(user, 'test key', cls.public_keys[user.username])
             Session().commit()
 
         return cls._ssh_param(repo_name, user, ssh_key, client_ip)
@@ -263,9 +263,9 @@ class TestVCSOperations(base.TestController):
     @pytest.fixture(scope="module")
     def testfork(self):
         # create fork so the repo stays untouched
-        git_fork_name = u'%s_fork%s' % (base.GIT_REPO, next(_RandomNameSequence()))
+        git_fork_name = '%s_fork%s' % (base.GIT_REPO, next(_RandomNameSequence()))
         fixture.create_fork(base.GIT_REPO, git_fork_name)
-        hg_fork_name = u'%s_fork%s' % (base.HG_REPO, next(_RandomNameSequence()))
+        hg_fork_name = '%s_fork%s' % (base.HG_REPO, next(_RandomNameSequence()))
         fixture.create_fork(base.HG_REPO, hg_fork_name)
         return {'git': git_fork_name, 'hg': hg_fork_name}
 
@@ -319,7 +319,7 @@ class TestVCSOperations(base.TestController):
         Session().commit()
 
         # Create an empty server repo using the API
-        repo_name = u'new_%s_%s' % (vt.repo_type, next(_RandomNameSequence()))
+        repo_name = 'new_%s_%s' % (vt.repo_type, next(_RandomNameSequence()))
         usr = User.get_by_username(base.TEST_USER_ADMIN_LOGIN)
         params = {
             "id": 7,
@@ -337,7 +337,7 @@ class TestVCSOperations(base.TestController):
         result = json.loads(response.read())
         # Expect something like:
         # {u'result': {u'msg': u'Created new repository `new_XXX`', u'task': None, u'success': True}, u'id': 7, u'error': None}
-        assert result[u'result'][u'success']
+        assert result['result']['success']
 
         # Create local clone of the empty server repo
         local_clone_dir = _get_tmp_dir()
@@ -362,15 +362,15 @@ class TestVCSOperations(base.TestController):
         # <UserLog('id:new_git_XXX:push:aed9d4c1732a1927da3be42c47eb9afdc200d427,d38b083a07af10a9f44193486959a96a23db78da,4841ff9a2b385bec995f4679ef649adb3f437622')>
         action_parts = [ul.action.split(':', 1) for ul in UserLog.query().order_by(UserLog.user_log_id)]
         assert [(t[0], (t[1].count(',') + 1) if len(t) == 2 else 0) for t in action_parts] == ([
-            (u'started_following_repo', 0),
-            (u'user_created_repo', 0),
-            (u'pull', 0),
-            (u'push', 3)]
+            ('started_following_repo', 0),
+            ('user_created_repo', 0),
+            ('pull', 0),
+            ('push', 3)]
             if vt.repo_type == 'git' else [
-            (u'started_following_repo', 0),
-            (u'user_created_repo', 0),
+            ('started_following_repo', 0),
+            ('user_created_repo', 0),
             # (u'pull', 0), # Mercurial outgoing hook is not called for empty clones
-            (u'push', 3)])
+            ('push', 3)])
 
     @parametrize_vcs_test
     def test_push_new_file(self, webserver, testfork, vt):
@@ -393,7 +393,7 @@ class TestVCSOperations(base.TestController):
 
         action_parts = [ul.action.split(':', 1) for ul in UserLog.query().order_by(UserLog.user_log_id)]
         assert [(t[0], (t[1].count(',') + 1) if len(t) == 2 else 0) for t in action_parts] == \
-            [(u'pull', 0), (u'push', 3)]
+            [('pull', 0), ('push', 3)]
 
     @parametrize_vcs_test
     def test_pull(self, webserver, testfork, vt):
@@ -412,7 +412,7 @@ class TestVCSOperations(base.TestController):
             assert 'new changesets' in stdout
 
         action_parts = [ul.action for ul in UserLog.query().order_by(UserLog.user_log_id)]
-        assert action_parts == [u'pull']
+        assert action_parts == ['pull']
 
         # Test handling of URLs with extra '/' around repo_name
         stdout, stderr = Command(dest_dir).execute(vt.repo_type, 'pull', clone_url.replace('/' + vt.repo_name, '/./%s/' % vt.repo_name), ignoreReturnCode=True)
@@ -502,7 +502,7 @@ class TestVCSOperations(base.TestController):
 
         action_parts = [ul.action.split(':', 1) for ul in UserLog.query().order_by(UserLog.user_log_id)]
         assert [(t[0], (t[1].count(',') + 1) if len(t) == 2 else 0) for t in action_parts] == \
-            [(u'pull', 0)]
+            [('pull', 0)]
 
     @parametrize_vcs_test
     def test_push_back_to_wrong_url(self, webserver, vt):

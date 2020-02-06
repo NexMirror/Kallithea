@@ -35,7 +35,7 @@ def test_list_valued_setting_update():
     setting = Setting.create_or_update(name, 'spam', type='list')
     Session().flush() # must flush so we can delete it below
     try:
-        assert setting.app_settings_value == [u'spam']
+        assert setting.app_settings_value == ['spam']
         # Assign back setting value.
         setting.app_settings_value = setting.app_settings_value
         # Quirk: value is stringified on write and listified on read.

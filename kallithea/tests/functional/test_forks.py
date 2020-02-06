@@ -23,9 +23,9 @@ class _BaseTestCase(base.TestController):
     REPO_FORK = None
 
     def setup_method(self, method):
-        self.username = u'forkuser'
-        self.password = u'qweqwe'
-        u1 = fixture.create_user(self.username, password=self.password, email=u'fork_king@example.com')
+        self.username = 'forkuser'
+        self.password = 'qweqwe'
+        u1 = fixture.create_user(self.username, password=self.password, email='fork_king@example.com')
         self.u1_id = u1.user_id
         Session().commit()
 
@@ -69,7 +69,7 @@ class _BaseTestCase(base.TestController):
         org_repo = Repository.get_by_repo_name(repo_name)
         creation_args = {
             'repo_name': fork_name,
-            'repo_group': u'-1',
+            'repo_group': '-1',
             'fork_parent_id': org_repo.repo_id,
             'repo_type': self.REPO_TYPE,
             'description': description,
@@ -93,7 +93,7 @@ class _BaseTestCase(base.TestController):
 
     def test_fork_create_into_group(self):
         self.log_user()
-        group = fixture.create_repo_group(u'vc')
+        group = fixture.create_repo_group('vc')
         group_id = group.group_id
         fork_name = self.REPO_FORK
         fork_name_full = 'vc/%s' % fork_name
@@ -143,10 +143,10 @@ class _BaseTestCase(base.TestController):
         # create a fork
         repo_name = self.REPO
         org_repo = Repository.get_by_repo_name(repo_name)
-        fork_name = self.REPO_FORK + u'-rødgrød'
+        fork_name = self.REPO_FORK + '-rødgrød'
         creation_args = {
             'repo_name': fork_name,
-            'repo_group': u'-1',
+            'repo_group': '-1',
             'fork_parent_id': org_repo.repo_id,
             'repo_type': self.REPO_TYPE,
             'description': 'unicode repo 1',
@@ -164,10 +164,10 @@ class _BaseTestCase(base.TestController):
         assert fork_repo
 
         # fork the fork
-        fork_name_2 = self.REPO_FORK + u'-blåbærgrød'
+        fork_name_2 = self.REPO_FORK + '-blåbærgrød'
         creation_args = {
             'repo_name': fork_name_2,
-            'repo_group': u'-1',
+            'repo_group': '-1',
             'fork_parent_id': fork_repo.repo_id,
             'repo_type': self.REPO_TYPE,
             'description': 'unicode repo 2',
@@ -196,7 +196,7 @@ class _BaseTestCase(base.TestController):
         org_repo = Repository.get_by_repo_name(repo_name)
         creation_args = {
             'repo_name': fork_name,
-            'repo_group': u'-1',
+            'repo_group': '-1',
             'fork_parent_id': org_repo.repo_id,
             'repo_type': self.REPO_TYPE,
             'description': description,

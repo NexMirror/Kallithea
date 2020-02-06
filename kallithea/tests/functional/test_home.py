@@ -53,35 +53,35 @@ class TestHomeController(base.TestController):
 
     def test_index_page_on_groups(self):
         self.log_user()
-        gr = fixture.create_repo_group(u'gr1')
-        fixture.create_repo(name=u'gr1/repo_in_group', repo_group=gr)
-        response = self.app.get(base.url('repos_group_home', group_name=u'gr1'))
+        gr = fixture.create_repo_group('gr1')
+        fixture.create_repo(name='gr1/repo_in_group', repo_group=gr)
+        response = self.app.get(base.url('repos_group_home', group_name='gr1'))
 
         try:
-            response.mustcontain(u"gr1/repo_in_group")
+            response.mustcontain("gr1/repo_in_group")
         finally:
-            RepoModel().delete(u'gr1/repo_in_group')
-            RepoGroupModel().delete(repo_group=u'gr1', force_delete=True)
+            RepoModel().delete('gr1/repo_in_group')
+            RepoGroupModel().delete(repo_group='gr1', force_delete=True)
             Session().commit()
 
     def test_users_and_groups_data(self):
-        fixture.create_user('evil', firstname=u'D\'o\'ct"o"r', lastname=u'Évíl')
-        fixture.create_user_group(u'grrrr', user_group_description=u"Groüp")
-        response = self.app.get(base.url('users_and_groups_data', query=u'evi'))
+        fixture.create_user('evil', firstname='D\'o\'ct"o"r', lastname='Évíl')
+        fixture.create_user_group('grrrr', user_group_description="Groüp")
+        response = self.app.get(base.url('users_and_groups_data', query='evi'))
         assert response.status_code == 302
         assert base.url('login_home') in response.location
         self.log_user(base.TEST_USER_REGULAR_LOGIN, base.TEST_USER_REGULAR_PASS)
-        response = self.app.get(base.url('users_and_groups_data', query=u'evi'))
+        response = self.app.get(base.url('users_and_groups_data', query='evi'))
         result = json.loads(response.body)['results']
-        assert result[0].get('fname') == u'D\'o\'ct"o"r'
-        assert result[0].get('lname') == u'Évíl'
-        response = self.app.get(base.url('users_and_groups_data', key=u'evil'))
+        assert result[0].get('fname') == 'D\'o\'ct"o"r'
+        assert result[0].get('lname') == 'Évíl'
+        response = self.app.get(base.url('users_and_groups_data', key='evil'))
         result = json.loads(response.body)['results']
-        assert result[0].get('fname') == u'D\'o\'ct"o"r'
-        assert result[0].get('lname') == u'Évíl'
-        response = self.app.get(base.url('users_and_groups_data', query=u'rrrr'))
+        assert result[0].get('fname') == 'D\'o\'ct"o"r'
+        assert result[0].get('lname') == 'Évíl'
+        response = self.app.get(base.url('users_and_groups_data', query='rrrr'))
         result = json.loads(response.body)['results']
         assert not result
-        response = self.app.get(base.url('users_and_groups_data', types='users,groups', query=u'rrrr'))
+        response = self.app.get(base.url('users_and_groups_data', types='users,groups', query='rrrr'))
         result = json.loads(response.body)['results']
-        assert result[0].get('grname') == u'grrrr'
+        assert result[0].get('grname') == 'grrrr'

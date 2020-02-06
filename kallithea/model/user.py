@@ -94,8 +94,8 @@ class UserModel(object):
         log_create_user(new_user.get_dict(), cur_user)
         return new_user
 
-    def create_or_update(self, username, password, email, firstname=u'',
-                         lastname=u'', active=True, admin=False,
+    def create_or_update(self, username, password, email, firstname='',
+                         lastname='', active=True, admin=False,
                          extern_type=None, extern_name=None, cur_user=None):
         """
         Creates a new instance if not found, or updates current one
@@ -183,7 +183,7 @@ class UserModel(object):
         # notification to admins
         subject = _('New user registration')
         body = (
-            u'New user registration\n'
+            'New user registration\n'
             '---------------------\n'
             '- Username: {user.username}\n'
             '- Full Name: {user.full_name}\n'
@@ -308,8 +308,8 @@ class UserModel(object):
         """
         app_secret = config.get('app_instance_uuid')
         return hmac.HMAC(
-            key=u'\0'.join([app_secret, user.password]).encode('utf-8'),
-            msg=u'\0'.join([session_id, str(user.user_id), user.email, str(timestamp)]).encode('utf-8'),
+            key='\0'.join([app_secret, user.password]).encode('utf-8'),
+            msg='\0'.join([session_id, str(user.user_id), user.email, str(timestamp)]).encode('utf-8'),
             digestmod=hashlib.sha1,
         ).hexdigest()
 

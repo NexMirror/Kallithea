@@ -85,7 +85,7 @@ class RepositoryGetDiffTest(_BackendTestMixin):
                 'removed': [FileNode('foobar')],
             },
             {
-                'message': u'Commit that contains glob pattern in filename',
+                'message': 'Commit that contains glob pattern in filename',
                 'author': 'Jane Doe <jane.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 22),
                 'added': [

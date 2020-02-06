@@ -286,11 +286,11 @@ def loadplugin(plugin):
         ImportError -- if we couldn't import the plugin at all
     """
     log.debug("Importing %s", plugin)
-    if not plugin.startswith(u'kallithea.lib.auth_modules.auth_'):
-        parts = plugin.split(u'.lib.auth_modules.auth_', 1)
+    if not plugin.startswith('kallithea.lib.auth_modules.auth_'):
+        parts = plugin.split('.lib.auth_modules.auth_', 1)
         if len(parts) == 2:
             _module, pn = parts
-            plugin = u'kallithea.lib.auth_modules.auth_' + pn
+            plugin = 'kallithea.lib.auth_modules.auth_' + pn
     PLUGIN_CLASS_NAME = "KallitheaAuthPlugin"
     try:
         module = importlib.import_module(plugin)

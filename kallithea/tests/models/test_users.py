@@ -21,21 +21,21 @@ class TestUser(base.TestController):
         Session.remove()
 
     def test_create_and_remove(self):
-        usr = UserModel().create_or_update(username=u'test_user',
-                                           password=u'qweqwe',
-                                           email=u'u232@example.com',
-                                           firstname=u'u1', lastname=u'u1')
+        usr = UserModel().create_or_update(username='test_user',
+                                           password='qweqwe',
+                                           email='u232@example.com',
+                                           firstname='u1', lastname='u1')
         Session().commit()
-        assert User.get_by_username(u'test_user') == usr
-        assert User.get_by_username(u'test_USER', case_insensitive=True) == usr
+        assert User.get_by_username('test_user') == usr
+        assert User.get_by_username('test_USER', case_insensitive=True) == usr
         # User.get_by_username without explicit request for case insensitivty
         # will use database case sensitivity. The following will thus return
         # None on for example PostgreSQL but find test_user on MySQL - we are
         # fine with leaving that as undefined as long as it doesn't crash.
-        User.get_by_username(u'test_USER', case_insensitive=False)
+        User.get_by_username('test_USER', case_insensitive=False)
 
         # make user group
-        user_group = fixture.create_user_group(u'some_example_group')
+        user_group = fixture.create_user_group('some_example_group')
         Session().commit()
 
         UserGroupModel().add_user_to_group(user_group, usr)
@@ -49,15 +49,15 @@ class TestUser(base.TestController):
         assert UserGroupMember.query().all() == []
 
     def test_additional_email_as_main(self):
-        usr = UserModel().create_or_update(username=u'test_user',
-                                           password=u'qweqwe',
-                                     email=u'main_email@example.com',
-                                     firstname=u'u1', lastname=u'u1')
+        usr = UserModel().create_or_update(username='test_user',
+                                           password='qweqwe',
+                                     email='main_email@example.com',
+                                     firstname='u1', lastname='u1')
         Session().commit()
 
         with pytest.raises(AttributeError):
             m = UserEmailMap()
-            m.email = u'main_email@example.com'
+            m.email = 'main_email@example.com'
             m.user = usr
             Session().add(m)
             Session().commit()
@@ -66,14 +66,14 @@ class TestUser(base.TestController):
         Session().commit()
 
     def test_extra_email_map(self):
-        usr = UserModel().create_or_update(username=u'test_user',
-                                           password=u'qweqwe',
-                                     email=u'main_email@example.com',
-                                     firstname=u'u1', lastname=u'u1')
+        usr = UserModel().create_or_update(username='test_user',
+                                           password='qweqwe',
+                                     email='main_email@example.com',
+                                     firstname='u1', lastname='u1')
         Session().commit()
 
         m = UserEmailMap()
-        m.email = u'main_email2@example.com'
+        m.email = 'main_email2@example.com'
         m.user = usr
         Session().add(m)
         Session().commit()
@@ -104,10 +104,10 @@ class TestUser(base.TestController):
 class TestUsers(base.TestController):
 
     def setup_method(self, method):
-        self.u1 = UserModel().create_or_update(username=u'u1',
-                                        password=u'qweqwe',
-                                        email=u'u1@example.com',
-                                        firstname=u'u1', lastname=u'u1')
+        self.u1 = UserModel().create_or_update(username='u1',
+                                        password='qweqwe',
+                                        email='u1@example.com',
+                                        firstname='u1', lastname='u1')
 
     def teardown_method(self, method):
         perm = Permission.query().all()

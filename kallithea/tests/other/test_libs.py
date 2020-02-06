@@ -142,20 +142,20 @@ class TestLibs(base.TestController):
         assert expected == set(extract_mentioned_usernames(sample))
 
     @base.parametrize('age_args,expected', [
-        (dict(), u'just now'),
-        (dict(seconds= -1), u'1 second ago'),
-        (dict(seconds= -60 * 2), u'2 minutes ago'),
-        (dict(hours= -1), u'1 hour ago'),
-        (dict(hours= -24), u'1 day ago'),
-        (dict(hours= -24 * 5), u'5 days ago'),
-        (dict(months= -1), u'1 month ago'),
-        (dict(months= -1, days= -2), u'1 month and 2 days ago'),
-        (dict(months= -1, days= -20), u'1 month and 19 days ago'),
-        (dict(years= -1, months= -1), u'1 year and 1 month ago'),
-        (dict(years= -1, months= -10), u'1 year and 10 months ago'),
-        (dict(years= -2, months= -4), u'2 years and 4 months ago'),
-        (dict(years= -2, months= -11), u'2 years and 11 months ago'),
-        (dict(years= -3, months= -2), u'3 years and 2 months ago'),
+        (dict(), 'just now'),
+        (dict(seconds= -1), '1 second ago'),
+        (dict(seconds= -60 * 2), '2 minutes ago'),
+        (dict(hours= -1), '1 hour ago'),
+        (dict(hours= -24), '1 day ago'),
+        (dict(hours= -24 * 5), '5 days ago'),
+        (dict(months= -1), '1 month ago'),
+        (dict(months= -1, days= -2), '1 month and 2 days ago'),
+        (dict(months= -1, days= -20), '1 month and 19 days ago'),
+        (dict(years= -1, months= -1), '1 year and 1 month ago'),
+        (dict(years= -1, months= -10), '1 year and 10 months ago'),
+        (dict(years= -2, months= -4), '2 years and 4 months ago'),
+        (dict(years= -2, months= -11), '2 years and 11 months ago'),
+        (dict(years= -3, months= -2), '3 years and 2 months ago'),
     ])
     def test_age(self, age_args, expected):
         from kallithea.lib.utils2 import age
@@ -166,21 +166,21 @@ class TestLibs(base.TestController):
             assert age(n + delt(**age_args), now=n) == expected
 
     @base.parametrize('age_args,expected', [
-        (dict(), u'just now'),
-        (dict(seconds= -1), u'1 second ago'),
-        (dict(seconds= -60 * 2), u'2 minutes ago'),
-        (dict(hours= -1), u'1 hour ago'),
-        (dict(hours= -24), u'1 day ago'),
-        (dict(hours= -24 * 5), u'5 days ago'),
-        (dict(months= -1), u'1 month ago'),
-        (dict(months= -1, days= -2), u'1 month ago'),
-        (dict(months= -1, days= -20), u'1 month ago'),
-        (dict(years= -1, months= -1), u'13 months ago'),
-        (dict(years= -1, months= -10), u'22 months ago'),
-        (dict(years= -2, months= -4), u'2 years ago'),
-        (dict(years= -2, months= -11), u'3 years ago'),
-        (dict(years= -3, months= -2), u'3 years ago'),
-        (dict(years= -4, months= -8), u'5 years ago'),
+        (dict(), 'just now'),
+        (dict(seconds= -1), '1 second ago'),
+        (dict(seconds= -60 * 2), '2 minutes ago'),
+        (dict(hours= -1), '1 hour ago'),
+        (dict(hours= -24), '1 day ago'),
+        (dict(hours= -24 * 5), '5 days ago'),
+        (dict(months= -1), '1 month ago'),
+        (dict(months= -1, days= -2), '1 month ago'),
+        (dict(months= -1, days= -20), '1 month ago'),
+        (dict(years= -1, months= -1), '13 months ago'),
+        (dict(years= -1, months= -10), '22 months ago'),
+        (dict(years= -2, months= -4), '2 years ago'),
+        (dict(years= -2, months= -11), '3 years ago'),
+        (dict(years= -3, months= -2), '3 years ago'),
+        (dict(years= -4, months= -8), '5 years ago'),
     ])
     def test_age_short(self, age_args, expected):
         from kallithea.lib.utils2 import age
@@ -191,15 +191,15 @@ class TestLibs(base.TestController):
             assert age(n + delt(**age_args), show_short_version=True, now=n) == expected
 
     @base.parametrize('age_args,expected', [
-        (dict(), u'just now'),
-        (dict(seconds=1), u'in 1 second'),
-        (dict(seconds=60 * 2), u'in 2 minutes'),
-        (dict(hours=1), u'in 1 hour'),
-        (dict(hours=24), u'in 1 day'),
-        (dict(hours=24 * 5), u'in 5 days'),
-        (dict(months=1), u'in 1 month'),
-        (dict(months=1, days=1), u'in 1 month and 1 day'),
-        (dict(years=1, months=1), u'in 1 year and 1 month')
+        (dict(), 'just now'),
+        (dict(seconds=1), 'in 1 second'),
+        (dict(seconds=60 * 2), 'in 2 minutes'),
+        (dict(hours=1), 'in 1 hour'),
+        (dict(hours=24), 'in 1 day'),
+        (dict(hours=24 * 5), 'in 5 days'),
+        (dict(months=1), 'in 1 month'),
+        (dict(months=1, days=1), 'in 1 month and 1 day'),
+        (dict(years=1, months=1), 'in 1 year and 1 month')
     ])
     def test_age_in_future(self, age_args, expected):
         from kallithea.lib.utils2 import age

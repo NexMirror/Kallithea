@@ -16,7 +16,7 @@ class TestChangeSetCommentsController(base.TestController):
     def test_create(self):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'general comment on changeset'
+        text = 'general comment on changeset'
 
         params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='changeset', action='comment',
@@ -39,7 +39,7 @@ class TestChangeSetCommentsController(base.TestController):
     def test_create_inline(self):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'inline comment on changeset'
+        text = 'inline comment on changeset'
         f_path = 'vcs/web/simplevcs/views/repository.py'
         line = 'n1'
 
@@ -70,7 +70,7 @@ class TestChangeSetCommentsController(base.TestController):
         self.log_user()
 
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'@%s check CommentOnRevision' % base.TEST_USER_REGULAR_LOGIN
+        text = '@%s check CommentOnRevision' % base.TEST_USER_REGULAR_LOGIN
 
         params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='changeset', action='comment',
@@ -93,7 +93,7 @@ class TestChangeSetCommentsController(base.TestController):
     def test_create_status_change(self):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'general comment on changeset'
+        text = 'general comment on changeset'
 
         params = {'text': text, 'changeset_status': 'rejected',
                 '_session_csrf_secret_token': self.session_csrf_secret_token()}
@@ -121,7 +121,7 @@ class TestChangeSetCommentsController(base.TestController):
     def test_delete(self):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'general comment on changeset to be deleted'
+        text = 'general comment on changeset to be deleted'
 
         params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='changeset', action='comment',
@@ -175,7 +175,7 @@ class TestPullrequestsCommentsController(base.TestController):
         self.log_user()
         pr_id = self._create_pr()
 
-        text = u'general comment on pullrequest'
+        text = 'general comment on pullrequest'
         params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='pullrequests', action='comment',
                                      repo_name=base.HG_REPO, pull_request_id=pr_id),
@@ -201,7 +201,7 @@ class TestPullrequestsCommentsController(base.TestController):
         self.log_user()
         pr_id = self._create_pr()
 
-        text = u'inline comment on changeset'
+        text = 'inline comment on changeset'
         f_path = 'vcs/web/simplevcs/views/repository.py'
         line = 'n1'
         params = {'text': text, 'f_path': f_path, 'line': line, '_session_csrf_secret_token': self.session_csrf_secret_token()}
@@ -231,7 +231,7 @@ class TestPullrequestsCommentsController(base.TestController):
         self.log_user()
         pr_id = self._create_pr()
 
-        text = u'@%s check CommentOnRevision' % base.TEST_USER_REGULAR_LOGIN
+        text = '@%s check CommentOnRevision' % base.TEST_USER_REGULAR_LOGIN
         params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='pullrequests', action='comment',
                                      repo_name=base.HG_REPO, pull_request_id=pr_id),
@@ -254,7 +254,7 @@ class TestPullrequestsCommentsController(base.TestController):
         self.log_user()
         pr_id = self._create_pr()
 
-        text = u'general comment on pullrequest'
+        text = 'general comment on pullrequest'
         params = {'text': text, 'changeset_status': 'rejected',
                 '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='pullrequests', action='comment',
@@ -285,7 +285,7 @@ class TestPullrequestsCommentsController(base.TestController):
         self.log_user()
         pr_id = self._create_pr()
 
-        text = u'general comment on changeset to be deleted'
+        text = 'general comment on changeset to be deleted'
         params = {'text': text, '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='pullrequests', action='comment',
                                      repo_name=base.HG_REPO, pull_request_id=pr_id),
@@ -315,7 +315,7 @@ class TestPullrequestsCommentsController(base.TestController):
         self.log_user()
         pr_id = self._create_pr()
 
-        text = u'general comment on pullrequest'
+        text = 'general comment on pullrequest'
         params = {'text': text, 'save_close': 'close',
                 '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='pullrequests', action='comment',
@@ -338,7 +338,7 @@ class TestPullrequestsCommentsController(base.TestController):
         self.log_user()
         pr_id = self._create_pr()
 
-        text = u'general comment on pullrequest'
+        text = 'general comment on pullrequest'
         params = {'text': text, 'save_delete': 'delete',
                 '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='pullrequests', action='comment',
@@ -358,7 +358,7 @@ class TestPullrequestsCommentsController(base.TestController):
         pr_id = self._create_pr()
 
         # first close
-        text = u'general comment on pullrequest'
+        text = 'general comment on pullrequest'
         params = {'text': text, 'save_close': 'close',
                 '_session_csrf_secret_token': self.session_csrf_secret_token()}
         response = self.app.post(base.url(controller='pullrequests', action='comment',

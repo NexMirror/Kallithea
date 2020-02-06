@@ -39,12 +39,12 @@ def init_stopword_test(repo):
 
 repos = [
     # reponame,              init func or fork base, groupname
-    (u'indexing_test',       init_indexing_test,     None),
-    (u'indexing_test-fork',  u'indexing_test',       None),
-    (u'group/indexing_test', u'indexing_test',       u'group'),
-    (u'this-is-it',          u'indexing_test',       None),
-    (u'indexing_test-foo',   u'indexing_test',       None),
-    (u'stopword_test',       init_stopword_test,     None),
+    ('indexing_test',       init_indexing_test,     None),
+    ('indexing_test-fork',  'indexing_test',       None),
+    ('group/indexing_test', 'indexing_test',       'group'),
+    ('this-is-it',          'indexing_test',       None),
+    ('indexing_test-foo',   'indexing_test',       None),
+    ('stopword_test',       init_stopword_test,     None),
 ]
 
 
@@ -109,12 +109,12 @@ class TestSearchControllerIndexing(base.TestController):
         rebuild_index(full_index=True) # rebuild fully for subsequent tests
 
     @base.parametrize('reponame', [
-        (u'indexing_test'),
-        (u'indexing_test-fork'),
-        (u'group/indexing_test'),
-        (u'this-is-it'),
-        (u'*-fork'),
-        (u'group/*'),
+        ('indexing_test'),
+        ('indexing_test-fork'),
+        ('group/indexing_test'),
+        ('this-is-it'),
+        ('*-fork'),
+        ('group/*'),
     ])
     @base.parametrize('searchtype,query,hit', [
         ('content', 'this_should_be_unique_content', 1),
@@ -130,10 +130,10 @@ class TestSearchControllerIndexing(base.TestController):
         response.mustcontain('>%d results' % hit)
 
     @base.parametrize('reponame', [
-        (u'indexing_test'),
-        (u'indexing_test-fork'),
-        (u'group/indexing_test'),
-        (u'this-is-it'),
+        ('indexing_test'),
+        ('indexing_test-fork'),
+        ('group/indexing_test'),
+        ('this-is-it'),
     ])
     @base.parametrize('searchtype,query,hit', [
         ('content', 'this_should_be_unique_content', 1),

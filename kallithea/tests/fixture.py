@@ -92,8 +92,8 @@ class Fixture(object):
             repo_name=None,
             repo_type='hg',
             clone_uri='',
-            repo_group=u'-1',
-            repo_description=u'DESC',
+            repo_group='-1',
+            repo_description='DESC',
             repo_private=False,
             repo_landing_rev='rev:tip',
             repo_copy_permissions=False,
@@ -113,8 +113,8 @@ class Fixture(object):
         """Return form values to be validated through RepoGroupForm"""
         defs = dict(
             group_name=None,
-            group_description=u'DESC',
-            parent_group_id=u'-1',
+            group_description='DESC',
+            parent_group_id='-1',
             perms_updates=[],
             perms_new=[],
             recursive=False
@@ -128,8 +128,8 @@ class Fixture(object):
             username=name,
             password='qweqwe',
             email='%s+test@example.com' % name,
-            firstname=u'TestUser',
-            lastname=u'Test',
+            firstname='TestUser',
+            lastname='Test',
             active=True,
             admin=False,
             extern_type='internal',
@@ -142,7 +142,7 @@ class Fixture(object):
     def _get_user_group_create_params(self, name, **custom):
         defs = dict(
             users_group_name=name,
-            user_group_description=u'DESC',
+            user_group_description='DESC',
             users_group_active=True,
             user_group_data={},
         )
@@ -253,7 +253,7 @@ class Fixture(object):
 
     def create_gist(self, **kwargs):
         form_data = {
-            'description': u'new-gist',
+            'description': 'new-gist',
             'owner': TEST_USER_ADMIN_LOGIN,
             'gist_type': Gist.GIST_PUBLIC,
             'lifetime': -1,
@@ -324,12 +324,12 @@ class Fixture(object):
         return cs
 
     def review_changeset(self, repo, revision, status, author=TEST_USER_ADMIN_LOGIN):
-        comment = ChangesetCommentsModel().create(u"review comment", repo, author, revision=revision, send_email=False)
+        comment = ChangesetCommentsModel().create("review comment", repo, author, revision=revision, send_email=False)
         csm = ChangesetStatusModel().set_status(repo, ChangesetStatus.STATUS_APPROVED, author, comment, revision=revision)
         Session().commit()
         return csm
 
-    def create_pullrequest(self, testcontroller, repo_name, pr_src_rev, pr_dst_rev, title=u'title'):
+    def create_pullrequest(self, testcontroller, repo_name, pr_src_rev, pr_dst_rev, title='title'):
         org_ref = 'branch:stable:%s' % pr_src_rev
         other_ref = 'branch:default:%s' % pr_dst_rev
         with test_context(testcontroller.app): # needed to be able to mock request user
@@ -339,7 +339,7 @@ class Fixture(object):
             request.authuser = AuthUser(dbuser=owner_user)
             # creating a PR sends a message with an absolute URL - without routing that requires mocking
             with mock.patch.object(helpers, 'url', (lambda arg, qualified=False, **kwargs: ('https://localhost' if qualified else '') + '/fake/' + arg)):
-                cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, u'No description', owner_user, reviewers)
+                cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, 'No description', owner_user, reviewers)
                 pull_request = cmd.execute()
             Session().commit()
         return pull_request.pull_request_id

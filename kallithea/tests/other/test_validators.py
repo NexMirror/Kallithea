@@ -54,26 +54,26 @@ class TestRepoGroups(base.TestController):
     def test_ValidUserGroup(self):
         validator = v.ValidUserGroup()
         with pytest.raises(formencode.Invalid):
-            validator.to_python(u'default')
+            validator.to_python('default')
         with pytest.raises(formencode.Invalid):
-            validator.to_python(u'.,')
+            validator.to_python('.,')
 
-        gr = fixture.create_user_group(u'test')
-        gr2 = fixture.create_user_group(u'tes2')
+        gr = fixture.create_user_group('test')
+        gr2 = fixture.create_user_group('tes2')
         Session().commit()
         with pytest.raises(formencode.Invalid):
-            validator.to_python(u'test')
+            validator.to_python('test')
         assert gr.users_group_id is not None
         validator = v.ValidUserGroup(edit=True,
                                     old_data={'users_group_id':
                                               gr2.users_group_id})
 
         with pytest.raises(formencode.Invalid):
-            validator.to_python(u'test')
+            validator.to_python('test')
         with pytest.raises(formencode.Invalid):
-            validator.to_python(u'TesT')
+            validator.to_python('TesT')
         with pytest.raises(formencode.Invalid):
-            validator.to_python(u'TEST')
+            validator.to_python('TEST')
         UserGroupModel().delete(gr)
         UserGroupModel().delete(gr2)
         Session().commit()
@@ -83,7 +83,7 @@ class TestRepoGroups(base.TestController):
         model = RepoGroupModel()
         with pytest.raises(formencode.Invalid):
             validator.to_python({'group_name': base.HG_REPO, })
-        gr = model.create(group_name=u'test_gr', group_description=u'desc',
+        gr = model.create(group_name='test_gr', group_description='desc',
                           parent=None,
                           just_db=True,
                           owner=base.TEST_USER_ADMIN_LOGIN)
@@ -147,8 +147,8 @@ class TestRepoGroups(base.TestController):
         with pytest.raises(formencode.Invalid):
             validator.to_python({'repo_name': base.HG_REPO})
 
-        gr = RepoGroupModel().create(group_name=u'group_test',
-                                      group_description=u'desc',
+        gr = RepoGroupModel().create(group_name='group_test',
+                                      group_description='desc',
                                       parent=None,
                                       owner=base.TEST_USER_ADMIN_LOGIN)
         with pytest.raises(formencode.Invalid):

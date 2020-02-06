@@ -26,7 +26,7 @@ class TestAuthSettingsController(base.TestController):
         self.log_user()
 
         params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_ldap')
-        params.update({'auth_ldap_host': u'dc.example.com',
+        params.update({'auth_ldap_host': 'dc.example.com',
                        'auth_ldap_port': '999',
                        'auth_ldap_tls_kind': 'PLAIN',
                        'auth_ldap_tls_reqcert': 'NEVER',
@@ -48,7 +48,7 @@ class TestAuthSettingsController(base.TestController):
         self.checkSessionFlash(response, 'Auth settings updated successfully')
 
         new_settings = Setting.get_auth_settings()
-        assert new_settings['auth_ldap_host'] == u'dc.example.com', 'fail db write compare'
+        assert new_settings['auth_ldap_host'] == 'dc.example.com', 'fail db write compare'
 
     @base.skipif(not base.ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_error_form_wrong_port_number(self):
@@ -239,7 +239,7 @@ class TestAuthSettingsController(base.TestController):
         self.checkSessionFlash(response, 'Auth settings updated successfully')
 
         new_settings = Setting.get_auth_settings()
-        assert new_settings['auth_crowd_host'] == u'hostname', 'fail db write compare'
+        assert new_settings['auth_crowd_host'] == 'hostname', 'fail db write compare'
 
     @base.skipif(not base.pam_lib_installed, reason='skipping due to missing pam lib')
     def test_pam_save_settings(self):
@@ -256,4 +256,4 @@ class TestAuthSettingsController(base.TestController):
         self.checkSessionFlash(response, 'Auth settings updated successfully')
 
         new_settings = Setting.get_auth_settings()
-        assert new_settings['auth_pam_service'] == u'kallithea', 'fail db write compare'
+        assert new_settings['auth_pam_service'] == 'kallithea', 'fail db write compare'

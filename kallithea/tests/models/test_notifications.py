@@ -18,24 +18,24 @@ class TestNotifications(base.TestController):
 
     def setup_method(self, method):
         Session.remove()
-        u1 = UserModel().create_or_update(username=u'u1',
-                                        password=u'qweqwe',
-                                        email=u'u1@example.com',
-                                        firstname=u'u1', lastname=u'u1')
+        u1 = UserModel().create_or_update(username='u1',
+                                        password='qweqwe',
+                                        email='u1@example.com',
+                                        firstname='u1', lastname='u1')
         Session().commit()
         self.u1 = u1.user_id
 
-        u2 = UserModel().create_or_update(username=u'u2',
-                                        password=u'qweqwe',
-                                        email=u'u2@example.com',
-                                        firstname=u'u2', lastname=u'u3')
+        u2 = UserModel().create_or_update(username='u2',
+                                        password='qweqwe',
+                                        email='u2@example.com',
+                                        firstname='u2', lastname='u3')
         Session().commit()
         self.u2 = u2.user_id
 
-        u3 = UserModel().create_or_update(username=u'u3',
-                                        password=u'qweqwe',
-                                        email=u'u3@example.com',
-                                        firstname=u'u3', lastname=u'u3')
+        u3 = UserModel().create_or_update(username='u3',
+                                        password='qweqwe',
+                                        email='u3@example.com',
+                                        firstname='u3', lastname='u3')
         Session().commit()
         self.u3 = u3.user_id
 
@@ -46,12 +46,12 @@ class TestNotifications(base.TestController):
             def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
                 assert recipients == ['u2@example.com']
                 assert subject == 'Test Message'
-                assert body == u"hi there"
+                assert body == "hi there"
                 assert '>hi there<' in html_body
                 assert author.username == 'u1'
             with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', send_email):
                 NotificationModel().create(created_by=self.u1,
-                                                   subject=u'subj', body=u'hi there',
+                                                   subject='subj', body='hi there',
                                                    recipients=usrs)
 
     @mock.patch.object(h, 'canonical_url', (lambda arg, **kwargs: 'http://%s/?%s' % (arg, '&'.join('%s=%s' % (k, v) for (k, v) in sorted(kwargs.items())))))
@@ -90,7 +90,7 @@ class TestNotifications(base.TestController):
 
                 for type_, body, kwargs in [
                         (NotificationModel.TYPE_CHANGESET_COMMENT,
-                         u'This is the new \'comment\'.\n\n - and here it ends indented.',
+                         'This is the new \'comment\'.\n\n - and here it ends indented.',
                          dict(
                             short_id='cafe1234',
                             raw_id='cafe1234c0ffeecafe',
@@ -105,18 +105,18 @@ class TestNotifications(base.TestController):
                             cs_url='http://changeset.com',
                             cs_author=User.get(self.u2))),
                         (NotificationModel.TYPE_MESSAGE,
-                         u'This is the \'body\' of the "test" message\n - nothing interesting here except indentation.',
+                         'This is the \'body\' of the "test" message\n - nothing interesting here except indentation.',
                          dict()),
                         #(NotificationModel.TYPE_MENTION, '$body', None), # not used
                         (NotificationModel.TYPE_REGISTRATION,
-                         u'Registration body',
+                         'Registration body',
                          dict(
                             new_username='newbie',
                             registered_user_url='http://newbie.org',
                             new_email='new@email.com',
                             new_full_name='New Full Name')),
                         (NotificationModel.TYPE_PULL_REQUEST,
-                         u'This PR is \'awesome\' because it does <stuff>\n - please approve indented!',
+                         'This PR is \'awesome\' because it does <stuff>\n - please approve indented!',
                          dict(
                             pr_user_created='Requesting User (root)', # pr_owner should perhaps be used for @mention in description ...
                             is_mention=[False, True],
@@ -124,7 +124,7 @@ class TestNotifications(base.TestController):
                             org_repo_name='repo_org',
                             **pr_kwargs)),
                         (NotificationModel.TYPE_PULL_REQUEST_COMMENT,
-                         u'Me too!\n\n - and indented on second line',
+                         'Me too!\n\n - and indented on second line',
                          dict(
                             closing_pr=[False, True],
                             is_mention=[False, True],
@@ -133,7 +133,7 @@ class TestNotifications(base.TestController):
                             status_change=[None, 'Under Review'],
                             **pr_kwargs)),
                         ]:
-                    kwargs['repo_name'] = u'repo/name'
+                    kwargs['repo_name'] = 'repo/name'
                     params = [(type_, type_, body, kwargs)]
                     for param_name in ['is_mention', 'status_change', 'closing_pr']: # TODO: inline/general
                         if not isinstance(kwargs.get(param_name), list):
@@ -149,7 +149,7 @@ class TestNotifications(base.TestController):
                     for desc, type_, body, kwargs in params:
                         # desc is used as "global" variable
                         NotificationModel().create(created_by=self.u1,
-                                                           subject=u'unused', body=body, email_kwargs=kwargs,
+                                                           subject='unused', body=body, email_kwargs=kwargs,
                                                            recipients=[self.u2], type_=type_)
 
                 # Email type TYPE_PASSWORD_RESET has no corresponding notification type - test it directly:

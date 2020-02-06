@@ -11,7 +11,7 @@ class TestRepoGroupsController(TestController):
 
     def test_case_insensitivity(self):
         self.log_user()
-        group_name = u'newgroup'
+        group_name = 'newgroup'
         response = self.app.post(url('repos_groups'),
                                  fixture._get_repo_group_create_params(group_name=group_name,
                                                                  _session_csrf_secret_token=self.session_csrf_secret_token()))

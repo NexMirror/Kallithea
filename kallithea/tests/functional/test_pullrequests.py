@@ -292,14 +292,14 @@ class TestPullrequestsController(base.TestController):
 class TestPullrequestsGetRepoRefs(base.TestController):
 
     def setup_method(self, method):
-        self.repo_name = u'main'
+        self.repo_name = 'main'
         repo = fixture.create_repo(self.repo_name, repo_type='hg')
         self.repo_scm_instance = repo.scm_instance
         Session().commit()
         self.c = PullrequestsController()
 
     def teardown_method(self, method):
-        fixture.destroy_repo(u'main')
+        fixture.destroy_repo('main')
         Session().commit()
         Session.remove()
 

@@ -959,9 +959,9 @@ class Repository(Base, BaseDbModel):
     DEFAULT_CLONE_URI = '{scheme}://{user}@{netloc}/{repo}'
     DEFAULT_CLONE_SSH = 'ssh://{system_user}@{hostname}/{repo}'
 
-    STATE_CREATED = u'repo_state_created'
-    STATE_PENDING = u'repo_state_pending'
-    STATE_ERROR = u'repo_state_error'
+    STATE_CREATED = 'repo_state_created'
+    STATE_PENDING = 'repo_state_pending'
+    STATE_ERROR = 'repo_state_error'
 
     repo_id = Column(Integer(), primary_key=True)
     repo_name = Column(Unicode(255), nullable=False, unique=True)
@@ -1490,7 +1490,7 @@ class RepoGroup(Base, BaseDbModel):
         """Return tuple with group_id and name as html literal"""
         from webhelpers2.html import literal
         if repo_group is None:
-            return (-1, u'-- %s --' % _('top level'))
+            return (-1, '-- %s --' % _('top level'))
         return repo_group.group_id, literal(cls.SEP.join(repo_group.full_path_splitted))
 
     @classmethod
@@ -2258,8 +2258,8 @@ class PullRequest(Base, BaseDbModel):
     )
 
     # values for .status
-    STATUS_NEW = u'new'
-    STATUS_CLOSED = u'closed'
+    STATUS_NEW = 'new'
+    STATUS_CLOSED = 'closed'
 
     pull_request_id = Column(Integer(), primary_key=True)
     title = Column(Unicode(255), nullable=False)
@@ -2428,9 +2428,9 @@ class Gist(Base, BaseDbModel):
         _table_args_default_dict,
     )
 
-    GIST_PUBLIC = u'public'
-    GIST_PRIVATE = u'private'
-    DEFAULT_FILENAME = u'gistfile1.txt'
+    GIST_PUBLIC = 'public'
+    GIST_PRIVATE = 'private'
+    DEFAULT_FILENAME = 'gistfile1.txt'
 
     gist_id = Column(Integer(), primary_key=True)
     gist_access_id = Column(Unicode(250), nullable=False)

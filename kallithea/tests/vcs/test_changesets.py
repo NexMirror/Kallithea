@@ -21,7 +21,7 @@ class TestBaseChangeset(object):
         changeset.date = datetime.datetime(2011, 1, 30, 1, 45)
         changeset.message = 'Message of a commit'
         changeset.author = 'Joe Doe <joe.doe@example.com>'
-        changeset.added = [FileNode('foo/bar/baz'), FileNode(u'foobar'), FileNode(u'blåbærgrød')]
+        changeset.added = [FileNode('foo/bar/baz'), FileNode('foobar'), FileNode('blåbærgrød')]
         changeset.changed = []
         changeset.removed = []
         assert changeset.as_dict() == {
@@ -34,7 +34,7 @@ class TestBaseChangeset(object):
                 'name': 'Joe Doe',
                 'email': 'joe.doe@example.com',
             },
-            'added': ['foo/bar/baz', 'foobar', u'bl\xe5b\xe6rgr\xf8d'],
+            'added': ['foo/bar/baz', 'foobar', 'bl\xe5b\xe6rgr\xf8d'],
             'changed': [],
             'removed': [],
         }
@@ -59,8 +59,8 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
         self.imc.add(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\n'))
         foobar_tip = self.imc.commit(
-            message=u'New branch: foobar',
-            author=u'joe',
+            message='New branch: foobar',
+            author='joe',
             branch='foobar',
         )
         assert 'foobar' in self.repo.branches
@@ -75,23 +75,23 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
         self.imc.add(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\n'))
         foobar_tip = self.imc.commit(
-            message=u'New branch: foobar',
-            author=u'joe',
+            message='New branch: foobar',
+            author='joe',
             branch='foobar',
             parents=[tip],
         )
         self.imc.change(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\nand more...\n'))
         newtip = self.imc.commit(
-            message=u'At default branch',
-            author=u'joe',
+            message='At default branch',
+            author='joe',
             branch=foobar_tip.branch,
             parents=[foobar_tip],
         )
 
         newest_tip = self.imc.commit(
-            message=u'Merged with %s' % foobar_tip.raw_id,
-            author=u'joe',
+            message='Merged with %s' % foobar_tip.raw_id,
+            author='joe',
             branch=self.backend_class.DEFAULT_BRANCH_NAME,
             parents=[newtip, foobar_tip],
         )
@@ -104,14 +104,14 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
         self.imc.add(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\n'))
         doc_changeset = self.imc.commit(
-            message=u'New branch: docs',
-            author=u'joe',
+            message='New branch: docs',
+            author='joe',
             branch='docs',
         )
         self.imc.add(vcs.nodes.FileNode('newfile', content=''))
         self.imc.commit(
-            message=u'Back in default branch',
-            author=u'joe',
+            message='Back in default branch',
+            author='joe',
             parents=[tip],
         )
         default_branch_changesets = self.repo.get_changesets(
@@ -145,8 +145,8 @@ class _ChangesetsTestCaseMixin(_BackendTestMixin):
         start_date = datetime.datetime(2010, 1, 1, 20)
         for x in range(5):
             yield {
-                'message': u'Commit %d' % x,
-                'author': u'Joe Doe <joe.doe@example.com>',
+                'message': 'Commit %d' % x,
+                'author': 'Joe Doe <joe.doe@example.com>',
                 'date': start_date + datetime.timedelta(hours=12 * x),
                 'added': [
                     FileNode('file_%d.txt' % x, content='Foobar %d' % x),
@@ -247,15 +247,15 @@ class _ChangesetsTestCaseMixin(_BackendTestMixin):
 
     def test_author(self):
         tip = self.repo.get_changeset()
-        assert tip.author == u'Joe Doe <joe.doe@example.com>'
+        assert tip.author == 'Joe Doe <joe.doe@example.com>'
 
     def test_author_name(self):
         tip = self.repo.get_changeset()
-        assert tip.author_name == u'Joe Doe'
+        assert tip.author_name == 'Joe Doe'
 
     def test_author_email(self):
         tip = self.repo.get_changeset()
-        assert tip.author_email == u'joe.doe@example.com'
+        assert tip.author_email == 'joe.doe@example.com'
 
     def test_get_changesets_raise_changesetdoesnotexist_for_wrong_start(self):
         with pytest.raises(ChangesetDoesNotExistError):
@@ -297,8 +297,8 @@ class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
     def _get_commits(cls):
         return [
             {
-                'message': u'Initial',
-                'author': u'Joe Doe <joe.doe@example.com>',
+                'message': 'Initial',
+                'author': 'Joe Doe <joe.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 20),
                 'added': [
                     FileNode('foo/bar', content='foo'),
@@ -308,8 +308,8 @@ class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
                 ],
             },
             {
-                'message': u'Massive changes',
-                'author': u'Joe Doe <joe.doe@example.com>',
+                'message': 'Massive changes',
+                'author': 'Joe Doe <joe.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 22),
                 'added': [FileNode('fallout', content='War never changes')],
                 'changed': [
@@ -330,8 +330,8 @@ class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
         ])
         assert list(changeset.changed) == []
         assert list(changeset.removed) == []
-        assert u'foo/ba\u0142' in changeset.as_dict()['added']
-        assert u'foo/ba\u0142' in changeset.__json__(with_file_list=True)['added']
+        assert 'foo/ba\u0142' in changeset.as_dict()['added']
+        assert 'foo/ba\u0142' in changeset.__json__(with_file_list=True)['added']
 
     def test_head_added(self):
         changeset = self.repo.get_changeset()
@@ -355,7 +355,7 @@ class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
     def test_get_filemode_non_ascii(self):
         changeset = self.repo.get_changeset()
         assert 33188 == changeset.get_file_mode('foo/bał')
-        assert 33188 == changeset.get_file_mode(u'foo/bał')
+        assert 33188 == changeset.get_file_mode('foo/bał')
 
 
 class TestGitChangesetsWithCommits(_ChangesetsWithCommitsTestCaseixin):

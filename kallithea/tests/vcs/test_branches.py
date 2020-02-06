@@ -46,8 +46,8 @@ class BranchesTestCaseMixin(_BackendTestMixin):
         self.imc.add(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\n'))
         foobar_tip = self.imc.commit(
-            message=u'New branch: foobar',
-            author=u'joe',
+            message='New branch: foobar',
+            author='joe',
             branch='foobar',
         )
         assert 'foobar' in self.repo.branches
@@ -59,23 +59,23 @@ class BranchesTestCaseMixin(_BackendTestMixin):
         self.imc.add(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\n'))
         foobar_tip = self.imc.commit(
-            message=u'New branch: foobar',
-            author=u'joe',
+            message='New branch: foobar',
+            author='joe',
             branch='foobar',
             parents=[tip],
         )
         self.imc.change(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\nand more...\n'))
         newtip = self.imc.commit(
-            message=u'At default branch',
-            author=u'joe',
+            message='At default branch',
+            author='joe',
             branch=foobar_tip.branch,
             parents=[foobar_tip],
         )
 
         newest_tip = self.imc.commit(
-            message=u'Merged with %s' % foobar_tip.raw_id,
-            author=u'joe',
+            message='Merged with %s' % foobar_tip.raw_id,
+            author='joe',
             branch=self.backend_class.DEFAULT_BRANCH_NAME,
             parents=[newtip, foobar_tip],
         )
@@ -85,16 +85,16 @@ class BranchesTestCaseMixin(_BackendTestMixin):
 
     def test_branch_with_slash_in_name(self):
         self.imc.add(vcs.nodes.FileNode('extrafile', content='Some data\n'))
-        self.imc.commit(u'Branch with a slash!', author=u'joe',
+        self.imc.commit('Branch with a slash!', author='joe',
             branch='issue/123')
         assert 'issue/123' in self.repo.branches
 
     def test_branch_with_slash_in_name_and_similar_without(self):
         self.imc.add(vcs.nodes.FileNode('extrafile', content='Some data\n'))
-        self.imc.commit(u'Branch with a slash!', author=u'joe',
+        self.imc.commit('Branch with a slash!', author='joe',
             branch='issue/123')
         self.imc.add(vcs.nodes.FileNode('extrafile II', content='Some data\n'))
-        self.imc.commit(u'Branch without a slash...', author=u'joe',
+        self.imc.commit('Branch without a slash...', author='joe',
             branch='123')
         assert 'issue/123' in self.repo.branches
         assert '123' in self.repo.branches

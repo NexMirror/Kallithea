@@ -27,10 +27,10 @@ class NodeKind:
 
 
 class NodeState:
-    ADDED = u'added'
-    CHANGED = u'changed'
-    NOT_CHANGED = u'not changed'
-    REMOVED = u'removed'
+    ADDED = 'added'
+    CHANGED = 'changed'
+    NOT_CHANGED = 'not changed'
+    REMOVED = 'removed'
 
 
 class NodeGeneratorBase(object):
@@ -606,4 +606,4 @@ class SubModuleNode(Node):
         then only last part is returned.
         """
         org = self.path.rstrip('/').rsplit('/', 1)[-1]
-        return u'%s @ %s' % (org, self.changeset.short_id)
+        return '%s @ %s' % (org, self.changeset.short_id)

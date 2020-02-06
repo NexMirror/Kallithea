@@ -558,11 +558,11 @@ def GistForm(lifetime_options):
 
         filename = All(v.BasePath()(),
                        v.UnicodeString(strip=True, required=False))
-        description = v.UnicodeString(required=False, if_missing=u'')
+        description = v.UnicodeString(required=False, if_missing='')
         lifetime = v.OneOf(lifetime_options)
         mimetype = v.UnicodeString(required=False, if_missing=None)
         content = v.UnicodeString(required=True, not_empty=True)
-        public = v.UnicodeString(required=False, if_missing=u'')
-        private = v.UnicodeString(required=False, if_missing=u'')
+        public = v.UnicodeString(required=False, if_missing='')
+        private = v.UnicodeString(required=False, if_missing='')
 
     return _GistForm

@@ -4,7 +4,7 @@ from kallithea.model.meta import Session
 from kallithea.tests import base
 
 
-TEST_USER_GROUP = u'admins_test'
+TEST_USER_GROUP = 'admins_test'
 
 
 class TestAdminUsersGroupsController(base.TestController):
@@ -19,7 +19,7 @@ class TestAdminUsersGroupsController(base.TestController):
         users_group_name = TEST_USER_GROUP
         response = self.app.post(base.url('users_groups'),
                                  {'users_group_name': users_group_name,
-                                  'user_group_description': u'DESC',
+                                  'user_group_description': 'DESC',
                                   'active': True,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
@@ -44,7 +44,7 @@ class TestAdminUsersGroupsController(base.TestController):
         users_group_name = TEST_USER_GROUP + 'another'
         response = self.app.post(base.url('users_groups'),
                                  {'users_group_name': users_group_name,
-                                  'user_group_description': u'DESC',
+                                  'user_group_description': 'DESC',
                                   'active': True,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
@@ -68,7 +68,7 @@ class TestAdminUsersGroupsController(base.TestController):
         users_group_name = TEST_USER_GROUP + 'another2'
         response = self.app.post(base.url('users_groups'),
                                  {'users_group_name': users_group_name,
-                                  'user_group_description': u'DESC',
+                                  'user_group_description': 'DESC',
                                   'active': True,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
@@ -137,7 +137,7 @@ class TestAdminUsersGroupsController(base.TestController):
         users_group_name = TEST_USER_GROUP + 'another2'
         response = self.app.post(base.url('users_groups'),
                                  {'users_group_name': users_group_name,
-                                  'user_group_description': u'DESC',
+                                  'user_group_description': 'DESC',
                                   'active': True,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()

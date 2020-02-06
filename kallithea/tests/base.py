@@ -66,17 +66,17 @@ TEST_USER_REGULAR2_EMAIL = 'test_regular2@example.com'
 
 IP_ADDR = '127.0.0.127'
 
-HG_REPO = u'vcs_test_hg'
-GIT_REPO = u'vcs_test_git'
+HG_REPO = 'vcs_test_hg'
+GIT_REPO = 'vcs_test_git'
 
-NEW_HG_REPO = u'vcs_test_hg_new'
-NEW_GIT_REPO = u'vcs_test_git_new'
+NEW_HG_REPO = 'vcs_test_hg_new'
+NEW_GIT_REPO = 'vcs_test_git_new'
 
-HG_FORK = u'vcs_test_hg_fork'
-GIT_FORK = u'vcs_test_git_fork'
+HG_FORK = 'vcs_test_hg_fork'
+GIT_FORK = 'vcs_test_git_fork'
 
-HG_TEST_REVISION = u"a53d9201d4bc278910d416d94941b7ea007ecd52"
-GIT_TEST_REVISION = u"7ab37bc680b4aa72c34d07b230c866c28e9fc204"
+HG_TEST_REVISION = "a53d9201d4bc278910d416d94941b7ea007ecd52"
+GIT_TEST_REVISION = "7ab37bc680b4aa72c34d07b230c866c28e9fc204"
 
 
 ## VCS
@@ -180,14 +180,14 @@ class TestController(object):
 
     def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:
-            pytest.fail(u'msg `%s` not found - session has no flash:\n%s' % (msg, response))
+            pytest.fail('msg `%s` not found - session has no flash:\n%s' % (msg, response))
         try:
             level, m = response.session['flash'][-1 - skip]
             if _matcher(msg, m):
                 return
         except IndexError:
             pass
-        pytest.fail(u'msg `%s` not found in session flash (skipping %s): %s' %
+        pytest.fail('msg `%s` not found in session flash (skipping %s): %s' %
                     (msg, skip, ', '.join('`%s`' % m for level, m in response.session['flash'])))
 
     def checkSessionFlashRegex(self, response, regex, skip=0):

@@ -45,7 +45,7 @@ class _BaseTestCase(base.TestController):
     def test_create(self):
         self.log_user()
         repo_name = self.NEW_REPO
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -54,7 +54,7 @@ class _BaseTestCase(base.TestController):
                                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(base.url('repo_check_home', repo_name=repo_name))
-        assert response.json == {u'result': True}
+        assert response.json == {'result': True}
         self.checkSessionFlash(response,
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name, repo_name))
@@ -83,7 +83,7 @@ class _BaseTestCase(base.TestController):
     def test_case_insensitivity(self):
         self.log_user()
         repo_name = self.NEW_REPO
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                                  fixture._get_repo_create_params(repo_private=False,
                                                                  repo_name=repo_name,
@@ -107,15 +107,15 @@ class _BaseTestCase(base.TestController):
         self.log_user()
 
         ## create GROUP
-        group_name = u'sometest_%s' % self.REPO_TYPE
+        group_name = 'sometest_%s' % self.REPO_TYPE
         gr = RepoGroupModel().create(group_name=group_name,
-                                     group_description=u'test',
+                                     group_description='test',
                                      owner=base.TEST_USER_ADMIN_LOGIN)
         Session().commit()
 
-        repo_name = u'ingroup'
+        repo_name = 'ingroup'
         repo_name_full = RepoGroup.url_sep().join([group_name, repo_name])
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -125,7 +125,7 @@ class _BaseTestCase(base.TestController):
                                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(base.url('repo_check_home', repo_name=repo_name_full))
-        assert response.json == {u'result': True}
+        assert response.json == {'result': True}
         self.checkSessionFlash(response,
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name_full, repo_name_full))
@@ -178,21 +178,21 @@ class _BaseTestCase(base.TestController):
         Session().commit()
 
         ## create GROUP
-        group_name = u'reg_sometest_%s' % self.REPO_TYPE
+        group_name = 'reg_sometest_%s' % self.REPO_TYPE
         gr = RepoGroupModel().create(group_name=group_name,
-                                     group_description=u'test',
+                                     group_description='test',
                                      owner=base.TEST_USER_ADMIN_LOGIN)
         Session().commit()
 
-        group_name_allowed = u'reg_sometest_allowed_%s' % self.REPO_TYPE
+        group_name_allowed = 'reg_sometest_allowed_%s' % self.REPO_TYPE
         gr_allowed = RepoGroupModel().create(group_name=group_name_allowed,
-                                     group_description=u'test',
+                                     group_description='test',
                                      owner=base.TEST_USER_REGULAR_LOGIN)
         Session().commit()
 
-        repo_name = u'ingroup'
+        repo_name = 'ingroup'
         repo_name_full = RepoGroup.url_sep().join([group_name, repo_name])
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -204,9 +204,9 @@ class _BaseTestCase(base.TestController):
         response.mustcontain('Invalid value')
 
         # user is allowed to create in this group
-        repo_name = u'ingroup'
+        repo_name = 'ingroup'
         repo_name_full = RepoGroup.url_sep().join([group_name_allowed, repo_name])
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -217,7 +217,7 @@ class _BaseTestCase(base.TestController):
 
         ## run the check page that triggers the flash message
         response = self.app.get(base.url('repo_check_home', repo_name=repo_name_full))
-        assert response.json == {u'result': True}
+        assert response.json == {'result': True}
         self.checkSessionFlash(response,
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name_full, repo_name_full))
@@ -255,9 +255,9 @@ class _BaseTestCase(base.TestController):
         self.log_user()
 
         ## create GROUP
-        group_name = u'sometest_%s' % self.REPO_TYPE
+        group_name = 'sometest_%s' % self.REPO_TYPE
         gr = RepoGroupModel().create(group_name=group_name,
-                                     group_description=u'test',
+                                     group_description='test',
                                      owner=base.TEST_USER_ADMIN_LOGIN)
         perm = Permission.get_by_key('repository.write')
         RepoGroupModel().grant_user_permission(gr, base.TEST_USER_REGULAR_LOGIN, perm)
@@ -265,9 +265,9 @@ class _BaseTestCase(base.TestController):
         ## add repo permissions
         Session().commit()
 
-        repo_name = u'ingroup_inherited_%s' % self.REPO_TYPE
+        repo_name = 'ingroup_inherited_%s' % self.REPO_TYPE
         repo_name_full = RepoGroup.url_sep().join([group_name, repo_name])
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -320,7 +320,7 @@ class _BaseTestCase(base.TestController):
     def test_create_remote_repo_wrong_clone_uri(self):
         self.log_user()
         repo_name = self.NEW_REPO
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -333,7 +333,7 @@ class _BaseTestCase(base.TestController):
     def test_create_remote_repo_wrong_clone_uri_hg_svn(self):
         self.log_user()
         repo_name = self.NEW_REPO
-        description = u'description for newly created repo'
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -345,8 +345,8 @@ class _BaseTestCase(base.TestController):
 
     def test_delete(self):
         self.log_user()
-        repo_name = u'vcs_test_new_to_delete_%s' % self.REPO_TYPE
-        description = u'description for newly created repo'
+        repo_name = 'vcs_test_new_to_delete_%s' % self.REPO_TYPE
+        description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_type=self.REPO_TYPE,
@@ -404,9 +404,9 @@ class _BaseTestCase(base.TestController):
                                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(base.url('repo_check_home', repo_name=repo_name))
-        assert response.json == {u'result': True}
+        assert response.json == {'result': True}
         self.checkSessionFlash(response,
-                               u'Created repository <a href="/%s">%s</a>'
+                               'Created repository <a href="/%s">%s</a>'
                                % (urllib.parse.quote(repo_name), repo_name))
         # test if the repo was created in the database
         new_repo = Session().query(Repository) \
@@ -505,7 +505,7 @@ class _BaseTestCase(base.TestController):
 
     def test_set_fork_of_other_repo(self):
         self.log_user()
-        other_repo = u'other_%s' % self.REPO_TYPE
+        other_repo = 'other_%s' % self.REPO_TYPE
         fixture.create_repo(other_repo, repo_type=self.REPO_TYPE)
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
@@ -577,7 +577,7 @@ class _BaseTestCase(base.TestController):
 
         user = User.get(usr['user_id'])
 
-        repo_name = self.NEW_REPO + u'no_perms'
+        repo_name = self.NEW_REPO + 'no_perms'
         description = 'description for newly created repo'
         response = self.app.post(base.url('repos'),
                         fixture._get_repo_create_params(repo_private=False,

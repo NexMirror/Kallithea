@@ -659,18 +659,18 @@ class ScmModel(object):
 
         repo = repo.scm_instance
 
-        branches_group = ([(u'branch:%s' % k, k) for k, v in
+        branches_group = ([('branch:%s' % k, k) for k, v in
                            repo.branches.items()], _("Branches"))
         hist_l.append(branches_group)
         choices.extend([x[0] for x in branches_group[0]])
 
         if repo.alias == 'hg':
-            bookmarks_group = ([(u'book:%s' % k, k) for k, v in
+            bookmarks_group = ([('book:%s' % k, k) for k, v in
                                 repo.bookmarks.items()], _("Bookmarks"))
             hist_l.append(bookmarks_group)
             choices.extend([x[0] for x in bookmarks_group[0]])
 
-        tags_group = ([(u'tag:%s' % k, k) for k, v in
+        tags_group = ([('tag:%s' % k, k) for k, v in
                        repo.tags.items()], _("Tags"))
         hist_l.append(tags_group)
         choices.extend([x[0] for x in tags_group[0]])

@@ -288,7 +288,7 @@ class RepoGroupModel(object):
                 repo_group.parent_group_id = repo_group_args['parent_group_id']
 
             if 'parent_group_id' in repo_group_args:
-                assert repo_group_args['parent_group_id'] != u'-1', repo_group_args  # RepoGroupForm should have converted to None
+                assert repo_group_args['parent_group_id'] != '-1', repo_group_args  # RepoGroupForm should have converted to None
                 repo_group.parent_group = RepoGroup.get(repo_group_args['parent_group_id'])
             if 'group_name' in repo_group_args:
                 group_name = repo_group_args['group_name']

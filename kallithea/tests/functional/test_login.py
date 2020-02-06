@@ -164,7 +164,7 @@ class TestLoginController(base.TestController):
 
     @base.parametrize('args', [
         {'foo':'one', 'bar':'two'},
-        {'blue': u'blå', 'green': u'grøn'},
+        {'blue': 'blå', 'green': 'grøn'},
     ])
     def test_redirection_to_login_form_preserves_get_args(self, args):
         with fixture.anon_access(False):
@@ -178,7 +178,7 @@ class TestLoginController(base.TestController):
 
     @base.parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå', 'green':u'grøn'},
+        ({'blue': 'blå', 'green':'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_preserves_get_args(self, args, args_encoded):
@@ -190,7 +190,7 @@ class TestLoginController(base.TestController):
 
     @base.parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå', 'green':u'grøn'},
+        ({'blue': 'blå', 'green':'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_redirection_after_successful_login_preserves_get_args(self, args, args_encoded):
@@ -205,7 +205,7 @@ class TestLoginController(base.TestController):
 
     @base.parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå', 'green':u'grøn'},
+        ({'blue': 'blå', 'green':'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_after_incorrect_login_preserves_get_args(self, args, args_encoded):
@@ -392,8 +392,8 @@ class TestLoginController(base.TestController):
         username = 'test_password_reset_1'
         password = 'qweqwe'
         email = 'username@example.com'
-        name = u'passwd'
-        lastname = u'reset'
+        name = 'passwd'
+        lastname = 'reset'
         timestamp = int(time.time())
 
         new = User()
@@ -521,12 +521,12 @@ class TestLoginController(base.TestController):
         self._api_key_test(api_key, code)
 
     def test_access_page_via_extra_api_key(self):
-        new_api_key = ApiKeyModel().create(base.TEST_USER_ADMIN_LOGIN, u'test')
+        new_api_key = ApiKeyModel().create(base.TEST_USER_ADMIN_LOGIN, 'test')
         Session().commit()
         self._api_key_test(new_api_key.api_key, status=200)
 
     def test_access_page_via_expired_api_key(self):
-        new_api_key = ApiKeyModel().create(base.TEST_USER_ADMIN_LOGIN, u'test')
+        new_api_key = ApiKeyModel().create(base.TEST_USER_ADMIN_LOGIN, 'test')
         Session().commit()
         # patch the API key and make it expired
         new_api_key.expires = 0

@@ -43,12 +43,12 @@ log = logging.getLogger(__name__)
 
 class NotificationModel(object):
 
-    TYPE_CHANGESET_COMMENT = u'cs_comment'
-    TYPE_MESSAGE = u'message'
-    TYPE_MENTION = u'mention' # not used
-    TYPE_REGISTRATION = u'registration'
-    TYPE_PULL_REQUEST = u'pull_request'
-    TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
+    TYPE_CHANGESET_COMMENT = 'cs_comment'
+    TYPE_MESSAGE = 'message'
+    TYPE_MENTION = 'mention' # not used
+    TYPE_REGISTRATION = 'registration'
+    TYPE_PULL_REQUEST = 'pull_request'
+    TYPE_PULL_REQUEST_COMMENT = 'pull_request_comment'
 
     def create(self, created_by, subject, body, recipients=None,
                type_=TYPE_MESSAGE, with_email=True,

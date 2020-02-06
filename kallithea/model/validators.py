@@ -276,7 +276,7 @@ def ValidPasswordsMatch(password_field, password_confirmation_field):
 def ValidAuth():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_auth': _(u'Invalid username or password'),
+            'invalid_auth': _('Invalid username or password'),
         }
 
         def _validate_python(self, value, state):

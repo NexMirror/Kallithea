@@ -165,7 +165,7 @@ class GitRepository(object):
             log.error(traceback.format_exc())
             raise exc.HTTPExpectationFailed()
 
-        if git_command in [u'git-receive-pack']:
+        if git_command in ['git-receive-pack']:
             # updating refs manually after each push.
             # Needed for pre-1.7.0.4 git clients using regular HTTP mode.
             from kallithea.lib.vcs import get_repo

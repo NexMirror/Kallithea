@@ -29,7 +29,7 @@ class TestComments(base.TestController):
             self._check_comment_count(repo_id, revision,
                     expected_len_comments=0, expected_len_inline_comments=0)
 
-            text = u'a comment'
+            text = 'a comment'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
                     repo=base.HG_REPO,
@@ -53,9 +53,9 @@ class TestComments(base.TestController):
             self._check_comment_count(repo_id, revision,
                     expected_len_comments=0, expected_len_inline_comments=0)
 
-            text = u'an inline comment'
-            f_path = u'vcs/tests/base.py'
-            line_no = u'n50'
+            text = 'an inline comment'
+            f_path = 'vcs/tests/base.py'
+            line_no = 'n50'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
                     repo=base.HG_REPO,
@@ -87,9 +87,9 @@ class TestComments(base.TestController):
             self._check_comment_count(repo_id, revision,
                     expected_len_comments=0, expected_len_inline_comments=0)
 
-            text = u'an inline comment'
-            f_path = u'vcs/tests/base.py'
-            line_no = u'n50'
+            text = 'an inline comment'
+            f_path = 'vcs/tests/base.py'
+            line_no = 'n50'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
                     repo=base.HG_REPO,
@@ -99,8 +99,8 @@ class TestComments(base.TestController):
                     line_no=line_no,
                     send_email=False)
 
-            text2 = u'another inline comment, same file'
-            line_no2 = u'o41'
+            text2 = 'another inline comment, same file'
+            line_no2 = 'o41'
             new_comment2 = ChangesetCommentsModel().create(
                     text=text2,
                     repo=base.HG_REPO,
@@ -110,9 +110,9 @@ class TestComments(base.TestController):
                     line_no=line_no2,
                     send_email=False)
 
-            text3 = u'another inline comment, same file'
-            f_path3 = u'vcs/tests/test_hg.py'
-            line_no3 = u'n159'
+            text3 = 'another inline comment, same file'
+            f_path3 = 'vcs/tests/test_hg.py'
+            line_no3 = 'n159'
             new_comment3 = ChangesetCommentsModel().create(
                     text=text3,
                     repo=base.HG_REPO,
@@ -167,9 +167,9 @@ class TestComments(base.TestController):
             self._check_comment_count(repo_id, revision,
                     expected_len_comments=0, expected_len_inline_comments=0)
 
-            text = u'an inline comment'
-            f_path = u'vcs/tests/base.py'
-            line_no = u'n50'
+            text = 'an inline comment'
+            f_path = 'vcs/tests/base.py'
+            line_no = 'n50'
             new_comment = ChangesetCommentsModel().create(
                     text=text,
                     repo=base.HG_REPO,
@@ -179,8 +179,8 @@ class TestComments(base.TestController):
                     line_no=line_no,
                     send_email=False)
 
-            text2 = u'another inline comment, same file'
-            line_no2 = u'o41'
+            text2 = 'another inline comment, same file'
+            line_no2 = 'o41'
             new_comment2 = ChangesetCommentsModel().create(
                     text=text2,
                     repo=base.HG_REPO,
@@ -190,9 +190,9 @@ class TestComments(base.TestController):
                     line_no=line_no2,
                     send_email=False)
 
-            text3 = u'another inline comment, same file'
-            f_path3 = u'vcs/tests/test_hg.py'
-            line_no3 = u'n159'
+            text3 = 'another inline comment, same file'
+            f_path3 = 'vcs/tests/test_hg.py'
+            line_no3 = 'n159'
             new_comment3 = ChangesetCommentsModel().create(
                     text=text3,
                     repo=base.HG_REPO,

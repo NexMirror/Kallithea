@@ -265,7 +265,7 @@ class CreatePullRequestAction(object):
         from kallithea.model.changeset_status import ChangesetStatusModel
         from kallithea.model.comment import ChangesetCommentsModel
         comment = ChangesetCommentsModel().create(
-            text=u'',
+            text='',
             repo=self.org_repo,
             author=created_by,
             pull_request=pr,

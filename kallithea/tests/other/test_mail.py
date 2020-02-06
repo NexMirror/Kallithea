@@ -175,7 +175,7 @@ class TestMail(base.TestController):
         subject = 'subject'
         body = 'body'
         html_body = 'html_body'
-        author = User(name='foo', lastname=u'(fubar) "baz"')
+        author = User(name='foo', lastname='(fubar) "baz"')
         headers = {'extra': 'yes'}
 
         config_mock = {

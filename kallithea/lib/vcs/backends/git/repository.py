@@ -351,7 +351,7 @@ class GitRepository(BaseRepository):
 
     @LazyProperty
     def contact(self):
-        undefined_contact = u'Unknown'
+        undefined_contact = 'Unknown'
         return undefined_contact
 
     @property

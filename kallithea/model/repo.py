@@ -272,7 +272,7 @@ class RepoModel(object):
                 cur_repo.owner = User.get_by_username(kwargs['owner'])
 
             if 'repo_group' in kwargs:
-                assert kwargs['repo_group'] != u'-1', kwargs # RepoForm should have converted to None
+                assert kwargs['repo_group'] != '-1', kwargs # RepoForm should have converted to None
                 cur_repo.group = RepoGroup.get(kwargs['repo_group'])
                 cur_repo.repo_name = cur_repo.get_new_name(cur_repo.just_name)
             log.debug('Updating repo %s with params:%s', cur_repo, kwargs)
