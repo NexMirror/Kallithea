@@ -3,8 +3,6 @@
 Based on kallithea/lib/paster_commands/template.ini.mako, generate development.ini
 """
 
-from __future__ import print_function
-
 import re
 
 from kallithea.lib import inifile

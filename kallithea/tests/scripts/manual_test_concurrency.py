@@ -26,8 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
-from __future__ import print_function
-
 import logging
 import os
 import shutil

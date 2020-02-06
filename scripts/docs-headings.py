@@ -4,8 +4,6 @@
 Consistent formatting of rst section titles
 """
 
-from __future__ import print_function
-
 import re
 import subprocess
 

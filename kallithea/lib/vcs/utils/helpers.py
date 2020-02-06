@@ -1,7 +1,6 @@
 """
 Utilities aimed to help achieve mostly basic tasks.
 """
-from __future__ import division
 
 import datetime
 import os

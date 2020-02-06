@@ -25,8 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import print_function
-
 import argparse
 import fileinput
 import json
