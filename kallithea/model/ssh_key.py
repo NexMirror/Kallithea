@@ -134,8 +134,5 @@ class SshKeyModel(object):
             for key in UserSshKeys.query().join(UserSshKeys.user).filter(User.active == True):
                 f.write(ssh.authorized_keys_line(kallithea_cli_path, config['__file__'], key))
         os.chmod(tmp_authorized_keys, stat.S_IRUSR | stat.S_IWUSR)
-        # This preliminary remove is needed for Windows, not for Unix.
-        # TODO In Python 3, the remove+rename sequence below should become os.replace.
-        if os.path.exists(authorized_keys):
-            os.remove(authorized_keys)
-        os.rename(tmp_authorized_keys, authorized_keys)
+        # Note: simple overwrite / rename isn't enough to replace the file on Windows
+        os.replace(tmp_authorized_keys, authorized_keys)
