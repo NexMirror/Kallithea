@@ -552,7 +552,7 @@ class BaseRepoController(BaseController):
 
     def _before(self, *args, **kwargs):
         super(BaseRepoController, self)._before(*args, **kwargs)
-        if c.repo_name:  # extracted from routes
+        if c.repo_name:  # extracted from request by base-base BaseController._before
             _dbr = Repository.get_by_repo_name(c.repo_name)
             if not _dbr:
                 return
