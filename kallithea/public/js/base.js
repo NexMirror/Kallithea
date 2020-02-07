@@ -457,8 +457,10 @@ var _onSuccessFollow = function(target){
 }
 
 var toggleFollowingRepo = function(target, follows_repository_id){
-    var args = 'follows_repository_id=' + follows_repository_id;
-    args += '&amp;_session_csrf_secret_token=' + _session_csrf_secret_token;
+    var args = {
+        'follows_repository_id': follows_repository_id,
+        '_session_csrf_secret_token': _session_csrf_secret_token
+    }
     $.post(TOGGLE_FOLLOW_URL, args, function(data){
             _onSuccessFollow(target);
         });
