@@ -30,10 +30,6 @@ class TagDoesNotExistError(RepositoryError):
     pass
 
 
-class BranchAlreadyExistError(RepositoryError):
-    pass
-
-
 class BranchDoesNotExistError(RepositoryError):
     pass
 
@@ -47,10 +43,6 @@ class ChangesetDoesNotExistError(ChangesetError):
 
 
 class CommitError(RepositoryError):
-    pass
-
-
-class NothingChangedError(CommitError):
     pass
 
 
@@ -87,8 +79,4 @@ class NodeAlreadyRemovedError(CommitError):
 
 
 class ImproperArchiveTypeError(VCSError):
-    pass
-
-
-class CommandError(VCSError):
     pass

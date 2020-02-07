@@ -584,11 +584,11 @@ def ValidPerms(type_='repo'):
             for k, v, t in perms_new:
                 try:
                     if t == 'user':
-                        self.user_db = User.query() \
+                        _user_db = User.query() \
                             .filter(User.active == True) \
                             .filter(User.username == k).one()
                     if t == 'users_group':
-                        self.user_db = UserGroup.query() \
+                        _user_db = UserGroup.query() \
                             .filter(UserGroup.users_group_active == True) \
                             .filter(UserGroup.users_group_name == k).one()
 

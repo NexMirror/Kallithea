@@ -392,7 +392,7 @@ class MIMEPart(MIMEBase):
         if mail.body is None:
             return  # only None, '' is still ok
 
-        ctype, ctype_params = mail.content_encoding['Content-Type']
+        ctype, _ctype_params = mail.content_encoding['Content-Type']
         cdisp, cdisp_params = mail.content_encoding['Content-Disposition']
 
         assert ctype, ("Extract payload requires that mail.content_encoding "

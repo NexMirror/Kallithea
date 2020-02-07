@@ -1,6 +1,3 @@
-import threading
-
-
 class _Missing(object):
 
     def __repr__(self):
@@ -43,22 +40,4 @@ class LazyProperty(object):
         if value is _missing:
             value = self._func(obj)
             obj.__dict__[self.__name__] = value
-        return value
-
-
-class ThreadLocalLazyProperty(LazyProperty):
-    """
-    Same as above but uses thread local dict for cache storage.
-    """
-
-    def __get__(self, obj, klass=None):
-        if obj is None:
-            return self
-        if not hasattr(obj, '__tl_dict__'):
-            obj.__tl_dict__ = threading.local().__dict__
-
-        value = obj.__tl_dict__.get(self.__name__, _missing)
-        if value is _missing:
-            value = self._func(obj)
-            obj.__tl_dict__[self.__name__] = value
         return value

@@ -11,7 +11,7 @@ def get_dirs_for_path(*paths):
     for path in paths:
         head = path
         while head:
-            head, tail = os.path.split(head)
+            head, _tail = os.path.split(head)
             if head:
                 yield head
             else:

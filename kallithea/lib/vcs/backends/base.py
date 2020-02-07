@@ -258,8 +258,6 @@ class BaseRepository(object):
         """
         Persists current changes made on this repository and returns newly
         created changeset.
-
-        :raises ``NothingChangedError``: if no changes has been made
         """
         raise NotImplementedError
 

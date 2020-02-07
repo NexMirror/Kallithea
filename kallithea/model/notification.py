@@ -33,7 +33,6 @@ from tg import app_globals
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 
-import kallithea
 from kallithea.lib import helpers as h
 from kallithea.model.db import User
 
@@ -149,7 +148,6 @@ class EmailNotificationModel(object):
 
     def __init__(self):
         super(EmailNotificationModel, self).__init__()
-        self._template_root = kallithea.CONFIG['paths']['templates'][0]
         self._tmpl_lookup = app_globals.mako_lookup
         self.email_types = {
             self.TYPE_CHANGESET_COMMENT: 'changeset_comment',

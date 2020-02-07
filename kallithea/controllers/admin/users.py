@@ -70,7 +70,6 @@ class UsersController(BaseController):
                         .all()
 
         users_data = []
-        total_records = len(c.users_list)
         _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 

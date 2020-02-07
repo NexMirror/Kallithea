@@ -221,17 +221,6 @@ class BufferedGenerator(object):
         return not self.worker.keep_reading.is_set()
 
     @property
-    def done_reading_event(self):
-        """
-        Done_reading does not mean that the iterator's buffer is empty.
-        Iterator might have done reading from underlying source, but the read
-        chunks might still be available for serving through .next() method.
-
-        :returns: An threading.Event class instance.
-        """
-        return self.worker.EOF
-
-    @property
     def done_reading(self):
         """
         Done_reading does not mean that the iterator's buffer is empty.

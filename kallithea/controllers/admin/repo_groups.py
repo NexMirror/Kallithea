@@ -101,7 +101,6 @@ class RepoGroupsController(BaseController):
         _list = RepoGroup.query(sorted=True).all()
         group_iter = RepoGroupList(_list, perm_level='admin')
         repo_groups_data = []
-        total_records = len(group_iter)
         _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 

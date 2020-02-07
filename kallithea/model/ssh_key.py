@@ -52,7 +52,7 @@ class SshKeyModel(object):
         Will raise SshKeyModelException on errors
         """
         try:
-            keytype, pub, comment = ssh.parse_pub_key(public_key)
+            keytype, _pub, comment = ssh.parse_pub_key(public_key)
         except ssh.SshKeyParseError as e:
             raise SshKeyModelException(_('SSH key %r is invalid: %s') % (public_key, e.args[0]))
         if not description.strip():

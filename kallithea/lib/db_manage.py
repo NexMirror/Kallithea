@@ -54,7 +54,6 @@ class DbManage(object):
         self.tests = tests
         self.root = root
         self.dburi = dbconf
-        self.db_exists = False
         self.cli_args = cli_args or {}
         self.init_db(SESSION=SESSION)
 

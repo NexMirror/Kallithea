@@ -215,7 +215,6 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
             return {
                'location': h.url('my_pullrequests'), # or repo pr list?
             }
-            raise HTTPFound(location=h.url('my_pullrequests')) # or repo pr list?
         raise HTTPForbidden()
 
     text = request.POST.get('text', '').strip()
