@@ -57,6 +57,25 @@ from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 from kallithea.lib.vcs.utils import author_email, author_name
 
 
+# mute pyflakes "imported but unused"
+assert Option
+assert checkbox
+assert end_form
+assert password
+assert radio
+assert submit
+assert text
+assert textarea
+assert format_byte_size
+assert chop_at
+assert wrap_paragraphs
+assert HasPermissionAny
+assert HasRepoGroupPermissionLevel
+assert HasRepoPermissionLevel
+assert time_to_datetime
+assert EmptyChangeset
+
+
 log = logging.getLogger(__name__)
 
 

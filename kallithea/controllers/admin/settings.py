@@ -120,6 +120,7 @@ class SettingsController(BaseController):
                 if sett.ui_active:
                     try:
                         import hgsubversion  # pragma: no cover
+                        assert hgsubversion
                     except ImportError:
                         raise HgsubversionImportError
 

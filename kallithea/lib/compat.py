@@ -62,3 +62,8 @@ if os.name == 'nt': # Windows
 
 else:
     kill = os.kill
+
+
+# mute pyflakes "imported but unused"
+assert hybrid_property
+assert OrderedSet

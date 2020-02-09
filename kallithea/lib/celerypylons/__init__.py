@@ -21,6 +21,12 @@ from celery.bin import worker
 from celery.task import task
 
 
+# mute pyflakes "imported but unused"
+assert result
+assert worker
+assert task
+
+
 def celery_config(config):
     """Return Celery config object populated from relevant settings in a config dict, such as tg.config"""
 

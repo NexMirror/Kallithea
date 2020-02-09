@@ -45,6 +45,14 @@ from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
+# mute pyflakes "imported but unused"
+assert ascii_bytes
+assert ascii_str
+assert safe_bytes
+assert safe_str
+assert LazyProperty
+
+
 def str2bool(_str):
     """
     returns True/False value from given string, it tries to translate the

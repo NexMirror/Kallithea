@@ -113,6 +113,7 @@ base_config = KallitheaAppConfig()
 try:
     from tgext.debugbar import enable_debugbar
     import kajiki # only to check its existence
+    assert kajiki
 except ImportError:
     pass
 else:
