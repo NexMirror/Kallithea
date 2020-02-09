@@ -112,8 +112,8 @@ try:
     long_description = open(README_FILE).read()
 except IOError as err:
     sys.stderr.write(
-        "[WARNING] Cannot find file specified as long_description (%s)\n"
-        % README_FILE
+        "[WARNING] Cannot find file specified as long_description (%s): %s\n"
+        % (README_FILE, err)
     )
     long_description = description
 

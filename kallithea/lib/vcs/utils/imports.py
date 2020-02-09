@@ -1,6 +1,3 @@
-from kallithea.lib.vcs.exceptions import VCSError
-
-
 def import_class(class_path):
     """
     Returns class from the given path.
@@ -8,10 +5,7 @@ def import_class(class_path):
     For example, in order to get class located at
     ``vcs.backends.hg.MercurialRepository``:
 
-        try:
-            hgrepo = import_class('vcs.backends.hg.MercurialRepository')
-        except VCSError:
-            # handle error
+        hgrepo = import_class('vcs.backends.hg.MercurialRepository')
     """
     splitted = class_path.split('.')
     mod_path = '.'.join(splitted[:-1])

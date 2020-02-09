@@ -33,7 +33,7 @@ from collections import OrderedDict, defaultdict
 from tg import request, response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPFound, HTTPNotFound
+from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPNotFound
 
 import kallithea.lib.helpers as h
 from kallithea.lib import diffs
