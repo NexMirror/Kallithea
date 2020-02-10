@@ -55,11 +55,11 @@ error_email_from =
 <%text>## For "SSL", use smtp_use_ssl = true and smtp_port = 465.</%text>
 <%text>## For "STARTTLS", use smtp_use_tls = true and smtp_port = 587.</%text>
 smtp_server =
-#smtp_username =
-#smtp_password =
+smtp_username =
+smtp_password =
 smtp_port =
-#smtp_use_ssl = false
-#smtp_use_tls = false
+smtp_use_ssl = false
+smtp_use_tls = false
 
 %if http_server != 'uwsgi':
 <%text>## Entry point for 'gearbox serve'</%text>
@@ -435,10 +435,13 @@ session.secret = ${uuid()}
 
 # Propagate email settings to ErrorReporter of TurboGears2
 # You do not normally need to change these lines
-get trace_errors.error_email = email_to
 get trace_errors.smtp_server = smtp_server
 get trace_errors.smtp_port = smtp_port
 get trace_errors.from_address = error_email_from
+get trace_errors.error_email = email_to
+get trace_errors.smtp_username = smtp_username
+get trace_errors.smtp_password = smtp_password
+get trace_errors.smtp_use_tls = smtp_use_tls
 
 %if error_aggregation_service == 'appenlight':
 <%text>####################</%text>
