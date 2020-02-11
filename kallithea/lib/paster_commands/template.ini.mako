@@ -363,8 +363,7 @@ broker.url = amqp://rabbitmq:qewqew@localhost:5672/rabbitmqhost
 
 celery.imports = kallithea.lib.celerylib.tasks
 celery.accept.content = pickle
-celery.result.backend = amqp
-celery.result.dburi = amqp://
+celery.result.backend = amqp://
 celery.result.serializer = json
 
 #celery.send.task.error.emails = true
