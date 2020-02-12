@@ -791,6 +791,13 @@ msgstr ""
 msgid "SSH key is missing"
 msgstr "Отсутствует ключ SSH"
 
+msgid ""
+"Incorrect SSH key - it must have both a key type and a base64 part, like "
+"'ssh-rsa ASRNeaZu4FA...xlJp='"
+msgstr ""
+"Некорректный ключ SSH — должен присутствовать тип ключа и код base64, "
+"например 'ssh-rsa ASRNeaZu4FA...xlJp='"
+
 msgid "Incorrect SSH key - it must start with 'ssh-(rsa|dss|ed25519)'"
 msgstr ""
 "Некорректный ключ SSH — он должен начинаться с 'ssh-(rsa|dss|ed25519)'"
@@ -1068,6 +1075,9 @@ msgstr "Ошибка ключа SSH %r: %s"
 
 msgid "SSH key %s is already used by %s"
 msgstr "Ключ SSH %s уже используется пользователем %s"
+
+msgid "SSH key with fingerprint %r found"
+msgstr "Найден ключ SSH с отпечатком %r"
 
 msgid "New user registration"
 msgstr "Регистрация нового пользователя"
