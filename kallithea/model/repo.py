@@ -138,11 +138,15 @@ class RepoModel(object):
         admin: return data for action column.
         """
         _render = self._render_datatable
-        from tg import tmpl_context as c
+        from tg import tmpl_context as c, request
+        from kallithea.model.scm import ScmModel
 
         def repo_lnk(name, rtype, rstate, private, fork_of):
             return _render('repo_name', name, rtype, rstate, private, fork_of,
                            short_name=short_name)
+
+        def following(repo_id, is_following):
+            return _render('following', repo_id, is_following)
 
         def last_change(last_change):
             return _render("last_change", last_change)
@@ -188,6 +192,10 @@ class RepoModel(object):
                 "just_name": repo.just_name,
                 "name": repo_lnk(repo.repo_name, repo.repo_type,
                                  repo.repo_state, repo.private, repo.fork),
+                "following": following(
+                    repo.repo_id,
+                    ScmModel().is_following_repo(repo.repo_name, request.authuser.user_id),
+                ),
                 "last_change_iso": repo.last_db_change.isoformat(),
                 "last_change": last_change(repo.last_db_change),
                 "last_changeset": last_rev(repo.repo_name, cs_cache),
