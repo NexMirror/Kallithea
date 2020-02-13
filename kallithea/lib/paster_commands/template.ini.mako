@@ -359,18 +359,20 @@ ssh_locale = ${ssh_locale}
 <%text>## Note: Celery doesn't support Windows.</%text>
 use_celery = false
 
+<%text>## Celery config settings from https://docs.celeryproject.org/en/4.4.0/userguide/configuration.html prefixed with 'celery.'.</%text>
+
 <%text>## Example: use the message queue on the local virtual host 'kallitheavhost' as the RabbitMQ user 'kallithea':</%text>
-broker.url = amqp://kallithea:thepassword@localhost:5672/kallitheavhost
+celery.broker_url = amqp://kallithea:thepassword@localhost:5672/kallitheavhost
 
 celery.result.backend = db+sqlite:///celery-results.db
 
 #celery.amqp.task.result.expires = 18000
 
-celeryd.concurrency = 2
-celeryd.max.tasks.per.child = 1
+celery.worker_concurrency = 2
+celery.worker_max_tasks_per_child = 1
 
 <%text>## If true, tasks will never be sent to the queue, but executed locally instead.</%text>
-celery.always.eager = false
+celery.task_always_eager = false
 
 <%text>####################################</%text>
 <%text>###         BEAKER CACHE        ####</%text>
