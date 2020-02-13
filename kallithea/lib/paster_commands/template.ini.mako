@@ -358,8 +358,8 @@ ssh_locale = ${ssh_locale}
 
 use_celery = false
 
-<%text>## Example: connect to the virtual host 'rabbitmqhost' on localhost as rabbitmq:</%text>
-broker.url = amqp://rabbitmq:qewqew@localhost:5672/rabbitmqhost
+<%text>## Example: use the message queue on the local virtual host 'kallitheavhost' as the RabbitMQ user 'kallithea':</%text>
+broker.url = amqp://kallithea:thepassword@localhost:5672/kallitheavhost
 
 celery.result.backend = db+sqlite:///celery-results.db
 
