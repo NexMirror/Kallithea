@@ -36,7 +36,7 @@ from time import mktime
 
 from tg import config
 
-from kallithea import CELERY_ON
+import kallithea
 from kallithea.lib import celerylib, ext_json
 from kallithea.lib.helpers import person
 from kallithea.lib.hooks import log_create_repository
@@ -218,7 +218,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
         lock.release()
 
         # execute another task if celery is enabled
-        if len(repo.revisions) > 1 and CELERY_ON and recurse_limit > 0:
+        if len(repo.revisions) > 1 and kallithea.CELERY_APP and recurse_limit > 0:
             get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit - 1)
         elif recurse_limit <= 0:
             log.debug('Not recursing - limit has been reached')

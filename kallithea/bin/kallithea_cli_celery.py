@@ -32,10 +32,9 @@ def celery_run(celery_args):
     by this CLI command.
     """
 
-    if not kallithea.CELERY_ON:
+    if not kallithea.CELERY_APP:
         raise Exception('Please set use_celery = true in .ini config '
                         'file before running this command')
 
-    app = celerypylons.make_app()
-    cmd = celerypylons.worker.worker(app)
+    cmd = celerypylons.worker.worker(kallithea.CELERY_APP)
     return cmd.run_from_argv(None, command='celery-run -c CONFIG_FILE --', argv=list(celery_args))

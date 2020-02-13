@@ -33,7 +33,7 @@ from hashlib import md5
 from decorator import decorator
 from tg import config
 
-from kallithea import CELERY_EAGER, CELERY_ON
+import kallithea
 from kallithea.lib.pidlock import DaemonLock, LockHeld
 from kallithea.lib.utils2 import safe_bytes
 from kallithea.model import meta
@@ -57,10 +57,10 @@ class FakeTask(object):
 
 
 def task(f_org):
-    """Wrapper of celery.task.task, running async if CELERY_ON
+    """Wrapper of celery.task.task, running async if CELERY_APP
     """
 
-    if CELERY_ON:
+    if kallithea.CELERY_APP:
         def f_async(*args, **kwargs):
             log.info('executing %s task', f_org.__name__)
             try:
@@ -128,7 +128,7 @@ def dbsession(func):
             ret = func(*fargs, **fkwargs)
             return ret
         finally:
-            if CELERY_ON and not CELERY_EAGER:
+            if kallithea.CELERY_APP and not kallithea.CELERY_EAGER:
                 meta.Session.remove()
 
     return decorator(__wrapper, func)

@@ -34,6 +34,7 @@ from tg.support.converters import asbool
 import kallithea.lib.locale
 import kallithea.model.base
 import kallithea.model.meta
+from kallithea.lib import celerypylons
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
@@ -158,7 +159,8 @@ def setup_configuration(app):
             sys.exit(1)
 
     # store some globals into kallithea
-    kallithea.CELERY_ON = str2bool(config.get('use_celery'))
+    if str2bool(config.get('use_celery')):
+        kallithea.CELERY_APP = celerypylons.make_app()
     kallithea.CELERY_EAGER = str2bool(config.get('celery.always.eager'))
     kallithea.CONFIG = config
 
