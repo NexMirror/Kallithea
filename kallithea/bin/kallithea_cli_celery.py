@@ -12,11 +12,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import celery.bin.worker
 import click
 
 import kallithea
 import kallithea.bin.kallithea_cli_base as cli_base
-from kallithea.lib import celerypylons
 
 
 @cli_base.register_command(config_file_initialize_app=True)
@@ -36,5 +36,5 @@ def celery_run(celery_args):
         raise Exception('Please set use_celery = true in .ini config '
                         'file before running this command')
 
-    cmd = celerypylons.worker.worker(kallithea.CELERY_APP)
+    cmd = celery.bin.worker.worker(kallithea.CELERY_APP)
     return cmd.run_from_argv(None, command='celery-run -c CONFIG_FILE --', argv=list(celery_args))

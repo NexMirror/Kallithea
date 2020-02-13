@@ -15,16 +15,7 @@ mandatory settings.
 """
 
 import celery
-import celery.result as result
 import tg
-from celery.bin import worker
-from celery.task import task
-
-
-# mute pyflakes "imported but unused"
-assert result
-assert worker
-assert task
 
 
 def celery_config(config):
