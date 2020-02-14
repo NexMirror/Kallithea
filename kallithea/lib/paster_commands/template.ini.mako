@@ -361,7 +361,7 @@ use_celery = false
 <%text>## Example: connect to the virtual host 'rabbitmqhost' on localhost as rabbitmq:</%text>
 broker.url = amqp://rabbitmq:qewqew@localhost:5672/rabbitmqhost
 
-celery.result.backend = amqp://
+celery.result.backend = db+sqlite:///celery-results.db
 
 #celery.send.task.error.emails = true
 #celery.amqp.task.result.expires = 18000
