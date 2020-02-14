@@ -27,13 +27,13 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import email.utils
-import logging
 import os
 import traceback
 from collections import OrderedDict
 from operator import itemgetter
 from time import mktime
 
+import celery.utils.log
 from tg import config
 
 import kallithea
@@ -50,7 +50,7 @@ from kallithea.model.db import RepoGroup, Repository, Statistics, User
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
 
 
-log = logging.getLogger(__name__)
+log = celery.utils.log.get_task_logger(__name__)
 
 
 @celerylib.task
