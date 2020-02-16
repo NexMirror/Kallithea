@@ -353,7 +353,7 @@ var _run_callbacks = function(callbacks){
 /**
  * turns objects into GET query string
  */
-var _toQueryString = function(o) {
+function _toQueryString(o) {
     if(typeof o !== 'object') {
         return false;
     }
@@ -362,7 +362,7 @@ var _toQueryString = function(o) {
         _qs.push(encodeURIComponent(_p) + '=' + encodeURIComponent(o[_p]));
     }
     return _qs.join('&');
-};
+}
 
 /**
  * Load HTML into DOM using Ajax
@@ -395,7 +395,7 @@ function asynchtml(url, $target, success, args){
         ;
 };
 
-var ajaxGET = function(url, success, failure) {
+function ajaxGET(url, success, failure) {
     if(failure === undefined) {
         failure = function(jqXHR, textStatus, errorThrown) {
                 if (textStatus != "abort")
@@ -405,9 +405,9 @@ var ajaxGET = function(url, success, failure) {
     return $.ajax({url: url, headers: {'X-PARTIAL-XHR': '1'}, cache: false})
         .done(success)
         .fail(failure);
-};
+}
 
-var ajaxPOST = function(url, postData, success, failure) {
+function ajaxPOST(url, postData, success, failure) {
     postData['_session_csrf_secret_token'] = _session_csrf_secret_token;
     var postData = _toQueryString(postData);
     if(failure === undefined) {
@@ -419,7 +419,7 @@ var ajaxPOST = function(url, postData, success, failure) {
     return $.ajax({url: url, data: postData, type: 'POST', headers: {'X-PARTIAL-XHR': '1'}, cache: false})
         .done(success)
         .fail(failure);
-};
+}
 
 
 /**
@@ -427,16 +427,16 @@ var ajaxPOST = function(url, postData, success, failure) {
  * the .show_more must have an id that is the the id of an element to hide prefixed with _
  * the parentnode will be displayed
  */
-var show_more_event = function(){
+function show_more_event(){
     $('.show_more').click(function(e){
         var el = e.currentTarget;
         $('#' + el.id.substring(1)).hide();
         $(el.parentNode).show();
     });
-};
+}
 
 
-var _onSuccessFollow = function(target){
+function _onSuccessFollow(target){
     var $target = $(target);
     var $f_cnt = $('#current_followers_count');
     if ($target.hasClass('follow')) {
@@ -456,7 +456,7 @@ var _onSuccessFollow = function(target){
     }
 }
 
-var toggleFollowingRepo = function(target, follows_repository_id){
+function toggleFollowingRepo(target, follows_repository_id){
     var args = {
         'follows_repository_id': follows_repository_id,
         '_session_csrf_secret_token': _session_csrf_secret_token
@@ -465,9 +465,9 @@ var toggleFollowingRepo = function(target, follows_repository_id){
             _onSuccessFollow(target);
         });
     return false;
-};
+}
 
-var showRepoSize = function(target, repo_name){
+function showRepoSize(target, repo_name){
     var args = '_session_csrf_secret_token=' + _session_csrf_secret_token;
 
     if(!$("#" + target).hasClass('loaded')){
@@ -479,12 +479,12 @@ var showRepoSize = function(target, repo_name){
         });
     }
     return false;
-};
+}
 
 /**
  * load tooltips dynamically based on data attributes, used for .lazy-cs changeset links
  */
-var get_changeset_tooltip = function() {
+function get_changeset_tooltip() {
     var $target = $(this);
     var tooltip = $target.data('tooltip');
     if (!tooltip) {
@@ -501,12 +501,12 @@ var get_changeset_tooltip = function() {
         $target.data('tooltip', tooltip);
     }
     return tooltip;
-};
+}
 
 /**
  * activate tooltips and popups
  */
-var tooltip_activate = function(){
+function tooltip_activate(){
     function placement(p, e){
         if(e.getBoundingClientRect().top > 2*$(window).height()/3){
             return 'top';
@@ -531,7 +531,7 @@ var tooltip_activate = function(){
             placement: placement
         });
     });
-};
+}
 
 
 /**
@@ -799,7 +799,7 @@ function deleteComment(comment_id) {
 /**
  * Double link comments
  */
-var linkInlineComments = function($firstlinks, $comments){
+function linkInlineComments($firstlinks, $comments){
     if ($comments.length > 0) {
         $firstlinks.html('<a href="#{0}">First comment</a>'.format($comments.prop('id')));
     }
@@ -825,7 +825,7 @@ var linkInlineComments = function($firstlinks, $comments){
 }
 
 /* activate files.html stuff */
-var fileBrowserListeners = function(node_list_url, url_base){
+function fileBrowserListeners(node_list_url, url_base){
     var $node_filter = $('#node_filter');
 
     var filterTimeout = null;
@@ -914,10 +914,10 @@ var fileBrowserListeners = function(node_list_url, url_base){
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(updateFilter(e),600);
         });
-};
+}
 
 
-var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
+function initCodeMirror(textarea_id, baseUrl, resetUrl){
     var myCodeMirror = CodeMirror.fromTextArea($('#' + textarea_id)[0], {
             mode: "null",
             lineNumbers: true,
@@ -943,14 +943,14 @@ var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
         });
 
     return myCodeMirror
-};
+}
 
-var setCodeMirrorMode = function(codeMirrorInstance, mode) {
+function setCodeMirrorMode(codeMirrorInstance, mode) {
     CodeMirror.autoLoadMode(codeMirrorInstance, mode);
 }
 
 
-var _getIdentNode = function(n){
+function _getIdentNode(n){
     //iterate thrugh nodes until matching interesting node
 
     if (typeof n == 'undefined'){
@@ -963,11 +963,11 @@ var _getIdentNode = function(n){
     else{
         return _getIdentNode(n.parentNode);
     }
-};
+}
 
 /* generate links for multi line selects that can be shown by files.html page_highlights.
  * This is a mouseup handler for hlcode from CodeHtmlFormatter and pygmentize */
-var getSelectionLink = function(e) {
+function getSelectionLink(e) {
     //get selection from start/to nodes
     if (typeof window.getSelection != "undefined") {
         var s = window.getSelection();
@@ -1004,7 +1004,7 @@ var getSelectionLink = function(e) {
             $hl_div.hide();
         }
     }
-};
+}
 
 /**
  * Autocomplete functionality
@@ -1050,7 +1050,7 @@ var autocompleteMatchGroups = function (sQuery, myGroups) {
 
 // Highlight the snippet if it is found in the full text, while escaping any existing markup.
 // Snippet must be lowercased already.
-var autocompleteHighlightMatch = function (full, snippet) {
+function autocompleteHighlightMatch(full, snippet) {
     var matchindex = full.toLowerCase().indexOf(snippet);
     if (matchindex <0)
         return full.html_escape();
@@ -1059,10 +1059,10 @@ var autocompleteHighlightMatch = function (full, snippet) {
         + full.substr(matchindex, snippet.length).html_escape()
         + '</span>'
         + full.substring(matchindex + snippet.length).html_escape();
-};
+}
 
 // Return html snippet for showing the provided gravatar url
-var gravatar = function(gravatar_lnk, size, cssclass) {
+function gravatar(gravatar_lnk, size, cssclass) {
     if (!gravatar_lnk) {
         return '';
     }
@@ -1074,7 +1074,7 @@ var gravatar = function(gravatar_lnk, size, cssclass) {
             '></i>').format(size, gravatar_lnk, cssclass);
 }
 
-var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
+function autocompleteGravatar(res, gravatar_lnk, size, group) {
     var elem;
     if (group !== undefined) {
         elem = '<i class="perm-gravatar-ac icon-users"></i>';
@@ -1085,7 +1085,7 @@ var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
 }
 
 // Custom formatter to highlight the matching letters and do HTML escaping
-var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
+function autocompleteFormatter(oResultData, sQuery, sResultMatch) {
     var query;
     if (sQuery && sQuery.toLowerCase) // YAHOO AutoComplete
         query = sQuery.toLowerCase();
@@ -1115,9 +1115,9 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     }
 
     return '';
-};
+}
 
-var SimpleUserAutoComplete = function ($inputElement) {
+function SimpleUserAutoComplete($inputElement) {
     $inputElement.select2({
         formatInputTooShort: $inputElement.attr('placeholder'),
         initSelection : function (element, callback) {
@@ -1152,7 +1152,7 @@ var SimpleUserAutoComplete = function ($inputElement) {
     });
 }
 
-var MembersAutoComplete = function ($inputElement, $typeElement) {
+function MembersAutoComplete($inputElement, $typeElement) {
 
     $inputElement.select2({
         placeholder: $inputElement.attr('placeholder'),
@@ -1180,7 +1180,7 @@ var MembersAutoComplete = function ($inputElement, $typeElement) {
     });
 }
 
-var MentionsAutoComplete = function ($inputElement) {
+function MentionsAutoComplete($inputElement) {
   $inputElement.atwho({
     at: "@",
     callbacks: {
@@ -1209,7 +1209,7 @@ var MentionsAutoComplete = function ($inputElement) {
     },
     insertTpl: "${atwho-at}${nname}"
   });
-};
+}
 
 
 // Set caret at the given position in the input element
@@ -1230,7 +1230,7 @@ function _setCaretPosition($inputElement, caretPos) {
 }
 
 
-var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
+function addReviewMember(id,fname,lname,nname,gravatar_link,gravatar_size){
     var displayname = nname;
     if ((fname != "") && (lname != "")) {
         displayname = "{0} {1} ({2})".format(fname, lname, nname);
@@ -1267,7 +1267,7 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     }
 }
 
-var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
+function removeReviewMember(reviewer_id, repo_name, pull_request_id){
     var $li = $('#reviewer_{0}'.format(reviewer_id));
     $li.find('div div').css("text-decoration", "line-through");
     $li.find('input').prop('name', 'review_members_removed');
@@ -1275,7 +1275,7 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 }
 
 /* activate auto completion of users as PR reviewers */
-var PullRequestAutoComplete = function ($inputElement) {
+function PullRequestAutoComplete($inputElement) {
     $inputElement.select2(
     {
         placeholder: $inputElement.attr('placeholder'),
@@ -1350,7 +1350,7 @@ function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data)
 
 /* Multi selectors */
 
-var MultiSelectWidget = function(selected_id, available_id, form_id){
+function MultiSelectWidget(selected_id, available_id, form_id){
     var $availableselect = $('#' + available_id);
     var $selectedselect = $('#' + selected_id);
 
@@ -1384,7 +1384,7 @@ var MultiSelectWidget = function(selected_id, available_id, form_id){
  Branch Sorting callback for select2, modifying the filtered result so prefix
  matches come before matches in the line.
  **/
-var branchSort = function(results, container, query) {
+function branchSort(results, container, query) {
     if (query.term) {
         return results.sort(function (a, b) {
             // Put closed branches after open ones (a bit of a hack ...)
@@ -1418,9 +1418,9 @@ var branchSort = function(results, container, query) {
         });
     }
     return results;
-};
+}
 
-var prefixFirstSort = function(results, container, query) {
+function prefixFirstSort(results, container, query) {
     if (query.term) {
         return results.sort(function (a, b) {
             // if parent node, no sorting
@@ -1449,23 +1449,23 @@ var prefixFirstSort = function(results, container, query) {
         });
     }
     return results;
-};
+}
 
 /* Helper for jQuery DataTables */
 
-var updateRowCountCallback = function updateRowCountCallback($elem, onlyDisplayed) {
+function updateRowCountCallback($elem, onlyDisplayed) {
     return function drawCallback() {
         var info = this.api().page.info(),
             count = onlyDisplayed === true ? info.recordsDisplay : info.recordsTotal;
         $elem.html(count);
     }
-};
+}
 
 
 /**
  * activate changeset parent/child navigation links
  */
-var activate_parent_child_links = function(){
+function activate_parent_child_links(){
 
     $('.parent-child-link').on('click', function(e){
         var $this = $(this);

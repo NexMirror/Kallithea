@@ -28,7 +28,7 @@
   <link href="${h.url('rss_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s RSS feed') % c.repo_name}" type="application/rss+xml" />
 
   <script>'use strict';
-  redirect_hash_branch = function(){
+  function redirect_hash_branch(){
     var branch = window.location.hash.replace(/^#(.*)/, '$1');
     if (branch){
       window.location = ${h.js(h.url('changelog_home',repo_name=c.repo_name,branch='__BRANCH__'))}
