@@ -42,6 +42,10 @@ default_variables = {
     'uuid': lambda: 'VERY-SECRET',
 }
 
+variable_options = {
+    'database_engine': ['sqlite', 'postgres', 'mysql'],
+    'http_server': ['waitress', 'gearbox', 'gevent', 'gunicorn', 'uwsgi'],
+}
 
 def expand(template, mako_variable_values, settings):
     """Expand mako template and tweak it.
@@ -64,15 +68,15 @@ def expand(template, mako_variable_values, settings):
     ... some_variable = "never mind - option-b will not be used anyway ..."
     ... %endif
     ... '''
-    >>> selected_mako_conditionals = []
     >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function': (lambda: 'FUNCTION RESULT'),
-    ...                         'conditional_options': 'option-a'}
+    ...                         'conditional_options': 'option-a', 'http_server': 'nc'}
     >>> settings = { # only partially used
     ...     '[first-section]': {'variable2': 'VAL2', 'first_extra': 'EXTRA'},
     ...     '[third-section]': {'third_extra': ' 3'},
     ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
     ... }
     >>> print(expand(template, mako_variable_values, settings))
+    ERROR: http_server is 'nc' - it should be one of 'waitress', 'gearbox', 'gevent', 'gunicorn', 'uwsgi'
     <BLANKLINE>
     [first-section]
     <BLANKLINE>
@@ -98,6 +102,12 @@ def expand(template, mako_variable_values, settings):
     mako_variables = dict(default_variables)
     mako_variables.update(mako_variable_values or {})
     settings = dict((k, dict(v)) for k, v in settings.items()) # deep copy before mutating
+
+    for key, value in mako_variables.items():
+        if key in variable_options:
+            if value not in variable_options[key]:
+                print('ERROR: %s is %r - it should be one of %s' %
+                      (key, value, ', '.join(repr(x) for x in variable_options[key])))
 
     ini_lines = mako.template.Template(template).render(**mako_variables)
 
