@@ -252,10 +252,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
 
         var data = [];
         var new_dataset = {};
-        var keys = [];
-        var max_commits = 0;
         for(var key in dataset){
-
             for(var ds in dataset[key].data){
                 let commit_data = dataset[key].data[ds];
                 if (commit_data.time >= ranges.xaxis.from && commit_data.time <= ranges.xaxis.to){

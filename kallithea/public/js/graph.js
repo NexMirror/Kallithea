@@ -109,9 +109,9 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			const in_l = cur[1];
 			const closing = cur[2];
 			const obsolete_node = cur[3];
-			const bumped_node = cur[4];
-			const divergent_node = cur[5];
-			const extinct_node = cur[6];
+			//const bumped_node = cur[4];
+			//const divergent_node = cur[5];
+			//const extinct_node = cur[6];
 			const unstable_node = cur[7];
 
 			// center dots on the first element in a td (not necessarily the first one, but there must be one)

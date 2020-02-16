@@ -281,10 +281,6 @@ var pyroutes = (function() {
         return str_format;
     })();
 
-    var vsprintf = function(fmt, argv) {
-        argv.unshift(fmt);
-        return sprintf.apply(null, argv);
-    };
     return {
         'url': function(route_name, params) {
             var result = route_name;
@@ -334,21 +330,6 @@ var pyroutes = (function() {
     }
 })();
 
-
-/* Invoke all functions in callbacks */
-var _run_callbacks = function(callbacks){
-    if (callbacks !== undefined){
-        var _l = callbacks.length;
-        for (var i=0;i<_l;i++){
-            var func = callbacks[i];
-            if(typeof(func)=='function'){
-                try{
-                    func();
-                }catch (err){}
-            }
-        }
-    }
-}
 
 /**
  * turns objects into GET query string
@@ -531,61 +512,6 @@ function tooltip_activate(){
         });
     });
 }
-
-
-/**
- * Quick filter widget
- *
- * @param target: filter input target
- * @param nodes: list of nodes in html we want to filter.
- * @param display_element function that takes current node from nodes and
- *    does hide or show based on the node
- */
-var q_filter = (function() {
-    var _namespace = {};
-    var namespace = function (target) {
-        if (!(target in _namespace)) {
-            _namespace[target] = {};
-        }
-        return _namespace[target];
-    };
-    return function (target, $nodes, display_element) {
-        var $q_filter_field = $('#' + target);
-        var F = namespace(target);
-
-        $q_filter_field.keyup(function () {
-            clearTimeout(F.filterTimeout);
-            F.filterTimeout = setTimeout(F.updateFilter, 600);
-        });
-
-        F.filterTimeout = null;
-
-        F.updateFilter = function () {
-            // Reset timeout
-            F.filterTimeout = null;
-
-            var obsolete = [];
-
-            var req = $q_filter_field.val().toLowerCase();
-
-            var showing = 0;
-            $nodes.each(function () {
-                var n = this;
-                var target_element = display_element(n);
-                if (req && n.innerHTML.toLowerCase().indexOf(req) == -1) {
-                    $(target_element).hide();
-                }
-                else {
-                    $(target_element).show();
-                    showing += 1;
-                }
-            });
-
-            $('#repo_count').html(showing);
-            /* FIXME: don't hardcode */
-        }
-    }
-})();
 
 
 /**
@@ -973,8 +899,8 @@ function getSelectionLink() {
         var from = _getIdentNode(s.anchorNode);
         var till = _getIdentNode(s.focusNode);
 
-        var f_int = parseInt(from.id.replace('L',''));
-        var t_int = parseInt(till.id.replace('L',''));
+        //var f_int = parseInt(from.id.replace('L',''));
+        //var t_int = parseInt(till.id.replace('L',''));
 
         var yoffset = 35;
         var ranges = [parseInt(from.id.replace('L','')), parseInt(till.id.replace('L',''))];
@@ -1007,44 +933,6 @@ function getSelectionLink() {
 /**
  * Autocomplete functionality
  */
-
-// Custom search function for the DataSource of users
-var autocompleteMatchUsers = function (sQuery, myUsers) {
-    // Case insensitive matching
-    var query = sQuery.toLowerCase();
-    var i = 0;
-    var l = myUsers.length;
-    var matches = [];
-
-    // Match against each name of each contact
-    for (; i < l; i++) {
-        var contact = myUsers[i];
-        if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-             ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-             ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-            matches[matches.length] = contact;
-        }
-    }
-    return matches;
-};
-
-// Custom search function for the DataSource of userGroups
-var autocompleteMatchGroups = function (sQuery, myGroups) {
-    // Case insensitive matching
-    var query = sQuery.toLowerCase();
-    var i = 0;
-    var l = myGroups.length;
-    var matches = [];
-
-    // Match against each name of each group
-    for (; i < l; i++) {
-        var matched_group = myGroups[i];
-        if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
-            matches[matches.length] = matched_group;
-        }
-    }
-    return matches;
-};
 
 // Highlight the snippet if it is found in the full text, while escaping any existing markup.
 // Snippet must be lowercased already.
@@ -1207,24 +1095,6 @@ function MentionsAutoComplete($inputElement) {
     },
     insertTpl: "${atwho-at}${nname}"
   });
-}
-
-
-// Set caret at the given position in the input element
-function _setCaretPosition($inputElement, caretPos) {
-    $inputElement.each(function(){
-        if(this.createTextRange) { // IE
-            var range = this.createTextRange();
-            range.move('character', caretPos);
-            range.select();
-        }
-        else if(this.selectionStart) { // other recent browsers
-            this.focus();
-            this.setSelectionRange(caretPos, caretPos);
-        }
-        else // last resort - very old browser
-            this.focus();
-    });
 }
 
 
