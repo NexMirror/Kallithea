@@ -145,8 +145,6 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     for(var key in overview_dataset){
       overview_dataset[key][0] *= 1000;
     }
-    var dataset = dataset;
-    var overview_dataset = [overview_dataset];
     var choiceContainer = $("#legend_choices")[0];
     var choiceContainerTable = $("#legend_choices_tables")[0];
     var $plotContainer = $('#commit_history');
@@ -439,7 +437,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     var plot = $.plot(plotContainer,data,plot_options);
 
     //overview
-    var overview = $.plot(overviewContainer, overview_dataset, overview_options);
+    var overview = $.plot(overviewContainer, [overview_dataset], overview_options);
 
     //show initial selection on overview
     overview.setSelection(initial_ranges);
