@@ -51,7 +51,7 @@ ${self.repo_context_bar('summary')}
     </div>
 </div>
 
-<script>
+<script>'use strict';
 var data = ${h.js(c.trending_languages)};
 var total = 0;
 var tbl = document.createElement('table');
@@ -103,7 +103,7 @@ for (var i=0;i<data.length;i++){
     if(cnt == 3){
         var show_more = document.createElement('tr');
         var td = document.createElement('td');
-        lnk = document.createElement('a');
+        let lnk = document.createElement('a');
 
         lnk.href='#';
         lnk.innerHTML = ${h.jshtml(_('Show more'))};
@@ -118,7 +118,7 @@ for (var i=0;i<data.length;i++){
 }
 
 </script>
-<script>
+<script>'use strict';
 
 /**
  * Plots summary graph
@@ -260,7 +260,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
         for(var key in dataset){
 
             for(var ds in dataset[key].data){
-                commit_data = dataset[key].data[ds];
+                let commit_data = dataset[key].data[ds];
                 if (commit_data.time >= ranges.xaxis.from && commit_data.time <= ranges.xaxis.to){
                     if(new_dataset[key] === undefined){
                         new_dataset[key] = {data:[],label:key};
@@ -288,7 +288,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     * redraw using new checkbox data
     */
     function plotchoiced(e){
-        args = e.data;
+        let args = e.data;
         var cur_data = args[0];
         var cur_ranges = args[1];
 

@@ -1,3 +1,5 @@
+'use strict';
+
 // branch_renderer.js - Rendering of branch DAGs on the client side
 //
 // Copyright 2010 Marcin Kuzminski <marcin AT python-works DOT com>
@@ -102,15 +104,15 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			var next = document.getElementById(row_id_prefix+(idx+1));
 			var extra = 0;
 
-			cur = data[i];
-			node = cur[0];
-			in_l = cur[1];
-			closing = cur[2];
-			obsolete_node = cur[3];
-			bumped_node = cur[4];
-			divergent_node = cur[5];
-			extinct_node = cur[6];
-			unstable_node = cur[7];
+			const cur = data[i];
+			const node = cur[0];
+			const in_l = cur[1];
+			const closing = cur[2];
+			const obsolete_node = cur[3];
+			const bumped_node = cur[4];
+			const divergent_node = cur[5];
+			const extinct_node = cur[6];
+			const unstable_node = cur[7];
 
 			// center dots on the first element in a td (not necessarily the first one, but there must be one)
 			var firstincell = $(row).find('td>*:visible')[0];
@@ -119,20 +121,20 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			var nextY = Math.floor((next == null) ? rowY + row.offsetHeight/2 : next.offsetTop + nextFirstincell.offsetTop + nextFirstincell.offsetHeight/2);
 
 			for (var j in in_l) {
-				line = in_l[j];
-				start = line[0];
-				end = line[1];
-				color = line[2];
-				obsolete_line = line[3];
+				const line = in_l[j];
+				const start = line[0];
+				const end = line[1];
+				const color = line[2];
+				const obsolete_line = line[3];
 
-				x = Math.floor(base_x - box_size * start);
+				const x = Math.floor(base_x - box_size * start);
 
 				// figure out if this is a dead-end;
 				// we want to fade away this line
 				var dead_end = true;
 				if (next != null) {
-					nextdata = data[i+1];
-					next_l = nextdata[1];
+					const nextdata = data[i+1];
+					const next_l = nextdata[1];
 					for (var k=0; k < next_l.length; ++k) {
 						if (next_l[k][0] == end) {
 							dead_end = false;
@@ -192,10 +194,10 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				this.ctx.setLineDash([]); // reset the dashed line, if any
 			}
 
-			column = node[0];
-			color = node[1];
+			const column = node[0];
+			const color = node[1];
 
-			x = Math.floor(base_x - box_size * column);
+			const x = Math.floor(base_x - box_size * column);
 
 			this.setColor(color, 0.25, 0.75);
 			if(unstable_node)
@@ -203,7 +205,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				this.ctx.fillStyle = 'rgb(255, 0, 0)';
 			}
 
-			r = this.dot_radius
+			let r = this.dot_radius
 			if (obsolete_node)
 			{
 				this.ctx.beginPath();

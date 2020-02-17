@@ -77,7 +77,7 @@ ${self.repo_context_bar('files')}
     </div>
 </div>
 
-<script>
+<script>'use strict';
     $(document).ready(function(){
         var reset_url = ${h.jshtml(h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.file.path))};
         var myCodeMirror = initCodeMirror('editor', ${h.jshtml(request.script_name)}, reset_url);

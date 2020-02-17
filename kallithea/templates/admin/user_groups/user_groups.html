@@ -29,7 +29,7 @@
         <table class="table" id="datatable_list_wrap" width="100%"></table>
     </div>
 </div>
-<script>
+<script>'use strict';
     var data = ${h.js(c.data)};
     var $dataTable = $("#datatable_list_wrap").DataTable({
         data: data.records,

@@ -66,7 +66,7 @@
 <script src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
 %endif
 
-<script>
+<script>'use strict';
     var jsdata = ${h.js(c.jsdata)};
     var graph = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
 

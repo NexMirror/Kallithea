@@ -1,3 +1,5 @@
+'use strict';
+
 (function() {
   var loading = {};
   function splitCallback(cont, n) {

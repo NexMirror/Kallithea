@@ -55,7 +55,7 @@
             ${h.reset('reset',_('Reset'),class_="btn btn-default btn-xs")}
             </div>
           ${h.end_form()}
-          <script>
+          <script>'use strict';
             $(document).ready(function(){
                 var myCodeMirror = initCodeMirror('editor', ${h.jshtml(request.script_name)}, '');
 

@@ -92,7 +92,7 @@ ${self.repo_context_bar('showpullrequest')}
 </div>
 
 <script src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
-<script>
+<script>'use strict';
   pyroutes.register('pullrequest_repo_info', ${h.js(url('pullrequest_repo_info',repo_name='%(repo_name)s'))}, ['repo_name']);
 
   var pendingajax = undefined;
@@ -162,7 +162,7 @@ ${self.repo_context_bar('showpullrequest')}
           '__other_ref_name__': other_ref[2]
       }; // gather the org/other ref and repo here
 
-      for (k in rev_data){
+      for (let k in rev_data){
           url = url.replace(k,rev_data[k]);
       }
 

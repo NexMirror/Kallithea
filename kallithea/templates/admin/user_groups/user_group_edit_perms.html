@@ -92,9 +92,9 @@ ${h.form(url('edit_user_group_perms_update', id=c.user_group.users_group_id))}
 </div>
 ${h.end_form()}
 
-<script>
+<script>'use strict';
     function ajaxActionRevoke(obj_id, obj_type, field_id, obj_name) {
-        url = ${h.js(h.url('edit_user_group_perms_delete', id=c.user_group.users_group_id))};
+        let url = ${h.js(h.url('edit_user_group_perms_delete', id=c.user_group.users_group_id))};
         var revoke_msg = _TM['Confirm to revoke permission for {0}: {1} ?'].format(obj_type.replace('_', ' '), obj_name);
         if (confirm(revoke_msg)){
             ajaxActionRevokePermission(url, obj_id, obj_type, field_id);

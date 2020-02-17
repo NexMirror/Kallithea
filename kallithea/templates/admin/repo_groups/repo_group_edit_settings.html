@@ -41,7 +41,7 @@ ${h.form(url('delete_repo_group', group_name=c.repo_group.group_name))}
 </div>
 ${h.end_form()}
 
-<script>
+<script>'use strict';
     $(document).ready(function(){
         $("#parent_group_id").select2({
             'dropdownAutoWidth': true

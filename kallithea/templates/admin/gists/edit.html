@@ -35,7 +35,7 @@
               ${(h.HTML(_('Gist was updated since you started editing. Copy your changes and click %(here)s to reload new version.'))
                              % {'here': h.link_to(_('here'),h.url('edit_gist', gist_id=c.gist.gist_access_id))})}
             </div>
-            <script>
+            <script>'use strict';
             if (typeof jQuery != 'undefined') {
                 $(".alert").alert();
             }
@@ -79,7 +79,7 @@
                 </div>
 
                 ## dynamic edit box.
-                <script>
+                <script>'use strict';
                     $(document).ready(function(){
                         var myCodeMirror = initCodeMirror(${h.js('editor_' + h.FID('f',file.path))}, ${h.jshtml(request.script_name)}, '');
 
@@ -146,7 +146,7 @@
             <a class="btn btn-default" href="${h.url('gist', gist_id=c.gist.gist_access_id)}">${_('Cancel')}</a>
             </div>
           ${h.end_form()}
-          <script>
+          <script>'use strict';
               $('#update').on('click', function(e){
                   e.preventDefault();
 

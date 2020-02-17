@@ -60,7 +60,7 @@ ${self.repo_context_bar('changelog')}
         </div>
     </div>
 
-<script>
+<script>'use strict';
 var orig1_url = ${h.jshtml(h.url('files_raw_home',repo_name=c.repo_name,f_path=c.node1.path,revision=c.cs1.raw_id))};
 var orig2_url = ${h.jshtml(h.url('files_raw_home',repo_name=c.repo_name,f_path=c.node2.path,revision=c.cs2.raw_id))};
 

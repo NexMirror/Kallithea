@@ -36,7 +36,7 @@ ${self.repo_context_bar('files', c.revision)}
     </div>
 </div>
 
-<script>
+<script>'use strict';
 var CACHE = {};
 var CACHE_EXPIRE = 5*60*1000; //cache for 5*60s
 //used to construct links from the search list
@@ -125,16 +125,16 @@ var post_load_state = function(state) {
     }
 
     function highlight_lines(lines){
-        for(pos in lines){
+        for(let pos in lines){
           $('#L'+lines[pos]).css('background-color','#FFFFBE');
         }
     }
-    page_highlights = location.href.substring(location.href.indexOf('#')+1).split('L');
+    let page_highlights = location.href.substring(location.href.indexOf('#')+1).split('L');
     if (page_highlights.length == 2){
-       highlight_ranges  = page_highlights[1].split(",");
+       let highlight_ranges  = page_highlights[1].split(",");
 
        var h_lines = [];
-       for (pos in highlight_ranges){
+       for (let pos in highlight_ranges){
             var _range = highlight_ranges[pos].split('-');
             if(_range.length == 2){
                 var start = parseInt(_range[0]);

@@ -21,7 +21,7 @@
         <%block name="css_extra"/>
 
         ## JAVASCRIPT ##
-        <script>
+        <script>'use strict';
             ## JS translations map
             var TRANSLATION_MAP = {
                 'Cancel': ${h.jshtml(_("Cancel"))},
@@ -77,7 +77,7 @@
         <script src="${h.url('/js/base.js', ver=c.kallithea_version)}"></script>
         ## EXTRA FOR JS
         <%block name="js_extra"/>
-        <script>
+        <script>'use strict';
             $(document).ready(function(){
               tooltip_activate();
               show_more_event();

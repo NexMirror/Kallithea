@@ -50,7 +50,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
 ${h.end_form()}
 % endif
 
-<script>
+<script>'use strict';
 function delete_hook(hook_id, field_id) {
     var sUrl = ${h.js(h.url('admin_settings_hooks_delete'))};
     var success = function (o) {
