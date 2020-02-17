@@ -5,9 +5,9 @@
 </%block>
 
 <%block name="js_extra">
-  <script type="text/javascript" src="${h.url('/codemirror/lib/codemirror.js')}"></script>
-  <script type="text/javascript" src="${h.url('/js/codemirror_loadmode.js')}"></script>
-  <script type="text/javascript" src="${h.url('/codemirror/mode/meta.js')}"></script>
+  <script src="${h.url('/codemirror/lib/codemirror.js')}"></script>
+  <script src="${h.url('/js/codemirror_loadmode.js')}"></script>
+  <script src="${h.url('/codemirror/mode/meta.js')}"></script>
 </%block>
 <%block name="css_extra">
   <link rel="stylesheet" type="text/css" href="${h.url('/codemirror/lib/codemirror.css')}"/>
@@ -77,7 +77,7 @@ ${self.repo_context_bar('files')}
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function(){
         var reset_url = ${h.jshtml(h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.file.path))};
         var myCodeMirror = initCodeMirror('editor', ${h.jshtml(request.script_name)}, reset_url);

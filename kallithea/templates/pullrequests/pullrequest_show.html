@@ -343,7 +343,7 @@ ${self.repo_context_bar('showpullrequest')}
     ## main comment form and it status
     ${comment.comments(change_status=c.allowed_to_change_status)}
 
-    <script type="text/javascript">
+    <script>
       $(document).ready(function(){
           PullRequestAutoComplete($('#user'));
           SimpleUserAutoComplete($('#owner'));

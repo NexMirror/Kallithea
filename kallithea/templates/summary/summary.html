@@ -238,7 +238,7 @@ hg push ${c.clone_repo_url}
 </div>
 %endif
 
-<script type="text/javascript">
+<script>
 $(document).ready(function(){
     $('#clone-url input').click(function(e){
         if($(this).hasClass('selected')){
@@ -334,7 +334,7 @@ $(document).ready(function(){
 </script>
 
 %if c.show_stats:
-<script type="text/javascript">
+<script>
 $(document).ready(function(){
     var data = ${h.js(c.trending_languages)};
     var total = 0;

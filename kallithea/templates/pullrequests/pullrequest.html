@@ -91,8 +91,8 @@ ${self.repo_context_bar('showpullrequest')}
 
 </div>
 
-<script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
-<script type="text/javascript">
+<script src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
+<script>
   pyroutes.register('pullrequest_repo_info', ${h.js(url('pullrequest_repo_info',repo_name='%(repo_name)s'))}, ['repo_name']);
 
   var pendingajax = undefined;

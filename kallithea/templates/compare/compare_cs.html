@@ -63,10 +63,10 @@
 %if c.is_ajax_preview:
 <div id="jsdata" style="display:none">${h.js(c.jsdata)}</div>
 %else:
-<script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
+<script src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
 %endif
 
-<script type="text/javascript">
+<script>
     var jsdata = ${h.js(c.jsdata)};
     var graph = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
 
