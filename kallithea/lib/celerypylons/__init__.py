@@ -18,14 +18,15 @@ import celery
 import tg
 
 
+class CeleryConfig(object):
+    CELERY_IMPORTS = ['kallithea.lib.celerylib.tasks']
+    CELERY_ACCEPT_CONTENT = ['json']
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_TASK_SERIALIZER = 'json'
+
+
 def celery_config(config):
     """Return Celery config object populated from relevant settings in a config dict, such as tg.config"""
-
-    # Verify .ini file configuration has been loaded
-    assert config['celery.imports'] == 'kallithea.lib.celerylib.tasks', 'Kallithea Celery configuration has not been loaded'
-
-    class CeleryConfig(object):
-        pass
 
     celery_config = CeleryConfig()
 

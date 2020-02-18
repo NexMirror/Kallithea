@@ -361,11 +361,7 @@ use_celery = false
 <%text>## Example: connect to the virtual host 'rabbitmqhost' on localhost as rabbitmq:</%text>
 broker.url = amqp://rabbitmq:qewqew@localhost:5672/rabbitmqhost
 
-celery.imports = kallithea.lib.celerylib.tasks
-celery.accept.content = json
 celery.result.backend = amqp://
-celery.result.serializer = json
-celery.task.serializer = json
 
 #celery.send.task.error.emails = true
 #celery.amqp.task.result.expires = 18000
