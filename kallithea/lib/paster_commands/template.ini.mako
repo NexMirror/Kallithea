@@ -356,6 +356,7 @@ ssh_locale = ${ssh_locale}
 <%text>###        CELERY CONFIG        ####</%text>
 <%text>####################################</%text>
 
+<%text>## Note: Celery doesn't support Windows.</%text>
 use_celery = false
 
 <%text>## Example: use the message queue on the local virtual host 'kallitheavhost' as the RabbitMQ user 'kallithea':</%text>

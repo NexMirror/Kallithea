@@ -332,11 +332,11 @@ To enable it, simply set::
 
   use_celery = true
 
-and add or change the ``celery.*`` and ``broker.*`` configuration variables.
+and add or change the ``celery.*`` configuration variables.
 
-Remember that the ini files use the format with '.' and not with '_' like
-Celery. So for example setting `BROKER_HOST` in Celery means setting
-`broker.host` in the configuration file.
+Configuration settings are prefixed with 'celery.', so for example setting
+`broker_url` in Celery means setting `celery.broker_url` in the configuration
+file.
 
 To start the Celery process, run::
 
