@@ -31,7 +31,7 @@ def celery_config(config):
     celery_config = CeleryConfig()
 
     PREFIXES = """ADMINS BROKER CASSANDRA CELERYBEAT CELERYD CELERYMON CELERY EMAIL SERVER""".split()
-    LIST_PARAMS = """CELERY_IMPORTS ADMINS ROUTES CELERY_ACCEPT_CONTENT""".split()
+    LIST_PARAMS = """CELERY_IMPORTS CELERY_ACCEPT_CONTENT""".split()
 
     for config_key, config_value in sorted(config.items()):
         celery_key = config_key.replace('.', '_').upper()

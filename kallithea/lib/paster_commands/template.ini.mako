@@ -363,7 +363,6 @@ broker.url = amqp://kallithea:thepassword@localhost:5672/kallitheavhost
 
 celery.result.backend = db+sqlite:///celery-results.db
 
-#celery.send.task.error.emails = true
 #celery.amqp.task.result.expires = 18000
 
 celeryd.concurrency = 2
