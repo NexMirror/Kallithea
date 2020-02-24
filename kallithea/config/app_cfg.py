@@ -161,7 +161,6 @@ def setup_configuration(app):
     # store some globals into kallithea
     if str2bool(config.get('use_celery')):
         kallithea.CELERY_APP = celerypylons.make_app()
-    kallithea.CELERY_EAGER = str2bool(config.get('celery.always.eager'))
     kallithea.CONFIG = config
 
     load_rcextensions(root_path=config['here'])

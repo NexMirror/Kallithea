@@ -19,12 +19,15 @@ import logging
 import celery
 import tg
 
+import kallithea
+
 
 class CeleryConfig(object):
     CELERY_IMPORTS = ['kallithea.lib.celerylib.tasks']
     CELERY_ACCEPT_CONTENT = ['json']
     CELERY_RESULT_SERIALIZER = 'json'
     CELERY_TASK_SERIALIZER = 'json'
+    CELERY_ALWAYS_EAGER = False
 
 
 desupported = set([
@@ -37,7 +40,7 @@ desupported = set([
 log = logging.getLogger(__name__)
 
 
-def celery_config(config):
+def make_celery_config(config):
     """Return Celery config object populated from relevant settings in a config dict, such as tg.config"""
 
     celery_config = CeleryConfig()
@@ -68,5 +71,7 @@ def celery_config(config):
 def make_app():
     """Create celery app from the TurboGears configuration file"""
     app = celery.Celery()
-    app.config_from_object(celery_config(tg.config))
+    celery_config = make_celery_config(tg.config)
+    kallithea.CELERY_EAGER = celery_config.CELERY_ALWAYS_EAGER
+    app.config_from_object(celery_config)
     return app
