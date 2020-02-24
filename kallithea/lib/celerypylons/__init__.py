@@ -14,6 +14,8 @@ To make sure that the config really has been initialized, we check one of the
 mandatory settings.
 """
 
+import logging
+
 import celery
 import tg
 
@@ -25,6 +27,16 @@ class CeleryConfig(object):
     CELERY_TASK_SERIALIZER = 'json'
 
 
+desupported = set([
+    'celery.result.dburi',
+    'celery.result.serialier',
+    'celery.send.task.error.emails',
+])
+
+
+log = logging.getLogger(__name__)
+
+
 def celery_config(config):
     """Return Celery config object populated from relevant settings in a config dict, such as tg.config"""
 
@@ -34,6 +46,8 @@ def celery_config(config):
     LIST_PARAMS = """CELERY_IMPORTS CELERY_ACCEPT_CONTENT""".split()
 
     for config_key, config_value in sorted(config.items()):
+        if config_key in desupported and config_value:
+            log.error('Celery configuration setting %r is no longer supported', config_key)
         celery_key = config_key.replace('.', '_').upper()
         if celery_key.split('_', 1)[0] not in PREFIXES:
             continue
