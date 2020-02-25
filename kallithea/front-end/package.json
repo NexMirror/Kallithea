@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "eslint": "6.8.0",
+    "eslint-plugin-html": "6.0.0",
     "less": "3.10.3",
     "less-plugin-clean-css": "1.5.1",
     "license-checker": "25.0.1"
