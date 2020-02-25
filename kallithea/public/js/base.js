@@ -593,6 +593,7 @@ function _comment_div_append_add($comment_div, f_path, line_no) {
 }
 
 // append a comment form to $comment_div
+// Note: var AJAX_COMMENT_URL must have been defined before invoking this function
 function _comment_div_append_form($comment_div, f_path, line_no) {
     var $form_div = $('#comment-inline-form-template').children()
         .clone()
@@ -709,6 +710,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
 }
 
 
+// Note: var AJAX_COMMENT_URL must have been defined before invoking this function
 function deleteComment(comment_id) {
     var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
     var postData = {};
