@@ -135,7 +135,7 @@ class TestMail(base.TestController):
             'app_email_from': envelope_from,
         }
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
-            kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body, author=author)
+            kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body, from_name=author.full_name_or_username)
 
         assert smtplib_mock.lastdest == set(recipients)
         assert smtplib_mock.lastsender == envelope_from
@@ -159,7 +159,7 @@ class TestMail(base.TestController):
             'app_email_from': envelope_from,
         }
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
-            kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body, author=author)
+            kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body, from_name=author.full_name_or_username)
 
         assert smtplib_mock.lastdest == set(recipients)
         assert smtplib_mock.lastsender == envelope_from
@@ -184,7 +184,7 @@ class TestMail(base.TestController):
         }
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body,
-                                                     author=author, headers=headers)
+                                                     from_name=author.full_name_or_username, headers=headers)
 
         assert smtplib_mock.lastdest == set(recipients)
         assert smtplib_mock.lastsender == envelope_from

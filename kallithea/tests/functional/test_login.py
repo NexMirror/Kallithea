@@ -410,7 +410,7 @@ class TestLoginController(base.TestController):
             User.get_by_username(username), timestamp, self.session_csrf_secret_token())
 
         collected = []
-        def mock_send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+        def mock_send_email(recipients, subject, body='', html_body='', headers=None, from_name=None):
             collected.append((recipients, subject, body, html_body))
 
         with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', mock_send_email), \

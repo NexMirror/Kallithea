@@ -132,7 +132,8 @@ class NotificationModel(object):
         # send email with notification to all other participants
         for rec in rec_objs:
             tasks.send_email([rec.email], email_subject, email_txt_body,
-                     email_html_body, headers, author=created_by_obj)
+                     email_html_body, headers,
+                     from_name=created_by_obj.full_name_or_username)
 
 
 class EmailNotificationModel(object):

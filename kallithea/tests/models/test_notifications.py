@@ -43,12 +43,12 @@ class TestNotifications(base.TestController):
         with test_context(self.app):
             usrs = [self.u1, self.u2]
 
-            def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+            def send_email(recipients, subject, body='', html_body='', headers=None, from_name=None):
                 assert recipients == ['u2@example.com']
                 assert subject == 'Test Message'
                 assert body == "hi there"
                 assert '>hi there<' in html_body
-                assert author.username == 'u1'
+                assert from_name == 'u1 u1'
             with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', send_email):
                 NotificationModel().create(created_by=self.u1,
                                                    subject='subj', body='hi there',
@@ -59,11 +59,11 @@ class TestNotifications(base.TestController):
         # Exercise all notification types and dump them to one big html file
         l = []
 
-        def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+        def send_email(recipients, subject, body='', html_body='', headers=None, from_name=None):
             l.append('<hr/>\n')
             l.append('<h1>%s</h1>\n' % desc) # desc is from outer scope
             l.append('<pre>\n')
-            l.append('From: %s\n' % author.username)
+            l.append('From: %s <name@example.com>\n' % from_name)
             l.append('To: %s\n' % ' '.join(recipients))
             l.append('Subject: %s\n' % subject)
             l.append('</pre>\n')
@@ -159,7 +159,7 @@ class TestNotifications(base.TestController):
                     "Password reset link",
                     EmailNotificationModel().get_email_tmpl(EmailNotificationModel.TYPE_PASSWORD_RESET, 'txt', **kwargs),
                     EmailNotificationModel().get_email_tmpl(EmailNotificationModel.TYPE_PASSWORD_RESET, 'html', **kwargs),
-                    author=User.get(self.u1))
+                    from_name=User.get(self.u1).full_name_or_username)
 
         out = '<!doctype html>\n<html lang="en">\n<head><title>Notifications</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>\n<body>\n%s\n</body>\n</html>\n' % \
             re.sub(r'<(/?(?:!doctype|html|head|title|meta|body)\b[^>]*)>', r'<!--\1-->', ''.join(l))

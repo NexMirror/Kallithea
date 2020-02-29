@@ -233,7 +233,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
 @celerylib.task
 @celerylib.dbsession
-def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+def send_email(recipients, subject, body='', html_body='', headers=None, from_name=None):
     """
     Sends an email with defined parameters from the .ini files.
 
@@ -243,7 +243,8 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
     :param body: body of the mail
     :param html_body: html version of body
     :param headers: dictionary of prepopulated e-mail headers
-    :param author: User object of the author of this mail, if known and relevant
+    :param from_name: full name to be used as sender of this mail - often a
+    .full_name_or_username value
     """
     assert isinstance(recipients, list), recipients
     if headers is None:
@@ -275,13 +276,13 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
     # SMTP sender
     envelope_from = email_config.get('app_email_from', 'Kallithea')
     # 'From' header
-    if author is not None:
-        # set From header based on author but with a generic e-mail address
+    if from_name is not None:
+        # set From header based on from_name but with a generic e-mail address
         # In case app_email_from is in "Some Name <e-mail>" format, we first
         # extract the e-mail address.
         envelope_addr = author_email(envelope_from)
         headers['From'] = '"%s" <%s>' % (
-            email.utils.quote('%s (no-reply)' % author.full_name_or_username),
+            email.utils.quote('%s (no-reply)' % from_name),
             envelope_addr)
 
     user = email_config.get('smtp_username')
