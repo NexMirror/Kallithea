@@ -39,7 +39,7 @@ import mercurial.ui
 from tg.i18n import ugettext as _
 
 import kallithea.config.conf
-from kallithea.lib.exceptions import HgsubversionImportError
+from kallithea.lib.exceptions import HgsubversionImportError, InvalidCloneUriException
 from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str
 from kallithea.lib.vcs.backends.git.repository import GitRepository
 from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
@@ -225,7 +225,8 @@ def get_filesystem_repos(path):
 
 
 def is_valid_repo_uri(repo_type, url, ui):
-    """Check if the url seems like a valid remote repo location - raise an Exception if any problems"""
+    """Check if the url seems like a valid remote repo location
+    Raise InvalidCloneUriException or other Exception if any problems"""
     if repo_type == 'hg':
         if url.startswith('http') or url.startswith('ssh'):
             # initially check if it's at least the proper URL
@@ -241,7 +242,7 @@ def is_valid_repo_uri(repo_type, url, ui):
         elif url.startswith('git+http'):
             raise NotImplementedError()
         else:
-            raise Exception('URI %s not allowed' % (url,))
+            raise InvalidCloneUriException('URI %s not allowed' % (url,))
 
     elif repo_type == 'git':
         if url.startswith('http') or url.startswith('git'):
@@ -253,7 +254,7 @@ def is_valid_repo_uri(repo_type, url, ui):
         elif url.startswith('hg+http'):
             raise NotImplementedError()
         else:
-            raise Exception('URI %s not allowed' % (url))
+            raise InvalidCloneUriException('URI %s not allowed' % (url))
 
 
 def is_valid_repo(repo_name, base_path, scm=None):
