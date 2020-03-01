@@ -171,8 +171,8 @@ class GitRepository(BaseRepository):
         handlers = []
         url_obj = mercurial.util.url(safe_bytes(url))
         test_uri, authinfo = url_obj.authinfo()
-        if not test_uri.endswith('info/refs'):
-            test_uri = test_uri.rstrip('/') + '/info/refs'
+        if not test_uri.endswith(b'info/refs'):
+            test_uri = test_uri.rstrip(b'/') + b'/info/refs'
 
         url_obj.passwd = b'*****'
         cleaned_uri = str(url_obj)
@@ -204,7 +204,7 @@ class GitRepository(BaseRepository):
 
         # now detect if it's proper git repo
         gitdata = resp.read()
-        if 'service=git-upload-pack' not in gitdata:
+        if b'service=git-upload-pack' not in gitdata:
             raise urllib.error.URLError(
                 "url [%s] does not look like an git" % cleaned_uri)
 

@@ -294,6 +294,7 @@ class MercurialRepository(BaseRepository):
         when the return code is non 200
         """
         # check first if it's not an local url
+        url = safe_bytes(url)
         if os.path.isdir(url) or url.startswith(b'file:'):
             return True
 
