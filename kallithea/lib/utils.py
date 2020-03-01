@@ -226,7 +226,7 @@ def get_filesystem_repos(path):
 
 def is_valid_repo_uri(repo_type, url, ui):
     """Check if the url seems like a valid remote repo location
-    Raise InvalidCloneUriException or other Exception if any problems"""
+    Raise InvalidCloneUriException if any problems"""
     if repo_type == 'hg':
         if url.startswith('http') or url.startswith('ssh'):
             # initially check if it's at least the proper URL

@@ -30,7 +30,7 @@ from tg.i18n import ugettext as _
 from kallithea.config.routing import ADMIN_PREFIX
 from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel
 from kallithea.lib.compat import OrderedSet
-from kallithea.lib.exceptions import LdapImportError
+from kallithea.lib.exceptions import InvalidCloneUriException, LdapImportError
 from kallithea.lib.utils import is_valid_repo_uri
 from kallithea.lib.utils2 import aslist, repo_name_slug, str2bool
 from kallithea.model.db import RepoGroup, Repository, User, UserGroup
@@ -409,7 +409,7 @@ def ValidCloneUri():
             if url and url != value.get('clone_uri_hidden'):
                 try:
                     is_valid_repo_uri(repo_type, url, make_ui())
-                except Exception as e:
+                except InvalidCloneUriException as e:
                     log.warning('validation of clone URL %r failed: %s', url, e)
                     msg = self.message('clone_uri', state)
                     raise formencode.Invalid(msg, value, state,
