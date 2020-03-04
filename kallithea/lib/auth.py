@@ -404,9 +404,8 @@ class AuthUser(object):
     def __init__(self, user_id=None, dbuser=None, is_external_auth=False):
         self.is_external_auth = is_external_auth # container auth - don't show logout option
 
-        # These attributes will be overridden by fill_data, below, unless the
-        # requested user cannot be found and the default anonymous user is
-        # not enabled.
+        # These attributes will be overridden below if the requested user is
+        # found or anonymous access (using the default user) is enabled.
         self.user_id = None
         self.username = None
         self.api_key = None
