@@ -59,7 +59,7 @@ def argparser(argv):
                  'be also `%s`' % (FORMAT_PRETTY, FORMAT_JSON),
             default=FORMAT_PRETTY
     )
-    args, other = parser.parse_known_args(args=argv)
+    args, other = parser.parse_known_args(args=argv[1:])
     return parser, args, other
 
 
