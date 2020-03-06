@@ -240,7 +240,7 @@ def is_valid_repo_uri(repo_type, url, ui):
                                                 'The "hgsubversion" library is missing'))
             svnremoterepo(ui, url).svn.uuid
         elif url.startswith('git+http'):
-            raise NotImplementedError()
+            raise InvalidCloneUriException('URI type %s not implemented' % (url,))
         else:
             raise InvalidCloneUriException('URI %s not allowed' % (url,))
 
@@ -250,9 +250,9 @@ def is_valid_repo_uri(repo_type, url, ui):
             # or does it pass basic auth
             GitRepository._check_url(url)
         elif url.startswith('svn+http'):
-            raise NotImplementedError()
+            raise InvalidCloneUriException('URI type %s not implemented' % (url,))
         elif url.startswith('hg+http'):
-            raise NotImplementedError()
+            raise InvalidCloneUriException('URI type %s not implemented' % (url,))
         else:
             raise InvalidCloneUriException('URI %s not allowed' % (url))
 
