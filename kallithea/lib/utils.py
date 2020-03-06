@@ -31,6 +31,7 @@ import os
 import re
 import sys
 import traceback
+import urllib.error
 from distutils.version import StrictVersion
 
 import beaker.cache
@@ -230,7 +231,10 @@ def is_valid_repo_uri(repo_type, url, ui):
         if url.startswith('http') or url.startswith('ssh'):
             # initially check if it's at least the proper URL
             # or does it pass basic auth
-            MercurialRepository._check_url(url, ui)
+            try:
+                MercurialRepository._check_url(url, ui)
+            except urllib.error.URLError as e:
+                raise InvalidCloneUriException('URI %s URLError: %s' % (url, e))
         elif url.startswith('svn+http'):
             try:
                 from hgsubversion.svnrepo import svnremoterepo
@@ -246,7 +250,10 @@ def is_valid_repo_uri(repo_type, url, ui):
         if url.startswith('http') or url.startswith('git'):
             # initially check if it's at least the proper URL
             # or does it pass basic auth
-            GitRepository._check_url(url)
+            try:
+                GitRepository._check_url(url)
+            except urllib.error.URLError as e:
+                raise InvalidCloneUriException('URI %s URLError: %s' % (url, e))
         elif url.startswith('svn+http'):
             raise InvalidCloneUriException('URI type %s not implemented' % (url,))
         elif url.startswith('hg+http'):
