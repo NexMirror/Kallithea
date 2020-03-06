@@ -371,6 +371,7 @@ def make_ui(repo_path=None):
         else:
             log.debug('hgrc file is not present at %s, skipping...', hgrc_path)
 
+    assert baseui.plain()  # set by hgcompat.monkey_do (invoked from import of vcs.backends.hg) to minimize potential impact of loading config files
     return baseui
 
 
