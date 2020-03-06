@@ -315,19 +315,6 @@ def is_valid_repo_group(repo_group_name, base_path, skip_path_check=False):
     return False
 
 
-# propagated from mercurial documentation
-ui_sections = ['alias', 'auth',
-                'decode/encode', 'defaults',
-                'diff', 'email',
-                'extensions', 'format',
-                'merge-patterns', 'merge-tools',
-                'hooks', 'http_proxy',
-                'smtp', 'patch',
-                'paths', 'profiling',
-                'server', 'trusted',
-                'ui', 'web', ]
-
-
 def make_ui(repo_path=None):
     """
     Create an Mercurial 'ui' object based on database Ui settings, possibly
@@ -359,17 +346,8 @@ def make_ui(repo_path=None):
     baseui.setconfig(b'hooks', b'outgoing.kallithea_log_pull_action', b'python:kallithea.lib.hooks.log_pull_action')
 
     if repo_path is not None:
-        hgrc_path = os.path.join(repo_path, '.hg', 'hgrc')
-        if os.path.isfile(hgrc_path):
-            log.debug('reading hgrc from %s', hgrc_path)
-            cfg = mercurial.config.config()
-            cfg.read(safe_bytes(hgrc_path))
-            for section in ui_sections:
-                for k, v in cfg.items(section):
-                    log.debug('config from file: [%s] %s=%s', section, k, v)
-                    baseui.setconfig(ascii_bytes(section), ascii_bytes(k), safe_bytes(v))
-        else:
-            log.debug('hgrc file is not present at %s, skipping...', hgrc_path)
+        # Note: MercurialRepository / mercurial.localrepo.instance will do this too, so it will always be possible to override db settings or what is hardcoded above
+        baseui.readconfig(repo_path)
 
     assert baseui.plain()  # set by hgcompat.monkey_do (invoked from import of vcs.backends.hg) to minimize potential impact of loading config files
     return baseui
