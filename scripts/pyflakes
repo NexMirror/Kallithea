@@ -5,8 +5,10 @@ Inspired by pyflakes/api.py and flake8/plugins/pyflakes.py .
 """
 
 import sys
+
 import pyflakes.api
 import pyflakes.messages
+
 
 class Reporter:
 
