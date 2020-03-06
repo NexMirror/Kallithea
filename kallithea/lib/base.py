@@ -278,11 +278,8 @@ class BaseVCSController(object):
 
     def _check_permission(self, action, authuser, repo_name):
         """
-        Checks permissions using action (push/pull) user and repository
-        name
-
-        :param action: 'push' or 'pull' action
-        :param user: `User` instance
+        :param action: 'push' or 'pull'
+        :param user: `AuthUser` instance
         :param repo_name: repository name
         """
         if action == 'push':
@@ -291,13 +288,16 @@ class BaseVCSController(object):
                                                                   repo_name):
                 return False
 
-        else:
+        elif action == 'pull':
             #any other action need at least read permission
             if not HasPermissionAnyMiddleware('repository.read',
                                               'repository.write',
                                               'repository.admin')(authuser,
                                                                   repo_name):
                 return False
+
+        else:
+            assert False, action
 
         return True
 
