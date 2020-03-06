@@ -36,10 +36,9 @@ from distutils.version import StrictVersion
 import beaker.cache
 import mercurial.config
 import mercurial.ui
-from tg.i18n import ugettext as _
 
 import kallithea.config.conf
-from kallithea.lib.exceptions import HgsubversionImportError, InvalidCloneUriException
+from kallithea.lib.exceptions import InvalidCloneUriException
 from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str
 from kallithea.lib.vcs.backends.git.repository import GitRepository
 from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
@@ -236,8 +235,7 @@ def is_valid_repo_uri(repo_type, url, ui):
             try:
                 from hgsubversion.svnrepo import svnremoterepo
             except ImportError:
-                raise HgsubversionImportError(_('Unable to activate hgsubversion support. '
-                                                'The "hgsubversion" library is missing'))
+                raise InvalidCloneUriException('URI type %s not supported - hgsubversion is not available' % (url,))
             svnremoterepo(ui, url).svn.uuid
         elif url.startswith('git+http'):
             raise InvalidCloneUriException('URI type %s not implemented' % (url,))
