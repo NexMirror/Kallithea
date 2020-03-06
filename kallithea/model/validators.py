@@ -409,8 +409,8 @@ def ValidCloneUri():
             if url and url != value.get('clone_uri_hidden'):
                 try:
                     is_valid_repo_uri(repo_type, url, make_ui())
-                except Exception:
-                    log.exception('URL validation failed')
+                except Exception as e:
+                    log.warning('validation of clone URL %r failed: %s', url, e)
                     msg = self.message('clone_uri', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(clone_uri=msg)
@@ -588,8 +588,8 @@ def ValidPerms(type_='repo'):
                             .filter(UserGroup.users_group_active == True) \
                             .filter(UserGroup.users_group_name == k).one()
 
-                except Exception:
-                    log.exception('Updated permission failed')
+                except Exception as e:
+                    log.warning('Error validating %s permission %s', t, k)
                     msg = self.message('perm_new_member_type', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(perm_new_member_name=msg)
