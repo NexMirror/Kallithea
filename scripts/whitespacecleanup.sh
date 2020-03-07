@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -xe
 
 # Enforce some consistency in whitespace - just to avoid spurious whitespaces changes
 

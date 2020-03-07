@@ -40,14 +40,18 @@ for rev in $(hg log -r "$1" -T '{node}\n'); do
     pip install -e . -r dev_requirements.txt python-ldap python-pam
 
     # run-all-cleanup
-    scripts/run-all-cleanup
-    if ! hg update --check -q .; then
-        echo "run-all-cleanup did not give clean results!"
+    if ! scripts/run-all-cleanup ; then
+        echo "run-all-cleanup encountered errors!"
         result="NOK"
-        hg diff
-        hg revert -a
     else
-        result=" OK"
+        if ! hg update --check -q .; then
+            echo "run-all-cleanup did not give clean results!"
+            result="NOK"
+            hg diff
+            hg revert -a
+        else
+            result=" OK"
+        fi
     fi
     echo "$result: $rev (run-all-cleanup)" >> "$resultfile"
 
