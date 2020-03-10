@@ -49,8 +49,8 @@ from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_str, str2bool
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import (
-    ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, ImproperArchiveTypeError, NodeAlreadyExistsError, NodeDoesNotExistError, NodeError, RepositoryError, VCSError)
+from kallithea.lib.vcs.exceptions import (ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, ImproperArchiveTypeError, NodeAlreadyExistsError,
+                                          NodeDoesNotExistError, NodeError, RepositoryError, VCSError)
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel

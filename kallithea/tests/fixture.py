@@ -41,8 +41,8 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.scm import ScmModel
 from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
-from kallithea.tests.base import (
-    GIT_REPO, HG_REPO, IP_ADDR, TEST_USER_ADMIN_EMAIL, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH, invalidate_all_caches)
+from kallithea.tests.base import (GIT_REPO, HG_REPO, IP_ADDR, TEST_USER_ADMIN_EMAIL, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH,
+                                  invalidate_all_caches)
 
 
 log = logging.getLogger(__name__)

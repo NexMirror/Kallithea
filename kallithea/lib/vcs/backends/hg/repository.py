@@ -37,8 +37,8 @@ import mercurial.url
 import mercurial.util
 
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
-from kallithea.lib.vcs.exceptions import (
-    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
+from kallithea.lib.vcs.exceptions import (BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError,
+                                          TagDoesNotExistError, VCSError)
 from kallithea.lib.vcs.utils import ascii_str, author_email, author_name, date_fromtimestamp, makedate, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath

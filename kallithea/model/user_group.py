@@ -28,8 +28,8 @@ import logging
 import traceback
 
 from kallithea.lib.exceptions import RepoGroupAssignmentError, UserGroupsAssignedException
-from kallithea.model.db import (
-    Permission, Session, User, UserGroup, UserGroupMember, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserUserGroupToPerm)
+from kallithea.model.db import (Permission, Session, User, UserGroup, UserGroupMember, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm,
+                                UserUserGroupToPerm)
 
 
 log = logging.getLogger(__name__)

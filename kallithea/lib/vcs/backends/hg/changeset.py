@@ -8,8 +8,8 @@ import mercurial.obsutil
 from kallithea.lib.vcs.backends.base import BaseChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, VCSError
-from kallithea.lib.vcs.nodes import (
-    AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
+from kallithea.lib.vcs.nodes import (AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode,
+                                     SubModuleNode)
 from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path

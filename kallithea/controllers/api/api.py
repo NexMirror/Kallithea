@@ -32,8 +32,8 @@ from datetime import datetime
 from tg import request
 
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
-from kallithea.lib.auth import (
-    AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel)
+from kallithea.lib.auth import (AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel,
+                                HasUserGroupPermissionLevel)
 from kallithea.lib.exceptions import DefaultUserException, UserGroupsAssignedException
 from kallithea.lib.utils import action_logger, repo2db_mapper
 from kallithea.lib.utils2 import OAttr, Optional

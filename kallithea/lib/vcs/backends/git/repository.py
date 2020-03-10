@@ -28,8 +28,8 @@ from dulwich.repo import NotGitRepository, Repo
 from kallithea.lib.vcs import subprocessio
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import (
-    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
+from kallithea.lib.vcs.exceptions import (BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError,
+                                          TagDoesNotExistError)
 from kallithea.lib.vcs.utils import ascii_str, date_fromtimestamp, makedate, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home

@@ -13,8 +13,8 @@ import datetime
 import itertools
 
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import (
-    ChangesetError, EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError, NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError, RepositoryError)
+from kallithea.lib.vcs.exceptions import (ChangesetError, EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError,
+                                          NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError, RepositoryError)
 from kallithea.lib.vcs.utils import author_email, author_name
 from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
 from kallithea.lib.vcs.utils.lazy import LazyProperty

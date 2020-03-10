@@ -44,8 +44,8 @@ from kallithea.lib.caching_query import FromCache
 from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
 from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.model.db import (
-    Permission, RepoGroup, Repository, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
+from kallithea.model.db import (Permission, RepoGroup, Repository, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm,
+                                UserGroupToPerm, UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 

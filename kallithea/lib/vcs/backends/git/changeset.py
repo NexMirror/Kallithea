@@ -9,8 +9,8 @@ from dulwich.config import ConfigFile
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, RepositoryError, VCSError
-from kallithea.lib.vcs.nodes import (
-    AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
+from kallithea.lib.vcs.nodes import (AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode,
+                                     SubModuleNode)
 from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_int, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 

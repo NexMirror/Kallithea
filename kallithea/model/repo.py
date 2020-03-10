@@ -41,8 +41,8 @@ from kallithea.lib.hooks import log_delete_repository
 from kallithea.lib.utils import is_valid_repo_uri, make_ui
 from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix
 from kallithea.lib.vcs.backends import get_backend
-from kallithea.model.db import (
-    Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
+from kallithea.model.db import (Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm,
+                                UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
 
 
 log = logging.getLogger(__name__)
