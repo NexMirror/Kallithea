@@ -10,3 +10,4 @@ scripts/generate-ini.py
 scripts/whitespacecleanup.sh
 
 hg loc 'set:!binary()&grep("^#!.*python")' '*.py' | xargs scripts/pyflakes
+echo "no blocking problems found by $0"

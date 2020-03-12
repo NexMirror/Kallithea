@@ -20,4 +20,5 @@ hg loc 'set:!binary()&grep("^#!")&!(**_tmpl.py)&!(**/template**)' | xargs chmod 
 # isort is installed from dev_requirements.txt
 hg loc 'set:!binary()&grep("^#!.*python")' '*.py' | xargs isort --line-width 160 --lines-after-imports 2
 
+echo "diff after $0:"
 hg diff
