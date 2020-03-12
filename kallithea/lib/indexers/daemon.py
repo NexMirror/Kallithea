@@ -40,7 +40,7 @@ from whoosh.qparser import QueryParser
 from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
 from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA
 from kallithea.lib.utils2 import safe_str
-from kallithea.lib.vcs.exceptions import ChangesetError, NodeDoesNotExistError, RepositoryError
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, NodeDoesNotExistError, RepositoryError
 from kallithea.model.db import Repository
 from kallithea.model.scm import ScmModel
 
@@ -299,7 +299,11 @@ class WhooshIndexingDaemon(object):
                         # assuming that there is only one result, if not this
                         # may require a full re-index.
                         start_id = results[0]['raw_id']
-                        last_rev = repo.get_changeset(revision=start_id).revision
+                        try:
+                            last_rev = repo.get_changeset(revision=start_id).revision
+                        except ChangesetDoesNotExistError:
+                            log.error('previous last revision %s not found - indexing from scratch', start_id)
+                            start_id = None
 
                     # there are new changesets to index or a new repo to index
                     if last_rev == 0 or num_of_revs > last_rev + 1:
