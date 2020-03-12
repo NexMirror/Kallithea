@@ -337,9 +337,7 @@ class Setting(Base, BaseDbModel):
 class Ui(Base, BaseDbModel):
     __tablename__ = 'ui'
     __table_args__ = (
-        # FIXME: ui_key as key is wrong and should be removed when the corresponding
-        # Ui.get_by_key has been replaced by the composite key
-        UniqueConstraint('ui_key'),
+        Index('ui_ui_section_ui_key_idx', 'ui_section', 'ui_key'),
         UniqueConstraint('ui_section', 'ui_key'),
         _table_args_default_dict,
     )
@@ -372,6 +370,7 @@ class Ui(Base, BaseDbModel):
         q = cls.query()
         q = q.filter(cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE]))
         q = q.filter(cls.ui_section == 'hooks')
+        q = q.order_by(cls.ui_section, cls.ui_key)
         return q.all()
 
     @classmethod
@@ -379,6 +378,7 @@ class Ui(Base, BaseDbModel):
         q = cls.query()
         q = q.filter(~cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE]))
         q = q.filter(cls.ui_section == 'hooks')
+        q = q.order_by(cls.ui_section, cls.ui_key)
         return q.all()
 
     @classmethod

@@ -341,7 +341,7 @@ def make_ui(repo_path=None):
     baseui._tcfg = mercurial.config.config()
 
     sa = meta.Session()
-    for ui_ in sa.query(Ui).all():
+    for ui_ in sa.query(Ui).order_by(Ui.ui_section, Ui.ui_key):
         if ui_.ui_active:
             log.debug('config from db: [%s] %s=%r', ui_.ui_section,
                       ui_.ui_key, ui_.ui_value)
