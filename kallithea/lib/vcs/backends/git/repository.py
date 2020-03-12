@@ -190,7 +190,7 @@ class GitRepository(BaseRepository):
 
         req = urllib.request.Request(
             "%s?%s" % (
-                test_uri,
+                safe_str(test_uri),
                 urllib.parse.urlencode({"service": 'git-upload-pack'})
             ))
 
