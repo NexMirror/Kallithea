@@ -26,13 +26,20 @@ down_revision = 'd7ec25b66e47'
 branch_labels = None
 depends_on = None
 
+import sqlalchemy as sa
 from alembic import op
 
 
 def upgrade():
+    meta = sa.MetaData()
+    meta.reflect(bind=op.get_bind())
+
     with op.batch_alter_table('ui', schema=None) as batch_op:
         batch_op.create_index('ui_ui_section_ui_key_idx', ['ui_section', 'ui_key'], unique=False)
-        batch_op.drop_constraint('uq_ui_ui_key', type_='unique')
+        if any(i.name == 'uq_ui_ui_key' for i in meta.tables['ui'].constraints):
+            batch_op.drop_constraint('uq_ui_ui_key', type_='unique')
+        elif any(i.name == 'ui_ui_key_key' for i in meta.tables['ui'].constraints):  # table was created with old naming before 1a080d4e926e
+            batch_op.drop_constraint('ui_ui_key_key', type_='unique')
 
 
 def downgrade():
