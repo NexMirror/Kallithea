@@ -112,17 +112,11 @@ class ReposController(BaseRepoController):
     @NotAnonymous()
     def create(self):
         self.__load_defaults()
-        form_result = {}
         try:
             # CanWriteGroup validators checks permissions of this POST
             form_result = RepoForm(repo_groups=c.repo_groups,
                                    landing_revs=c.landing_revs_choices)() \
                             .to_python(dict(request.POST))
-
-            # create is done sometimes async on celery, db transaction
-            # management is handled there.
-            task = RepoModel().create(form_result, request.authuser.user_id)
-            task_id = task.task_id
         except formencode.Invalid as errors:
             log.info(errors)
             return htmlfill.render(
@@ -133,6 +127,11 @@ class ReposController(BaseRepoController):
                 force_defaults=False,
                 encoding="UTF-8")
 
+        try:
+            # create is done sometimes async on celery, db transaction
+            # management is handled there.
+            task = RepoModel().create(form_result, request.authuser.user_id)
+            task_id = task.task_id
         except Exception:
             log.error(traceback.format_exc())
             msg = (_('Error creating repository %s')
