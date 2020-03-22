@@ -31,6 +31,7 @@ import logging
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import hybrid_property
 from kallithea.lib.exceptions import LdapConnectionError, LdapImportError, LdapPasswordError, LdapUsernameError
+from kallithea.lib.utils2 import safe_str
 
 
 log = logging.getLogger(__name__)
@@ -328,7 +329,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             log.debug('Got ldap DN response %s', user_dn)
 
             def get_ldap_attr(k):
-                return ldap_attrs.get(settings.get(k), [''])[0]
+                return safe_str(ldap_attrs.get(settings.get(k), [b''])[0])
 
             # old attrs fetched from Kallithea database
             admin = getattr(userobj, 'admin', False)
