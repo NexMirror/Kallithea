@@ -32,7 +32,7 @@ import threading
 import time
 
 from kallithea.lib import auth_modules
-from kallithea.lib.compat import formatted_json, hybrid_property
+from kallithea.lib.compat import hybrid_property
 
 
 try:
@@ -142,7 +142,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             log.warning("Cannot extract additional info for PAM user %s", username)
             pass
 
-        log.debug("pamuser: \n%s", formatted_json(user_data))
+        log.debug("pamuser: %s", user_data)
         log.info('user %s authenticated correctly', user_data['username'])
         return user_data
 

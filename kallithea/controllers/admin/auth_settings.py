@@ -37,7 +37,6 @@ from kallithea.lib import auth_modules
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasPermissionAnyDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.compat import formatted_json
 from kallithea.model.db import Setting
 from kallithea.model.forms import AuthSettingsForm
 from kallithea.model.meta import Session
@@ -87,7 +86,7 @@ class AuthSettingsController(BaseController):
         # we want to show , separated list of enabled plugins
         c.defaults['auth_plugins'] = ','.join(c.enabled_plugin_names)
 
-        log.debug(formatted_json(defaults))
+        log.debug('defaults: %s', defaults)
         return formencode.htmlfill.render(
             render('admin/auth/auth_settings.html'),
             defaults=c.defaults,
@@ -103,7 +102,7 @@ class AuthSettingsController(BaseController):
     def auth_settings(self):
         """POST create and store auth settings"""
         self.__load_defaults()
-        log.debug("POST Result: %s", formatted_json(dict(request.POST)))
+        log.debug("POST Result: %s", dict(request.POST))
 
         # First, parse only the plugin list (not the plugin settings).
         _auth_plugins_validator = AuthSettingsForm([]).fields['auth_plugins']
