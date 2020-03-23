@@ -136,9 +136,6 @@ class KallitheaAuthPluginBase(object):
                   username)
         if username:
             user = User.get_by_username_or_email(username)
-            if user is None:
-                log.debug('Fallback to fetch user in case insensitive mode')
-                user = User.get_by_username(username, case_insensitive=True)
         else:
             log.debug('provided username:`%s` is empty skipping...', username)
         return user

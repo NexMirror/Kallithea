@@ -549,7 +549,7 @@ class User(Base, BaseDbModel):
         return user
 
     @classmethod
-    def get_by_username_or_email(cls, username_or_email, case_insensitive=False, cache=False):
+    def get_by_username_or_email(cls, username_or_email, case_insensitive=True, cache=False):
         """
         For anything that looks like an email address, look up by the email address (matching
         case insensitively).
