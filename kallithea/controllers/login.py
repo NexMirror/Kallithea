@@ -83,6 +83,7 @@ class LoginController(BaseController):
                 # form checks for username/password, now we're authenticated
                 username = c.form_result['username']
                 user = User.get_by_username_or_email(username, case_insensitive=True)
+                assert user is not None  # the same user get just passed in the form validation
             except formencode.Invalid as errors:
                 defaults = errors.value
                 # remove password from filling in form again
