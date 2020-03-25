@@ -1024,7 +1024,7 @@ class EmptyChangeset(BaseChangeset):
         return self
 
     def get_file_content(self, path):
-        return ''
+        return b''
 
     def get_file_size(self, path):
         return 0
