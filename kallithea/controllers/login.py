@@ -103,8 +103,9 @@ class LoginController(BaseController):
                 h.flash(e, 'error')
             else:
                 auth_user = log_in_user(user, c.form_result['remember'], is_external_auth=False, ip_addr=request.ip_addr)
-                # TODO: handle auth_user is None as failed authentication?
-                raise HTTPFound(location=c.came_from)
+                if auth_user:
+                    raise HTTPFound(location=c.came_from)
+                h.flash(_('Authentication failed.'), 'error')
         else:
             # redirect if already logged in
             if not request.authuser.is_anonymous:
