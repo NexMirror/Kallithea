@@ -76,16 +76,13 @@ class MercurialChangeset(BaseChangeset):
     @LazyProperty
     def successors(self):
         successors = mercurial.obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
-        if successors:
-            # flatten the list here handles both divergent (len > 1)
-            # and the usual case (len = 1)
-            successors = [mercurial.node.hex(n)[:12] for sub in successors for n in sub if n != self._ctx.node()]
-
-        return successors
+        # flatten the list here handles both divergent (len > 1)
+        # and the usual case (len = 1)
+        return [safe_str(mercurial.node.hex(n)[:12]) for sub in successors for n in sub if n != self._ctx.node()]
 
     @LazyProperty
     def predecessors(self):
-        return [mercurial.node.hex(n)[:12] for n in mercurial.obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
+        return [safe_str(mercurial.node.hex(n)[:12]) for n in mercurial.obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
 
     @LazyProperty
     def bookmarks(self):
