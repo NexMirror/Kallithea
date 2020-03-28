@@ -9,7 +9,7 @@ import argparse
 import os
 from collections import Counter
 
-from . import contributor_data
+import contributor_data
 
 
 def main():

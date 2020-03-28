@@ -42,7 +42,7 @@ import os
 import re
 from collections import defaultdict
 
-from . import contributor_data
+import contributor_data
 
 
 def sortkey(x):
