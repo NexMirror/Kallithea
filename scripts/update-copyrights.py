@@ -134,7 +134,7 @@ def main():
         all_entries=repo_entries + contributor_data.other_about + contributor_data.other,
         no_entries=contributor_data.no_about,
         domain_extra=contributor_data.domain_extra,
-        split_re=r'(?:  <li>Copyright &copy; [^\n]*</li>\n)*',
+        split_re=r'(?:  <li>Copyright &copy; [^\n]+</li>\n)+',
         normalize_name=lambda name: name.split('<', 1)[0].strip(),
         format_f=lambda years, name: '  <li>Copyright &copy; %s, %s</li>\n' % (nice_years(years, '&ndash;', ', '), name),
         )
@@ -144,7 +144,7 @@ def main():
         all_entries=repo_entries + contributor_data.other_contributors + contributor_data.other,
         no_entries=contributor_data.total_ignore,
         domain_extra=contributor_data.domain_extra,
-        split_re=r'(?:    [^\n]*\n)*',
+        split_re=r'(?:    [^\n]+\n)+',
         normalize_name=lambda name: name,
         format_f=lambda years, name: ('    %s%s%s\n' % (name, ' ' if years else '', nice_years(years))),
         )
@@ -154,7 +154,7 @@ def main():
         all_entries=repo_entries,
         no_entries=contributor_data.total_ignore,
         domain_extra={},
-        split_re=r'(?<=&copy;) .* (?=by various authors)',
+        split_re=r'(?<=&copy;) .+ (?=by various authors)',
         normalize_name=lambda name: '',
         format_f=lambda years, name: ' ' + nice_years(years, '&ndash;', ', ') + ' ',
         )
@@ -165,7 +165,7 @@ def main():
         all_entries=repo_entries,
         no_entries=contributor_data.total_ignore,
         domain_extra={},
-        split_re=r"(?<=copyright = u').*(?= by various authors)",
+        split_re=r"(?<=copyright = ').+(?= by various authors)",
         normalize_name=lambda name: '',
         format_f=lambda years, name: nice_years(years, '-', ', '),
         )
