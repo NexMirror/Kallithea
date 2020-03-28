@@ -49,11 +49,6 @@ class TestNodeBasic(object):
         with pytest.raises(NodeError):
             Node('', NodeKind.FILE)
 
-    def test_kind_setter(self):
-        node = Node('', NodeKind.DIR)
-        with pytest.raises(NodeError):
-            setattr(node, 'kind', NodeKind.FILE)
-
     def _test_parent_path(self, node_path, expected_parent_path):
         """
         Tests if node's parent path are properly computed.
@@ -104,7 +99,7 @@ class TestNodeBasic(object):
         node = DirNode('any_dir')
 
         assert node.is_dir()
-        with pytest.raises(NodeError):
+        with pytest.raises(AttributeError):  # Note: this used to raise NodeError
             getattr(node, 'content')
 
     def test_dir_node_iter(self):

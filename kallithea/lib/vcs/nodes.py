@@ -128,24 +128,10 @@ class Node(object):
         """
         return self.path.rstrip('/').split('/')[-1]
 
-    def _get_kind(self):
-        return self._kind
-
-    def _set_kind(self, kind):
-        if hasattr(self, '_kind'):
-            raise NodeError("Cannot change node's kind")
-        else:
-            self._kind = kind
-            # Post setter check (path's trailing slash)
-            if self.path.endswith('/'):
-                raise NodeError("Node's path cannot end with slash")
-
-    kind = property(_get_kind, _set_kind)
-
     def __eq__(self, other):
         if type(self) is not type(other):
             return False
-        if self._kind != other._kind:
+        if self.kind != other.kind:
             return False
         if self.path != other.path:
             return False
@@ -158,9 +144,9 @@ class Node(object):
             return self_nodes_paths == other_nodes_paths
 
     def __lt__(self, other):
-        if self._kind < other._kind:
+        if self.kind < other.kind:
             return True
-        if self._kind > other._kind:
+        if self.kind > other.kind:
             return False
         if self.path < other.path:
             return True
@@ -587,7 +573,7 @@ class SubModuleNode(Node):
 
     def __init__(self, name, url, changeset=None, alias=None):
         # Note: Doesn't call Node.__init__!
-        self.path = name
+        self.path = name.rstrip('/')
         self.kind = NodeKind.SUBMODULE
         self.alias = alias
         # we have to use emptyChangeset here since this can point to svn/git/hg
