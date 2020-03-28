@@ -52,10 +52,13 @@ def sortkey(x):
     * number of contribution years
     * name (with some unicode normalization)
     The entries must be 2-tuples of a list of string years and the name"""
-    return (x[0] and -int(x[0][-1]),
-            x[0] and int(x[0][0]),
-            -len(x[0]),
-            x[1].decode('utf-8').lower().replace('\xe9', 'e').replace('\u0142', 'l')
+    years, name = x
+    if not years:
+        years = ['0']
+    return (-int(years[-1]),  # primarily sort by latest contribution
+            int(years[0]),  # then sort by first contribution
+            -len(years),  # then sort by length of contribution (no gaps)
+            name.lower().replace('\xe9', 'e').replace('\u0142', 'l')  # finally sort by name
         )
 
 
