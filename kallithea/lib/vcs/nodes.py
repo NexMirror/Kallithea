@@ -135,13 +135,6 @@ class Node(object):
             return False
         if self.path != other.path:
             return False
-        if self.is_file():
-            return self.content == other.content
-        else:
-            # For DirNode's check without entering each dir
-            self_nodes_paths = list(sorted(n.path for n in self.nodes))
-            other_nodes_paths = list(sorted(n.path for n in self.nodes))
-            return self_nodes_paths == other_nodes_paths
 
     def __lt__(self, other):
         if self.kind < other.kind:
@@ -152,13 +145,6 @@ class Node(object):
             return True
         if self.path > other.path:
             return False
-        if self.is_file():
-            return self.content < other.content
-        else:
-            # For DirNode's check without entering each dir
-            self_nodes_paths = list(sorted(n.path for n in self.nodes))
-            other_nodes_paths = list(sorted(n.path for n in self.nodes))
-            return self_nodes_paths < other_nodes_paths
 
     def __repr__(self):
         return '<%s %r>' % (self.__class__.__name__, self.path)
@@ -246,6 +232,18 @@ class FileNode(Node):
             content = safe_bytes(content)
         self._content = content
         self._mode = mode or 0o100644
+
+    def __eq__(self, other):
+        eq = super(FileNode, self).__eq__(other)
+        if eq is not None:
+            return eq
+        return self.content == other.content
+
+    def __lt__(self, other):
+        lt = super(FileNode, self).__lt__(other)
+        if lt is not None:
+            return lt
+        return self.content < other.content
 
     @LazyProperty
     def mode(self):
@@ -465,10 +463,23 @@ class DirNode(Node):
         self.changeset = changeset
         self._nodes = nodes
 
-    @LazyProperty
-    def content(self):
-        raise NodeError("%s represents a dir and has no ``content`` attribute"
-            % self)
+    def __eq__(self, other):
+        eq = super(DirNode, self).__eq__(other)
+        if eq is not None:
+            return eq
+        # check without entering each dir
+        self_nodes_paths = list(sorted(n.path for n in self.nodes))
+        other_nodes_paths = list(sorted(n.path for n in self.nodes))
+        return self_nodes_paths == other_nodes_paths
+
+    def __lt__(self, other):
+        lt = super(DirNode, self).__lt__(other)
+        if lt is not None:
+            return lt
+        # check without entering each dir
+        self_nodes_paths = list(sorted(n.path for n in self.nodes))
+        other_nodes_paths = list(sorted(n.path for n in self.nodes))
+        return self_nodes_paths < other_nodes_paths
 
     @LazyProperty
     def nodes(self):
