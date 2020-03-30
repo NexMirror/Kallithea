@@ -365,6 +365,7 @@ def set_app_settings(config):
     hgsettings = Setting.get_app_settings()
     for k, v in hgsettings.items():
         config[k] = v
+    config['base_path'] = Ui.get_repos_location()
 
 
 def set_vcs_config(config):
