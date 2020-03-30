@@ -34,6 +34,7 @@ import traceback
 
 import kallithea.lib.utils2
 from kallithea.lib.utils2 import LazyProperty
+from kallithea.model import db
 from kallithea.model.db import Permission, RepoGroup, Repository, Session, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserRepoGroupToPerm
 
 
@@ -115,7 +116,7 @@ class RepoGroupModel(object):
         :param group: instance of group from database
         :param force_delete: use shutil rmtree to remove all objects
         """
-        paths = group.full_path.split(RepoGroup.url_sep())
+        paths = group.full_path.split(db.URL_SEP)
         paths = os.sep.join(paths)
 
         rm_path = os.path.join(self.repos_path, paths)

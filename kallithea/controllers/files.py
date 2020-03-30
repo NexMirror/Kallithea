@@ -52,7 +52,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import (ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, ImproperArchiveTypeError, NodeAlreadyExistsError,
                                           NodeDoesNotExistError, NodeError, RepositoryError, VCSError)
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.model.db import Repository
+from kallithea.model import db
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
 
@@ -233,7 +233,7 @@ class FilesController(BaseRepoController):
         file_node = self.__get_filenode(cs, f_path)
 
         response.content_disposition = \
-            'attachment; filename=%s' % f_path.split(Repository.url_sep())[-1]
+            'attachment; filename=%s' % f_path.split(db.URL_SEP)[-1]
 
         response.content_type = file_node.mimetype
         return file_node.content

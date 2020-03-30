@@ -3,6 +3,7 @@ import os
 import pytest
 from sqlalchemy.exc import IntegrityError
 
+from kallithea.model import db
 from kallithea.model.db import RepoGroup
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -132,8 +133,7 @@ class TestRepoGroups(base.TestController):
         assert self.__check_path('g2', 'g1')
 
         # test repo
-        assert r.repo_name == RepoGroup.url_sep().join(['g2', 'g1',
-                                                                r.just_name])
+        assert r.repo_name == db.URL_SEP.join(['g2', 'g1', r.just_name])
 
     def test_move_to_root(self):
         g1 = fixture.create_repo_group('t11')

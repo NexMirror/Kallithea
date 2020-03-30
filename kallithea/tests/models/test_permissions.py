@@ -1,5 +1,6 @@
 from kallithea.lib.auth import AuthUser
-from kallithea.model.db import Permission, RepoGroup, User, UserGroupRepoGroupToPerm, UserToPerm
+from kallithea.model import db
+from kallithea.model.db import Permission, User, UserGroupRepoGroupToPerm, UserToPerm
 from kallithea.model.meta import Session
 from kallithea.model.permission import PermissionModel
 from kallithea.model.repo import RepoModel
@@ -222,7 +223,7 @@ class TestPermissions(base.TestController):
         assert a1_auth.permissions['repositories_groups'] == {'group1': 'group.none', 'group2': 'group.none'}
 
         # add repo to group
-        name = RepoGroup.url_sep().join([self.g1.group_name, 'test_perm'])
+        name = db.URL_SEP.join([self.g1.group_name, 'test_perm'])
         self.test_repo = fixture.create_repo(name=name,
                                              repo_type='hg',
                                              repo_group=self.g1,

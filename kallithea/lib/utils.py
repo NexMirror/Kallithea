@@ -48,7 +48,7 @@ from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError
 from kallithea.lib.vcs.utils.fakemod import create_module
 from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.model import meta
+from kallithea.model import db, meta
 from kallithea.model.db import RepoGroup, Repository, Setting, Ui, User, UserGroup, UserLog
 
 
@@ -407,7 +407,7 @@ def map_groups(path):
     """
     from kallithea.model.repo_group import RepoGroupModel
     sa = meta.Session()
-    groups = path.split(Repository.url_sep())
+    groups = path.split(db.URL_SEP)
     parent = None
     group = None
 

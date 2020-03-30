@@ -40,7 +40,7 @@ from kallithea.lib.hooks import log_delete_repository
 from kallithea.lib.utils import is_valid_repo_uri, make_ui
 from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix
 from kallithea.lib.vcs.backends import get_backend
-from kallithea.model.db import (Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm,
+from kallithea.model.db import (URL_SEP, Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm,
                                 UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
 
 
@@ -49,7 +49,7 @@ log = logging.getLogger(__name__)
 
 class RepoModel(object):
 
-    URL_SEPARATOR = Repository.url_sep()
+    URL_SEPARATOR = URL_SEP
 
     def _create_default_perms(self, repository, private):
         # create default permission
@@ -343,7 +343,7 @@ class RepoModel(object):
             # while repo_name_full is a full qualified name that is combined
             # with name and path of group
             repo_name_full = repo_name
-            repo_name = repo_name.split(self.URL_SEPARATOR)[-1]
+            repo_name = repo_name.split(URL_SEP)[-1]
             if kallithea.lib.utils2.repo_name_slug(repo_name) != repo_name:
                 raise Exception('invalid repo name %s' % repo_name)
 

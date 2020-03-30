@@ -1057,10 +1057,6 @@ class Repository(Base, BaseDbModel):
         return q
 
     @classmethod
-    def url_sep(cls):
-        return URL_SEP
-
-    @classmethod
     def normalize_repo_name(cls, repo_name):
         """
         Normalizes os specific repo_name to the format internally stored inside
@@ -1069,7 +1065,7 @@ class Repository(Base, BaseDbModel):
         :param cls:
         :param repo_name:
         """
-        return cls.url_sep().join(repo_name.split(os.sep))
+        return URL_SEP.join(repo_name.split(os.sep))
 
     @classmethod
     def guess_instance(cls, value):
@@ -1109,7 +1105,7 @@ class Repository(Base, BaseDbModel):
         :param cls:
         """
         q = Session().query(Ui) \
-            .filter(Ui.ui_key == cls.url_sep())
+            .filter(Ui.ui_key == URL_SEP)
         q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
         return q.one().ui_value
 
@@ -1129,7 +1125,7 @@ class Repository(Base, BaseDbModel):
 
     @property
     def just_name(self):
-        return self.repo_name.split(Repository.url_sep())[-1]
+        return self.repo_name.split(URL_SEP)[-1]
 
     @property
     def groups_with_parents(self):
@@ -1148,8 +1144,7 @@ class Repository(Base, BaseDbModel):
         Returns base full path for that repository means where it actually
         exists on a filesystem
         """
-        q = Session().query(Ui).filter(Ui.ui_key ==
-                                              Repository.url_sep())
+        q = Session().query(Ui).filter(Ui.ui_key == URL_SEP)
         q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
         return q.one().ui_value
 
@@ -1159,7 +1154,7 @@ class Repository(Base, BaseDbModel):
         # we need to split the name by / since this is how we store the
         # names in the database, but that eventually needs to be converted
         # into a valid system path
-        p += self.repo_name.split(Repository.url_sep())
+        p += self.repo_name.split(URL_SEP)
         return os.path.join(*p)
 
     @property
@@ -1179,7 +1174,7 @@ class Repository(Base, BaseDbModel):
         :param group_name:
         """
         path_prefix = self.group.full_path_splitted if self.group else []
-        return Repository.url_sep().join(path_prefix + [repo_name])
+        return URL_SEP.join(path_prefix + [repo_name])
 
     @property
     def _ui(self):
@@ -1500,10 +1495,6 @@ class RepoGroup(Base, BaseDbModel):
                       key=lambda c: c[1].split(cls.SEP))
 
     @classmethod
-    def url_sep(cls):
-        return URL_SEP
-
-    @classmethod
     def guess_instance(cls, value):
         return super(RepoGroup, cls).guess_instance(value, RepoGroup.get_by_group_name)
 
@@ -1541,7 +1532,7 @@ class RepoGroup(Base, BaseDbModel):
 
     @property
     def name(self):
-        return self.group_name.split(RepoGroup.url_sep())[-1]
+        return self.group_name.split(URL_SEP)[-1]
 
     @property
     def full_path(self):
@@ -1549,7 +1540,7 @@ class RepoGroup(Base, BaseDbModel):
 
     @property
     def full_path_splitted(self):
-        return self.group_name.split(RepoGroup.url_sep())
+        return self.group_name.split(URL_SEP)
 
     @property
     def repositories(self):
@@ -1604,7 +1595,7 @@ class RepoGroup(Base, BaseDbModel):
         """
         path_prefix = (self.parent_group.full_path_splitted if
                        self.parent_group else [])
-        return RepoGroup.url_sep().join(path_prefix + [group_name])
+        return URL_SEP.join(path_prefix + [group_name])
 
     def get_api_data(self):
         """

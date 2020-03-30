@@ -33,6 +33,7 @@ from kallithea.lib.compat import OrderedSet
 from kallithea.lib.exceptions import InvalidCloneUriException, LdapImportError
 from kallithea.lib.utils import is_valid_repo_uri
 from kallithea.lib.utils2 import aslist, repo_name_slug, str2bool
+from kallithea.model import db
 from kallithea.model.db import RepoGroup, Repository, User, UserGroup
 
 
@@ -325,7 +326,7 @@ def ValidRepoName(edit=False, old_data=None):
                 # value needs to be aware of group name in order to check
                 # db key This is an actual just the name to store in the
                 # database
-                repo_name_full = group_path + RepoGroup.url_sep() + repo_name
+                repo_name_full = group_path + db.URL_SEP + repo_name
             else:
                 group_name = group_path = ''
                 repo_name_full = repo_name
