@@ -35,7 +35,6 @@ from datetime import datetime
 import kallithea.lib.utils2
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionLevel
-from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import AttachedForksError
 from kallithea.lib.hooks import log_delete_repository
 from kallithea.lib.utils import is_valid_repo_uri, make_ui
@@ -81,25 +80,19 @@ class RepoModel(object):
         q = Ui.query().filter(Ui.ui_key == '/').one()
         return q.ui_value
 
-    def get(self, repo_id, cache=False):
+    def get(self, repo_id):
         repo = Repository.query() \
             .filter(Repository.repo_id == repo_id)
 
-        if cache:
-            repo = repo.options(FromCache("sql_cache_short",
-                                          "get_repo_%s" % repo_id))
         return repo.scalar()
 
     def get_repo(self, repository):
         return Repository.guess_instance(repository)
 
-    def get_by_repo_name(self, repo_name, cache=False):
+    def get_by_repo_name(self, repo_name):
         repo = Repository.query() \
             .filter(Repository.repo_name == repo_name)
 
-        if cache:
-            repo = repo.options(FromCache("sql_cache_short",
-                                          "get_repo_%s" % repo_name))
         return repo.scalar()
 
     def get_all_user_repos(self, user):
