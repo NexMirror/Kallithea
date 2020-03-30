@@ -40,12 +40,14 @@ class Meter:
     def __init__(self, start_response):
         self._start_response = start_response
         self._start = time.time()
+        self.status = None
         self._size = 0
 
     def duration(self):
         return time.time() - self._start
 
     def start_response(self, status, response_headers, exc_info=None):
+        self.status = status
         write = self._start_response(status, response_headers, exc_info)
         def metered_write(s):
             self.measure(s)
@@ -77,7 +79,7 @@ class ResultIter:
 
     def close(self):
         self._result_close()
-        log.info("%s responded after %.3fs with %s bytes", self._description, self._meter.duration(), self._meter.size())
+        log.info("%s responded %r after %.3fs with %s bytes", self._description, self._meter.status, self._meter.duration(), self._meter.size())
 
 
 class RequestWrapper(object):
@@ -95,5 +97,5 @@ class RequestWrapper(object):
         try:
             result = self.application(environ, meter.start_response)
         finally:
-            log.info("%s responding after %.3fs", description, meter.duration())
+            log.info("%s responding %r after %.3fs", description, meter.status, meter.duration())
         return ResultIter(result, meter, description)
