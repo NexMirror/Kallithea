@@ -26,10 +26,11 @@ import shutil
 
 import click
 
+import kallithea
 import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.utils import REMOVED_REPO_PAT, repo2db_mapper
 from kallithea.lib.utils2 import ask_ok
-from kallithea.model.db import Repository, Ui
+from kallithea.model.db import Repository
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
 
@@ -125,7 +126,7 @@ def repo_purge_deleted(ask, older_than):
         date_part = name[4:19]  # 4:19 since we don't parse milliseconds
         return datetime.datetime.strptime(date_part, '%Y%m%d_%H%M%S')
 
-    repos_location = Ui.get_repos_location()
+    repos_location = kallithea.CONFIG['base_path']
     to_remove = []
     for dn_, dirs, f in os.walk(repos_location):
         alldirs = list(dirs)

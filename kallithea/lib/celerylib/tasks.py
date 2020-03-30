@@ -414,7 +414,7 @@ def create_repo_fork(form_data, cur_user):
 
     DBS = celerylib.get_session()
 
-    base_path = Repository.base_path()
+    base_path = kallithea.CONFIG['base_path']
     cur_user = User.guess_instance(cur_user)
 
     repo_name = form_data['repo_name']  # fork in this case

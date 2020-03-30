@@ -53,7 +53,6 @@ from kallithea.lib.utils2 import (Optional, ascii_bytes, aslist, get_changeset_s
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.model.meta import Base, Session
 
 
@@ -1086,7 +1085,7 @@ class Repository(Base, BaseDbModel):
 
     @classmethod
     def get_by_full_path(cls, repo_full_path):
-        base_full_path = os.path.realpath(cls.base_path())
+        base_full_path = os.path.realpath(kallithea.CONFIG['base_path'])
         repo_full_path = os.path.realpath(repo_full_path)
         assert repo_full_path.startswith(base_full_path + os.path.sep)
         repo_name = repo_full_path[len(base_full_path) + 1:]
@@ -1096,18 +1095,6 @@ class Repository(Base, BaseDbModel):
     @classmethod
     def get_repo_forks(cls, repo_id):
         return cls.query().filter(Repository.fork_id == repo_id)
-
-    @classmethod
-    def base_path(cls):
-        """
-        Returns base path where all repos are stored
-
-        :param cls:
-        """
-        q = Session().query(Ui) \
-            .filter(Ui.ui_key == URL_SEP)
-        q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
-        return q.one().ui_value
 
     @property
     def forks(self):
@@ -1138,19 +1125,13 @@ class Repository(Base, BaseDbModel):
         groups.reverse()
         return groups
 
-    @LazyProperty
-    def repo_path(self):
-        """
-        Returns base full path for that repository means where it actually
-        exists on a filesystem
-        """
-        q = Session().query(Ui).filter(Ui.ui_key == URL_SEP)
-        q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
-        return q.one().ui_value
-
     @property
     def repo_full_path(self):
-        p = [self.repo_path]
+        """
+        Returns base full path for the repository - where it actually
+        exists on a filesystem.
+        """
+        p = [kallithea.CONFIG['base_path']]
         # we need to split the name by / since this is how we store the
         # names in the database, but that eventually needs to be converted
         # into a valid system path
@@ -1194,7 +1175,7 @@ class Repository(Base, BaseDbModel):
         """
         from kallithea.lib.utils import is_valid_repo
 
-        return is_valid_repo(repo_name, cls.base_path())
+        return is_valid_repo(repo_name, kallithea.CONFIG['base_path'])
 
     def get_api_data(self, with_revision_names=False,
                            with_pullrequests=False):
@@ -2466,19 +2447,6 @@ class Gist(Base, BaseDbModel):
         import kallithea.lib.helpers as h
         return h.canonical_url('gist', gist_id=self.gist_access_id)
 
-    @classmethod
-    def base_path(cls):
-        """
-        Returns base path where all gists are stored
-
-        :param cls:
-        """
-        from kallithea.model.gist import GIST_STORE_LOC
-        q = Session().query(Ui) \
-            .filter(Ui.ui_key == URL_SEP)
-        q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
-        return os.path.join(q.one().ui_value, GIST_STORE_LOC)
-
     def get_api_data(self):
         """
         Common function for generating gist related data for API
@@ -2500,13 +2468,15 @@ class Gist(Base, BaseDbModel):
         )
         data.update(self.get_api_data())
         return data
+
     ## SCM functions
 
     @property
     def scm_instance(self):
         from kallithea.lib.vcs import get_repo
-        base_path = self.base_path()
-        return get_repo(os.path.join(base_path, self.gist_access_id))
+        from kallithea.model.gist import GIST_STORE_LOC
+        gist_base_path = os.path.join(kallithea.CONFIG['base_path'], GIST_STORE_LOC)
+        return get_repo(os.path.join(gist_base_path, self.gist_access_id))
 
 
 class UserSshKeys(Base, BaseDbModel):
