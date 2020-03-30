@@ -31,7 +31,6 @@ import binascii
 import datetime
 import json
 import os
-import pwd
 import re
 import time
 import urllib.parse
@@ -43,6 +42,12 @@ from webhelpers2.text import collapse, remove_formatting, strip_tags
 
 from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, safe_bytes, safe_str  # re-export
 from kallithea.lib.vcs.utils.lazy import LazyProperty
+
+
+try:
+    import pwd
+except ImportError:
+    pass
 
 
 # mute pyflakes "imported but unused"
@@ -331,7 +336,7 @@ def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None)
     prefix = urllib.parse.unquote(parsed_url.path.rstrip('/'))
     try:
         system_user = pwd.getpwuid(os.getuid()).pw_name
-    except Exception: # TODO: support all systems - especially Windows
+    except NameError: # TODO: support all systems - especially Windows
         system_user = 'kallithea' # hardcoded default value ...
     args = {
         'scheme': parsed_url.scheme,
