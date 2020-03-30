@@ -106,7 +106,6 @@ class _BaseTestApi(object):
         Session().commit()
         cls.TEST_USER_LOGIN = cls.test_user.username
         cls.apikey_regular = cls.test_user.api_key
-        cls.default_user_username = User.get_default_user().username
 
     @classmethod
     def teardown_class(cls):
@@ -706,7 +705,7 @@ class _BaseTestApi(object):
 
     def test_api_get_repo_by_non_admin_no_permission_to_repo(self):
         RepoModel().grant_user_permission(repo=self.REPO,
-                                          user=self.default_user_username,
+                                          user=User.DEFAULT_USER,
                                           perm='repository.none')
         try:
             RepoModel().grant_user_permission(repo=self.REPO,
@@ -721,7 +720,7 @@ class _BaseTestApi(object):
             self._compare_error(id_, expected, given=response.body)
         finally:
             RepoModel().grant_user_permission(repo=self.REPO,
-                                              user=self.default_user_username,
+                                              user=User.DEFAULT_USER,
                                               perm='repository.read')
 
     def test_api_get_repo_that_doesn_not_exist(self):
@@ -1363,7 +1362,7 @@ class _BaseTestApi(object):
 
     def test_api_fork_repo_non_admin_no_permission_to_fork(self):
         RepoModel().grant_user_permission(repo=self.REPO,
-                                          user=self.default_user_username,
+                                          user=User.DEFAULT_USER,
                                           perm='repository.none')
         try:
             fork_name = 'api-repo-fork'
@@ -1376,7 +1375,7 @@ class _BaseTestApi(object):
             self._compare_error(id_, expected, given=response.body)
         finally:
             RepoModel().grant_user_permission(repo=self.REPO,
-                                              user=self.default_user_username,
+                                              user=User.DEFAULT_USER,
                                               perm='repository.read')
             fixture.destroy_repo(fork_name)
 
