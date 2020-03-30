@@ -99,12 +99,6 @@ class CachingQuery(Query):
             ret = self.merge_result(ret, load=False)
         return ret
 
-    def set_value(self, value):
-        """Set the value in the cache for this query."""
-
-        cache, cache_key = _get_cache_parameters(self)
-        cache.put(cache_key, value)
-
 
 def query_callable(manager, query_cls=CachingQuery):
     def query(*arg, **kw):
