@@ -44,8 +44,8 @@ from kallithea.lib.caching_query import FromCache
 from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
 from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.model.db import (Permission, RepoGroup, Repository, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm,
-                                UserGroupToPerm, UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
+from kallithea.model.db import (Permission, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm,
+                                UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 
@@ -156,19 +156,19 @@ def _cached_perms_data(user_id, user_is_admin):
 
         # repositories
         for perm in default_repo_perms:
-            r_k = perm.UserRepoToPerm.repository.repo_name
+            r_k = perm.repository.repo_name
             p = 'repository.admin'
             permissions[RK][r_k] = p
 
         # repository groups
         for perm in default_repo_groups_perms:
-            rg_k = perm.UserRepoGroupToPerm.group.group_name
+            rg_k = perm.group.group_name
             p = 'group.admin'
             permissions[GK][rg_k] = p
 
         # user groups
         for perm in default_user_group_perms:
-            u_k = perm.UserUserGroupToPerm.user_group.users_group_name
+            u_k = perm.user_group.users_group_name
             p = 'usergroup.admin'
             permissions[UK][u_k] = p
         return permissions
@@ -187,27 +187,27 @@ def _cached_perms_data(user_id, user_is_admin):
 
     # defaults for repositories, taken from default user
     for perm in default_repo_perms:
-        r_k = perm.UserRepoToPerm.repository.repo_name
-        if perm.Repository.owner_id == user_id:
+        r_k = perm.repository.repo_name
+        if perm.repository.owner_id == user_id:
             p = 'repository.admin'
-        elif perm.Repository.private:
+        elif perm.repository.private:
             p = 'repository.none'
         else:
-            p = perm.Permission.permission_name
+            p = perm.permission.permission_name
         permissions[RK][r_k] = p
 
     # defaults for repository groups taken from default user permission
     # on given group
     for perm in default_repo_groups_perms:
-        rg_k = perm.UserRepoGroupToPerm.group.group_name
-        p = perm.Permission.permission_name
+        rg_k = perm.group.group_name
+        p = perm.permission.permission_name
         permissions[GK][rg_k] = p
 
     # defaults for user groups taken from default user permission
     # on given user group
     for perm in default_user_group_perms:
-        u_k = perm.UserUserGroupToPerm.user_group.users_group_name
-        p = perm.Permission.permission_name
+        u_k = perm.user_group.users_group_name
+        p = perm.permission.permission_name
         permissions[UK][u_k] = p
 
     #======================================================================
@@ -261,30 +261,28 @@ def _cached_perms_data(user_id, user_is_admin):
 
     # user group for repositories permissions
     user_repo_perms_from_users_groups = \
-     Session().query(UserGroupRepoToPerm, Permission, Repository,) \
-        .join((Repository, UserGroupRepoToPerm.repository_id ==
-               Repository.repo_id)) \
-        .join((Permission, UserGroupRepoToPerm.permission_id ==
-               Permission.permission_id)) \
+     Session().query(UserGroupRepoToPerm) \
         .join((UserGroup, UserGroupRepoToPerm.users_group_id ==
                UserGroup.users_group_id)) \
         .filter(UserGroup.users_group_active == True) \
         .join((UserGroupMember, UserGroupRepoToPerm.users_group_id ==
                UserGroupMember.users_group_id)) \
         .filter(UserGroupMember.user_id == user_id) \
+        .options(joinedload(UserGroupRepoToPerm.repository)) \
+        .options(joinedload(UserGroupRepoToPerm.permission)) \
         .all()
 
     for perm in user_repo_perms_from_users_groups:
         bump_permission(RK,
-            perm.UserGroupRepoToPerm.repository.repo_name,
-            perm.Permission.permission_name)
+            perm.repository.repo_name,
+            perm.permission.permission_name)
 
     # user permissions for repositories
     user_repo_perms = Permission.get_default_perms(user_id)
     for perm in user_repo_perms:
         bump_permission(RK,
-            perm.UserRepoToPerm.repository.repo_name,
-            perm.Permission.permission_name)
+            perm.repository.repo_name,
+            perm.permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR REPOSITORY GROUPS !!
@@ -295,59 +293,56 @@ def _cached_perms_data(user_id, user_is_admin):
     #======================================================================
     # user group for repo groups permissions
     user_repo_group_perms_from_users_groups = \
-     Session().query(UserGroupRepoGroupToPerm, Permission, RepoGroup) \
-     .join((RepoGroup, UserGroupRepoGroupToPerm.group_id == RepoGroup.group_id)) \
-     .join((Permission, UserGroupRepoGroupToPerm.permission_id
-            == Permission.permission_id)) \
+     Session().query(UserGroupRepoGroupToPerm) \
      .join((UserGroup, UserGroupRepoGroupToPerm.users_group_id ==
             UserGroup.users_group_id)) \
      .filter(UserGroup.users_group_active == True) \
      .join((UserGroupMember, UserGroupRepoGroupToPerm.users_group_id
             == UserGroupMember.users_group_id)) \
      .filter(UserGroupMember.user_id == user_id) \
+     .options(joinedload(UserGroupRepoGroupToPerm.permission)) \
      .all()
 
     for perm in user_repo_group_perms_from_users_groups:
         bump_permission(GK,
-            perm.UserGroupRepoGroupToPerm.group.group_name,
-            perm.Permission.permission_name)
+            perm.group.group_name,
+            perm.permission.permission_name)
 
     # user explicit permissions for repository groups
     user_repo_groups_perms = Permission.get_default_group_perms(user_id)
     for perm in user_repo_groups_perms:
         bump_permission(GK,
-            perm.UserRepoGroupToPerm.group.group_name,
-            perm.Permission.permission_name)
+            perm.group.group_name,
+            perm.permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR USER GROUPS !!
     #======================================================================
     # user group for user group permissions
     user_group_user_groups_perms = \
-     Session().query(UserGroupUserGroupToPerm, Permission, UserGroup) \
+     Session().query(UserGroupUserGroupToPerm) \
      .join((UserGroup, UserGroupUserGroupToPerm.target_user_group_id
             == UserGroup.users_group_id)) \
-     .join((Permission, UserGroupUserGroupToPerm.permission_id
-            == Permission.permission_id)) \
      .join((UserGroupMember, UserGroupUserGroupToPerm.user_group_id
             == UserGroupMember.users_group_id)) \
      .filter(UserGroupMember.user_id == user_id) \
      .join((UserGroup, UserGroupMember.users_group_id ==
             UserGroup.users_group_id), aliased=True, from_joinpoint=True) \
      .filter(UserGroup.users_group_active == True) \
+     .options(joinedload(UserGroupUserGroupToPerm.permission)) \
      .all()
 
     for perm in user_group_user_groups_perms:
         bump_permission(UK,
-            perm.UserGroupUserGroupToPerm.target_user_group.users_group_name,
-            perm.Permission.permission_name)
+            perm.target_user_group.users_group_name,
+            perm.permission.permission_name)
 
     # user explicit permission for user groups
     user_user_groups_perms = Permission.get_default_user_group_perms(user_id)
     for perm in user_user_groups_perms:
         bump_permission(UK,
-            perm.UserUserGroupToPerm.user_group.users_group_name,
-            perm.Permission.permission_name)
+            perm.user_group.users_group_name,
+            perm.permission.permission_name)
 
     return permissions
 

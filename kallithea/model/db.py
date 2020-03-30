@@ -1743,27 +1743,27 @@ class Permission(Base, BaseDbModel):
 
     @classmethod
     def get_default_perms(cls, default_user_id):
-        q = Session().query(UserRepoToPerm, Repository, cls) \
-         .join((Repository, UserRepoToPerm.repository_id == Repository.repo_id)) \
-         .join((cls, UserRepoToPerm.permission_id == cls.permission_id)) \
+        q = Session().query(UserRepoToPerm) \
+         .options(joinedload(UserRepoToPerm.repository)) \
+         .options(joinedload(UserRepoToPerm.permission)) \
          .filter(UserRepoToPerm.user_id == default_user_id)
 
         return q.all()
 
     @classmethod
     def get_default_group_perms(cls, default_user_id):
-        q = Session().query(UserRepoGroupToPerm, RepoGroup, cls) \
-         .join((RepoGroup, UserRepoGroupToPerm.group_id == RepoGroup.group_id)) \
-         .join((cls, UserRepoGroupToPerm.permission_id == cls.permission_id)) \
+        q = Session().query(UserRepoGroupToPerm) \
+         .options(joinedload(UserRepoGroupToPerm.group)) \
+         .options(joinedload(UserRepoGroupToPerm.permission)) \
          .filter(UserRepoGroupToPerm.user_id == default_user_id)
 
         return q.all()
 
     @classmethod
     def get_default_user_group_perms(cls, default_user_id):
-        q = Session().query(UserUserGroupToPerm, UserGroup, cls) \
-         .join((UserGroup, UserUserGroupToPerm.user_group_id == UserGroup.users_group_id)) \
-         .join((cls, UserUserGroupToPerm.permission_id == cls.permission_id)) \
+        q = Session().query(UserUserGroupToPerm) \
+         .options(joinedload(UserUserGroupToPerm.user_group)) \
+         .options(joinedload(UserUserGroupToPerm.permission)) \
          .filter(UserUserGroupToPerm.user_id == default_user_id)
 
         return q.all()
