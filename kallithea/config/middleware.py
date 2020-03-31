@@ -42,4 +42,6 @@ def make_app(global_conf, full_stack=True, **app_conf):
     ``app_conf`` contains all the application-specific settings (those defined
     under ``[app:main]``.
     """
+    assert app_conf.get('sqlalchemy.url')  # must be called with a Kallithea .ini file, which for example must have this config option
+    assert global_conf.get('here') and global_conf.get('__file__')  # app config should be initialized the paste way ...
     return make_base_app(global_conf, full_stack=full_stack, **app_conf)
