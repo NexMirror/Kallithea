@@ -115,7 +115,7 @@ timeout = 3600
 [uwsgi]
 socket = /tmp/uwsgi.sock
 master = true
-http = ${host}:${port}
+http-socket = ${host}:${port}
 
 <%text>## set as daemon and redirect all output to file</%text>
 #daemonize = ./uwsgi_kallithea.log
