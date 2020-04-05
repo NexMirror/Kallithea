@@ -111,64 +111,29 @@ timeout = 3600
 %endif
 %else:
 <%text>## UWSGI ##</%text>
-<%text>## run with uwsgi --ini-paste-logged <inifile.ini></%text>
 [uwsgi]
-socket = /tmp/uwsgi.sock
-master = true
+<%text>## Note: this section is parsed by the uWSGI .ini parser when run as:</%text>
+<%text>## uwsgi --venv /srv/kallithea/venv --ini-paste-logged my.ini</%text>
+
+# HTTP Basics:
 http-socket = ${host}:${port}
+buffer-size = 65535                    ; Mercurial will use huge GET headers for discovery
 
-<%text>## set as daemon and redirect all output to file</%text>
-#daemonize = ./uwsgi_kallithea.log
+# Scaling:
+master = true                          ; Use separate master and worker processes
+auto-procname = true                   ; Name worker processes accordingly
+lazy = true                            ; App *must* be loaded in workers - db connections can't be shared
+workers = 4                            ; On demand scaling up to this many worker processes
+cheaper = 1                            ; Initial and on demand scaling down to this many worker processes
+max-requests = 1000                    ; Graceful reload of worker processes to avoid leaks
 
-<%text>## master process PID</%text>
-pidfile = ./uwsgi_kallithea.pid
-
-<%text>## stats server with workers statistics, use uwsgitop</%text>
-<%text>## for monitoring, `uwsgitop 127.0.0.1:1717`</%text>
-stats = 127.0.0.1:1717
-memory-report = true
-
-<%text>## log 5XX errors</%text>
-log-5xx = true
-
-<%text>## Set the socket listen queue size.</%text>
-listen = 128
-
-<%text>## Gracefully Reload workers after the specified amount of managed requests</%text>
-<%text>## (avoid memory leaks).</%text>
-max-requests = 1000
-
-<%text>## enable large buffers</%text>
-buffer-size = 65535
-
-<%text>## socket and http timeouts ##</%text>
-http-timeout = 3600
-socket-timeout = 3600
-
-<%text>## Log requests slower than the specified number of milliseconds.</%text>
-log-slow = 10
-
-<%text>## Exit if no app can be loaded.</%text>
-need-app = true
-
-<%text>## Set lazy mode (load apps in workers instead of master).</%text>
-lazy = true
-
-<%text>## scaling ##</%text>
-<%text>## set cheaper algorithm to use, if not set default will be used</%text>
-cheaper-algo = spare
-
-<%text>## minimum number of workers to keep at all times</%text>
-cheaper = 1
-
-<%text>## number of workers to spawn at startup</%text>
-cheaper-initial = 1
-
-<%text>## maximum number of workers that can be spawned</%text>
-workers = 4
-
-<%text>## how many workers should be spawned at a time</%text>
-cheaper-step = 1
+# Tweak defaults:
+strict = true                          ; Fail on unknown config directives
+enable-threads = true                  ; Enable Python threads (not threaded workers)
+vacuum = true                          ; Delete sockets during shutdown
+single-interpreter = true
+die-on-term = true                     ; Shutdown when receiving SIGTERM (default is respawn)
+need-app = true                        ; Exit early if no app can be loaded.
 
 %endif
 <%text>## middleware for hosting the WSGI application under a URL prefix</%text>
