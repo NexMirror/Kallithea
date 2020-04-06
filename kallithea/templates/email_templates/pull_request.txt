@@ -29,4 +29,5 @@ ${_('Changesets')|n,unicode}:
 ${h.shorter(desc, 80, firstline=True)|n,unicode}
 %endfor
 
-<%include file="button.txt" args="url=pr_url,title='View Pull Request'"/>\
+<% title = _('View Pull Request') %>\
+<%include file="button.txt" args="url=pr_url,title=title"/>\
