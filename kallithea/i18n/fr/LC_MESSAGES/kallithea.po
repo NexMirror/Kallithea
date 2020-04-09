@@ -394,6 +394,12 @@ msgstr "Clé d'API remise à zéro avec succès"
 msgid "API key successfully deleted"
 msgstr "Clé d'API supprimée avec succès"
 
+msgid "SSH key %s successfully added"
+msgstr "Clé SSH %s ajoutée avec succès"
+
+msgid "SSH key successfully deleted"
+msgstr "Clé SSH supprimée avec succès"
+
 msgid "Read"
 msgstr "Lire"
 
@@ -674,6 +680,9 @@ msgstr "Dépôt non trouvé sur le système de fichiers"
 msgid "Changeset for %s %s not found in %s"
 msgstr "Ensemble de changements pour %s %s non trouvé dans %s"
 
+msgid "SSH access is disabled."
+msgstr "L'accès SSH est désactivé."
+
 msgid "Binary file"
 msgstr "Fichier binaire"
 
@@ -805,6 +814,24 @@ msgstr ""
 "Le dépôt %s n’est pas représenté dans la base de données. Il a "
 "probablement été créé ou renommé manuellement. Veuillez relancer "
 "l’application pour rescanner les dépôts"
+
+msgid "SSH key is missing"
+msgstr "La clé SSH est manquante"
+
+msgid "Incorrect SSH key - it must start with 'ssh-(rsa|dss|ed25519)'"
+msgstr ""
+"Clé SSH incorrecte – elle dpit commencer par « ssh-(rsa|dss|ed25519) »"
+
+msgid "Incorrect SSH key - unexpected characters in base64 part %r"
+msgstr "Clé SSH incorrecte – caractères inattendus dans la partie base64 %r"
+
+msgid "Incorrect SSH key - failed to decode base64 part %r"
+msgstr "Clé SSH incorrecte – échec du décodage de la partie base64 %r"
+
+msgid "Incorrect SSH key - base64 part is not %r as claimed but %r"
+msgstr ""
+"Clé SSH incorrecte – la partie base64 n'est pas %r comme il est dit mais "
+"%r"
 
 msgid "%d year"
 msgid_plural "%d years"
