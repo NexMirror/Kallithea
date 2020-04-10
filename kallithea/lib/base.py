@@ -529,7 +529,7 @@ class BaseController(TGController):
             request.ip_addr = ip_addr
             request.needs_csrf_check = needs_csrf_check
 
-            log.info('IP: %s User: %s accessed %s',
+            log.info('IP: %s User: %s Request: %s',
                 request.ip_addr, request.authuser,
                 get_path_info(environ),
             )
