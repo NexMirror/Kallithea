@@ -820,8 +820,8 @@ class UserGroup(Base, BaseDbModel):
     users_group_to_perm = relationship('UserGroupToPerm', cascade='all')
     users_group_repo_to_perm = relationship('UserGroupRepoToPerm', cascade='all')
     users_group_repo_group_to_perm = relationship('UserGroupRepoGroupToPerm', cascade='all')
-    user_user_group_to_perm = relationship('UserUserGroupToPerm ', cascade='all')
-    user_group_user_group_to_perm = relationship('UserGroupUserGroupToPerm ', primaryjoin="UserGroupUserGroupToPerm.target_user_group_id==UserGroup.users_group_id", cascade='all')
+    user_user_group_to_perm = relationship('UserUserGroupToPerm', cascade='all')
+    user_group_user_group_to_perm = relationship('UserGroupUserGroupToPerm', primaryjoin="UserGroupUserGroupToPerm.target_user_group_id==UserGroup.users_group_id", cascade='all')
 
     owner = relationship('User')
 
