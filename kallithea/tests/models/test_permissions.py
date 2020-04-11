@@ -19,7 +19,7 @@ class TestPermissions(base.TestController):
     @classmethod
     def setup_class(cls):
         # recreate default user to get a clean start
-        PermissionModel().create_default_permissions(user=User.DEFAULT_USER,
+        PermissionModel().create_default_permissions(user=User.DEFAULT_USER_NAME,
                                                      force=True)
         Session().commit()
 

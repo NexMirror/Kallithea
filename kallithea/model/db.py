@@ -398,7 +398,7 @@ class User(Base, BaseDbModel):
         _table_args_default_dict,
     )
 
-    DEFAULT_USER = 'default'
+    DEFAULT_USER_NAME = 'default'
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
     # The name of the default auth type in extern_type, 'internal' lives in auth_internal.py
     DEFAULT_AUTH_TYPE = 'internal'
@@ -504,7 +504,7 @@ class User(Base, BaseDbModel):
 
     @hybrid_property
     def is_default_user(self):
-        return self.username == User.DEFAULT_USER
+        return self.username == User.DEFAULT_USER_NAME
 
     @hybrid_property
     def user_data(self):
@@ -627,7 +627,7 @@ class User(Base, BaseDbModel):
 
     @classmethod
     def get_default_user(cls):
-        user = User.get_by_username(User.DEFAULT_USER)
+        user = User.get_by_username(User.DEFAULT_USER_NAME)
         if user is None:
             raise Exception('Missing default account!')
         return user

@@ -389,7 +389,7 @@ class DbManage(object):
     def create_default_user(self):
         log.info('creating default user')
         # create default user for handling default permissions.
-        user = UserModel().create_or_update(username=User.DEFAULT_USER,
+        user = UserModel().create_or_update(username=User.DEFAULT_USER_NAME,
                                             password=str(uuid.uuid1())[:20],
                                             email='anonymous@kallithea-scm.org',
                                             firstname='Anonymous',
@@ -416,4 +416,4 @@ class DbManage(object):
         permissions that are missing, and not alter already defined ones
         """
         log.info('creating default user permissions')
-        PermissionModel().create_default_permissions(user=User.DEFAULT_USER)
+        PermissionModel().create_default_permissions(user=User.DEFAULT_USER_NAME)

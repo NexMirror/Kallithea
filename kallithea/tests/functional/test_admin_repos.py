@@ -166,10 +166,10 @@ class _BaseTestCase(base.TestController):
         # revoke
         user_model = UserModel()
         # disable fork and create on default user
-        user_model.revoke_perm(User.DEFAULT_USER, 'hg.create.repository')
-        user_model.grant_perm(User.DEFAULT_USER, 'hg.create.none')
-        user_model.revoke_perm(User.DEFAULT_USER, 'hg.fork.repository')
-        user_model.grant_perm(User.DEFAULT_USER, 'hg.fork.none')
+        user_model.revoke_perm(User.DEFAULT_USER_NAME, 'hg.create.repository')
+        user_model.grant_perm(User.DEFAULT_USER_NAME, 'hg.create.none')
+        user_model.revoke_perm(User.DEFAULT_USER_NAME, 'hg.fork.repository')
+        user_model.grant_perm(User.DEFAULT_USER_NAME, 'hg.fork.none')
 
         # disable on regular user
         user_model.revoke_perm(base.TEST_USER_REGULAR_LOGIN, 'hg.create.repository')
@@ -563,10 +563,10 @@ class _BaseTestCase(base.TestController):
         # revoke
         user_model = UserModel()
         # disable fork and create on default user
-        user_model.revoke_perm(User.DEFAULT_USER, 'hg.create.repository')
-        user_model.grant_perm(User.DEFAULT_USER, 'hg.create.none')
-        user_model.revoke_perm(User.DEFAULT_USER, 'hg.fork.repository')
-        user_model.grant_perm(User.DEFAULT_USER, 'hg.fork.none')
+        user_model.revoke_perm(User.DEFAULT_USER_NAME, 'hg.create.repository')
+        user_model.grant_perm(User.DEFAULT_USER_NAME, 'hg.create.none')
+        user_model.revoke_perm(User.DEFAULT_USER_NAME, 'hg.fork.repository')
+        user_model.grant_perm(User.DEFAULT_USER_NAME, 'hg.fork.none')
 
         # disable on regular user
         user_model.revoke_perm(base.TEST_USER_REGULAR_LOGIN, 'hg.create.repository')

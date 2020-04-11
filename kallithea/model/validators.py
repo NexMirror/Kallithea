@@ -563,16 +563,16 @@ def ValidPerms(type_='repo'):
 
             for k, v in value.items():
                 if k.startswith('u_perm_') or k.startswith('g_perm_'):
-                    member = k[7:]
+                    member_name = k[7:]
                     t = {'u': 'user',
                          'g': 'users_group'
                     }[k[0]]
-                    if member == User.DEFAULT_USER:
+                    if member_name == User.DEFAULT_USER_NAME:
                         if str2bool(value.get('repo_private')):
                             # set none for default when updating to
                             # private repo protects against form manipulation
                             v = EMPTY_PERM
-                    perms_update.add((member, v, t))
+                    perms_update.add((member_name, v, t))
 
             value['perms_updates'] = list(perms_update)
             value['perms_new'] = list(perms_new)
