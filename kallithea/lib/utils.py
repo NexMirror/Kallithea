@@ -610,9 +610,8 @@ def check_git_version():
 
 def conditional_cache(region, prefix, condition, func):
     """
-
     Conditional caching function use like::
-        def _c(arg):
+        def func(arg):
             #heavy computation function
             return data
 
@@ -623,8 +622,7 @@ def conditional_cache(region, prefix, condition, func):
     :param region: name of cache region
     :param prefix: cache region prefix
     :param condition: condition for cache to be triggered, and return data cached
-    :param func: wrapped heavy function to compute
-
+    :param func: heavy function to compute
     """
     wrapped = func
     if condition:

@@ -40,7 +40,7 @@ from tg.i18n import ugettext as _
 from webob.exc import HTTPForbidden, HTTPFound
 
 from kallithea.config.routing import url
-from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
+from kallithea.lib.utils import get_repo_group_slug, get_repo_slug, get_user_group_slug
 from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.model.db import (Permission, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm,
@@ -433,7 +433,15 @@ class AuthUser(object):
 
     @LazyProperty
     def permissions(self):
-        return self.__get_perms(user=self, cache=False)
+        """
+        Fills user permission attribute with permissions taken from database
+        works for permissions given for repositories, and for permissions that
+        are granted to groups
+
+        :param user: `AuthUser` instance
+        """
+        log.debug('Getting PERMISSION tree for %s', self)
+        return _cached_perms_data(self.user_id, self.is_admin)
 
     def has_repository_permission_level(self, repo_name, level, purpose=None):
         required_perms = {
@@ -474,22 +482,6 @@ class AuthUser(object):
     @property
     def api_keys(self):
         return self._get_api_keys()
-
-    def __get_perms(self, user, cache=False):
-        """
-        Fills user permission attribute with permissions taken from database
-        works for permissions given for repositories, and for permissions that
-        are granted to groups
-
-        :param user: `AuthUser` instance
-        """
-        user_id = user.user_id
-        user_is_admin = user.is_admin
-
-        log.debug('Getting PERMISSION tree')
-        compute = conditional_cache('short_term', 'cache_desc',
-                                    condition=cache, func=_cached_perms_data)
-        return compute(user_id, user_is_admin)
 
     def _get_api_keys(self):
         api_keys = [self.api_key]
