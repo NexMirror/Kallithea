@@ -39,11 +39,12 @@ from tg import request
 from tg.i18n import ugettext as _
 from webob.exc import HTTPForbidden, HTTPFound
 
+import kallithea
 from kallithea.config.routing import url
 from kallithea.lib.utils import get_repo_group_slug, get_repo_slug, get_user_group_slug
 from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.model.db import (Permission, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm,
+from kallithea.model.db import (Permission, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm,
                                 UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
@@ -138,12 +139,9 @@ def _cached_perms_data(user_id, user_is_admin):
     #======================================================================
     # fetch default permissions
     #======================================================================
-    default_user = User.get_by_username('default')
-    default_user_id = default_user.user_id
-
-    default_repo_perms = Permission.get_default_perms(default_user_id)
-    default_repo_groups_perms = Permission.get_default_group_perms(default_user_id)
-    default_user_group_perms = Permission.get_default_user_group_perms(default_user_id)
+    default_repo_perms = Permission.get_default_perms(kallithea.DEFAULT_USER_ID)
+    default_repo_groups_perms = Permission.get_default_group_perms(kallithea.DEFAULT_USER_ID)
+    default_user_group_perms = Permission.get_default_user_group_perms(kallithea.DEFAULT_USER_ID)
 
     if user_is_admin:
         #==================================================================
@@ -178,7 +176,7 @@ def _cached_perms_data(user_id, user_is_admin):
 
     # default global permissions taken from the default user
     default_global_perms = UserToPerm.query() \
-        .filter(UserToPerm.user_id == default_user_id) \
+        .filter(UserToPerm.user_id == kallithea.DEFAULT_USER_ID) \
         .options(joinedload(UserToPerm.permission))
 
     for perm in default_global_perms:
@@ -544,8 +542,7 @@ class AuthUser(object):
     def get_allowed_ips(cls, user_id):
         _set = set()
 
-        default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
-                                        User.get_default_user().user_id)
+        default_ips = UserIpMap.query().filter(UserIpMap.user_id == kallithea.DEFAULT_USER_ID)
         for ip in default_ips:
             try:
                 _set.add(ip.ip_addr)

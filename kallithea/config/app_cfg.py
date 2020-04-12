@@ -42,6 +42,7 @@ from kallithea.lib.middleware.simplehg import SimpleHg
 from kallithea.lib.middleware.wrapper import RequestWrapper
 from kallithea.lib.utils import check_git_version, load_rcextensions, set_app_settings, set_indexer_config, set_vcs_config
 from kallithea.lib.utils2 import str2bool
+from kallithea.model import db
 
 
 log = logging.getLogger(__name__)
@@ -157,6 +158,8 @@ def setup_configuration(app):
             sys.exit(1)
 
     # store some globals into kallithea
+    kallithea.DEFAULT_USER_ID = db.User.get_default_user().user_id
+
     if str2bool(config.get('use_celery')):
         kallithea.CELERY_APP = celerypylons.make_app()
     kallithea.CONFIG = config

@@ -17,6 +17,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from tg.util.webtest import test_context
 from webob.exc import HTTPNotFound
 
+import kallithea
 from kallithea.controllers.admin.users import UsersController
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import check_password
@@ -578,7 +579,7 @@ class TestAdminUsersController_unittest(base.TestController):
         assert u._get_user_or_raise_if_default(user.user_id) == user
         # the default user should raise
         with pytest.raises(HTTPNotFound):
-            u._get_user_or_raise_if_default(User.get_default_user().user_id)
+            u._get_user_or_raise_if_default(kallithea.DEFAULT_USER_ID)
 
 
 class TestAdminUsersControllerForDefaultUser(base.TestController):

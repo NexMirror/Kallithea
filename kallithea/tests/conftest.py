@@ -145,7 +145,7 @@ def auto_clear_ip_permissions():
     user_model = UserModel()
 
     user_ids = []
-    user_ids.append(User.get_default_user().user_id)
+    user_ids.append(kallithea.DEFAULT_USER_ID)
     user_ids.append(User.get_by_username(TEST_USER_REGULAR_LOGIN).user_id)
 
     for user_id in user_ids:

@@ -1,3 +1,4 @@
+import kallithea
 from kallithea.model.db import User, UserIpMap
 from kallithea.tests import base
 
@@ -17,7 +18,7 @@ class TestAdminPermissionsController(base.TestController):
 
     def test_add_delete_ips(self, auto_clear_ip_permissions):
         self.log_user()
-        default_user_id = User.get_default_user().user_id
+        default_user_id = kallithea.DEFAULT_USER_ID
 
         # Add IP and verify it is shown in UI and both gives access and rejects
 

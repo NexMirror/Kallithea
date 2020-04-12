@@ -1,6 +1,7 @@
 import functools
 
-from kallithea.model.db import RepoGroup, Repository, User
+import kallithea
+from kallithea.model.db import RepoGroup, Repository
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.tests.models.common import _check_expected_count, _create_project_tree, _destroy_project_tree, _get_perms, check_tree_perms, expected_count
@@ -19,7 +20,7 @@ def permissions_setup_func(group_name='g0', perm='group.read', recursive='all',
     if not user_id:
         user_id = test_u1_id
         permissions_setup_func(group_name, perm, recursive,
-                               user_id=User.get_default_user().user_id)
+                               user_id=kallithea.DEFAULT_USER_ID)
 
     repo_group = RepoGroup.get_by_group_name(group_name=group_name)
     if not repo_group:
@@ -116,7 +117,7 @@ def test_user_permissions_on_group_with_recursive_mode_for_default_user():
     # other repos and groups should have this permission now set !
     recursive = 'all'
     group = 'g0'
-    default_user_id = User.get_default_user().user_id
+    default_user_id = kallithea.DEFAULT_USER_ID
     permissions_setup_func(group, 'group.write', recursive=recursive,
                            user_id=default_user_id)
 
@@ -196,7 +197,7 @@ def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
     recursive = 'repos'
     group = 'g0/g0_1'
     perm = 'group.none'
-    default_user_id = User.get_default_user().user_id
+    default_user_id = kallithea.DEFAULT_USER_ID
 
     permissions_setup_func(group, perm, recursive=recursive,
                            user_id=default_user_id)
@@ -254,7 +255,7 @@ def test_user_permissions_on_group_with_recursive_group_mode_for_default_user():
     # remain intact as we use groups only mode !
     recursive = 'groups'
     group = 'g0/g0_1'
-    default_user_id = User.get_default_user().user_id
+    default_user_id = kallithea.DEFAULT_USER_ID
     permissions_setup_func(group, 'group.write', recursive=recursive,
                            user_id=default_user_id)
 

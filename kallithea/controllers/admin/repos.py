@@ -45,7 +45,7 @@ from kallithea.lib.exceptions import AttachedForksError
 from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import safe_int
 from kallithea.lib.vcs import RepositoryError
-from kallithea.model.db import RepoGroup, Repository, RepositoryField, Setting, User, UserFollowing
+from kallithea.model.db import RepoGroup, Repository, RepositoryField, Setting, UserFollowing
 from kallithea.model.forms import RepoFieldForm, RepoForm, RepoPermsForm
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -405,7 +405,7 @@ class ReposController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('admin')
     def edit_advanced(self, repo_name):
         c.repo_info = self._load_repo()
-        c.default_user_id = User.get_default_user().user_id
+        c.default_user_id = kallithea.DEFAULT_USER_ID
         c.in_public_journal = UserFollowing.query() \
             .filter(UserFollowing.user_id == c.default_user_id) \
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
@@ -442,7 +442,7 @@ class ReposController(BaseRepoController):
 
         try:
             repo_id = Repository.get_by_repo_name(repo_name).repo_id
-            user_id = User.get_default_user().user_id
+            user_id = kallithea.DEFAULT_USER_ID
             self.scm_model.toggle_following_repo(repo_id, user_id)
             h.flash(_('Updated repository visibility in public journal'),
                     category='success')
