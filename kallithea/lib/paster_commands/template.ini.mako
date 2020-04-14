@@ -114,6 +114,9 @@ timeout = 3600
 [uwsgi]
 <%text>## Note: this section is parsed by the uWSGI .ini parser when run as:</%text>
 <%text>## uwsgi --venv /srv/kallithea/venv --ini-paste-logged my.ini</%text>
+<%text>## Note: in uWSGI 2.0.18 or older, pastescript needs to be installed to</%text>
+<%text>## get correct application logging. In later versions this is not necessary.</%text>
+<%text>## pip install pastescript</%text>
 
 <%text>## HTTP Basics:</%text>
 http-socket = ${host}:${port}
