@@ -524,7 +524,7 @@ class User(Base, BaseDbModel):
             log.error(traceback.format_exc())
 
     def __repr__(self):
-        return "<%s %s: %r')>" % (self.__class__.__name__, self.user_id, self.username)
+        return "<%s %s: %r>" % (self.__class__.__name__, self.user_id, self.username)
 
     @classmethod
     def guess_instance(cls, value):
@@ -764,7 +764,7 @@ class UserLog(Base, BaseDbModel):
     action_date = Column(DateTime(timezone=False), nullable=False)
 
     def __repr__(self):
-        return "<%s %r: %r')>" % (self.__class__.__name__,
+        return "<%s %r: %r>" % (self.__class__.__name__,
                                   self.repository_name,
                                   self.action)
 
@@ -817,7 +817,7 @@ class UserGroup(Base, BaseDbModel):
             log.error(traceback.format_exc())
 
     def __repr__(self):
-        return "<%s %s: %r')>" % (self.__class__.__name__,
+        return "<%s %s: %r>" % (self.__class__.__name__,
                                   self.users_group_id,
                                   self.users_group_name)
 
