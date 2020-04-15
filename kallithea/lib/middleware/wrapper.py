@@ -94,6 +94,7 @@ class RequestWrapper(object):
             _get_ip_addr(environ),
             get_path_info(environ),
         )
+        log.info("%s received", description)
         try:
             result = self.application(environ, meter.start_response)
         finally:
