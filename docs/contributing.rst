@@ -266,6 +266,20 @@ code needs the database to assign an "auto-increment" primary key ID to
 a freshly created model object (before flushing, the ID attribute will
 be ``None``).
 
+Debugging
+^^^^^^^^^
+
+A good way to trace what Kallithea is doing is to keep an eye on the output of
+stdout/stderr from the server process. Perhaps change ``my.ini`` to log at
+``DEBUG`` or ``INFO`` level, especially ``[logger_kallithea]``, but perhaps
+also other loggers. It is often easier to add additional ``log`` or ``print``
+statements than to use a Python debugger.
+
+Sometimes it is simpler to disable ``errorpage.enabled`` and perhaps also
+``trace_errors.enable`` to expose raw errors instead of adding extra
+processing. Enabling ``debug`` can be helpful for showing and exploring
+tracebacks in the browser, but is also insecure and will add extra processing.
+
 TurboGears2 DebugBar
 ^^^^^^^^^^^^^^^^^^^^
 

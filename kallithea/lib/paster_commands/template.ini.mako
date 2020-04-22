@@ -391,9 +391,21 @@ session.secret = ${uuid()}
 #session.sa.url = postgresql://postgres:qwe@localhost/kallithea
 #session.table_name = db_session
 
-<%text>############################</%text>
-<%text>## ERROR HANDLING SYSTEMS ##</%text>
-<%text>############################</%text>
+<%text>####################################</%text>
+<%text>###       ERROR HANDLING        ####</%text>
+<%text>####################################</%text>
+
+<%text>## Show a nice error page for application HTTP errors and exceptions (default true)</%text>
+#errorpage.enabled = true
+
+<%text>## Enable Backlash client-side interactive debugger (default false)</%text>
+<%text>## WARNING: *THIS MUST BE false IN PRODUCTION ENVIRONMENTS!!!*</%text>
+<%text>## This debug mode will allow all visitors to execute malicious code.</%text>
+#debug = false
+
+<%text>## Enable Backlash server-side error reporting (unless debug mode handles it client-side) (default true)</%text>
+#trace_errors.enable = true
+<%text>## Errors will be reported by mail if trace_errors.error_email is set.</%text>
 
 <%text>## Propagate email settings to ErrorReporter of TurboGears2</%text>
 <%text>## You do not normally need to change these lines</%text>
@@ -481,12 +493,6 @@ sentry.include_paths =
 sentry.exclude_paths =
 
 %endif
-<%text>################################################################################</%text>
-<%text>## WARNING: *DEBUG MODE MUST BE OFF IN A PRODUCTION ENVIRONMENT*              ##</%text>
-<%text>## Debug mode will enable the interactive debugging tool, allowing ANYONE to  ##</%text>
-<%text>## execute malicious code after an exception is raised.                       ##</%text>
-<%text>################################################################################</%text>
-debug = false
 
 <%text>##################################</%text>
 <%text>###       LOGVIEW CONFIG       ###</%text>
