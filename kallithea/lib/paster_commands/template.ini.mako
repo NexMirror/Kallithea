@@ -137,6 +137,7 @@ vacuum = true                          ; Delete sockets during shutdown
 single-interpreter = true
 die-on-term = true                     ; Shutdown when receiving SIGTERM (default is respawn)
 need-app = true                        ; Exit early if no app can be loaded.
+reload-on-exception = true             ; Don't assume that the application worker can process more requests after a severe error
 
 %endif
 <%text>## middleware for hosting the WSGI application under a URL prefix</%text>
