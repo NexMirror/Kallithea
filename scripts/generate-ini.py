@@ -60,6 +60,13 @@ def main():
         print('writing:', makofile)
         open(makofile, 'w').write(mako_marked_up)
 
+    lines = re.findall(r'\n(# [^ ].*)', mako_marked_up)
+    if lines:
+        print('ERROR: the template .ini file convention is to use "## Foo Bar" for text comments and "#foo = bar" for disabled settings')
+        for line in lines:
+            print(line)
+        raise SystemExit(1)
+
     # create ini files
     for fn, settings in ini_files:
         print('updating:', fn)

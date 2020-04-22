@@ -1,11 +1,11 @@
 ## -*- coding: utf-8 -*-
-<%text>################################################################################</%text>
-<%text>################################################################################</%text>
-# Kallithea - config file generated with kallithea-config                      #
-#                                                                              #
-# The %(here)s variable will be replaced with the parent directory of this file#
-<%text>################################################################################</%text>
-<%text>################################################################################</%text>
+<%text>###################################################################################</%text>
+<%text>###################################################################################</%text>
+<%text>## Kallithea config file generated with kallithea-config                         ##</%text>
+<%text>##                                                                               ##</%text>
+<%text>## The %(here)s variable will be replaced with the parent directory of this file ##</%text>
+<%text>###################################################################################</%text>
+<%text>###################################################################################</%text>
 
 [DEFAULT]
 
@@ -115,11 +115,11 @@ timeout = 3600
 <%text>## Note: this section is parsed by the uWSGI .ini parser when run as:</%text>
 <%text>## uwsgi --venv /srv/kallithea/venv --ini-paste-logged my.ini</%text>
 
-# HTTP Basics:
+<%text>## HTTP Basics:</%text>
 http-socket = ${host}:${port}
 buffer-size = 65535                    ; Mercurial will use huge GET headers for discovery
 
-# Scaling:
+<%text>## Scaling:</%text>
 master = true                          ; Use separate master and worker processes
 auto-procname = true                   ; Name worker processes accordingly
 lazy = true                            ; App *must* be loaded in workers - db connections can't be shared
@@ -127,7 +127,7 @@ workers = 4                            ; On demand scaling up to this many worke
 cheaper = 1                            ; Initial and on demand scaling down to this many worker processes
 max-requests = 1000                    ; Graceful reload of worker processes to avoid leaks
 
-# Tweak defaults:
+<%text>## Tweak defaults:</%text>
 strict = true                          ; Fail on unknown config directives
 enable-threads = true                  ; Enable Python threads (not threaded workers)
 vacuum = true                          ; Delete sockets during shutdown
@@ -185,7 +185,7 @@ commit_parse_limit = 25
 <%text>## used, which is correct in many cases but for example not when using uwsgi.</%text>
 <%text>## If you change this setting, you should reinstall the Git hooks via</%text>
 <%text>## Admin > Settings > Remap and Rescan.</%text>
-# git_hook_interpreter = /srv/kallithea/venv/bin/python3
+#git_hook_interpreter = /srv/kallithea/venv/bin/python3
 %if git_hook_interpreter:
 git_hook_interpreter = ${git_hook_interpreter}
 %endif
@@ -260,7 +260,7 @@ issue_sub =
 <%text>## issue_pat, issue_server_link and issue_sub can have suffixes to specify</%text>
 <%text>## multiple patterns, to other issues server, wiki or others</%text>
 <%text>## below an example how to create a wiki pattern</%text>
-# wiki-some-id -> https://wiki.example.com/some-id
+<%text>## wiki-some-id -> https://wiki.example.com/some-id</%text>
 
 #issue_pat_wiki = wiki-(\S+)
 #issue_server_link_wiki = https://wiki.example.com/\1
@@ -278,12 +278,12 @@ allow_repo_location_change = True
 allow_custom_hooks_settings = True
 
 <%text>## extra extensions for indexing, space separated and without the leading '.'.</%text>
-# index.extensions =
+#index.extensions =
 #    gemfile
 #    lock
 
 <%text>## extra filenames for indexing, space separated</%text>
-# index.filenames =
+#index.filenames =
 #    .dockerignore
 #    .editorconfig
 #    INSTALL
@@ -392,8 +392,8 @@ session.secret = ${uuid()}
 <%text>## ERROR HANDLING SYSTEMS ##</%text>
 <%text>############################</%text>
 
-# Propagate email settings to ErrorReporter of TurboGears2
-# You do not normally need to change these lines
+<%text>## Propagate email settings to ErrorReporter of TurboGears2</%text>
+<%text>## You do not normally need to change these lines</%text>
 get trace_errors.smtp_server = smtp_server
 get trace_errors.smtp_port = smtp_port
 get trace_errors.from_address = error_email_from
@@ -498,19 +498,19 @@ logview.pylons.util = #eee
 <%text>#########################################################</%text>
 
 %if database_engine == 'sqlite':
-# SQLITE [default]
+<%text>## SQLITE [default]</%text>
 sqlalchemy.url = sqlite:///%(here)s/kallithea.db?timeout=60
 
 %elif database_engine == 'postgres':
-# POSTGRESQL
+<%text>## POSTGRESQL</%text>
 sqlalchemy.url = postgresql://user:pass@localhost/kallithea
 
 %elif database_engine == 'mysql':
-# MySQL
+<%text>## MySQL</%text>
 sqlalchemy.url = mysql://user:pass@localhost/kallithea?charset=utf8
 
 %endif
-# see sqlalchemy docs for others
+<%text>## see sqlalchemy docs for other backends</%text>
 
 sqlalchemy.pool_recycle = 3600
 
@@ -541,8 +541,8 @@ keys = generic, color_formatter, color_formatter_sql
 [logger_root]
 level = NOTSET
 handlers = console
-# For coloring based on log level:
-# handlers = console_color
+<%text>## For coloring based on log level:</%text>
+#handlers = console_color
 
 [logger_routes]
 level = WARN
@@ -579,10 +579,10 @@ qualname = gearbox
 level = WARN
 handlers =
 qualname = sqlalchemy.engine
-# For coloring based on log level and pretty printing of SQL:
-# level = INFO
-# handlers = console_color_sql
-# propagate = 0
+<%text>## For coloring based on log level and pretty printing of SQL:</%text>
+#level = INFO
+#handlers = console_color_sql
+#propagate = 0
 
 [logger_whoosh_indexer]
 level = WARN
@@ -609,13 +609,13 @@ args = (sys.stderr,)
 formatter = generic
 
 [handler_console_color]
-# ANSI color coding based on log level
+<%text>## ANSI color coding based on log level</%text>
 class = StreamHandler
 args = (sys.stderr,)
 formatter = color_formatter
 
 [handler_console_color_sql]
-# ANSI color coding and pretty printing of SQL statements
+<%text>## ANSI color coding and pretty printing of SQL statements</%text>
 class = StreamHandler
 args = (sys.stderr,)
 formatter = color_formatter_sql
@@ -646,16 +646,16 @@ datefmt = %Y-%m-%d %H:%M:%S
 <%text>## SSH LOGGING ##</%text>
 <%text>#################</%text>
 
-# The default loggers use 'handler_console' that uses StreamHandler with
-# destination 'sys.stderr'. In the context of the SSH server process, these log
-# messages would be sent to the client, which is normally not what you want.
-# By default, when running ssh-serve, just use NullHandler and disable logging
-# completely. For other logging options, see:
-# https://docs.python.org/2/library/logging.handlers.html
+<%text>## The default loggers use 'handler_console' that uses StreamHandler with</%text>
+<%text>## destination 'sys.stderr'. In the context of the SSH server process, these log</%text>
+<%text>## messages would be sent to the client, which is normally not what you want.</%text>
+<%text>## By default, when running ssh-serve, just use NullHandler and disable logging</%text>
+<%text>## completely. For other logging options, see:</%text>
+<%text>## https://docs.python.org/2/library/logging.handlers.html</%text>
 
 [ssh_serve:logger_root]
 level = CRITICAL
 handlers = null
 
-# Note: If logging is configured with other handlers, they might need similar
-# muting for ssh-serve too.
+<%text>## Note: If logging is configured with other handlers, they might need similar</%text>
+<%text>## muting for ssh-serve too.</%text>
