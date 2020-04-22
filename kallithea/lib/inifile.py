@@ -67,11 +67,22 @@ def expand(template, mako_variable_values, settings):
     ... %elif conditional_options == 'option-b':
     ... some_variable = "never mind - option-b will not be used anyway ..."
     ... %endif
+    ...
+    ... [comment-section]
+    ... #variable3 = 3.0
+    ... #variable4 = 4.0
+    ... #variable5 = 5.0
+    ... variable5 = 5.1
+    ... #variable6 = 6.0
+    ... #variable6 = 6.1
+    ... #variable7 = 7.0
+    ... variable7 = 7.1
     ... '''
     >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function': (lambda: 'FUNCTION RESULT'),
     ...                         'conditional_options': 'option-a', 'http_server': 'nc'}
     >>> settings = { # only partially used
     ...     '[first-section]': {'variable2': 'VAL2', 'first_extra': 'EXTRA'},
+    ...     '[comment-section]': {'variable3': '3.0', 'variable4': '4.1', 'variable5': '5.2', 'variable6': '6.2', 'variable7': '7.0'},
     ...     '[third-section]': {'third_extra': ' 3'},
     ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
     ... }
@@ -90,6 +101,22 @@ def expand(template, mako_variable_values, settings):
     # FUNCTION RESULT
     [second-section]
     # option a was chosen
+    <BLANKLINE>
+    [comment-section]
+    #variable3 = 3.0
+    #variable4 = 4.0
+    #variable5 = 5.0
+    #variable5 = 5.1
+    variable5 = 5.2
+    #variable6 = 6.0
+    #variable6 = 6.1
+    #variable7 = 7.0
+    #variable7 = 7.1
+    variable7 = 7.0
+    <BLANKLINE>
+    variable3 = 3.0
+    variable4 = 4.1
+    variable6 = 6.2
     <BLANKLINE>
     [fourth-section]
     fourth = "four"
