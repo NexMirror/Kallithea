@@ -34,7 +34,6 @@ import traceback
 import urllib.error
 from distutils.version import StrictVersion
 
-import beaker.cache
 import mercurial.config
 import mercurial.error
 import mercurial.ui
