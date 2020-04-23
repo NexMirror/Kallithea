@@ -97,7 +97,7 @@ def expand(template, mako_variable_values, settings):
     variable2 = VAL2
     <BLANKLINE>
     first_extra = EXTRA
-    spacey =  
+    spacey =
     <BLANKLINE>
     <BLANKLINE>
     # FUNCTION RESULT
@@ -191,7 +191,7 @@ def expand(template, mako_variable_values, settings):
             if section_settings:
                 lines += '\n' + ''.join('%s = %s\n' % (key, value) for key, value in sorted(section_settings.items()))
 
-        return sectionname + '\n' + lines
+        return sectionname + '\n' + re.sub('[ \t]+\n', '\n', lines)
 
     # process sections until comments before next section or end
     ini_lines = re.sub(r'''^
