@@ -153,6 +153,16 @@ be writeable by the Kallithea user.
     process, the server process will raise an exception each time it attempts to
     write the ``authorized_keys`` file.
 
+.. note:: It is possible to configure the SSH server to look for authorized
+   keys in multiple files, for example reserving ``ssh/authorized_keys`` to be
+   used for normal SSH and with Kallithea using
+   ``.ssh/authorized_keys_kallithea``. In ``/etc/ssh/sshd_config`` set
+   ``AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys_kallithea``
+   and restart sshd, and in ``my.ini`` set ``ssh_authorized_keys =
+   /home/kallithea/.ssh/authorized_keys_kallithea``. Note that this new
+   location will apply to all system users, and that multiple entries for the
+   same SSH key will shadow each other.
+
 .. warning:: The handling of SSH access is steered directly by the command
     specified in the ``authorized_keys`` file. There is no interaction with the
     web UI.  Once SSH access is correctly configured and enabled, it will work
