@@ -24,7 +24,7 @@ class _AuthLdapMock():
     def authenticate_ldap(self, username, password):
         return 'spam dn', dict(test_ldap_firstname=['spam ldap first name'],
                                test_ldap_lastname=['spam ldap last name'],
-                               test_ldap_email=['spam ldap email'])
+                               test_ldap_email=['%s ldap email' % username])
 
 
 def test_update_user_attributes_from_ldap(monkeypatch, create_test_user,
@@ -56,13 +56,13 @@ def test_update_user_attributes_from_ldap(monkeypatch, create_test_user,
     assert user_data is not None
     assert user_data.get('firstname') == 'spam ldap first name'
     assert user_data.get('lastname') == 'spam ldap last name'
-    assert user_data.get('email') == 'spam ldap email'
+    assert user_data.get('email') == '%s ldap email' % username
 
     # Verify that authentication overwrote user attributes with the ones
     # retrieved from LDAP.
     assert user.firstname == 'spam ldap first name'
     assert user.lastname == 'spam ldap last name'
-    assert user.email == 'spam ldap email'
+    assert user.email == '%s ldap email' % username
 
 
 def test_init_user_attributes_from_ldap(monkeypatch, arrange_ldap_auth):
@@ -85,7 +85,7 @@ def test_init_user_attributes_from_ldap(monkeypatch, arrange_ldap_auth):
     assert user_data is not None
     assert user_data.get('firstname') == 'spam ldap first name'
     assert user_data.get('lastname') == 'spam ldap last name'
-    assert user_data.get('email') == 'spam ldap email'
+    assert user_data.get('email') == '%s ldap email' % username
 
     # Verify that authentication created new user with attributes
     # retrieved from LDAP.
@@ -93,7 +93,7 @@ def test_init_user_attributes_from_ldap(monkeypatch, arrange_ldap_auth):
     assert new_user is not None
     assert new_user.firstname == 'spam ldap first name'
     assert new_user.lastname == 'spam ldap last name'
-    assert new_user.email == 'spam ldap email'
+    assert new_user.email == '%s ldap email' % username
 
 
 class _AuthLdapNoEmailMock():
