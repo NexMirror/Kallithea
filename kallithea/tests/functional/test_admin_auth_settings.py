@@ -155,12 +155,12 @@ class TestAuthSettingsController(base.TestController):
         response = self.app.get(
             url=base.url(controller='admin/my_account', action='my_account'),
             extra_environ={'THE_USER_NAME': 'johnd',
-                           'THE_USER_EMAIL': 'john@example.org',
+                           'THE_USER_EMAIL': 'john2@example.org',
                            'THE_USER_FIRSTNAME': 'John',
                            'THE_USER_LASTNAME': 'Doe',
                            }
         )
-        assert response.form['email'].value == 'john@example.org'
+        assert response.form['email'].value == 'john2@example.org'
         assert response.form['firstname'].value == 'John'
         assert response.form['lastname'].value == 'Doe'
 
