@@ -68,13 +68,7 @@ class TestPermissions(base.TestController):
 
     def test_default_perms_set(self):
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        perms = {
-            'repositories_groups': {},
-            'global': set(['hg.create.repository', 'repository.read',
-                           'hg.register.manual_activate']),
-            'repositories': {base.HG_REPO: 'repository.read'}
-        }
-        assert u1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == 'repository.read'
         new_perm = 'repository.write'
         RepoModel().grant_user_permission(repo=base.HG_REPO, user=self.u1,
                                           perm=new_perm)
@@ -85,12 +79,7 @@ class TestPermissions(base.TestController):
 
     def test_default_admin_perms_set(self):
         a1_auth = AuthUser(user_id=self.a1.user_id)
-        perms = {
-            'repositories_groups': {},
-            'global': set(['hg.admin', 'hg.create.write_on_repogroup.true']),
-            'repositories': {base.HG_REPO: 'repository.admin'}
-        }
-        assert a1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
+        assert a1_auth.permissions['repositories'][base.HG_REPO] == 'repository.admin'
         new_perm = 'repository.write'
         RepoModel().grant_user_permission(repo=base.HG_REPO, user=self.a1,
                                           perm=new_perm)
@@ -98,33 +87,22 @@ class TestPermissions(base.TestController):
         # cannot really downgrade admins permissions !? they still gets set as
         # admin !
         u1_auth = AuthUser(user_id=self.a1.user_id)
-        assert u1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == 'repository.admin'
 
     def test_default_group_perms(self):
         self.g1 = fixture.create_repo_group('test1', skip_if_exists=True)
         self.g2 = fixture.create_repo_group('test2', skip_if_exists=True)
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        perms = {
-            'repositories_groups': {'test1': 'group.read', 'test2': 'group.read'},
-            'global': set(Permission.DEFAULT_USER_PERMISSIONS),
-            'repositories': {base.HG_REPO: 'repository.read'}
-        }
-        assert u1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
-        assert u1_auth.permissions['repositories_groups'] == perms['repositories_groups']
-        assert u1_auth.permissions['global'] == perms['global']
+        assert u1_auth.permissions['repositories'][base.HG_REPO] == 'repository.read'
+        assert u1_auth.permissions['repositories_groups'] == {'test1': 'group.read', 'test2': 'group.read'}
+        assert u1_auth.permissions['global'] == set(Permission.DEFAULT_USER_PERMISSIONS)
 
     def test_default_admin_group_perms(self):
         self.g1 = fixture.create_repo_group('test1', skip_if_exists=True)
         self.g2 = fixture.create_repo_group('test2', skip_if_exists=True)
         a1_auth = AuthUser(user_id=self.a1.user_id)
-        perms = {
-            'repositories_groups': {'test1': 'group.admin', 'test2': 'group.admin'},
-            'global': set(['hg.admin', 'hg.create.write_on_repogroup.true']),
-            'repositories': {base.HG_REPO: 'repository.admin'}
-        }
-
-        assert a1_auth.permissions['repositories'][base.HG_REPO] == perms['repositories'][base.HG_REPO]
-        assert a1_auth.permissions['repositories_groups'] == perms['repositories_groups']
+        assert a1_auth.permissions['repositories'][base.HG_REPO] == 'repository.admin'
+        assert a1_auth.permissions['repositories_groups'] == {'test1': 'group.admin', 'test2': 'group.admin'}
 
     def test_propagated_permission_from_users_group_by_explicit_perms_exist(self):
         # make group
@@ -158,14 +136,8 @@ class TestPermissions(base.TestController):
                                                  perm=new_perm_gr)
         # check perms
         u3_auth = AuthUser(user_id=self.u3.user_id)
-        perms = {
-            'repositories_groups': {},
-            'global': set(['hg.create.repository', 'repository.read',
-                           'hg.register.manual_activate']),
-            'repositories': {base.HG_REPO: 'repository.read'}
-        }
         assert u3_auth.permissions['repositories'][base.HG_REPO] == new_perm_gr
-        assert u3_auth.permissions['repositories_groups'] == perms['repositories_groups']
+        assert u3_auth.permissions['repositories_groups'] == {}  # note: it is unclear which repo group we are happy to not see here ...
 
     def test_propagated_permission_from_users_group_lower_weight(self):
         # make group
@@ -189,14 +161,8 @@ class TestPermissions(base.TestController):
                                                  perm=new_perm_l)
         # check perms
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        perms = {
-            'repositories_groups': {},
-            'global': set(['hg.create.repository', 'repository.read',
-                           'hg.register.manual_activate']),
-            'repositories': {base.HG_REPO: 'repository.write'}
-        }
         assert u1_auth.permissions['repositories'][base.HG_REPO] == new_perm_h
-        assert u1_auth.permissions['repositories_groups'] == perms['repositories_groups']
+        assert u1_auth.permissions['repositories_groups'] == {}  # note: it is unclear which repo group we are happy to not see here ...
 
     def test_repo_in_group_permissions(self):
         self.g1 = fixture.create_repo_group('group1', skip_if_exists=True)
