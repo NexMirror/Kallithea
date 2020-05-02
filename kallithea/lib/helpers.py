@@ -1194,8 +1194,14 @@ def urlify_issues(newtext, repo_name):
             issue_prefix = CONFIG.get('issue_prefix%s' % suffix)
             if issue_prefix:
                 log.error('found unsupported issue_prefix%s = %r - use issue_sub%s instead', suffix, issue_prefix, suffix)
-            if not issue_pat or not issue_server_link or issue_sub is None: # issue_sub can be empty but should be present
-                log.error('skipping incomplete issue pattern %r: %r -> %r %r', k, issue_pat, issue_server_link, issue_sub)
+            if not issue_pat:
+                log.error('skipping incomplete issue pattern %r: it needs a regexp', k)
+                continue
+            if not issue_server_link:
+                log.error('skipping incomplete issue pattern %r: it needs issue_server_link%s', k, suffix)
+                continue
+            if issue_sub is None: # issue_sub can be empty but should be present
+                log.error('skipping incomplete issue pattern %r: it needs (a potentially empty) issue_sub%s', k, suffix)
                 continue
 
             # Wrap tmp_urlify_issues_f with substitution of this pattern, while making sure all loop variables (and compiled regexpes) are bound
