@@ -30,12 +30,13 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import os
-import urllib
+import urllib.parse
 
-from kallithea.lib.base import BaseVCSController
+import mercurial.hgweb
+
+from kallithea.lib.base import BaseVCSController, get_path_info
 from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_str, safe_unicode
-from kallithea.lib.vcs.utils.hgcompat import hgweb_mod
+from kallithea.lib.utils2 import safe_bytes
 
 
 log = logging.getLogger(__name__)
@@ -99,12 +100,12 @@ class SimpleHg(BaseVCSController):
         http_accept = environ.get('HTTP_ACCEPT', '')
         if not http_accept.startswith('application/mercurial'):
             return None
-        path_info = environ.get('PATH_INFO', '')
+        path_info = get_path_info(environ)
         if not path_info.startswith('/'): # it must!
             return None
 
         class parsed_request(object):
-            repo_name = safe_unicode(path_info[1:].rstrip('/'))
+            repo_name = path_info[1:].rstrip('/')
 
             query_string = environ['QUERY_STRING']
 
@@ -120,7 +121,7 @@ class SimpleHg(BaseVCSController):
                             break
                         action = 'pull'
                         for cmd_arg in hgarg[5:].split(';'):
-                            cmd, _args = urllib.unquote_plus(cmd_arg).split(' ', 1)
+                            cmd, _args = urllib.parse.unquote_plus(cmd_arg).split(' ', 1)
                             op = cmd_mapping.get(cmd, 'push')
                             if op != 'pull':
                                 assert op == 'push'
@@ -136,13 +137,13 @@ class SimpleHg(BaseVCSController):
         """
         Make an hgweb wsgi application.
         """
-        str_repo_name = safe_str(parsed_request.repo_name)
-        repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
+        repo_name = parsed_request.repo_name
+        repo_path = os.path.join(self.basepath, repo_name)
         baseui = make_ui(repo_path=repo_path)
-        hgweb_app = hgweb_mod.hgweb(repo_path, name=str_repo_name, baseui=baseui)
+        hgweb_app = mercurial.hgweb.hgweb(safe_bytes(repo_path), name=safe_bytes(repo_name), baseui=baseui)
 
         def wrapper_app(environ, start_response):
-            environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
+            environ['REPO_NAME'] = repo_name # used by mercurial.hgweb.hgweb
             return hgweb_app(environ, start_response)
 
         return wrapper_app

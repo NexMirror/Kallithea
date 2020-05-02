@@ -31,7 +31,7 @@ import traceback
 import formencode
 from formencode import htmlfill
 from sqlalchemy.sql.expression import func
-from tg import app_globals, config, request
+from tg import app_globals, request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPNotFound
@@ -63,7 +63,6 @@ class UsersController(BaseController):
     @HasPermissionAnyDecorator('hg.admin')
     def _before(self, *args, **kwargs):
         super(UsersController, self)._before(*args, **kwargs)
-        c.available_permissions = config['available_permissions']
 
     def index(self, format='html'):
         c.users_list = User.query().order_by(User.username) \
@@ -72,19 +71,18 @@ class UsersController(BaseController):
                         .all()
 
         users_data = []
-        total_records = len(c.users_list)
         _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         grav_tmpl = '<div class="gravatar">%s</div>'
 
-        username = lambda user_id, username: (
-                template.get_def("user_name")
-                .render(user_id, username, _=_, h=h, c=c))
+        def username(user_id, username):
+            return template.get_def("user_name") \
+                .render_unicode(user_id, username, _=_, h=h, c=c)
 
-        user_actions = lambda user_id, username: (
-                template.get_def("user_actions")
-                .render(user_id, username, _=_, h=h, c=c))
+        def user_actions(user_id, username):
+            return template.get_def("user_actions") \
+                .render_unicode(user_id, username, _=_, h=h, c=c)
 
         for user in c.users_list:
             users_data.append({
@@ -390,7 +388,7 @@ class UsersController(BaseController):
             .filter(UserIpMap.user == c.user).all()
 
         c.default_user_ip_map = UserIpMap.query() \
-            .filter(UserIpMap.user == User.get_default_user()).all()
+            .filter(UserIpMap.user_id == kallithea.DEFAULT_USER_ID).all()
 
         defaults = c.user.get_dict()
         return htmlfill.render(
@@ -454,8 +452,8 @@ class UsersController(BaseController):
             Session().commit()
             SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
-        except SshKeyModelException as errors:
-            h.flash(errors.message, category='error')
+        except SshKeyModelException as e:
+            h.flash(e.args[0], category='error')
         raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))
 
     @IfSshEnabled
@@ -468,6 +466,6 @@ class UsersController(BaseController):
             Session().commit()
             SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key successfully deleted"), category='success')
-        except SshKeyModelException as errors:
-            h.flash(errors.message, category='error')
+        except SshKeyModelException as e:
+            h.flash(e.args[0], category='error')
         raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))

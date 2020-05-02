@@ -35,12 +35,12 @@ Git and development packages for the database of your choice.
 For Debian and Ubuntu, the following command will ensure that a reasonable
 set of dependencies is installed::
 
-    sudo apt-get install build-essential git python-pip python-virtualenv libffi-dev python-dev
+    sudo apt-get install build-essential git libffi-dev python3-dev
 
 For Fedora and RHEL-derivatives, the following command will ensure that a
 reasonable set of dependencies is installed::
 
-    sudo yum install gcc git python-pip python-virtualenv libffi-devel python-devel
+    sudo yum install gcc git libffi-devel python3-devel
 
 .. _installation-source:
 
@@ -48,16 +48,16 @@ reasonable set of dependencies is installed::
 Installation from repository source
 -----------------------------------
 
-To install Kallithea in a virtualenv_ using the stable branch of the development
+To install Kallithea in a virtualenv using the stable branch of the development
 repository, follow the instructions below::
 
         hg clone https://kallithea-scm.org/repos/kallithea -u stable
         cd kallithea
-        virtualenv ../kallithea-venv
+        python3 -m venv ../kallithea-venv
         . ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install --upgrade -e .
-        python2 setup.py compile_catalog   # for translation of the UI
+        python3 setup.py compile_catalog   # for translation of the UI
 
 You can now proceed to :ref:`setup`.
 
@@ -67,18 +67,18 @@ You can now proceed to :ref:`setup`.
 Installing a released version in a virtualenv
 ---------------------------------------------
 
-It is highly recommended to use a separate virtualenv_ for installing Kallithea.
+It is highly recommended to use a separate virtualenv for installing Kallithea.
 This way, all libraries required by Kallithea will be installed separately from your
 main Python installation and other applications and things will be less
 problematic when upgrading the system or Kallithea.
-An additional benefit of virtualenv_ is that it doesn't require root privileges.
+An additional benefit of virtualenv is that it doesn't require root privileges.
 
-- Assuming you have installed virtualenv_, create a new virtual environment
-  for example, in `/srv/kallithea/venv`, using the virtualenv command::
+- Assuming you have installed virtualenv, create a new virtual environment
+  for example, in `/srv/kallithea/venv`, using the venv command::
 
-    virtualenv /srv/kallithea/venv
+    python3 -m venv /srv/kallithea/venv
 
-- Activate the virtualenv_ in your current shell session and make sure the
+- Activate the virtualenv in your current shell session and make sure the
   basic requirements are up-to-date by running::
 
     . /srv/kallithea/venv/bin/activate
@@ -133,6 +133,3 @@ To install as a regular user in ``~/.local``, you can use::
     pip install --user kallithea
 
 You can now proceed to :ref:`setup`.
-
-
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv

@@ -3,7 +3,7 @@
 <%block name="title">
     ${_('%s Files') % c.repo_name}
     %if hasattr(c,'file'):
-        &middot; ${h.safe_unicode(c.file.path) or '/'}
+        &middot; ${c.file.path or '/'}
     %endif
 </%block>
 
@@ -36,7 +36,7 @@ ${self.repo_context_bar('files', c.revision)}
     </div>
 </div>
 
-<script type="text/javascript">
+<script>'use strict';
 var CACHE = {};
 var CACHE_EXPIRE = 5*60*1000; //cache for 5*60s
 //used to construct links from the search list
@@ -50,7 +50,7 @@ pyroutes.register('files_nodelist_home', ${h.js(h.url('files_nodelist_home', rep
 pyroutes.register('files_history_home', ${h.js(h.url('files_history_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
 pyroutes.register('files_authors_home', ${h.js(h.url('files_authors_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
 
-var ypjax_links = function(){
+function ypjax_links(){
     $('.ypjax-link').click(function(e){
 
         //don't do ypjax on middle click
@@ -88,7 +88,7 @@ var ypjax_links = function(){
     });
 }
 
-var load_state = function(state) {
+function load_state(state) {
     var $files_data = $('#files_data');
     var cache_key = state.url;
     var _cache_obj = CACHE[cache_key];
@@ -106,7 +106,7 @@ var load_state = function(state) {
     }
 }
 
-var post_load_state = function(state) {
+function post_load_state(state) {
     ypjax_links();
     tooltip_activate();
 
@@ -125,16 +125,16 @@ var post_load_state = function(state) {
     }
 
     function highlight_lines(lines){
-        for(pos in lines){
+        for(let pos in lines){
           $('#L'+lines[pos]).css('background-color','#FFFFBE');
         }
     }
-    page_highlights = location.href.substring(location.href.indexOf('#')+1).split('L');
+    let page_highlights = location.href.substring(location.href.indexOf('#')+1).split('L');
     if (page_highlights.length == 2){
-       highlight_ranges  = page_highlights[1].split(",");
+       let highlight_ranges  = page_highlights[1].split(",");
 
        var h_lines = [];
-       for (pos in highlight_ranges){
+       for (let pos in highlight_ranges){
             var _range = highlight_ranges[pos].split('-');
             if(_range.length == 2){
                 var start = parseInt(_range[0]);
@@ -217,12 +217,12 @@ $(document).ready(function(){
     });
 
     // init the search filter
-    var _node_list_url = node_list_url.replace('__REV__', ${h.js(c.changeset.raw_id)}).replace('__FPATH__', ${h.js(h.safe_unicode(c.file.path))});
+    var _node_list_url = node_list_url.replace('__REV__', ${h.js(c.changeset.raw_id)}).replace('__FPATH__', ${h.js(c.file.path)});
     var _url_base = url_base.replace('__REV__', ${h.js(c.changeset.raw_id)});
     fileBrowserListeners(_node_list_url, _url_base);
 
     var initial_state = {url:window.location.href, title:document.title, url_base:_url_base,
-         node_list_url:_node_list_url, rev:${h.js(c.changeset.raw_id)}, f_path:${h.js(h.safe_unicode(c.file.path))}};
+         node_list_url:_node_list_url, rev:${h.js(c.changeset.raw_id)}, f_path:${h.js(c.file.path)}};
 
     // change branch filter
     $("#branch_selector").select2({
@@ -234,7 +234,7 @@ $(document).ready(function(){
     $("#branch_selector").change(function(e){
         var selected = e.currentTarget.options[e.currentTarget.selectedIndex].value;
         if(selected && selected != ${h.js(c.changeset.raw_id)}){
-            window.location = pyroutes.url('files_home', {'repo_name': ${h.js(h.safe_unicode(c.repo_name))}, 'revision': selected, 'f_path': ${h.js(h.safe_unicode(c.file.path))}});
+            window.location = pyroutes.url('files_home', {'repo_name': ${h.js(c.repo_name)}, 'revision': selected, 'f_path': ${h.js(c.file.path)}});
             $("#body").hide();
         } else {
             $("#branch_selector").val(${h.js(c.changeset.raw_id)});
@@ -242,7 +242,7 @@ $(document).ready(function(){
     });
     $('#show_authors').on('click', function(){
         $.ajax({
-            url: pyroutes.url('files_authors_home', {'revision': ${h.js(c.changeset.raw_id)}, 'f_path': ${h.js(h.safe_unicode(c.file.path))}}),
+            url: pyroutes.url('files_authors_home', {'revision': ${h.js(c.changeset.raw_id)}, 'f_path': ${h.js(c.file.path)}}),
             success: function(data) {
                 $('#file_authors').html(data);
                 $('#file_authors').show();

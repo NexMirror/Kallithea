@@ -28,10 +28,12 @@ Original author and date, and relevant copyright and licensing information is be
 
 import base64
 import logging
-import urllib2
+import urllib.parse
+import urllib.request
 
-from kallithea.lib import auth_modules
-from kallithea.lib.compat import formatted_json, hybrid_property, json
+from kallithea.lib import auth_modules, ext_json
+from kallithea.lib.compat import hybrid_property
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 
 
 log = logging.getLogger(__name__)
@@ -71,10 +73,10 @@ class CrowdServer(object):
         self._make_opener()
 
     def _make_opener(self):
-        mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
         mgr.add_password(None, self._uri, self.user, self.passwd)
-        handler = urllib2.HTTPBasicAuthHandler(mgr)
-        self.opener = urllib2.build_opener(handler)
+        handler = urllib.request.HTTPBasicAuthHandler(mgr)
+        self.opener = urllib.request.build_opener(handler)
 
     def _request(self, url, body=None, headers=None,
                  method=None, noformat=False,
@@ -82,14 +84,12 @@ class CrowdServer(object):
         _headers = {"Content-type": "application/json",
                     "Accept": "application/json"}
         if self.user and self.passwd:
-            authstring = base64.b64encode("%s:%s" % (self.user, self.passwd))
+            authstring = ascii_str(base64.b64encode(safe_bytes("%s:%s" % (self.user, self.passwd))))
             _headers["Authorization"] = "Basic %s" % authstring
         if headers:
             _headers.update(headers)
-        log.debug("Sent crowd: \n%s",
-                  formatted_json({"url": url, "body": body,
-                                           "headers": _headers}))
-        req = urllib2.Request(url, body, _headers)
+        log.debug("Sent to crowd at %s:\nHeaders: %s\nBody:\n%s", url, _headers, body)
+        req = urllib.request.Request(url, body, _headers)
         if method:
             req.get_method = lambda: method
 
@@ -103,7 +103,7 @@ class CrowdServer(object):
                 rval["status"] = True
                 rval["error"] = "Response body was empty"
             elif not noformat:
-                rval = json.loads(msg)
+                rval = ext_json.loads(msg)
                 rval["status"] = True
             else:
                 rval = "".join(rdoc.readlines())
@@ -120,14 +120,14 @@ class CrowdServer(object):
         """Authenticate a user against crowd. Returns brief information about
         the user."""
         url = ("%s/rest/usermanagement/%s/authentication?username=%s"
-               % (self._uri, self._version, urllib2.quote(username)))
-        body = json.dumps({"value": password})
+               % (self._uri, self._version, urllib.parse.quote(username)))
+        body = ascii_bytes(ext_json.dumps({"value": password}))
         return self._request(url, body)
 
     def user_groups(self, username):
         """Retrieve a list of groups to which this user belongs."""
         url = ("%s/rest/usermanagement/%s/user/group/nested?username=%s"
-               % (self._uri, self._version, urllib2.quote(username)))
+               % (self._uri, self._version, urllib.parse.quote(username)))
         return self._request(url)
 
 
@@ -209,11 +209,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             log.debug('Empty username or password skipping...')
             return None
 
-        log.debug("Crowd settings: \n%s", formatted_json(settings))
+        log.debug("Crowd settings: %s", settings)
         server = CrowdServer(**settings)
         server.set_credentials(settings["app_name"], settings["app_password"])
         crowd_user = server.user_auth(username, password)
-        log.debug("Crowd returned: \n%s", formatted_json(crowd_user))
+        log.debug("Crowd returned: %s", crowd_user)
         if not crowd_user["status"]:
             log.error('Crowd authentication as %s returned no status', username)
             return None
@@ -223,7 +223,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             return None
 
         res = server.user_groups(crowd_user["name"])
-        log.debug("Crowd groups: \n%s", formatted_json(res))
+        log.debug("Crowd groups: %s", res)
         crowd_user["groups"] = [x["name"] for x in res["groups"]]
 
         # old attrs fetched from Kallithea database
@@ -246,7 +246,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         for group in settings["admin_groups"].split(","):
             if group in user_data["groups"]:
                 user_data["admin"] = True
-        log.debug("Final crowd user object: \n%s", formatted_json(user_data))
+        log.debug("Final crowd user object: %s", user_data)
         log.info('user %s authenticated correctly', user_data['username'])
         return user_data
 

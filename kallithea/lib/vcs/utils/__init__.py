@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This module provides some useful tools for ``vcs`` like annotate/diff html
 output. It also includes some internal helpers.
@@ -25,7 +27,7 @@ def aslist(obj, sep=None, strip=True):
     :param sep:
     :param strip:
     """
-    if isinstance(obj, (basestring)):
+    if isinstance(obj, str):
         lst = obj.split(sep)
         if strip:
             lst = [v.strip() for v in lst]
@@ -66,89 +68,107 @@ def safe_int(val, default=None):
     return val
 
 
-def safe_unicode(str_, from_encoding=None):
+def safe_str(s):
     """
-    safe unicode function. Does few trick to turn str_ into unicode
-
-    In case of UnicodeDecode error we try to return it with encoding detected
-    by chardet library if it fails fallback to unicode with errors replaced
-
-    :param str_: string to decode
-    :rtype: unicode
-    :returns: unicode object
+    Safe unicode str function. Use a few tricks to turn s into str:
+    In case of UnicodeDecodeError with configured default encodings, try to
+    detect encoding with chardet library, then fall back to first encoding with
+    errors replaced.
     """
-    if isinstance(str_, unicode):
-        return str_
+    if isinstance(s, str):
+        return s
 
-    if not from_encoding:
-        from kallithea.lib.vcs.conf import settings
-        from_encoding = settings.DEFAULT_ENCODINGS
+    if not isinstance(s, bytes):  # use __str__ and don't expect UnicodeDecodeError
+        return str(s)
 
-    if not isinstance(from_encoding, (list, tuple)):
-        from_encoding = [from_encoding]
-
-    try:
-        return unicode(str_)
-    except UnicodeDecodeError:
-        pass
-
-    for enc in from_encoding:
+    from kallithea.lib.vcs.conf import settings
+    for enc in settings.DEFAULT_ENCODINGS:
         try:
-            return unicode(str_, enc)
+            return str(s, enc)
         except UnicodeDecodeError:
             pass
 
     try:
         import chardet
-        encoding = chardet.detect(str_)['encoding']
-        if encoding is None:
-            raise Exception()
-        return str_.decode(encoding)
-    except (ImportError, UnicodeDecodeError, Exception):
-        return unicode(str_, from_encoding[0], 'replace')
+        encoding = chardet.detect(s)['encoding']
+        if encoding is not None:
+            return s.decode(encoding)
+    except (ImportError, UnicodeDecodeError):
+        pass
+
+    return str(s, settings.DEFAULT_ENCODINGS[0], 'replace')
 
 
-def safe_str(unicode_, to_encoding=None):
+def safe_bytes(s):
     """
-    safe str function. Does few trick to turn unicode_ into string
-
-    In case of UnicodeEncodeError we try to return it with encoding detected
-    by chardet library if it fails fallback to string with errors replaced
-
-    :param unicode_: unicode to encode
-    :rtype: str
-    :returns: str object
+    Safe bytes function. Use a few tricks to turn s into bytes string:
+    In case of UnicodeEncodeError with configured default encodings, fall back
+    to first configured encoding with errors replaced.
     """
+    if isinstance(s, bytes):
+        return s
 
-    # if it's not basestr cast to str
-    if not isinstance(unicode_, basestring):
-        return str(unicode_)
+    assert isinstance(s, str), repr(s)  # bytes cannot coerse with __str__ or handle None or int
 
-    if isinstance(unicode_, str):
-        return unicode_
-
-    if not to_encoding:
-        from kallithea.lib.vcs.conf import settings
-        to_encoding = settings.DEFAULT_ENCODINGS
-
-    if not isinstance(to_encoding, (list, tuple)):
-        to_encoding = [to_encoding]
-
-    for enc in to_encoding:
+    from kallithea.lib.vcs.conf import settings
+    for enc in settings.DEFAULT_ENCODINGS:
         try:
-            return unicode_.encode(enc)
+            return s.encode(enc)
         except UnicodeEncodeError:
             pass
 
-    try:
-        import chardet
-        encoding = chardet.detect(unicode_)['encoding']
-        if encoding is None:
-            raise UnicodeEncodeError()
+    return s.encode(settings.DEFAULT_ENCODINGS[0], 'replace')
 
-        return unicode_.encode(encoding)
-    except (ImportError, UnicodeEncodeError):
-        return unicode_.encode(to_encoding[0], 'replace')
+
+def ascii_bytes(s):
+    """
+    Simple conversion from str to bytes, *assuming* all codepoints are
+    7-bit and it thus is pure ASCII.
+    Will fail badly with UnicodeError on invalid input.
+    This should be used where enocding and "safe" ambiguity should be avoided.
+    Where strings already have been encoded in other ways but still are unicode
+    string - for example to hex, base64, json, urlencoding, or are known to be
+    identifiers.
+
+    >>> ascii_bytes('a')
+    b'a'
+    >>> ascii_bytes(u'a')
+    b'a'
+    >>> ascii_bytes('å')
+    Traceback (most recent call last):
+    UnicodeEncodeError: 'ascii' codec can't encode character '\xe5' in position 0: ordinal not in range(128)
+    >>> ascii_bytes('å'.encode('utf8'))
+    Traceback (most recent call last):
+    AssertionError: b'\xc3\xa5'
+    """
+    assert isinstance(s, str), repr(s)
+    return s.encode('ascii')
+
+
+def ascii_str(s):
+    r"""
+    Simple conversion from bytes to str, *assuming* all codepoints are
+    7-bit and it thus is pure ASCII.
+    Will fail badly with UnicodeError on invalid input.
+    This should be used where enocding and "safe" ambiguity should be avoided.
+    Where strings are encoded but also in other ways are known to be ASCII, and
+    where a unicode string is wanted without caring about encoding. For example
+    to hex, base64, urlencoding, or are known to be identifiers.
+
+    >>> ascii_str(b'a')
+    'a'
+    >>> ascii_str(u'a')
+    Traceback (most recent call last):
+    AssertionError: 'a'
+    >>> ascii_str('å'.encode('utf8'))
+    Traceback (most recent call last):
+    UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 0: ordinal not in range(128)
+    >>> ascii_str(u'å')
+    Traceback (most recent call last):
+    AssertionError: 'å'
+    """
+    assert isinstance(s, bytes), repr(s)
+    return s.decode('ascii')
 
 
 # Regex taken from http://www.regular-expressions.info/email.html
@@ -178,7 +198,7 @@ def author_email(author):
     m = email_re.search(author)
     if m is None:
         return ''
-    return safe_str(m.group(0))
+    return m.group(0)
 
 
 def author_name(author):

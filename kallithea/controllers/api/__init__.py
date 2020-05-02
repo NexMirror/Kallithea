@@ -35,11 +35,11 @@ import types
 from tg import Response, TGController, request, response
 from webob.exc import HTTPError, HTTPException
 
+from kallithea.lib import ext_json
 from kallithea.lib.auth import AuthUser
-from kallithea.lib.base import _get_access_path
 from kallithea.lib.base import _get_ip_addr as _get_ip
-from kallithea.lib.compat import json
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.base import get_path_info
+from kallithea.lib.utils2 import ascii_bytes
 from kallithea.model.db import User
 
 
@@ -53,7 +53,7 @@ class JSONRPCError(BaseException):
         super(JSONRPCError, self).__init__()
 
     def __str__(self):
-        return safe_str(self.message)
+        return self.message
 
 
 class JSONRPCErrorResponse(Response, HTTPException):
@@ -121,7 +121,7 @@ class JSONRPCController(TGController):
         raw_body = environ['wsgi.input'].read(length)
 
         try:
-            json_body = json.loads(raw_body)
+            json_body = ext_json.loads(raw_body)
         except ValueError as e:
             # catch JSON errors Here
             raise JSONRPCErrorResponse(retid=self._req_id,
@@ -166,13 +166,13 @@ class JSONRPCController(TGController):
 
         # now that we have a method, add self._req_params to
         # self.kargs and dispatch control to WGIController
-        argspec = inspect.getargspec(self._func)
-        arglist = argspec[0][1:]
-        defaults = map(type, argspec[3] or [])
-        default_empty = types.NotImplementedType
+        argspec = inspect.getfullargspec(self._func)
+        arglist = argspec.args[1:]
+        argtypes = [type(arg) for arg in argspec.defaults or []]
+        default_empty = type(NotImplemented)
 
         # kw arguments required by this method
-        func_kwargs = dict(itertools.izip_longest(reversed(arglist), reversed(defaults),
+        func_kwargs = dict(itertools.zip_longest(reversed(arglist), reversed(argtypes),
                                                   fillvalue=default_empty))
 
         # This attribute will need to be first param of a method that uses
@@ -180,7 +180,7 @@ class JSONRPCController(TGController):
         USER_SESSION_ATTR = 'apiuser'
 
         # get our arglist and check if we provided them as args
-        for arg, default in func_kwargs.iteritems():
+        for arg, default in func_kwargs.items():
             if arg == USER_SESSION_ATTR:
                 # USER_SESSION_ATTR is something translated from API key and
                 # this is checked before so we don't need validate it
@@ -209,7 +209,7 @@ class JSONRPCController(TGController):
 
         log.info('IP: %s Request to %s time: %.3fs' % (
             self._get_ip_addr(environ),
-            safe_unicode(_get_access_path(environ)), time.time() - start)
+            get_path_info(environ), time.time() - start)
         )
 
         state.set_action(self._rpc_call, [])
@@ -226,28 +226,28 @@ class JSONRPCController(TGController):
             if isinstance(raw_response, HTTPError):
                 self._error = str(raw_response)
         except JSONRPCError as e:
-            self._error = safe_str(e)
+            self._error = str(e)
         except Exception as e:
             log.error('Encountered unhandled exception: %s',
                       traceback.format_exc(),)
             json_exc = JSONRPCError('Internal server error')
-            self._error = safe_str(json_exc)
+            self._error = str(json_exc)
 
         if self._error is not None:
             raw_response = None
 
         response = dict(id=self._req_id, result=raw_response, error=self._error)
         try:
-            return json.dumps(response)
+            return ascii_bytes(ext_json.dumps(response))
         except TypeError as e:
-            log.error('API FAILED. Error encoding response: %s', e)
-            return json.dumps(
+            log.error('API FAILED. Error encoding response for %s %s: %s\n%s', action, rpc_args, e, traceback.format_exc())
+            return ascii_bytes(ext_json.dumps(
                 dict(
                     id=self._req_id,
                     result=None,
-                    error="Error encoding response"
+                    error="Error encoding response",
                 )
-            )
+            ))
 
     def _find_method(self):
         """

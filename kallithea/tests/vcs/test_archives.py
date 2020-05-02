@@ -1,6 +1,6 @@
 import datetime
+import io
 import os
-import StringIO
 import tarfile
 import tempfile
 import zipfile
@@ -18,7 +18,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
     @classmethod
     def _get_commits(cls):
         start_date = datetime.datetime(2010, 1, 1, 20)
-        for x in xrange(5):
+        for x in range(5):
             yield {
                 'message': 'Commit %d' % x,
                 'author': 'Joe Doe <joe.doe@example.com>',
@@ -35,11 +35,10 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
             self.tip.fill_archive(stream=f, kind='zip', prefix='repo')
         out = zipfile.ZipFile(path)
 
-        for x in xrange(5):
+        for x in range(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            decompressed = StringIO.StringIO()
-            decompressed.write(out.read('repo/' + node_path))
-            assert decompressed.getvalue() == self.tip.get_node(node_path).content
+            decompressed = out.read('repo/' + node_path)
+            assert decompressed == self.tip.get_node(node_path).content
 
     def test_archive_tgz(self):
         path = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_tgz-')[1]
@@ -50,9 +49,9 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
         outfile = tarfile.open(path, 'r|gz')
         outfile.extractall(outdir)
 
-        for x in xrange(5):
+        for x in range(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            assert open(os.path.join(outdir, 'repo/' + node_path)).read() == self.tip.get_node(node_path).content
+            assert open(os.path.join(outdir, 'repo/' + node_path), 'rb').read() == self.tip.get_node(node_path).content
 
     def test_archive_tbz2(self):
         path = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_tbz2-')[1]
@@ -63,15 +62,15 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
         outfile = tarfile.open(path, 'r|bz2')
         outfile.extractall(outdir)
 
-        for x in xrange(5):
+        for x in range(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            assert open(os.path.join(outdir, 'repo/' + node_path)).read() == self.tip.get_node(node_path).content
+            assert open(os.path.join(outdir, 'repo/' + node_path), 'rb').read() == self.tip.get_node(node_path).content
 
     def test_archive_default_stream(self):
         tmppath = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_default_stream-')[1]
         with open(tmppath, 'wb') as stream:
             self.tip.fill_archive(stream=stream)
-        mystream = StringIO.StringIO()
+        mystream = io.BytesIO()
         self.tip.fill_archive(stream=mystream)
         mystream.seek(0)
         with open(tmppath, 'rb') as f:

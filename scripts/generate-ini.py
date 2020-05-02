@@ -1,9 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 """
 Based on kallithea/lib/paster_commands/template.ini.mako, generate development.ini
 """
-
-from __future__ import print_function
 
 import re
 
@@ -61,6 +59,13 @@ def main():
     if mako_marked_up != mako_org:
         print('writing:', makofile)
         open(makofile, 'w').write(mako_marked_up)
+
+    lines = re.findall(r'\n(# [^ ].*)', mako_marked_up)
+    if lines:
+        print('ERROR: the template .ini file convention is to use "## Foo Bar" for text comments and "#foo = bar" for disabled settings')
+        for line in lines:
+            print(line)
+        raise SystemExit(1)
 
     # create ini files
     for fn, settings in ini_files:

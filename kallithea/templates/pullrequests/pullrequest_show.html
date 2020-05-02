@@ -300,7 +300,7 @@ ${self.repo_context_bar('showpullrequest')}
                     <div class="cs_${op} clearfix">
                       <span class="node">
                           <i class="icon-diff-${op}"></i>
-                          ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                          ${h.link_to(path, '#%s' % fid)}
                       </span>
                       <div class="changes">${h.fancy_file_stats(stats)}</div>
                     </div>
@@ -312,10 +312,10 @@ ${self.repo_context_bar('showpullrequest')}
             </div>
         </div>
     </div>
-    <script>
+    <script>'use strict';
     // TODO: switch this to pyroutes
-    AJAX_COMMENT_URL = ${h.js(url('pullrequest_comment',repo_name=c.repo_name,pull_request_id=c.pull_request.pull_request_id))};
-    AJAX_COMMENT_DELETE_URL = ${h.js(url('pullrequest_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__'))};
+    var AJAX_COMMENT_URL = ${h.js(url('pullrequest_comment',repo_name=c.repo_name,pull_request_id=c.pull_request.pull_request_id))};
+    var AJAX_COMMENT_DELETE_URL = ${h.js(url('pullrequest_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__'))};
 
     pyroutes.register('pullrequest_comment', ${h.js(url('pullrequest_comment',repo_name='%(repo_name)s',pull_request_id='%(pull_request_id)s'))}, ['repo_name', 'pull_request_id']);
     pyroutes.register('pullrequest_comment_delete', ${h.js(url('pullrequest_comment_delete',repo_name='%(repo_name)s',comment_id='%(comment_id)s'))}, ['repo_name', 'comment_id']);
@@ -343,12 +343,12 @@ ${self.repo_context_bar('showpullrequest')}
     ## main comment form and it status
     ${comment.comments(change_status=c.allowed_to_change_status)}
 
-    <script type="text/javascript">
+    <script>'use strict';
       $(document).ready(function(){
           PullRequestAutoComplete($('#user'));
           SimpleUserAutoComplete($('#owner'));
 
-          $('.code-difftable').on('click', '.add-bubble', function(e){
+          $('.code-difftable').on('click', '.add-bubble', function(){
               show_comment_form($(this));
           });
 
@@ -368,7 +368,7 @@ ${self.repo_context_bar('showpullrequest')}
               $('#pr-form-clone').prop('disabled',!update);
           });
           var $org_review_members = $('#review_members').clone();
-          $('#pr-form-reset').click(function(e){
+          $('#pr-form-reset').click(function(){
               $('.pr-do-edit').hide();
               $('.pr-not-edit').show();
               $('#pr-form-save').prop('disabled',false);

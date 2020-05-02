@@ -42,6 +42,10 @@ default_variables = {
     'uuid': lambda: 'VERY-SECRET',
 }
 
+variable_options = {
+    'database_engine': ['sqlite', 'postgres', 'mysql'],
+    'http_server': ['waitress', 'gearbox', 'gevent', 'gunicorn', 'uwsgi'],
+}
 
 def expand(template, mako_variable_values, settings):
     """Expand mako template and tweak it.
@@ -63,16 +67,27 @@ def expand(template, mako_variable_values, settings):
     ... %elif conditional_options == 'option-b':
     ... some_variable = "never mind - option-b will not be used anyway ..."
     ... %endif
+    ...
+    ... [comment-section]
+    ... #variable3 = 3.0
+    ... #variable4 = 4.0
+    ... #variable5 = 5.0
+    ... variable5 = 5.1
+    ... #variable6 = 6.0
+    ... #variable6 = 6.1
+    ... #variable7 = 7.0
+    ... variable7 = 7.1
     ... '''
-    >>> selected_mako_conditionals = []
     >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function': (lambda: 'FUNCTION RESULT'),
-    ...                         'conditional_options': 'option-a'}
+    ...                         'conditional_options': 'option-a', 'http_server': 'nc'}
     >>> settings = { # only partially used
     ...     '[first-section]': {'variable2': 'VAL2', 'first_extra': 'EXTRA'},
+    ...     '[comment-section]': {'variable3': '3.0', 'variable4': '4.1', 'variable5': '5.2', 'variable6': '6.2', 'variable7': '7.0'},
     ...     '[third-section]': {'third_extra': ' 3'},
     ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
     ... }
-    >>> print expand(template, mako_variable_values, settings)
+    >>> print(expand(template, mako_variable_values, settings))
+    ERROR: http_server is 'nc' - it should be one of 'waitress', 'gearbox', 'gevent', 'gunicorn', 'uwsgi'
     <BLANKLINE>
     [first-section]
     <BLANKLINE>
@@ -87,6 +102,19 @@ def expand(template, mako_variable_values, settings):
     [second-section]
     # option a was chosen
     <BLANKLINE>
+    [comment-section]
+    variable3 = 3.0
+    #variable4 = 4.0
+    variable4 = 4.1
+    #variable5 = 5.0
+    #variable5 = 5.1
+    variable5 = 5.2
+    #variable6 = 6.0
+    #variable6 = 6.1
+    variable6 = 6.2
+    variable7 = 7.0
+    #variable7 = 7.1
+    <BLANKLINE>
     [fourth-section]
     fourth = "four"
     fourth_extra = 4
@@ -99,6 +127,12 @@ def expand(template, mako_variable_values, settings):
     mako_variables.update(mako_variable_values or {})
     settings = dict((k, dict(v)) for k, v in settings.items()) # deep copy before mutating
 
+    for key, value in mako_variables.items():
+        if key in variable_options:
+            if value not in variable_options[key]:
+                print('ERROR: %s is %r - it should be one of %s' %
+                      (key, value, ', '.join(repr(x) for x in variable_options[key])))
+
     ini_lines = mako.template.Template(template).render(**mako_variables)
 
     def process_section(m):
@@ -106,20 +140,44 @@ def expand(template, mako_variable_values, settings):
         sectionname, lines = m.groups()
         if sectionname in settings:
             section_settings = settings.pop(sectionname)
+            add_after_key_value = {}  # map key to value it should be added after
 
-            def process_line(m):
-                """process a section line and update value if necessary"""
-                key, value = m.groups()
+            # 1st pass:
+            # comment out lines with keys that have new values
+            # find best line for keeping or un-commenting (because it has the right value) or adding after (because it is the last with other value)
+            def comment_out(m):
+                """process a section line if in section_settings and comment out and track in add_after_key_value"""
                 line = m.group(0)
-                if key in section_settings:
-                    new_line = '%s = %s' % (key, section_settings.pop(key))
-                    if new_line != line:
-                        # keep old entry as example - comments might refer to it
-                        line = '#%s\n%s' % (line, new_line)
-                return line.rstrip()
+                comment, key, line_value = m.groups()
+                if key not in section_settings:
+                    return line
+                new_value = section_settings[key]
+                if line_value == new_value or add_after_key_value.get(key) != new_value:
+                    add_after_key_value[key] = line_value
+                if comment:
+                    return line
+                return '#' + line
 
-            # process lines that not are comments or empty and look like name=value
-            lines = re.sub(r'^([^#\n\s]*)[ \t]*=[ \t]*(.*)$', process_line, lines, flags=re.MULTILINE)
+            lines = re.sub(r'^(#)?([^#\n\s]*)[ \t]*=[ \t]*(.*)$', comment_out, lines, flags=re.MULTILINE)
+
+            def add_after_comment(m):
+                """process a section comment line and add new value"""
+                line = m.group(0)
+                key, line_value = m.groups()
+                if key not in section_settings:
+                    return line
+                if line_value != add_after_key_value.get(key):
+                    return line
+                new_value = section_settings[key]
+                if new_value == line_value:
+                    line = line.lstrip('#')
+                else:
+                    line += '\n%s = %s' % (key, new_value)
+                section_settings.pop(key)
+                return line
+
+            lines = re.sub(r'^#([^#\n\s]*)[ \t]*=[ \t]*(.*)$', add_after_comment, lines, flags=re.MULTILINE)
+
             # add unused section settings
             if section_settings:
                 lines += '\n' + ''.join('%s = %s\n' % (key, value) for key, value in sorted(section_settings.items()))

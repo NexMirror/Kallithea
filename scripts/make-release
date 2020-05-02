@@ -15,7 +15,7 @@ venv=$(mktemp -d --tmpdir kallithea-release-XXXXX)
 trap cleanup EXIT
 
 echo "Setting up a fresh virtualenv in $venv"
-virtualenv -p python2 "$venv"
+python3 -m venv "$venv"
 . "$venv/bin/activate"
 
 echo "Install/verify tools needed for building and uploading stuff"
@@ -35,8 +35,8 @@ echo "Check that each entry in MANIFEST.in match something"
 sed -e 's/[^ ]*[ ]*\([^ ]*\).*/\1/g' MANIFEST.in | xargs ls -lad
 
 echo "Build dist"
-python2 setup.py compile_catalog
-python2 setup.py sdist
+python3 setup.py compile_catalog
+python3 setup.py sdist
 
 echo "Verify VERSION from kallithea/__init__.py"
 namerel=$(cd dist && echo Kallithea-*.tar.gz)
@@ -49,7 +49,7 @@ echo "Verify dist file content"
 diff -u <((hg mani | grep -v '^\.hg\|^kallithea/i18n/en/LC_MESSAGES/kallithea.mo$') | LANG=C sort) <(tar tf dist/Kallithea-$version.tar.gz | sed "s|^$namerel/||" | grep . | grep -v '^kallithea/i18n/.*/LC_MESSAGES/kallithea.mo$\|^Kallithea.egg-info/\|^PKG-INFO$\|/$' | LANG=C sort)
 
 echo "Verify docs build"
-python2 setup.py build_sphinx # the results are not actually used, but we want to make sure it builds
+python3 setup.py build_sphinx # the results are not actually used, but we want to make sure it builds
 
 echo "Shortlog for inclusion in the release announcement"
 scripts/shortlog.py "only('.', branch('stable') & tagged() & public() & not '.')"

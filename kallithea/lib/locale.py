@@ -24,7 +24,7 @@ def current_locale_is_valid():
     Note: UTF-8 is preferred, but for example ISO-8859-1 or mbcs should also
     work under the right circumstances."""
     try:
-        u'\xe9'.encode(sys.getfilesystemencoding()) # Test using é (&eacute;)
+        '\xe9'.encode(sys.getfilesystemencoding()) # Test using é (&eacute;)
     except UnicodeEncodeError:
         log.error("Cannot encode Unicode paths to file system encoding %r", sys.getfilesystemencoding())
         for var in ['LC_ALL', 'LC_CTYPE', 'LANG']:

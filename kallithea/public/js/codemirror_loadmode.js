@@ -1,3 +1,5 @@
+'use strict';
+
 (function() {
   var loading = {};
   function splitCallback(cont, n) {
@@ -8,13 +10,13 @@
     var deps = CodeMirror.modes[mode].dependencies;
     if (!deps) return cont();
     var missing = [];
-    for (var i = 0; i < deps.length; ++i) {
+    for (let i = 0; i < deps.length; ++i) {
       if (!CodeMirror.modes.hasOwnProperty(deps[i]))
         missing.push(deps[i]);
     }
     if (!missing.length) return cont();
     var split = splitCallback(cont, missing.length);
-    for (var i = 0; i < missing.length; ++i)
+    for (let i = 0; i < missing.length; ++i)
       CodeMirror.requireMode(missing[i], split);
   }
 
@@ -60,10 +62,11 @@
 
   CodeMirror.getFilenameAndExt = function(filename){
     var parts = filename.split('.');
+    var ext;
 
     if (parts.length > 1){
-        var ext = parts.pop();
-        var filename = parts.join("");
+        ext = parts.pop();
+        filename = parts.join("");
     }
     return {"filename": filename, "ext": ext};
   };

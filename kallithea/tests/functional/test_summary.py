@@ -18,7 +18,7 @@ from kallithea.model.db import Repository
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -32,14 +32,14 @@ def custom_settings(set_test_settings):
         )
 
 
-class TestSummaryController(TestController):
+class TestSummaryController(base.TestController):
 
     def test_index_hg(self, custom_settings):
         self.log_user()
-        ID = Repository.get_by_repo_name(HG_REPO).repo_id
-        response = self.app.get(url(controller='summary',
+        ID = Repository.get_by_repo_name(base.HG_REPO).repo_id
+        response = self.app.get(base.url(controller='summary',
                                     action='index',
-                                    repo_name=HG_REPO))
+                                    repo_name=base.HG_REPO))
 
         # repo type
         response.mustcontain(
@@ -52,24 +52,24 @@ class TestSummaryController(TestController):
         # clone URLs
         response.mustcontain(
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
-            (TEST_USER_ADMIN_LOGIN, HG_REPO)
+            (base.TEST_USER_ADMIN_LOGIN, base.HG_REPO)
         )
         response.mustcontain(
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
-            (TEST_USER_ADMIN_LOGIN, ID)
+            (base.TEST_USER_ADMIN_LOGIN, ID)
         )
         response.mustcontain(
             '''<input id="ssh_url" class="form-control" size="80" readonly="readonly" value="ssh://ssh_user@ssh_hostname/%s"/>''' %
-            (HG_REPO)
+            (base.HG_REPO)
         )
 
 
     def test_index_git(self, custom_settings):
         self.log_user()
-        ID = Repository.get_by_repo_name(GIT_REPO).repo_id
-        response = self.app.get(url(controller='summary',
+        ID = Repository.get_by_repo_name(base.GIT_REPO).repo_id
+        response = self.app.get(base.url(controller='summary',
                                     action='index',
-                                    repo_name=GIT_REPO))
+                                    repo_name=base.GIT_REPO))
 
         # repo type
         response.mustcontain(
@@ -82,21 +82,21 @@ class TestSummaryController(TestController):
         # clone URLs
         response.mustcontain(
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
-            (TEST_USER_ADMIN_LOGIN, GIT_REPO)
+            (base.TEST_USER_ADMIN_LOGIN, base.GIT_REPO)
         )
         response.mustcontain(
             '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
-            (TEST_USER_ADMIN_LOGIN, ID)
+            (base.TEST_USER_ADMIN_LOGIN, ID)
         )
         response.mustcontain(
             '''<input id="ssh_url" class="form-control" size="80" readonly="readonly" value="ssh://ssh_user@ssh_hostname/%s"/>''' %
-            (GIT_REPO)
+            (base.GIT_REPO)
         )
 
     def test_index_by_id_hg(self):
         self.log_user()
-        ID = Repository.get_by_repo_name(HG_REPO).repo_id
-        response = self.app.get(url(controller='summary',
+        ID = Repository.get_by_repo_name(base.HG_REPO).repo_id
+        response = self.app.get(base.url(controller='summary',
                                     action='index',
                                     repo_name='_%s' % ID))
 
@@ -111,21 +111,21 @@ class TestSummaryController(TestController):
 
     def test_index_by_repo_having_id_path_in_name_hg(self):
         self.log_user()
-        fixture.create_repo(name=u'repo_1')
-        response = self.app.get(url(controller='summary',
+        fixture.create_repo(name='repo_1')
+        response = self.app.get(base.url(controller='summary',
                                     action='index',
                                     repo_name='repo_1'))
 
         try:
             response.mustcontain("repo_1")
         finally:
-            RepoModel().delete(Repository.get_by_repo_name(u'repo_1'))
+            RepoModel().delete(Repository.get_by_repo_name('repo_1'))
             Session().commit()
 
     def test_index_by_id_git(self):
         self.log_user()
-        ID = Repository.get_by_repo_name(GIT_REPO).repo_id
-        response = self.app.get(url(controller='summary',
+        ID = Repository.get_by_repo_name(base.GIT_REPO).repo_id
+        response = self.app.get(base.url(controller='summary',
                                     action='index',
                                     repo_name='_%s' % ID))
 
@@ -146,14 +146,14 @@ class TestSummaryController(TestController):
     def test_index_trending(self):
         self.log_user()
         # codes stats
-        self._enable_stats(HG_REPO)
+        self._enable_stats(base.HG_REPO)
 
-        ScmModel().mark_for_invalidation(HG_REPO)
+        ScmModel().mark_for_invalidation(base.HG_REPO)
         # generate statistics first
-        response = self.app.get(url(controller='summary', action='statistics',
-                                    repo_name=HG_REPO))
-        response = self.app.get(url(controller='summary', action='index',
-                                    repo_name=HG_REPO))
+        response = self.app.get(base.url(controller='summary', action='statistics',
+                                    repo_name=base.HG_REPO))
+        response = self.app.get(base.url(controller='summary', action='index',
+                                    repo_name=base.HG_REPO))
         response.mustcontain(
             '[["py", {"count": 68, "desc": ["Python"]}], '
             '["rst", {"count": 16, "desc": ["Rst"]}], '
@@ -170,23 +170,23 @@ class TestSummaryController(TestController):
     def test_index_statistics(self):
         self.log_user()
         # codes stats
-        self._enable_stats(HG_REPO)
+        self._enable_stats(base.HG_REPO)
 
-        ScmModel().mark_for_invalidation(HG_REPO)
-        response = self.app.get(url(controller='summary', action='statistics',
-                                    repo_name=HG_REPO))
+        ScmModel().mark_for_invalidation(base.HG_REPO)
+        response = self.app.get(base.url(controller='summary', action='statistics',
+                                    repo_name=base.HG_REPO))
 
     def test_index_trending_git(self):
         self.log_user()
         # codes stats
-        self._enable_stats(GIT_REPO)
+        self._enable_stats(base.GIT_REPO)
 
-        ScmModel().mark_for_invalidation(GIT_REPO)
+        ScmModel().mark_for_invalidation(base.GIT_REPO)
         # generate statistics first
-        response = self.app.get(url(controller='summary', action='statistics',
-                                    repo_name=GIT_REPO))
-        response = self.app.get(url(controller='summary', action='index',
-                                    repo_name=GIT_REPO))
+        response = self.app.get(base.url(controller='summary', action='statistics',
+                                    repo_name=base.GIT_REPO))
+        response = self.app.get(base.url(controller='summary', action='index',
+                                    repo_name=base.GIT_REPO))
         response.mustcontain(
             '[["py", {"count": 68, "desc": ["Python"]}], '
             '["rst", {"count": 16, "desc": ["Rst"]}], '
@@ -203,8 +203,8 @@ class TestSummaryController(TestController):
     def test_index_statistics_git(self):
         self.log_user()
         # codes stats
-        self._enable_stats(GIT_REPO)
+        self._enable_stats(base.GIT_REPO)
 
-        ScmModel().mark_for_invalidation(GIT_REPO)
-        response = self.app.get(url(controller='summary', action='statistics',
-                                    repo_name=GIT_REPO))
+        ScmModel().mark_for_invalidation(base.GIT_REPO)
+        response = self.app.get(base.url(controller='summary', action='statistics',
+                                    repo_name=base.GIT_REPO))

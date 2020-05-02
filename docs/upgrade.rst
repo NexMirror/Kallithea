@@ -241,6 +241,3 @@ To update the hooks of your Git repositories:
 .. note::
     Kallithea does not use hooks on Mercurial repositories. This step is thus
     not necessary if you only have Mercurial repositories.
-
-
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv

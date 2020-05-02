@@ -32,7 +32,7 @@ import re
 from tg.i18n import ugettext as _
 
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode, SubModuleNode
@@ -216,8 +216,7 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
         stats = (0, 0)
 
     if not html_diff:
-        submodules = filter(lambda o: isinstance(o, SubModuleNode),
-                            [filenode_new, filenode_old])
+        submodules = [o for o in [filenode_new, filenode_old] if isinstance(o, SubModuleNode)]
         if submodules:
             html_diff = wrap_to_table(h.escape('Submodule %r' % submodules[0]))
         else:
@@ -235,10 +234,9 @@ def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     """
     # make sure we pass in default context
     context = context or 3
-    submodules = filter(lambda o: isinstance(o, SubModuleNode),
-                        [filenode_new, filenode_old])
+    submodules = [o for o in [filenode_new, filenode_old] if isinstance(o, SubModuleNode)]
     if submodules:
-        return ''
+        return b''
 
     for filenode in (filenode_old, filenode_new):
         if not isinstance(filenode, FileNode):
@@ -263,7 +261,7 @@ def get_diff(scm_instance, rev1, rev2, path=None, ignore_whitespace=False, conte
                                      ignore_whitespace=ignore_whitespace, context=context)
     except MemoryError:
         h.flash('MemoryError: Diff is too big', category='error')
-        return ''
+        return b''
 
 
 NEW_FILENODE = 1
@@ -281,7 +279,7 @@ class DiffProcessor(object):
     mentioned in the diff together with a dict of meta information that
     can be used to render it in a HTML template.
     """
-    _diff_git_re = re.compile('^diff --git', re.MULTILINE)
+    _diff_git_re = re.compile(b'^diff --git', re.MULTILINE)
 
     def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
         """
@@ -291,10 +289,10 @@ class DiffProcessor(object):
             based on that parameter cut off will be triggered, set to None
             to show full diff
         """
-        if not isinstance(diff, basestring):
-            raise Exception('Diff must be a basestring got %s instead' % type(diff))
+        if not isinstance(diff, bytes):
+            raise Exception('Diff must be bytes - got %s' % type(diff))
 
-        self._diff = diff
+        self._diff = memoryview(diff)
         self.adds = 0
         self.removes = 0
         self.diff_limit = diff_limit
@@ -317,7 +315,7 @@ class DiffProcessor(object):
                 self.limited_diff = True
                 continue
 
-            head, diff_lines = _get_header(self.vcs, buffer(self._diff, start, end - start))
+            head, diff_lines = _get_header(self.vcs, self._diff[start:end])
 
             op = None
             stats = {
@@ -399,7 +397,7 @@ class DiffProcessor(object):
                 'new_lineno': '',
                 'action':     'context',
                 'line':       msg,
-                } for _op, msg in stats['ops'].iteritems()
+                } for _op, msg in stats['ops'].items()
                   if _op not in [MOD_FILENODE]])
 
             _files.append({
@@ -420,22 +418,22 @@ class DiffProcessor(object):
             for chunk in diff_data['chunks']:
                 lineiter = iter(chunk)
                 try:
-                    peekline = lineiter.next()
+                    peekline = next(lineiter)
                     while True:
                         # find a first del line
                         while peekline['action'] != 'del':
-                            peekline = lineiter.next()
+                            peekline = next(lineiter)
                         delline = peekline
-                        peekline = lineiter.next()
+                        peekline = next(lineiter)
                         # if not followed by add, eat all following del lines
                         if peekline['action'] != 'add':
                             while peekline['action'] == 'del':
-                                peekline = lineiter.next()
+                                peekline = next(lineiter)
                             continue
                         # found an add - make sure it is the only one
                         addline = peekline
                         try:
-                            peekline = lineiter.next()
+                            peekline = next(lineiter)
                         except StopIteration:
                             # add was last line - ok
                             _highlight_inline_diff(delline, addline)
@@ -479,10 +477,10 @@ def _escaper(string):
             return ' <i></i>'
         assert False
 
-    return _escape_re.sub(substitute, safe_unicode(string))
+    return _escape_re.sub(substitute, safe_str(string))
 
 
-_git_header_re = re.compile(r"""
+_git_header_re = re.compile(br"""
     ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
     (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
        ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
@@ -499,7 +497,7 @@ _git_header_re = re.compile(r"""
 """, re.VERBOSE | re.MULTILINE)
 
 
-_hg_header_re = re.compile(r"""
+_hg_header_re = re.compile(br"""
     ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
     (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
        ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
@@ -516,6 +514,9 @@ _hg_header_re = re.compile(r"""
     (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
     (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
 """, re.VERBOSE | re.MULTILINE)
+
+
+_header_next_check = re.compile(br'''(?!@)(?!literal )(?!delta )''')
 
 
 def _get_header(vcs, diff_chunk):
@@ -537,11 +538,11 @@ def _get_header(vcs, diff_chunk):
         match = _hg_header_re.match(diff_chunk)
     if match is None:
         raise Exception('diff not recognized as valid %s diff' % vcs)
-    meta_info = match.groupdict()
+    meta_info = {k: None if v is None else safe_str(v) for k, v in match.groupdict().items()}
     rest = diff_chunk[match.end():]
-    if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
-        raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, diff_chunk[:match.end()], rest[:1000]))
-    diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
+    if rest and _header_next_check.match(rest):
+        raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, safe_str(bytes(diff_chunk[:match.end()])), safe_str(bytes(rest[:1000]))))
+    diff_lines = (_escaper(m.group(0)) for m in re.finditer(br'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
     return meta_info, diff_lines
 
 
@@ -559,7 +560,7 @@ def _parse_lines(diff_lines):
 
     chunks = []
     try:
-        line = diff_lines.next()
+        line = next(diff_lines)
 
         while True:
             lines = []
@@ -590,7 +591,7 @@ def _parse_lines(diff_lines):
                         'line':       line,
                     })
 
-            line = diff_lines.next()
+            line = next(diff_lines)
 
             while old_line < old_end or new_line < new_end:
                 if not line:
@@ -623,7 +624,7 @@ def _parse_lines(diff_lines):
                         'line':         line[1:],
                     })
 
-                line = diff_lines.next()
+                line = next(diff_lines)
 
                 if _newline_marker.match(line):
                     # we need to append to lines, since this is not
@@ -634,7 +635,7 @@ def _parse_lines(diff_lines):
                         'action':       'context',
                         'line':         line,
                     })
-                    line = diff_lines.next()
+                    line = next(diff_lines)
             if old_line > old_end:
                 raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
             if new_line > new_end:

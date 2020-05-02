@@ -44,7 +44,7 @@ class StreamFeeder(threading.Thread):
         if type(source) in (type(''), bytes, bytearray):  # string-like
             self.bytes = bytes(source)
         else:  # can be either file pointer or file-like
-            if type(source) in (int, long):  # file pointer it is
+            if isinstance(source, int):  # file pointer it is
                 # converting file descriptor (int) stdin into file-like
                 source = os.fdopen(source, 'rb', 16384)
             # let's see if source is file-like by now
@@ -125,11 +125,7 @@ class InputStreamChunker(threading.Thread):
             if len(t) > ccm:
                 kr.clear()
                 kr.wait(2)
-                # # this only works on 2.7.x and up
-                # if not kr.wait(10):
-                #     raise Exception("Timed out while waiting for input to be read.")
-                # instead we'll use this
-                if len(t) > ccm + 3:
+                if not kr.wait(10):
                     raise IOError(
                         "Timed out while waiting for input from subprocess.")
             t.append(b)
@@ -178,7 +174,7 @@ class BufferedGenerator(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         while not len(self.data) and not self.worker.EOF.is_set():
             self.worker.data_added.clear()
             self.worker.data_added.wait(0.2)
@@ -223,17 +219,6 @@ class BufferedGenerator(object):
     @property
     def reading_paused(self):
         return not self.worker.keep_reading.is_set()
-
-    @property
-    def done_reading_event(self):
-        """
-        Done_reading does not mean that the iterator's buffer is empty.
-        Iterator might have done reading from underlying source, but the read
-        chunks might still be available for serving through .next() method.
-
-        :returns: An threading.Event class instance.
-        """
-        return self.worker.EOF
 
     @property
     def done_reading(self):
@@ -286,7 +271,7 @@ class SubprocessIOChunker(object):
 
     - We are multithreaded. Writing in and reading out, err are all sep threads.
     - We support concurrent (in and out) stream processing.
-    - The output is not a stream. It's a queue of read string (bytes, not unicode)
+    - The output is not a stream. It's a queue of read string (bytes, not str)
       chunks. The object behaves as an iterable. You can "for chunk in obj:" us.
     - We are non-blocking in more respects than communicate()
       (reading from subprocess out pauses when internal buffer is full, but
@@ -367,18 +352,17 @@ class SubprocessIOChunker(object):
             and returncode != 0
         ): # and it failed
             bg_out.stop()
-            out = ''.join(bg_out)
+            out = b''.join(bg_out)
             bg_err.stop()
-            err = ''.join(bg_err)
-            if (err.strip() == 'fatal: The remote end hung up unexpectedly' and
-                out.startswith('0034shallow ')
+            err = b''.join(bg_err)
+            if (err.strip() == b'fatal: The remote end hung up unexpectedly' and
+                out.startswith(b'0034shallow ')
             ):
                 # hack inspired by https://github.com/schacon/grack/pull/7
                 bg_out = iter([out])
                 _p = None
             elif err:
-                raise EnvironmentError(
-                    "Subprocess exited due to an error:\n" + err)
+                raise EnvironmentError("Subprocess exited due to an error: %s" % err)
             else:
                 raise EnvironmentError(
                     "Subprocess exited with non 0 ret code: %s" % returncode)
@@ -390,7 +374,7 @@ class SubprocessIOChunker(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self.process:
             returncode = self.process.poll()
             if (returncode is not None # process has terminated
@@ -400,7 +384,7 @@ class SubprocessIOChunker(object):
                 self.error.stop()
                 err = ''.join(self.error)
                 raise EnvironmentError("Subprocess exited due to an error:\n" + err)
-        return self.output.next()
+        return next(self.output)
 
     def throw(self, type, value=None, traceback=None):
         if self.output.length or not self.output.done_reading:

@@ -80,8 +80,8 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 ${c.cs_pagination.pager()}
 
-        <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
-        <script type="text/javascript">
+        <script src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
+        <script>'use strict';
             var jsdata = ${h.js(c.jsdata)};
             var graph = new BranchRenderer('graph_canvas', 'graph_content', 'chg_');
 
@@ -90,7 +90,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 pyroutes.register('changeset_home', ${h.js(h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s'))}, ['repo_name', 'revision']);
 
-                var checkbox_checker = function(e) {
+                function checkbox_checker() {
                     var $checked_checkboxes = $checkboxes.filter(':checked');
                     var $singlerange = $('#singlerange');
 
@@ -163,7 +163,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         $('#compare_fork').show();
                         $checkboxes.closest('tr').removeClass('out-of-range');
                     }
-                };
+                }
                 checkbox_checker();
                 $checkboxes.click(function() {
                     checkbox_checker();
@@ -171,7 +171,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 });
                 $('#singlerange').click(checkbox_checker);
 
-                $('#rev_range_clear').click(function(e){
+                $('#rev_range_clear').click(function(){
                     $checkboxes.prop('checked', false);
                     checkbox_checker();
                     graph.render(jsdata);

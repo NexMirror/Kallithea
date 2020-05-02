@@ -28,6 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
+import celery.result
 import formencode
 from formencode import htmlfill
 from tg import request
@@ -35,6 +36,7 @@ from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPForbidden, HTTPFound, HTTPInternalServerError, HTTPNotFound
 
+import kallithea
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasPermissionAny, HasRepoPermissionLevelDecorator, LoginRequired, NotAnonymous
@@ -43,7 +45,7 @@ from kallithea.lib.exceptions import AttachedForksError
 from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import safe_int
 from kallithea.lib.vcs import RepositoryError
-from kallithea.model.db import RepoGroup, Repository, RepositoryField, Setting, User, UserFollowing
+from kallithea.model.db import RepoGroup, Repository, RepositoryField, Setting, UserFollowing
 from kallithea.model.forms import RepoFieldForm, RepoForm, RepoPermsForm
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -110,17 +112,11 @@ class ReposController(BaseRepoController):
     @NotAnonymous()
     def create(self):
         self.__load_defaults()
-        form_result = {}
         try:
             # CanWriteGroup validators checks permissions of this POST
             form_result = RepoForm(repo_groups=c.repo_groups,
                                    landing_revs=c.landing_revs_choices)() \
                             .to_python(dict(request.POST))
-
-            # create is done sometimes async on celery, db transaction
-            # management is handled there.
-            task = RepoModel().create(form_result, request.authuser.user_id)
-            task_id = task.task_id
         except formencode.Invalid as errors:
             log.info(errors)
             return htmlfill.render(
@@ -131,6 +127,11 @@ class ReposController(BaseRepoController):
                 force_defaults=False,
                 encoding="UTF-8")
 
+        try:
+            # create is done sometimes async on celery, db transaction
+            # management is handled there.
+            task = RepoModel().create(form_result, request.authuser.user_id)
+            task_id = task.task_id
         except Exception:
             log.error(traceback.format_exc())
             msg = (_('Error creating repository %s')
@@ -181,12 +182,10 @@ class ReposController(BaseRepoController):
         task_id = request.GET.get('task_id')
 
         if task_id and task_id not in ['None']:
-            from kallithea import CELERY_ON
-            from kallithea.lib import celerypylons
-            if CELERY_ON:
-                task = celerypylons.result.AsyncResult(task_id)
-                if task.failed():
-                    raise HTTPInternalServerError(task.traceback)
+            if kallithea.CELERY_APP:
+                task_result = celery.result.AsyncResult(task_id, app=kallithea.CELERY_APP)
+                if task_result.failed():
+                    raise HTTPInternalServerError(task_result.traceback)
 
         repo = Repository.get_by_repo_name(repo_name)
         if repo and repo.repo_state == Repository.STATE_CREATED:
@@ -406,7 +405,7 @@ class ReposController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('admin')
     def edit_advanced(self, repo_name):
         c.repo_info = self._load_repo()
-        c.default_user_id = User.get_default_user().user_id
+        c.default_user_id = kallithea.DEFAULT_USER_ID
         c.in_public_journal = UserFollowing.query() \
             .filter(UserFollowing.user_id == c.default_user_id) \
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
@@ -443,7 +442,7 @@ class ReposController(BaseRepoController):
 
         try:
             repo_id = Repository.get_by_repo_name(repo_name).repo_id
-            user_id = User.get_default_user().user_id
+            user_id = kallithea.DEFAULT_USER_ID
             self.scm_model.toggle_following_repo(repo_id, user_id)
             h.flash(_('Updated repository visibility in public journal'),
                     category='success')
@@ -471,31 +470,13 @@ class ReposController(BaseRepoController):
                     category='success')
         except RepositoryError as e:
             log.error(traceback.format_exc())
-            h.flash(str(e), category='error')
+            h.flash(e, category='error')
         except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during this operation'),
                     category='error')
 
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
-
-    @HasRepoPermissionLevelDecorator('admin')
-    def edit_caches(self, repo_name):
-        c.repo_info = self._load_repo()
-        c.active = 'caches'
-        if request.POST:
-            try:
-                ScmModel().mark_for_invalidation(repo_name)
-                Session().commit()
-                h.flash(_('Cache invalidation successful'),
-                        category='success')
-            except Exception as e:
-                log.error(traceback.format_exc())
-                h.flash(_('An error occurred during cache invalidation'),
-                        category='error')
-
-            raise HTTPFound(location=url('edit_repo_caches', repo_name=c.repo_name))
-        return render('admin/repos/repo_edit.html')
 
     @HasRepoPermissionLevelDecorator('admin')
     def edit_remote(self, repo_name):

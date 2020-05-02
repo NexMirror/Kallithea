@@ -5,7 +5,7 @@ from kallithea.config.conf import INDEX_FILENAMES
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture, create_test_index
 
 
@@ -39,12 +39,12 @@ def init_stopword_test(repo):
 
 repos = [
     # reponame,              init func or fork base, groupname
-    (u'indexing_test',       init_indexing_test,     None),
-    (u'indexing_test-fork',  u'indexing_test',       None),
-    (u'group/indexing_test', u'indexing_test',       u'group'),
-    (u'this-is-it',          u'indexing_test',       None),
-    (u'indexing_test-foo',   u'indexing_test',       None),
-    (u'stopword_test',       init_stopword_test,     None),
+    ('indexing_test',       init_indexing_test,     None),
+    ('indexing_test-fork',  'indexing_test',       None),
+    ('group/indexing_test', 'indexing_test',       'group'),
+    ('this-is-it',          'indexing_test',       None),
+    ('indexing_test-foo',   'indexing_test',       None),
+    ('stopword_test',       init_stopword_test,     None),
 ]
 
 
@@ -66,10 +66,10 @@ def rebuild_index(full_index):
         # (FYI, ENOMEM occurs at forking "git" with python 2.7.3,
         # Linux 3.2.78-1 x86_64, 3GB memory, and no ulimit
         # configuration for memory)
-        create_test_index(TESTS_TMP_PATH, CONFIG, full_index=full_index)
+        create_test_index(base.TESTS_TMP_PATH, CONFIG, full_index=full_index)
 
 
-class TestSearchControllerIndexing(TestController):
+class TestSearchControllerIndexing(base.TestController):
     @classmethod
     def setup_class(cls):
         for reponame, init_or_fork, groupname in repos:
@@ -108,15 +108,15 @@ class TestSearchControllerIndexing(TestController):
 
         rebuild_index(full_index=True) # rebuild fully for subsequent tests
 
-    @parametrize('reponame', [
-        (u'indexing_test'),
-        (u'indexing_test-fork'),
-        (u'group/indexing_test'),
-        (u'this-is-it'),
-        (u'*-fork'),
-        (u'group/*'),
+    @base.parametrize('reponame', [
+        ('indexing_test'),
+        ('indexing_test-fork'),
+        ('group/indexing_test'),
+        ('this-is-it'),
+        ('*-fork'),
+        ('group/*'),
     ])
-    @parametrize('searchtype,query,hit', [
+    @base.parametrize('searchtype,query,hit', [
         ('content', 'this_should_be_unique_content', 1),
         ('commit', 'this_should_be_unique_commit_log', 1),
         ('path', 'this_should_be_unique_filename.txt', 1),
@@ -125,17 +125,17 @@ class TestSearchControllerIndexing(TestController):
         self.log_user()
 
         q = 'repository:%s %s' % (reponame, query)
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': q, 'type': searchtype})
         response.mustcontain('>%d results' % hit)
 
-    @parametrize('reponame', [
-        (u'indexing_test'),
-        (u'indexing_test-fork'),
-        (u'group/indexing_test'),
-        (u'this-is-it'),
+    @base.parametrize('reponame', [
+        ('indexing_test'),
+        ('indexing_test-fork'),
+        ('group/indexing_test'),
+        ('this-is-it'),
     ])
-    @parametrize('searchtype,query,hit', [
+    @base.parametrize('searchtype,query,hit', [
         ('content', 'this_should_be_unique_content', 1),
         ('commit', 'this_should_be_unique_commit_log', 1),
         ('path', 'this_should_be_unique_filename.txt', 1),
@@ -143,12 +143,12 @@ class TestSearchControllerIndexing(TestController):
     def test_searching_under_repository(self, reponame, searchtype, query, hit):
         self.log_user()
 
-        response = self.app.get(url(controller='search', action='index',
+        response = self.app.get(base.url(controller='search', action='index',
                                     repo_name=reponame),
                                 {'q': query, 'type': searchtype})
         response.mustcontain('>%d results' % hit)
 
-    @parametrize('searchtype,query,hit', [
+    @base.parametrize('searchtype,query,hit', [
         ('content', 'path:this/is/it def test', 1),
         ('commit', 'added:this/is/it bother to ask where', 1),
         # this condition matches against files below, because
@@ -161,12 +161,12 @@ class TestSearchControllerIndexing(TestController):
         ('path', 'extension:us', 1),
     ])
     def test_filename_stopword(self, searchtype, query, hit):
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': query, 'type': searchtype})
 
         response.mustcontain('>%d results' % hit)
 
-    @parametrize('searchtype,query,hit', [
+    @base.parametrize('searchtype,query,hit', [
         # matching against both 2 files
         ('content', 'owner:"this is it"', 0),
         ('content', 'owner:this-is-it', 0),
@@ -182,7 +182,7 @@ class TestSearchControllerIndexing(TestController):
         ('commit', 'author:"this-is-it"', 1),
     ])
     def test_mailaddr_stopword(self, searchtype, query, hit):
-        response = self.app.get(url(controller='search', action='index'),
+        response = self.app.get(base.url(controller='search', action='index'),
                                 {'q': query, 'type': searchtype})
 
         response.mustcontain('>%d results' % hit)

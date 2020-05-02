@@ -23,7 +23,6 @@ Original author and date, and relevant copyright and licensing information is be
 :author: marcink
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
-
 """
 
 import logging
@@ -35,12 +34,11 @@ from sqlalchemy.orm import joinedload
 from tg import request, response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 from webob.exc import HTTPBadRequest
 
 import kallithea.lib.helpers as h
-from kallithea.config.routing import url
 from kallithea.controllers.admin.admin import _journal_filter
+from kallithea.lib import feeds
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.page import Page
@@ -105,89 +103,64 @@ class JournalController(BaseController):
 
         return journal
 
-    def _atom_feed(self, repos, public=True):
+    def _feed(self, repos, feeder, link, desc):
+        response.content_type = feeder.content_type
         journal = self._get_journal_data(repos)
+
+        header = dict(
+            title=desc,
+            link=link,
+            description=desc,
+        )
+
+        entries=[]
+        for entry in journal[:feed_nr]:
+            user = entry.user
+            if user is None:
+                # fix deleted users
+                user = AttributeDict({'short_contact': entry.username,
+                                      'email': '',
+                                      'full_contact': ''})
+            action, action_extra, ico = h.action_parser(entry, feed=True)
+            title = "%s - %s %s" % (user.short_contact, action(),
+                                    entry.repository.repo_name)
+            _url = None
+            if entry.repository is not None:
+                _url = h.canonical_url('changelog_home',
+                           repo_name=entry.repository.repo_name)
+
+            entries.append(dict(
+                title=title,
+                pubdate=entry.action_date,
+                link=_url or h.canonical_url(''),
+                author_email=user.email,
+                author_name=user.full_name_or_username,
+                description=action_extra(),
+            ))
+
+        return feeder.render(header, entries)
+
+    def _atom_feed(self, repos, public=True):
         if public:
-            _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
+            link = h.canonical_url('public_journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'atom feed')
         else:
-            _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'atom feed')
+            link = h.canonical_url('journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Journal'), 'atom feed')
 
-        feed = Atom1Feed(title=_desc,
-                         link=_link,
-                         description=_desc,
-                         language=language,
-                         ttl=ttl)
-
-        for entry in journal[:feed_nr]:
-            user = entry.user
-            if user is None:
-                # fix deleted users
-                user = AttributeDict({'short_contact': entry.username,
-                                      'email': '',
-                                      'full_contact': ''})
-            action, action_extra, ico = h.action_parser(entry, feed=True)
-            title = "%s - %s %s" % (user.short_contact, action(),
-                                    entry.repository.repo_name)
-            desc = action_extra()
-            _url = None
-            if entry.repository is not None:
-                _url = h.canonical_url('changelog_home',
-                           repo_name=entry.repository.repo_name)
-
-            feed.add_item(title=title,
-                          pubdate=entry.action_date,
-                          link=_url or h.canonical_url(''),
-                          author_email=user.email,
-                          author_name=user.full_contact,
-                          description=desc)
-
-        response.content_type = feed.mime_type
-        return feed.writeString('utf-8')
+        return self._feed(repos, feeds.AtomFeed, link, desc)
 
     def _rss_feed(self, repos, public=True):
-        journal = self._get_journal_data(repos)
         if public:
-            _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
+            link = h.canonical_url('public_journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'rss feed')
         else:
-            _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'rss feed')
+            link = h.canonical_url('journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Journal'), 'rss feed')
 
-        feed = Rss201rev2Feed(title=_desc,
-                         link=_link,
-                         description=_desc,
-                         language=language,
-                         ttl=ttl)
-
-        for entry in journal[:feed_nr]:
-            user = entry.user
-            if user is None:
-                # fix deleted users
-                user = AttributeDict({'short_contact': entry.username,
-                                      'email': '',
-                                      'full_contact': ''})
-            action, action_extra, ico = h.action_parser(entry, feed=True)
-            title = "%s - %s %s" % (user.short_contact, action(),
-                                    entry.repository.repo_name)
-            desc = action_extra()
-            _url = None
-            if entry.repository is not None:
-                _url = h.canonical_url('changelog_home',
-                           repo_name=entry.repository.repo_name)
-
-            feed.add_item(title=title,
-                          pubdate=entry.action_date,
-                          link=_url or h.canonical_url(''),
-                          author_email=user.email,
-                          author_name=user.full_contact,
-                          description=desc)
-
-        response.content_type = feed.mime_type
-        return feed.writeString('utf-8')
+        return self._feed(repos, feeds.RssFeed, link, desc)
 
     @LoginRequired()
     def index(self):
@@ -201,10 +174,8 @@ class JournalController(BaseController):
 
         journal = self._get_journal_data(c.following)
 
-        def url_generator(**kw):
-            return url.current(filter=c.search_term, **kw)
-
-        c.journal_pager = Page(journal, page=p, items_per_page=20, url=url_generator)
+        c.journal_pager = Page(journal, page=p, items_per_page=20,
+                               filter=c.search_term)
         c.journal_day_aggregate = self._get_daily_aggregate(c.journal_pager)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
@@ -221,9 +192,7 @@ class JournalController(BaseController):
 
     @LoginRequired()
     def journal_atom(self):
-        """
-        Produce an atom-1.0 feed via feedgenerator module
-        """
+        """Produce a simple atom-1.0 feed"""
         following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
@@ -232,9 +201,7 @@ class JournalController(BaseController):
 
     @LoginRequired()
     def journal_rss(self):
-        """
-        Produce an rss feed via feedgenerator module
-        """
+        """Produce a simple rss2 feed"""
         following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
@@ -290,9 +257,7 @@ class JournalController(BaseController):
 
     @LoginRequired(allow_default_user=True)
     def public_journal_atom(self):
-        """
-        Produce an atom-1.0 feed via feedgenerator module
-        """
+        """Produce a simple atom-1.0 feed"""
         c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
@@ -302,9 +267,7 @@ class JournalController(BaseController):
 
     @LoginRequired(allow_default_user=True)
     def public_journal_rss(self):
-        """
-        Produce an rss2 feed via feedgenerator module
-        """
+        """Produce a simple rss2 feed"""
         c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \

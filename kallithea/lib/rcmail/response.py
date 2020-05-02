@@ -44,7 +44,9 @@ from email.utils import parseaddr
 
 ADDRESS_HEADERS_WHITELIST = ['From', 'To', 'Delivered-To', 'Cc']
 DEFAULT_ENCODING = "utf-8"
-VALUE_IS_EMAIL_ADDRESS = lambda v: '@' in v
+
+def VALUE_IS_EMAIL_ADDRESS(v):
+    return '@' in v
 
 
 def normalize_header(header):
@@ -87,7 +89,7 @@ class MailBase(object):
     def __delitem__(self, key):
         del self.headers[normalize_header(key)]
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.body is not None or len(self.headers) > 0 or len(self.parts) > 0
 
     def keys(self):
@@ -339,20 +341,20 @@ def to_message(mail, separator="; "):
 
     try:
         out = MIMEPart(ctype, **params)
-    except TypeError as exc:  # pragma: no cover
+    except TypeError as e:  # pragma: no cover
         raise EncodingError("Content-Type malformed, not allowed: %r; "
-                            "%r (Python ERROR: %s" %
-                            (ctype, params, exc.message))
+                            "%r (Python ERROR: %s)" %
+                            (ctype, params, e.args[0]))
 
     for k in mail.keys():
         if k in ADDRESS_HEADERS_WHITELIST:
-            out[k.encode('ascii')] = header_to_mime_encoding(
+            out[k] = header_to_mime_encoding(
                                          mail[k],
                                          not_email=False,
                                          separator=separator
                                      )
         else:
-            out[k.encode('ascii')] = header_to_mime_encoding(
+            out[k] = header_to_mime_encoding(
                                          mail[k],
                                          not_email=True
                                     )
@@ -392,7 +394,7 @@ class MIMEPart(MIMEBase):
         if mail.body is None:
             return  # only None, '' is still ok
 
-        ctype, ctype_params = mail.content_encoding['Content-Type']
+        ctype, _ctype_params = mail.content_encoding['Content-Type']
         cdisp, cdisp_params = mail.content_encoding['Content-Disposition']
 
         assert ctype, ("Extract payload requires that mail.content_encoding "
@@ -422,7 +424,7 @@ def header_to_mime_encoding(value, not_email=False, separator=", "):
         return ""
 
     encoder = Charset(DEFAULT_ENCODING)
-    if type(value) == list:
+    if isinstance(value, list):
         return separator.join(properly_encode_header(
             v, encoder, not_email) for v in value)
     else:
@@ -443,12 +445,12 @@ def properly_encode_header(value, encoder, not_email):
     check different, then change this.
     """
     try:
-        return value.encode("ascii")
-    except UnicodeEncodeError:
+        value.encode("ascii")
+        return value
+    except UnicodeError:
         if not not_email and VALUE_IS_EMAIL_ADDRESS(value):
             # this could have an email address, make sure we don't screw it up
             name, address = parseaddr(value)
-            return '"%s" <%s>' % (
-                encoder.header_encode(name.encode("utf-8")), address)
+            return '"%s" <%s>' % (encoder.header_encode(name), address)
 
-        return encoder.header_encode(value.encode("utf-8"))
+        return encoder.header_encode(value)

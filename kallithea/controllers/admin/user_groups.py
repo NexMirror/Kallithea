@@ -32,19 +32,18 @@ import formencode
 from formencode import htmlfill
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import func
-from tg import app_globals, config, request
+from tg import app_globals, request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPInternalServerError
 
-import kallithea
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasPermissionAnyDecorator, HasUserGroupPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.exceptions import RepoGroupAssignmentError, UserGroupsAssignedException
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import safe_int, safe_unicode
+from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.model.db import User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm
 from kallithea.model.forms import CustomDefaultPermissionsForm, UserGroupForm, UserGroupPermsForm
 from kallithea.model.meta import Session
@@ -61,7 +60,6 @@ class UserGroupsController(BaseController):
     @LoginRequired(allow_default_user=True)
     def _before(self, *args, **kwargs):
         super(UserGroupsController, self)._before(*args, **kwargs)
-        c.available_permissions = config['available_permissions']
 
     def __load_data(self, user_group_id):
         c.group_members_obj = sorted((x.user for x in c.user_group.members),
@@ -88,20 +86,18 @@ class UserGroupsController(BaseController):
                         .all()
         group_iter = UserGroupList(_list, perm_level='admin')
         user_groups_data = []
-        total_records = len(group_iter)
         _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
-        user_group_name = lambda user_group_id, user_group_name: (
-            template.get_def("user_group_name")
-            .render(user_group_id, user_group_name, _=_, h=h, c=c)
-        )
-        user_group_actions = lambda user_group_id, user_group_name: (
-            template.get_def("user_group_actions")
-            .render(user_group_id, user_group_name, _=_, h=h, c=c)
-        )
-        for user_gr in group_iter:
+        def user_group_name(user_group_id, user_group_name):
+            return template.get_def("user_group_name") \
+                .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
 
+        def user_group_actions(user_group_id, user_group_name):
+            return template.get_def("user_group_actions") \
+                .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
+
+        for user_gr in group_iter:
             user_groups_data.append({
                 "raw_name": user_gr.users_group_name,
                 "group_name": user_group_name(user_gr.users_group_id,
@@ -163,7 +159,7 @@ class UserGroupsController(BaseController):
         c.active = 'settings'
         self.__load_data(id)
 
-        available_members = [safe_unicode(x[0]) for x in c.available_members]
+        available_members = [safe_str(x[0]) for x in c.available_members]
 
         users_group_form = UserGroupForm(edit=True,
                                          old_data=c.user_group.get_dict(),

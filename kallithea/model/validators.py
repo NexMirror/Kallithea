@@ -30,9 +30,10 @@ from tg.i18n import ugettext as _
 from kallithea.config.routing import ADMIN_PREFIX
 from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel
 from kallithea.lib.compat import OrderedSet
-from kallithea.lib.exceptions import LdapImportError
+from kallithea.lib.exceptions import InvalidCloneUriException, LdapImportError
 from kallithea.lib.utils import is_valid_repo_uri
 from kallithea.lib.utils2 import aslist, repo_name_slug, str2bool
+from kallithea.model import db
 from kallithea.model.db import RepoGroup, Repository, User, UserGroup
 
 
@@ -186,11 +187,7 @@ def ValidRepoGroup(edit=False, old_data=None):
             slug = repo_name_slug(group_name)
 
             # check for parent of self
-            parent_of_self = lambda: (
-                old_data['group_id'] == parent_group_id
-                if parent_group_id else False
-            )
-            if edit and parent_of_self():
+            if edit and parent_group_id and old_data['group_id'] == parent_group_id:
                 msg = self.message('parent_group_id', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(parent_group_id=msg)
@@ -235,7 +232,7 @@ def ValidPassword():
 
         def _validate_python(self, value, state):
             try:
-                (value or '').decode('ascii')
+                (value or '').encode('ascii')
             except UnicodeError:
                 msg = self.message('invalid_password', state)
                 raise formencode.Invalid(msg, value, state,)
@@ -276,7 +273,7 @@ def ValidPasswordsMatch(password_field, password_confirmation_field):
 def ValidAuth():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_auth': _(u'Invalid username or password'),
+            'invalid_auth': _('Invalid username or password'),
         }
 
         def _validate_python(self, value, state):
@@ -329,7 +326,7 @@ def ValidRepoName(edit=False, old_data=None):
                 # value needs to be aware of group name in order to check
                 # db key This is an actual just the name to store in the
                 # database
-                repo_name_full = group_path + RepoGroup.url_sep() + repo_name
+                repo_name_full = group_path + db.URL_SEP + repo_name
             else:
                 group_name = group_path = ''
                 repo_name_full = repo_name
@@ -412,9 +409,9 @@ def ValidCloneUri():
 
             if url and url != value.get('clone_uri_hidden'):
                 try:
-                    is_valid_repo_uri(repo_type, url, make_ui(clear_session=False))
-                except Exception:
-                    log.exception('URL validation failed')
+                    is_valid_repo_uri(repo_type, url, make_ui())
+                except InvalidCloneUriException as e:
+                    log.warning('validation of clone URL %r failed: %s', url, e)
                     msg = self.message('clone_uri', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(clone_uri=msg)
@@ -544,7 +541,7 @@ def ValidPerms(type_='repo'):
 
             # CLEAN OUT ORG VALUE FROM NEW MEMBERS, and group them using
             new_perms_group = defaultdict(dict)
-            for k, v in value.copy().iteritems():
+            for k, v in value.copy().items():
                 if k.startswith('perm_new_member'):
                     del value[k]
                     _type, part = k.split('perm_new_member_')
@@ -556,26 +553,26 @@ def ValidPerms(type_='repo'):
                         new_perms_group[pos][_key] = v
 
             # fill new permissions in order of how they were added
-            for k in sorted(map(int, new_perms_group.keys())):
-                perm_dict = new_perms_group[str(k)]
+            for k in sorted(new_perms_group, key=lambda k: int(k)):
+                perm_dict = new_perms_group[k]
                 new_member = perm_dict.get('name')
                 new_perm = perm_dict.get('perm')
                 new_type = perm_dict.get('type')
                 if new_member and new_perm and new_type:
                     perms_new.add((new_member, new_perm, new_type))
 
-            for k, v in value.iteritems():
+            for k, v in value.items():
                 if k.startswith('u_perm_') or k.startswith('g_perm_'):
-                    member = k[7:]
+                    member_name = k[7:]
                     t = {'u': 'user',
                          'g': 'users_group'
                     }[k[0]]
-                    if member == User.DEFAULT_USER:
+                    if member_name == User.DEFAULT_USER_NAME:
                         if str2bool(value.get('repo_private')):
                             # set none for default when updating to
                             # private repo protects against form manipulation
                             v = EMPTY_PERM
-                    perms_update.add((member, v, t))
+                    perms_update.add((member_name, v, t))
 
             value['perms_updates'] = list(perms_update)
             value['perms_new'] = list(perms_new)
@@ -584,16 +581,16 @@ def ValidPerms(type_='repo'):
             for k, v, t in perms_new:
                 try:
                     if t == 'user':
-                        self.user_db = User.query() \
+                        _user_db = User.query() \
                             .filter(User.active == True) \
                             .filter(User.username == k).one()
                     if t == 'users_group':
-                        self.user_db = UserGroup.query() \
+                        _user_db = UserGroup.query() \
                             .filter(UserGroup.users_group_active == True) \
                             .filter(UserGroup.users_group_name == k).one()
 
-                except Exception:
-                    log.exception('Updated permission failed')
+                except Exception as e:
+                    log.warning('Error validating %s permission %s', t, k)
                     msg = self.message('perm_new_member_type', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(perm_new_member_name=msg)
@@ -782,7 +779,7 @@ def ValidAuthPlugins():
 
         def _convert_to_python(self, value, state):
             # filter empty values
-            return filter(lambda s: s not in [None, ''], value)
+            return [s for s in value if s not in [None, '']]
 
         def _validate_python(self, value, state):
             from kallithea.lib import auth_modules

@@ -73,10 +73,8 @@ class PermissionModel(object):
             return '.'.join(perm_name.split('.')[:1])
 
         perms = UserToPerm.query().filter(UserToPerm.user == user).all()
-        defined_perms_groups = map(_get_group,
-                                (x.permission.permission_name for x in perms))
+        defined_perms_groups = set(_get_group(x.permission.permission_name) for x in perms)
         log.debug('GOT ALREADY DEFINED:%s', perms)
-        DEFAULT_PERMS = Permission.DEFAULT_USER_PERMISSIONS
 
         if force:
             for perm in perms:
@@ -85,7 +83,7 @@ class PermissionModel(object):
             defined_perms_groups = []
         # For every default permission that needs to be created, we check if
         # its group is already defined. If it's not, we create default permission.
-        for perm_name in DEFAULT_PERMS:
+        for perm_name in Permission.DEFAULT_USER_PERMISSIONS:
             gr = _get_group(perm_name)
             if gr not in defined_perms_groups:
                 log.debug('GR:%s not found, creating permission %s',

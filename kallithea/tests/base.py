@@ -22,7 +22,7 @@ import time
 import pytest
 from webtest import TestApp
 
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import ascii_str
 from kallithea.model.db import User
 
 
@@ -66,17 +66,17 @@ TEST_USER_REGULAR2_EMAIL = 'test_regular2@example.com'
 
 IP_ADDR = '127.0.0.127'
 
-HG_REPO = u'vcs_test_hg'
-GIT_REPO = u'vcs_test_git'
+HG_REPO = 'vcs_test_hg'
+GIT_REPO = 'vcs_test_git'
 
-NEW_HG_REPO = u'vcs_test_hg_new'
-NEW_GIT_REPO = u'vcs_test_git_new'
+NEW_HG_REPO = 'vcs_test_hg_new'
+NEW_GIT_REPO = 'vcs_test_git_new'
 
-HG_FORK = u'vcs_test_hg_fork'
-GIT_FORK = u'vcs_test_git_fork'
+HG_FORK = 'vcs_test_hg_fork'
+GIT_FORK = 'vcs_test_git_fork'
 
-HG_TEST_REVISION = u"a53d9201d4bc278910d416d94941b7ea007ecd52"
-GIT_TEST_REVISION = u"7ab37bc680b4aa72c34d07b230c866c28e9fc204"
+HG_TEST_REVISION = "a53d9201d4bc278910d416d94941b7ea007ecd52"
+GIT_TEST_REVISION = "7ab37bc680b4aa72c34d07b230c866c28e9fc204"
 
 
 ## VCS
@@ -156,7 +156,7 @@ class TestController(object):
                                   'password': password,
                                   '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
-        if 'Invalid username or password' in response.body:
+        if b'Invalid username or password' in response.body:
             pytest.fail('could not login using %s %s' % (username, password))
 
         assert response.status == '302 Found'
@@ -176,20 +176,19 @@ class TestController(object):
         assert user == expected_username
 
     def session_csrf_secret_token(self):
-        return self.app.get(url('session_csrf_secret_token')).body
+        return ascii_str(self.app.get(url('session_csrf_secret_token')).body)
 
     def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:
-            pytest.fail(safe_str(u'msg `%s` not found - session has no flash:\n%s' % (msg, response)))
+            pytest.fail('msg `%s` not found - session has no flash:\n%s' % (msg, response))
         try:
             level, m = response.session['flash'][-1 - skip]
             if _matcher(msg, m):
                 return
         except IndexError:
             pass
-        pytest.fail(safe_str(u'msg `%s` not found in session flash (skipping %s): %s' %
-                           (msg, skip,
-                            ', '.join('`%s`' % m for level, m in response.session['flash']))))
+        pytest.fail('msg `%s` not found in session flash (skipping %s): %s' %
+                    (msg, skip, ', '.join('`%s`' % m for level, m in response.session['flash'])))
 
     def checkSessionFlashRegex(self, response, regex, skip=0):
         self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)

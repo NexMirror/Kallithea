@@ -22,8 +22,8 @@ class _AuthLdapMock():
         pass
 
     def authenticate_ldap(self, username, password):
-        return 'spam dn', dict(test_ldap_firstname=[u'spam ldap first name'],
-                               test_ldap_lastname=[u'spam ldap last name'],
+        return 'spam dn', dict(test_ldap_firstname=['spam ldap first name'],
+                               test_ldap_lastname=['spam ldap last name'],
                                test_ldap_email=['spam ldap email'])
 
 
@@ -39,8 +39,8 @@ def test_update_user_attributes_from_ldap(monkeypatch, create_test_user,
     user_input = dict(username='test-user-{0}'.format(uniqifier),
                       password='spam password',
                       email='spam-email-{0}'.format(uniqifier),
-                      firstname=u'spam first name',
-                      lastname=u'spam last name',
+                      firstname='spam first name',
+                      lastname='spam last name',
                       active=True,
                       admin=False)
     user = create_test_user(user_input)
@@ -54,14 +54,14 @@ def test_update_user_attributes_from_ldap(monkeypatch, create_test_user,
     # Verify that authenication succeeded and retrieved correct attributes
     # from LDAP.
     assert user_data is not None
-    assert user_data.get('firstname') == u'spam ldap first name'
-    assert user_data.get('lastname') == u'spam ldap last name'
+    assert user_data.get('firstname') == 'spam ldap first name'
+    assert user_data.get('lastname') == 'spam ldap last name'
     assert user_data.get('email') == 'spam ldap email'
 
     # Verify that authentication overwrote user attributes with the ones
     # retrieved from LDAP.
-    assert user.firstname == u'spam ldap first name'
-    assert user.lastname == u'spam ldap last name'
+    assert user.firstname == 'spam ldap first name'
+    assert user.lastname == 'spam ldap last name'
     assert user.email == 'spam ldap email'
 
 
@@ -83,16 +83,16 @@ def test_init_user_attributes_from_ldap(monkeypatch, arrange_ldap_auth):
     # Verify that authenication succeeded and retrieved correct attributes
     # from LDAP.
     assert user_data is not None
-    assert user_data.get('firstname') == u'spam ldap first name'
-    assert user_data.get('lastname') == u'spam ldap last name'
+    assert user_data.get('firstname') == 'spam ldap first name'
+    assert user_data.get('lastname') == 'spam ldap last name'
     assert user_data.get('email') == 'spam ldap email'
 
     # Verify that authentication created new user with attributes
     # retrieved from LDAP.
     new_user = User.get_by_username(username)
     assert new_user is not None
-    assert new_user.firstname == u'spam ldap first name'
-    assert new_user.lastname == u'spam ldap last name'
+    assert new_user.firstname == 'spam ldap first name'
+    assert new_user.lastname == 'spam ldap last name'
     assert new_user.email == 'spam ldap email'
 
 
@@ -126,14 +126,14 @@ def test_init_user_attributes_from_ldap_with_missing_email(monkeypatch,
     # Verify that authenication succeeded and retrieved correct attributes
     # from LDAP, with empty email.
     assert user_data is not None
-    assert user_data.get('firstname') == u'spam ldap first name'
-    assert user_data.get('lastname') == u'spam ldap last name'
+    assert user_data.get('firstname') == 'spam ldap first name'
+    assert user_data.get('lastname') == 'spam ldap last name'
     assert user_data.get('email') == ''
 
     # Verify that authentication created new user with attributes
     # retrieved from LDAP, with email == None.
     new_user = User.get_by_username(username)
     assert new_user is not None
-    assert new_user.firstname == u'spam ldap first name'
-    assert new_user.lastname == u'spam ldap last name'
+    assert new_user.firstname == 'spam ldap first name'
+    assert new_user.lastname == 'spam ldap last name'
     assert new_user.email is None

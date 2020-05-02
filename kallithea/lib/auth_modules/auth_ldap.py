@@ -31,7 +31,7 @@ import logging
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import hybrid_property
 from kallithea.lib.exceptions import LdapConnectionError, LdapImportError, LdapPasswordError, LdapUsernameError
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils2 import safe_str
 
 
 log = logging.getLogger(__name__)
@@ -70,11 +70,11 @@ class AuthLdap(object):
                             port)
             for host in server.split(',')))
 
-        self.LDAP_BIND_DN = safe_str(bind_dn)
-        self.LDAP_BIND_PASS = safe_str(bind_pass)
+        self.LDAP_BIND_DN = bind_dn
+        self.LDAP_BIND_PASS = bind_pass
 
-        self.BASE_DN = safe_str(base_dn)
-        self.LDAP_FILTER = safe_str(ldap_filter)
+        self.BASE_DN = base_dn
+        self.LDAP_FILTER = ldap_filter
         self.SEARCH_SCOPE = getattr(ldap, 'SCOPE_%s' % search_scope)
         self.attr_login = attr_login
 
@@ -139,7 +139,7 @@ class AuthLdap(object):
 
                 try:
                     log.debug('Trying simple bind with %s', dn)
-                    server.simple_bind_s(dn, safe_str(password))
+                    server.simple_bind_s(dn, password)
                     results = server.search_ext_s(dn, ldap.SCOPE_BASE,
                                                   '(objectClass=*)')
                     if len(results) == 1:
@@ -328,7 +328,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             (user_dn, ldap_attrs) = aldap.authenticate_ldap(username, password)
             log.debug('Got ldap DN response %s', user_dn)
 
-            get_ldap_attr = lambda k: ldap_attrs.get(settings.get(k), [''])[0]
+            def get_ldap_attr(k):
+                return safe_str(ldap_attrs.get(settings.get(k), [b''])[0])
 
             # old attrs fetched from Kallithea database
             admin = getattr(userobj, 'admin', False)
@@ -338,8 +339,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
             user_data = {
                 'username': username,
-                'firstname': safe_unicode(get_ldap_attr('attr_firstname') or firstname),
-                'lastname': safe_unicode(get_ldap_attr('attr_lastname') or lastname),
+                'firstname': get_ldap_attr('attr_firstname') or firstname,
+                'lastname': get_ldap_attr('attr_lastname') or lastname,
                 'groups': [],
                 'email': get_ldap_attr('attr_email') or email,
                 'admin': admin,

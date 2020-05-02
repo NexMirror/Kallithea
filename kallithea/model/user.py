@@ -36,9 +36,8 @@ from sqlalchemy.exc import DatabaseError
 from tg import config
 from tg.i18n import ugettext as _
 
-from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import DefaultUserException, UserOwnsReposException
-from kallithea.lib.utils2 import generate_api_key, get_current_authuser, safe_unicode
+from kallithea.lib.utils2 import generate_api_key, get_current_authuser
 from kallithea.model.db import Permission, User, UserEmailMap, UserIpMap, UserToPerm
 from kallithea.model.meta import Session
 
@@ -49,11 +48,8 @@ log = logging.getLogger(__name__)
 class UserModel(object):
     password_reset_token_lifetime = 86400 # 24 hours
 
-    def get(self, user_id, cache=False):
+    def get(self, user_id):
         user = User.query()
-        if cache:
-            user = user.options(FromCache("sql_cache_short",
-                                          "get_user_%s" % user_id))
         return user.get(user_id)
 
     def get_user(self, user):
@@ -94,8 +90,8 @@ class UserModel(object):
         log_create_user(new_user.get_dict(), cur_user)
         return new_user
 
-    def create_or_update(self, username, password, email, firstname=u'',
-                         lastname=u'', active=True, admin=False,
+    def create_or_update(self, username, password, email, firstname='',
+                         lastname='', active=True, admin=False,
                          extern_type=None, extern_name=None, cur_user=None):
         """
         Creates a new instance if not found, or updates current one
@@ -142,10 +138,8 @@ class UserModel(object):
             new_user.admin = admin
             new_user.email = email
             new_user.active = active
-            new_user.extern_name = safe_unicode(extern_name) \
-                if extern_name else None
-            new_user.extern_type = safe_unicode(extern_type) \
-                if extern_type else None
+            new_user.extern_name = extern_name
+            new_user.extern_type = extern_type
             new_user.name = firstname
             new_user.lastname = lastname
 
@@ -185,7 +179,7 @@ class UserModel(object):
         # notification to admins
         subject = _('New user registration')
         body = (
-            u'New user registration\n'
+            'New user registration\n'
             '---------------------\n'
             '- Username: {user.username}\n'
             '- Full Name: {user.full_name}\n'
@@ -205,7 +199,7 @@ class UserModel(object):
     def update(self, user_id, form_data, skip_attrs=None):
         from kallithea.lib.auth import get_crypt_password
         skip_attrs = skip_attrs or []
-        user = self.get(user_id, cache=False)
+        user = self.get(user_id)
         if user.is_default_user:
             raise DefaultUserException(
                             _("You can't edit this user since it's "
@@ -310,8 +304,8 @@ class UserModel(object):
         """
         app_secret = config.get('app_instance_uuid')
         return hmac.HMAC(
-            key=u'\0'.join([app_secret, user.password]).encode('utf-8'),
-            msg=u'\0'.join([session_id, str(user.user_id), user.email, str(timestamp)]).encode('utf-8'),
+            key='\0'.join([app_secret, user.password]).encode('utf-8'),
+            msg='\0'.join([session_id, str(user.user_id), user.email, str(timestamp)]).encode('utf-8'),
             digestmod=hashlib.sha1,
         ).hexdigest()
 

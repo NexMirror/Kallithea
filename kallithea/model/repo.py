@@ -35,14 +35,13 @@ from datetime import datetime
 import kallithea.lib.utils2
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionLevel
-from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import AttachedForksError
 from kallithea.lib.hooks import log_delete_repository
 from kallithea.lib.utils import is_valid_repo_uri, make_ui
-from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix, safe_str, safe_unicode
+from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix
 from kallithea.lib.vcs.backends import get_backend
-from kallithea.model.db import (
-    Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
+from kallithea.model.db import (URL_SEP, Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm,
+                                UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
 
 
 log = logging.getLogger(__name__)
@@ -50,7 +49,7 @@ log = logging.getLogger(__name__)
 
 class RepoModel(object):
 
-    URL_SEPARATOR = Repository.url_sep()
+    URL_SEPARATOR = URL_SEP
 
     def _create_default_perms(self, repository, private):
         # create default permission
@@ -81,25 +80,17 @@ class RepoModel(object):
         q = Ui.query().filter(Ui.ui_key == '/').one()
         return q.ui_value
 
-    def get(self, repo_id, cache=False):
+    def get(self, repo_id):
         repo = Repository.query() \
             .filter(Repository.repo_id == repo_id)
-
-        if cache:
-            repo = repo.options(FromCache("sql_cache_short",
-                                          "get_repo_%s" % repo_id))
         return repo.scalar()
 
     def get_repo(self, repository):
         return Repository.guess_instance(repository)
 
-    def get_by_repo_name(self, repo_name, cache=False):
+    def get_by_repo_name(self, repo_name):
         repo = Repository.query() \
             .filter(Repository.repo_name == repo_name)
-
-        if cache:
-            repo = repo.options(FromCache("sql_cache_short",
-                                          "get_repo_%s" % repo_name))
         return repo.scalar()
 
     def get_all_user_repos(self, user):
@@ -109,17 +100,15 @@ class RepoModel(object):
         :param user:
         """
         from kallithea.lib.auth import AuthUser
-        user = User.guess_instance(user)
-        repos = AuthUser(dbuser=user).permissions['repositories']
-        access_check = lambda r: r[1] in ['repository.read',
-                                          'repository.write',
-                                          'repository.admin']
-        repos = [x[0] for x in filter(access_check, repos.items())]
+        auth_user = AuthUser(dbuser=User.guess_instance(user))
+        repos = [repo_name
+            for repo_name, perm in auth_user.permissions['repositories'].items()
+            if perm in ['repository.read', 'repository.write', 'repository.admin']
+            ]
         return Repository.query().filter(Repository.repo_name.in_(repos))
 
     @classmethod
     def _render_datatable(cls, tmpl, *args, **kwargs):
-        import kallithea
         from tg import tmpl_context as c, request, app_globals
         from tg.i18n import ugettext as _
 
@@ -128,7 +117,7 @@ class RepoModel(object):
 
         tmpl = template.get_def(tmpl)
         kwargs.update(dict(_=_, h=h, c=c, request=request))
-        return tmpl.render(*args, **kwargs)
+        return tmpl.render_unicode(*args, **kwargs)
 
     def get_repos_as_dict(self, repos_list, repo_groups_list=None,
                           admin=False,
@@ -139,11 +128,15 @@ class RepoModel(object):
         admin: return data for action column.
         """
         _render = self._render_datatable
-        from tg import tmpl_context as c
+        from tg import tmpl_context as c, request
+        from kallithea.model.scm import ScmModel
 
         def repo_lnk(name, rtype, rstate, private, fork_of):
             return _render('repo_name', name, rtype, rstate, private, fork_of,
                            short_name=short_name)
+
+        def following(repo_id, is_following):
+            return _render('following', repo_id, is_following)
 
         def last_change(last_change):
             return _render("last_change", last_change)
@@ -189,6 +182,10 @@ class RepoModel(object):
                 "just_name": repo.just_name,
                 "name": repo_lnk(repo.repo_name, repo.repo_type,
                                  repo.repo_state, repo.private, repo.fork),
+                "following": following(
+                    repo.repo_id,
+                    ScmModel().is_following_repo(repo.repo_name, request.authuser.user_id),
+                ),
                 "last_change_iso": repo.last_db_change.isoformat(),
                 "last_change": last_change(repo.last_db_change),
                 "last_changeset": last_rev(repo.repo_name, cs_cache),
@@ -273,7 +270,7 @@ class RepoModel(object):
                 cur_repo.owner = User.get_by_username(kwargs['owner'])
 
             if 'repo_group' in kwargs:
-                assert kwargs['repo_group'] != u'-1', kwargs # RepoForm should have converted to None
+                assert kwargs['repo_group'] != '-1', kwargs # RepoForm should have converted to None
                 cur_repo.group = RepoGroup.get(kwargs['repo_group'])
                 cur_repo.repo_name = cur_repo.get_new_name(cur_repo.just_name)
             log.debug('Updating repo %s with params:%s', cur_repo, kwargs)
@@ -290,7 +287,7 @@ class RepoModel(object):
                 # clone_uri is modified - if given a value, check it is valid
                 if clone_uri != '':
                     # will raise exception on error
-                    is_valid_repo_uri(cur_repo.repo_type, clone_uri, make_ui(clear_session=False))
+                    is_valid_repo_uri(cur_repo.repo_type, clone_uri, make_ui())
                 cur_repo.clone_uri = clone_uri
 
             if 'repo_name' in kwargs:
@@ -306,8 +303,7 @@ class RepoModel(object):
                     repo=cur_repo, user='default', perm=EMPTY_PERM
                 )
                 # handle extra fields
-            for field in filter(lambda k: k.startswith(RepositoryField.PREFIX),
-                                kwargs):
+            for field in [k for k in kwargs if k.startswith(RepositoryField.PREFIX)]:
                 k = RepositoryField.un_prefix_key(field)
                 ex_field = RepositoryField.get_by_key_name(key=k, repo=cur_repo)
                 if ex_field:
@@ -339,13 +335,13 @@ class RepoModel(object):
         fork_of = Repository.guess_instance(fork_of)
         repo_group = RepoGroup.guess_instance(repo_group)
         try:
-            repo_name = safe_unicode(repo_name)
-            description = safe_unicode(description)
+            repo_name = repo_name
+            description = description
             # repo name is just a name of repository
             # while repo_name_full is a full qualified name that is combined
             # with name and path of group
             repo_name_full = repo_name
-            repo_name = repo_name.split(self.URL_SEPARATOR)[-1]
+            repo_name = repo_name.split(URL_SEP)[-1]
             if kallithea.lib.utils2.repo_name_slug(repo_name) != repo_name:
                 raise Exception('invalid repo name %s' % repo_name)
 
@@ -360,7 +356,7 @@ class RepoModel(object):
             new_repo.private = private
             if clone_uri:
                 # will raise exception on error
-                is_valid_repo_uri(repo_type, clone_uri, make_ui(clear_session=False))
+                is_valid_repo_uri(repo_type, clone_uri, make_ui())
             new_repo.clone_uri = clone_uri
             new_repo.landing_rev = landing_rev
 
@@ -643,8 +639,7 @@ class RepoModel(object):
             _paths = [repo_store_location]
         else:
             _paths = [self.repos_path, new_parent_path, repo_name]
-            # we need to make it str for mercurial
-        repo_path = os.path.join(*map(lambda x: safe_str(x), _paths))
+        repo_path = os.path.join(*_paths)
 
         # check if this path is not a repository
         if is_valid_repo(repo_path, self.repos_path):
@@ -655,13 +650,13 @@ class RepoModel(object):
             raise Exception('This path %s is a valid group' % repo_path)
 
         log.info('creating repo %s in %s from url: `%s`',
-            repo_name, safe_unicode(repo_path),
+            repo_name, repo_path,
             obfuscate_url_pw(clone_uri))
 
         backend = get_backend(repo_type)
 
         if repo_type == 'hg':
-            baseui = make_ui(clear_session=False)
+            baseui = make_ui()
             # patch and reset hooks section of UI config to not run any
             # hooks on creating remote repo
             for k, v in baseui.configitems('hooks'):
@@ -676,7 +671,7 @@ class RepoModel(object):
             raise Exception('Not supported repo_type %s expected hg/git' % repo_type)
 
         log.debug('Created repo %s with %s backend',
-                  safe_unicode(repo_name), safe_unicode(repo_type))
+                  repo_name, repo_type)
         return repo
 
     def _rename_filesystem_repo(self, old, new):
@@ -688,8 +683,8 @@ class RepoModel(object):
         """
         log.info('renaming repo from %s to %s', old, new)
 
-        old_path = safe_str(os.path.join(self.repos_path, old))
-        new_path = safe_str(os.path.join(self.repos_path, new))
+        old_path = os.path.join(self.repos_path, old)
+        new_path = os.path.join(self.repos_path, new)
         if os.path.isdir(new_path):
             raise Exception(
                 'Was trying to rename to already existing dir %s' % new_path
@@ -704,7 +699,7 @@ class RepoModel(object):
 
         :param repo: repo object
         """
-        rm_path = safe_str(os.path.join(self.repos_path, repo.repo_name))
+        rm_path = os.path.join(self.repos_path, repo.repo_name)
         log.info("Removing %s", rm_path)
 
         _now = datetime.now()
@@ -715,6 +710,6 @@ class RepoModel(object):
             args = repo.group.full_path_splitted + [_d]
             _d = os.path.join(*args)
         if os.path.exists(rm_path):
-            shutil.move(rm_path, safe_str(os.path.join(self.repos_path, _d)))
+            shutil.move(rm_path, os.path.join(self.repos_path, _d))
         else:
             log.error("Can't find repo to delete in %r", rm_path)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,15 +30,13 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import print_function
-
-import cookielib
+import http.cookiejar
 import os
 import sys
 import tempfile
 import time
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
 from os.path import dirname
 
 from kallithea.lib import vcs
@@ -72,18 +70,18 @@ PROJECTS = [
 ]
 
 
-cj = cookielib.FileCookieJar(os.path.join(tempfile.gettempdir(), 'rc_test_cookie.txt'))
-o = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+cj = http.cookiejar.FileCookieJar(os.path.join(tempfile.gettempdir(), 'rc_test_cookie.txt'))
+o = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
 o.addheaders = [
     ('User-agent', 'kallithea-crawler'),
     ('Accept-Language', 'en - us, en;q = 0.5')
 ]
 
-urllib2.install_opener(o)
+urllib.request.install_opener(o)
 
 
 def _get_repo(proj):
-    if isinstance(proj, basestring):
+    if isinstance(proj, str):
         repo = vcs.get_repo(os.path.join(PROJECT_PATH, proj))
         proj = proj
     else:
@@ -101,7 +99,7 @@ def test_changelog_walk(proj, pages=100):
 
         page = '/'.join((proj, 'changelog',))
 
-        full_uri = (BASE_URI % page) + '?' + urllib.urlencode({'page': i})
+        full_uri = (BASE_URI % page) + '?' + urllib.parse.urlencode({'page': i})
         s = time.time()
         f = o.open(full_uri)
 
@@ -130,13 +128,13 @@ def test_changeset_walk(proj, limit=None):
             break
 
         full_uri = (BASE_URI % raw_cs)
-        print('%s visiting %s\%s' % (cnt, full_uri, i))
+        print('%s visiting %s/%s' % (cnt, full_uri, i))
         s = time.time()
         f = o.open(full_uri)
         size = len(f.read())
         e = time.time() - s
         total_time += e
-        print('%s visited %s\%s size:%s req:%s ms' % (cnt, full_uri, i, size, e))
+        print('%s visited %s/%s size:%s req:%s ms' % (cnt, full_uri, i, size, e))
 
     print('total_time', total_time)
     print('average on req', total_time / float(cnt))

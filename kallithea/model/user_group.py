@@ -28,8 +28,8 @@ import logging
 import traceback
 
 from kallithea.lib.exceptions import RepoGroupAssignmentError, UserGroupsAssignedException
-from kallithea.model.db import (
-    Permission, Session, User, UserGroup, UserGroupMember, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserUserGroupToPerm)
+from kallithea.model.db import (Permission, Session, User, UserGroup, UserGroupMember, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm,
+                                UserUserGroupToPerm)
 
 
 log = logging.getLogger(__name__)
@@ -94,8 +94,8 @@ class UserGroupModel(object):
     def get_group(self, user_group):
         return UserGroup.guess_instance(user_group)
 
-    def get_by_name(self, name, cache=False, case_insensitive=False):
-        return UserGroup.get_by_group_name(name, cache=cache, case_insensitive=case_insensitive)
+    def get_by_name(self, name, case_insensitive=False):
+        return UserGroup.get_by_group_name(name, case_insensitive=case_insensitive)
 
     def create(self, name, description, owner, active=True, group_data=None):
         try:
@@ -126,7 +126,7 @@ class UserGroupModel(object):
                 if k == 'users_group_members':
                     members_list = []
                     if v:
-                        v = [v] if isinstance(v, basestring) else v
+                        v = [v] if isinstance(v, str) else v
                         for u_id in set(v):
                             member = UserGroupMember(user_group.users_group_id, u_id)
                             members_list.append(member)
@@ -367,7 +367,7 @@ class UserGroupModel(object):
         for gr in set(groups):
             existing_group = UserGroup.get_by_group_name(gr)
             if not existing_group:
-                desc = u'Automatically created from plugin:%s' % extern_type
+                desc = 'Automatically created from plugin:%s' % extern_type
                 # we use first admin account to set the owner of the group
                 existing_group = UserGroupModel().create(gr, desc, owner,
                                         group_data={'extern_type': extern_type})

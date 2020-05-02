@@ -1,10 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 """
 Consistent formatting of rst section titles
 """
-
-from __future__ import print_function
 
 import re
 import subprocess
@@ -35,6 +33,7 @@ headermatch = re.compile(r'''\n*(.+)\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,
 def main():
     filenames = subprocess.check_output(['hg', 'loc', 'set:**.rst+kallithea/i18n/how_to']).splitlines()
     for fn in filenames:
+        fn = fn.decode()
         print('processing %s' % fn)
         s = open(fn).read()
 

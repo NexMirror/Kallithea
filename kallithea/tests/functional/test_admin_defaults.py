@@ -1,12 +1,12 @@
 from kallithea.model.db import Setting
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestDefaultsController(TestController):
+class TestDefaultsController(base.TestController):
 
     def test_index(self):
         self.log_user()
-        response = self.app.get(url('defaults'))
+        response = self.app.get(base.url('defaults'))
         response.mustcontain('default_repo_private')
         response.mustcontain('default_repo_enable_statistics')
         response.mustcontain('default_repo_enable_downloads')
@@ -20,7 +20,7 @@ class TestDefaultsController(TestController):
             'default_repo_type': 'hg',
             '_session_csrf_secret_token': self.session_csrf_secret_token(),
         }
-        response = self.app.post(url('defaults_update', id='default'), params=params)
+        response = self.app.post(base.url('defaults_update', id='default'), params=params)
         self.checkSessionFlash(response, 'Default settings updated successfully')
 
         params.pop('_session_csrf_secret_token')
@@ -36,7 +36,7 @@ class TestDefaultsController(TestController):
             'default_repo_type': 'git',
             '_session_csrf_secret_token': self.session_csrf_secret_token(),
         }
-        response = self.app.post(url('defaults_update', id='default'), params=params)
+        response = self.app.post(base.url('defaults_update', id='default'), params=params)
         self.checkSessionFlash(response, 'Default settings updated successfully')
 
         params.pop('_session_csrf_secret_token')

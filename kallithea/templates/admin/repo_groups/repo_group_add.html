@@ -61,9 +61,9 @@
     </div>
     ${h.end_form()}
 </div>
-<script>
+<script>'use strict';
     $(document).ready(function(){
-        var setCopyPermsOption = function(group_val){
+        function setCopyPermsOption(group_val){
             if(group_val != "-1"){
                 $('#copy_perms').show();
             }

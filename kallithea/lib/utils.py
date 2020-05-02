@@ -31,21 +31,24 @@ import os
 import re
 import sys
 import traceback
+import urllib.error
 from distutils.version import StrictVersion
 
-import beaker
-from beaker.cache import _cache_decorate
-from tg.i18n import ugettext as _
+import mercurial.config
+import mercurial.error
+import mercurial.ui
 
-from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.lib.utils2 import get_current_authuser, safe_str, safe_unicode
-from kallithea.lib.vcs.exceptions import VCSError
+import kallithea.config.conf
+from kallithea.lib.exceptions import InvalidCloneUriException
+from kallithea.lib.utils2 import ascii_bytes, aslist, get_current_authuser, safe_bytes, safe_str
+from kallithea.lib.vcs.backends.git.repository import GitRepository
+from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
+from kallithea.lib.vcs.conf import settings
+from kallithea.lib.vcs.exceptions import RepositoryError, VCSError
 from kallithea.lib.vcs.utils.fakemod import create_module
 from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.utils.hgcompat import config, ui
-from kallithea.model import meta
+from kallithea.model import db, meta
 from kallithea.model.db import RepoGroup, Repository, Setting, Ui, User, UserGroup, UserLog
-from kallithea.model.repo_group import RepoGroupModel
 
 
 log = logging.getLogger(__name__)
@@ -102,7 +105,6 @@ def fix_repo_id_name(path):
         rest = '/' + rest_
     repo_id = _get_permanent_id(first)
     if repo_id is not None:
-        from kallithea.model.db import Repository
         repo = Repository.get(repo_id)
         if repo is not None:
             return repo.repo_name + rest
@@ -130,7 +132,7 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
 
     if getattr(user, 'user_id', None):
         user_obj = User.get(user.user_id)
-    elif isinstance(user, basestring):
+    elif isinstance(user, str):
         user_obj = User.get_by_username(user)
     else:
         raise Exception('You have to provide a user object or a username')
@@ -138,17 +140,17 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
     if getattr(repo, 'repo_id', None):
         repo_obj = Repository.get(repo.repo_id)
         repo_name = repo_obj.repo_name
-    elif isinstance(repo, basestring):
+    elif isinstance(repo, str):
         repo_name = repo.lstrip('/')
         repo_obj = Repository.get_by_repo_name(repo_name)
     else:
         repo_obj = None
-        repo_name = u''
+        repo_name = ''
 
     user_log = UserLog()
     user_log.user_id = user_obj.user_id
     user_log.username = user_obj.username
-    user_log.action = safe_unicode(action)
+    user_log.action = action
 
     user_log.repository = repo_obj
     user_log.repository_name = repo_name
@@ -158,7 +160,7 @@ def action_logger(user, action, repo, ipaddr='', commit=False):
     meta.Session().add(user_log)
 
     log.info('Logging action:%s on %s by user:%s ip:%s',
-             action, safe_unicode(repo), user_obj, ipaddr)
+             action, repo, user_obj, ipaddr)
     if commit:
         meta.Session().commit()
 
@@ -172,7 +174,7 @@ def get_filesystem_repos(path):
     """
 
     # remove ending slash for better results
-    path = safe_str(path.rstrip(os.sep))
+    path = path.rstrip(os.sep)
     log.debug('now scanning in %s', path)
 
     def isdir(*n):
@@ -223,37 +225,43 @@ def get_filesystem_repos(path):
 
 
 def is_valid_repo_uri(repo_type, url, ui):
-    """Check if the url seems like a valid remote repo location - raise an Exception if any problems"""
+    """Check if the url seems like a valid remote repo location
+    Raise InvalidCloneUriException if any problems"""
     if repo_type == 'hg':
-        from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
         if url.startswith('http') or url.startswith('ssh'):
             # initially check if it's at least the proper URL
             # or does it pass basic auth
-            MercurialRepository._check_url(url, ui)
+            try:
+                MercurialRepository._check_url(url, ui)
+            except urllib.error.URLError as e:
+                raise InvalidCloneUriException('URI %s URLError: %s' % (url, e))
+            except mercurial.error.RepoError as e:
+                raise InvalidCloneUriException('Mercurial %s: %s' % (type(e).__name__, safe_str(bytes(e))))
         elif url.startswith('svn+http'):
             try:
                 from hgsubversion.svnrepo import svnremoterepo
             except ImportError:
-                raise HgsubversionImportError(_('Unable to activate hgsubversion support. '
-                                                'The "hgsubversion" library is missing'))
+                raise InvalidCloneUriException('URI type %s not supported - hgsubversion is not available' % (url,))
             svnremoterepo(ui, url).svn.uuid
         elif url.startswith('git+http'):
-            raise NotImplementedError()
+            raise InvalidCloneUriException('URI type %s not implemented' % (url,))
         else:
-            raise Exception('URI %s not allowed' % (url,))
+            raise InvalidCloneUriException('URI %s not allowed' % (url,))
 
     elif repo_type == 'git':
-        from kallithea.lib.vcs.backends.git.repository import GitRepository
         if url.startswith('http') or url.startswith('git'):
             # initially check if it's at least the proper URL
             # or does it pass basic auth
-            GitRepository._check_url(url)
+            try:
+                GitRepository._check_url(url)
+            except urllib.error.URLError as e:
+                raise InvalidCloneUriException('URI %s URLError: %s' % (url, e))
         elif url.startswith('svn+http'):
-            raise NotImplementedError()
+            raise InvalidCloneUriException('URI type %s not implemented' % (url,))
         elif url.startswith('hg+http'):
-            raise NotImplementedError()
+            raise InvalidCloneUriException('URI type %s not implemented' % (url,))
         else:
-            raise Exception('URI %s not allowed' % (url))
+            raise InvalidCloneUriException('URI %s not allowed' % (url))
 
 
 def is_valid_repo(repo_name, base_path, scm=None):
@@ -269,7 +277,7 @@ def is_valid_repo(repo_name, base_path, scm=None):
     :return True: if given path is a valid repository
     """
     # TODO: paranoid security checks?
-    full_path = os.path.join(safe_str(base_path), safe_str(repo_name))
+    full_path = os.path.join(base_path, repo_name)
 
     try:
         scm_ = get_scm(full_path)
@@ -287,7 +295,7 @@ def is_valid_repo_group(repo_group_name, base_path, skip_path_check=False):
     :param repo_name:
     :param base_path:
     """
-    full_path = os.path.join(safe_str(base_path), safe_str(repo_group_name))
+    full_path = os.path.join(base_path, repo_group_name)
 
     # check if it's not a repo
     if is_valid_repo(repo_group_name, base_path):
@@ -309,65 +317,41 @@ def is_valid_repo_group(repo_group_name, base_path, skip_path_check=False):
     return False
 
 
-# propagated from mercurial documentation
-ui_sections = ['alias', 'auth',
-                'decode/encode', 'defaults',
-                'diff', 'email',
-                'extensions', 'format',
-                'merge-patterns', 'merge-tools',
-                'hooks', 'http_proxy',
-                'smtp', 'patch',
-                'paths', 'profiling',
-                'server', 'trusted',
-                'ui', 'web', ]
-
-
-def make_ui(repo_path=None, clear_session=True):
+def make_ui(repo_path=None):
     """
     Create an Mercurial 'ui' object based on database Ui settings, possibly
     augmenting with content from a hgrc file.
     """
-    baseui = ui.ui()
+    baseui = mercurial.ui.ui()
 
     # clean the baseui object
-    baseui._ocfg = config.config()
-    baseui._ucfg = config.config()
-    baseui._tcfg = config.config()
+    baseui._ocfg = mercurial.config.config()
+    baseui._ucfg = mercurial.config.config()
+    baseui._tcfg = mercurial.config.config()
 
     sa = meta.Session()
-    for ui_ in sa.query(Ui).all():
+    for ui_ in sa.query(Ui).order_by(Ui.ui_section, Ui.ui_key):
         if ui_.ui_active:
-            ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
             log.debug('config from db: [%s] %s=%r', ui_.ui_section,
-                      ui_.ui_key, ui_val)
-            baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
-                             ui_val)
-    if clear_session:
-        meta.Session.remove()
+                      ui_.ui_key, ui_.ui_value)
+            baseui.setconfig(ascii_bytes(ui_.ui_section), ascii_bytes(ui_.ui_key),
+                             b'' if ui_.ui_value is None else safe_bytes(ui_.ui_value))
 
     # force set push_ssl requirement to False, Kallithea handles that
-    baseui.setconfig('web', 'push_ssl', False)
-    baseui.setconfig('web', 'allow_push', '*')
+    baseui.setconfig(b'web', b'push_ssl', False)
+    baseui.setconfig(b'web', b'allow_push', b'*')
     # prevent interactive questions for ssh password / passphrase
-    ssh = baseui.config('ui', 'ssh', default='ssh')
-    baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
+    ssh = baseui.config(b'ui', b'ssh', default=b'ssh')
+    baseui.setconfig(b'ui', b'ssh', b'%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
     # push / pull hooks
-    baseui.setconfig('hooks', 'changegroup.kallithea_log_push_action', 'python:kallithea.lib.hooks.log_push_action')
-    baseui.setconfig('hooks', 'outgoing.kallithea_log_pull_action', 'python:kallithea.lib.hooks.log_pull_action')
+    baseui.setconfig(b'hooks', b'changegroup.kallithea_log_push_action', b'python:kallithea.lib.hooks.log_push_action')
+    baseui.setconfig(b'hooks', b'outgoing.kallithea_log_pull_action', b'python:kallithea.lib.hooks.log_pull_action')
 
     if repo_path is not None:
-        hgrc_path = os.path.join(repo_path, '.hg', 'hgrc')
-        if os.path.isfile(hgrc_path):
-            log.debug('reading hgrc from %s', hgrc_path)
-            cfg = config.config()
-            cfg.read(hgrc_path)
-            for section in ui_sections:
-                for k, v in cfg.items(section):
-                    log.debug('config from file: [%s] %s=%s', section, k, v)
-                    baseui.setconfig(safe_str(section), safe_str(k), safe_str(v))
-        else:
-            log.debug('hgrc file is not present at %s, skipping...', hgrc_path)
+        # Note: MercurialRepository / mercurial.localrepo.instance will do this too, so it will always be possible to override db settings or what is hardcoded above
+        baseui.readconfig(repo_path)
 
+    assert baseui.plain()  # set by hgcompat.monkey_do (invoked from import of vcs.backends.hg) to minimize potential impact of loading config files
     return baseui
 
 
@@ -377,12 +361,10 @@ def set_app_settings(config):
 
     :param config:
     """
-    try:
-        hgsettings = Setting.get_app_settings()
-        for k, v in hgsettings.items():
-            config[k] = v
-    finally:
-        meta.Session.remove()
+    hgsettings = Setting.get_app_settings()
+    for k, v in hgsettings.items():
+        config[k] = v
+    config['base_path'] = Ui.get_repos_location()
 
 
 def set_vcs_config(config):
@@ -391,16 +373,14 @@ def set_vcs_config(config):
 
     :param config: kallithea.CONFIG
     """
-    from kallithea.lib.vcs import conf
-    from kallithea.lib.utils2 import aslist
-    conf.settings.BACKENDS = {
+    settings.BACKENDS = {
         'hg': 'kallithea.lib.vcs.backends.hg.MercurialRepository',
         'git': 'kallithea.lib.vcs.backends.git.GitRepository',
     }
 
-    conf.settings.GIT_EXECUTABLE_PATH = config.get('git_path', 'git')
-    conf.settings.GIT_REV_FILTER = config.get('git_rev_filter', '--all').strip()
-    conf.settings.DEFAULT_ENCODINGS = aslist(config.get('default_encoding',
+    settings.GIT_EXECUTABLE_PATH = config.get('git_path', 'git')
+    settings.GIT_REV_FILTER = config.get('git_rev_filter', '--all').strip()
+    settings.DEFAULT_ENCODINGS = aslist(config.get('default_encoding',
                                                         'utf-8'), sep=',')
 
 
@@ -410,13 +390,11 @@ def set_indexer_config(config):
 
     :param config: kallithea.CONFIG
     """
-    from kallithea.config import conf
-
     log.debug('adding extra into INDEX_EXTENSIONS')
-    conf.INDEX_EXTENSIONS.extend(re.split(r'\s+', config.get('index.extensions', '')))
+    kallithea.config.conf.INDEX_EXTENSIONS.extend(re.split(r'\s+', config.get('index.extensions', '')))
 
     log.debug('adding extra into INDEX_FILENAMES')
-    conf.INDEX_FILENAMES.extend(re.split(r'\s+', config.get('index.filenames', '')))
+    kallithea.config.conf.INDEX_FILENAMES.extend(re.split(r'\s+', config.get('index.filenames', '')))
 
 
 def map_groups(path):
@@ -427,8 +405,9 @@ def map_groups(path):
 
     :param paths: full path to repository
     """
+    from kallithea.model.repo_group import RepoGroupModel
     sa = meta.Session()
-    groups = path.split(Repository.url_sep())
+    groups = path.split(db.URL_SEP)
     parent = None
     group = None
 
@@ -437,7 +416,7 @@ def map_groups(path):
     rgm = RepoGroupModel()
     owner = User.get_first_admin()
     for lvl, group_name in enumerate(groups):
-        group_name = u'/'.join(groups[:lvl] + [group_name])
+        group_name = '/'.join(groups[:lvl] + [group_name])
         group = RepoGroup.get_by_group_name(group_name)
         desc = '%s group' % group_name
 
@@ -459,14 +438,14 @@ def map_groups(path):
     return group
 
 
-def repo2db_mapper(initial_repo_list, remove_obsolete=False,
+def repo2db_mapper(initial_repo_dict, remove_obsolete=False,
                    install_git_hooks=False, user=None, overwrite_git_hooks=False):
     """
-    maps all repos given in initial_repo_list, non existing repositories
+    maps all repos given in initial_repo_dict, non existing repositories
     are created, if remove_obsolete is True it also check for db entries
-    that are not in initial_repo_list and removes them.
+    that are not in initial_repo_dict and removes them.
 
-    :param initial_repo_list: list of repositories found by scanning methods
+    :param initial_repo_dict: mapping with repositories found by scanning methods
     :param remove_obsolete: check for obsolete entries in database
     :param install_git_hooks: if this is True, also check and install git hook
         for a repo if missing
@@ -487,10 +466,9 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
     enable_downloads = defs.get('repo_enable_downloads')
     private = defs.get('repo_private')
 
-    for name, repo in initial_repo_list.items():
+    for name, repo in initial_repo_dict.items():
         group = map_groups(name)
-        unicode_name = safe_unicode(name)
-        db_repo = repo_model.get_by_repo_name(unicode_name)
+        db_repo = repo_model.get_by_repo_name(name)
         # found repo that is on filesystem not in Kallithea database
         if not db_repo:
             log.info('repository %s not found, creating now', name)
@@ -526,9 +504,8 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
     removed = []
     # remove from database those repositories that are not in the filesystem
-    unicode_initial_repo_list = set(safe_unicode(name) for name in initial_repo_list)
     for repo in sa.query(Repository).all():
-        if repo.repo_name not in unicode_initial_repo_list:
+        if repo.repo_name not in initial_repo_dict:
             if remove_obsolete:
                 log.debug("Removing non-existing repository found in db `%s`",
                           repo.repo_name)
@@ -544,9 +521,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
 
 def load_rcextensions(root_path):
-    import kallithea
-    from kallithea.config import conf
-
     path = os.path.join(root_path, 'rcextensions', '__init__.py')
     if os.path.isfile(path):
         rcext = create_module('rc', path)
@@ -554,17 +528,17 @@ def load_rcextensions(root_path):
         log.debug('Found rcextensions now loading %s...', rcext)
 
         # Additional mappings that are not present in the pygments lexers
-        conf.LANGUAGES_EXTENSIONS_MAP.update(getattr(EXT, 'EXTRA_MAPPINGS', {}))
+        kallithea.config.conf.LANGUAGES_EXTENSIONS_MAP.update(getattr(EXT, 'EXTRA_MAPPINGS', {}))
 
         # OVERRIDE OUR EXTENSIONS FROM RC-EXTENSIONS (if present)
 
         if getattr(EXT, 'INDEX_EXTENSIONS', []):
             log.debug('settings custom INDEX_EXTENSIONS')
-            conf.INDEX_EXTENSIONS = getattr(EXT, 'INDEX_EXTENSIONS', [])
+            kallithea.config.conf.INDEX_EXTENSIONS = getattr(EXT, 'INDEX_EXTENSIONS', [])
 
         # ADDITIONAL MAPPINGS
         log.debug('adding extra into INDEX_EXTENSIONS')
-        conf.INDEX_EXTENSIONS.extend(getattr(EXT, 'EXTRA_INDEX_EXTENSIONS', []))
+        kallithea.config.conf.INDEX_EXTENSIONS.extend(getattr(EXT, 'EXTRA_INDEX_EXTENSIONS', []))
 
         # auto check if the module is not missing any data, set to default if is
         # this will help autoupdate new feature of rcext module
@@ -585,28 +559,33 @@ def check_git_version():
     Checks what version of git is installed on the system, and raise a system exit
     if it's too old for Kallithea to work properly.
     """
-    from kallithea import BACKENDS
-    from kallithea.lib.vcs.backends.git.repository import GitRepository
-    from kallithea.lib.vcs.conf import settings
-
-    if 'git' not in BACKENDS:
+    if 'git' not in kallithea.BACKENDS:
         return None
 
     if not settings.GIT_EXECUTABLE_PATH:
         log.warning('No git executable configured - check "git_path" in the ini file.')
         return None
 
-    stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
-                                                    _safe=True)
+    try:
+        stdout, stderr = GitRepository._run_git_command(['--version'])
+    except RepositoryError as e:
+        # message will already have been logged as error
+        log.warning('No working git executable found - check "git_path" in the ini file.')
+        return None
 
     if stderr:
-        log.warning('Error/stderr from "%s --version": %r', settings.GIT_EXECUTABLE_PATH, stderr)
+        log.warning('Error/stderr from "%s --version":\n%s', settings.GIT_EXECUTABLE_PATH, safe_str(stderr))
 
-    m = re.search(r"\d+.\d+.\d+", stdout)
+    if not stdout:
+        log.warning('No working git executable found - check "git_path" in the ini file.')
+        return None
+
+    output = safe_str(stdout).strip()
+    m = re.search(r"\d+.\d+.\d+", output)
     if m:
         ver = StrictVersion(m.group(0))
         log.debug('Git executable: "%s", version %s (parsed from: "%s")',
-                  settings.GIT_EXECUTABLE_PATH, ver, stdout.strip())
+                  settings.GIT_EXECUTABLE_PATH, ver, output)
         if ver < git_req_ver:
             log.error('Kallithea detected %s version %s, which is too old '
                       'for the system to function properly. '
@@ -618,68 +597,7 @@ def check_git_version():
             sys.exit(1)
     else:
         ver = StrictVersion('0.0.0')
-        log.warning('Error finding version number in "%s --version" stdout: %r',
-                    settings.GIT_EXECUTABLE_PATH, stdout.strip())
+        log.warning('Error finding version number in "%s --version" stdout:\n%s',
+                    settings.GIT_EXECUTABLE_PATH, output)
 
     return ver
-
-
-#===============================================================================
-# CACHE RELATED METHODS
-#===============================================================================
-
-# set cache regions for beaker so celery can utilise it
-def setup_cache_regions(settings):
-    # Create dict with just beaker cache configs with prefix stripped
-    cache_settings = {'regions': None}
-    prefix = 'beaker.cache.'
-    for key in settings:
-        if key.startswith(prefix):
-            name = key[len(prefix):]
-            cache_settings[name] = settings[key]
-    # Find all regions, apply defaults, and apply to beaker
-    if cache_settings['regions']:
-        for region in cache_settings['regions'].split(','):
-            region = region.strip()
-            prefix = region + '.'
-            region_settings = {}
-            for key in cache_settings:
-                if key.startswith(prefix):
-                    name = key[len(prefix):]
-                    region_settings[name] = cache_settings[key]
-            region_settings.setdefault('expire',
-                                       cache_settings.get('expire', '60'))
-            region_settings.setdefault('lock_dir',
-                                       cache_settings.get('lock_dir'))
-            region_settings.setdefault('data_dir',
-                                       cache_settings.get('data_dir'))
-            region_settings.setdefault('type',
-                                       cache_settings.get('type', 'memory'))
-            beaker.cache.cache_regions[region] = region_settings
-
-
-def conditional_cache(region, prefix, condition, func):
-    """
-
-    Conditional caching function use like::
-        def _c(arg):
-            #heavy computation function
-            return data
-
-        # depending from condition the compute is wrapped in cache or not
-        compute = conditional_cache('short_term', 'cache_desc', condition=True, func=func)
-        return compute(arg)
-
-    :param region: name of cache region
-    :param prefix: cache region prefix
-    :param condition: condition for cache to be triggered, and return data cached
-    :param func: wrapped heavy function to compute
-
-    """
-    wrapped = func
-    if condition:
-        log.debug('conditional_cache: True, wrapping call of '
-                  'func: %s into %s region cache' % (region, func))
-        wrapped = _cache_decorate((prefix,), None, None, region)(func)
-
-    return wrapped

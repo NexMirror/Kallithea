@@ -30,6 +30,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import re
 
+import mercurial.unionrepo
 from tg import request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
@@ -42,8 +43,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.utils2 import safe_int, safe_str
-from kallithea.lib.vcs.utils.hgcompat import unionrepo
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes, safe_int
 from kallithea.model.db import Repository
 
 
@@ -97,14 +97,9 @@ class CompareController(BaseRepoController):
         elif alias == 'hg':
             # case two independent repos
             if org_repo != other_repo:
-                try:
-                    hgrepo = unionrepo.makeunionrepository(other_repo.baseui,
-                                                           other_repo.path,
-                                                           org_repo.path)
-                except AttributeError: # makeunionrepository was introduced in Mercurial 4.8 23f2299e9e53
-                    hgrepo = unionrepo.unionrepository(other_repo.baseui,
-                                                       other_repo.path,
-                                                       org_repo.path)
+                hgrepo = mercurial.unionrepo.makeunionrepository(other_repo.baseui,
+                                                       safe_bytes(other_repo.path),
+                                                       safe_bytes(org_repo.path))
                 # all ancestors of other_rev will be in other_repo and
                 # rev numbers from hgrepo can be used in other_repo - org_rev ancestors cannot
 
@@ -112,21 +107,27 @@ class CompareController(BaseRepoController):
             else:
                 hgrepo = other_repo._repo
 
-            ancestors = [hgrepo[ancestor].hex() for ancestor in
-                         hgrepo.revs("id(%s) & ::id(%s)", other_rev, org_rev)]
+            ancestors = [ascii_str(hgrepo[ancestor].hex()) for ancestor in
+                         hgrepo.revs(b"id(%s) & ::id(%s)", ascii_bytes(other_rev), ascii_bytes(org_rev))]
             if ancestors:
                 log.debug("shortcut found: %s is already an ancestor of %s", other_rev, org_rev)
             else:
                 log.debug("no shortcut found: %s is not an ancestor of %s", other_rev, org_rev)
-                ancestors = [hgrepo[ancestor].hex() for ancestor in
-                             hgrepo.revs("heads(::id(%s) & ::id(%s))", org_rev, other_rev)] # FIXME: expensive!
+                ancestors = [ascii_str(hgrepo[ancestor].hex()) for ancestor in
+                             hgrepo.revs(b"heads(::id(%s) & ::id(%s))", ascii_bytes(org_rev), ascii_bytes(other_rev))] # FIXME: expensive!
 
-            other_revs = hgrepo.revs("ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
-                                     other_rev, org_rev, org_rev)
-            other_changesets = [other_repo.get_changeset(rev) for rev in other_revs]
-            org_revs = hgrepo.revs("ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
-                                   org_rev, other_rev, other_rev)
-            org_changesets = [org_repo.get_changeset(hgrepo[rev].hex()) for rev in org_revs]
+            other_changesets = [
+                other_repo.get_changeset(rev)
+                for rev in hgrepo.revs(
+                    b"ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
+                    ascii_bytes(other_rev), ascii_bytes(org_rev), ascii_bytes(org_rev))
+            ]
+            org_changesets = [
+                org_repo.get_changeset(ascii_str(hgrepo[rev].hex()))
+                for rev in hgrepo.revs(
+                    b"ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
+                    ascii_bytes(org_rev), ascii_bytes(other_rev), ascii_bytes(other_rev))
+            ]
 
         elif alias == 'git':
             if org_repo != other_repo:
@@ -134,15 +135,15 @@ class CompareController(BaseRepoController):
                 from dulwich.client import SubprocessGitClient
 
                 gitrepo = Repo(org_repo.path)
-                SubprocessGitClient(thin_packs=False).fetch(safe_str(other_repo.path), gitrepo)
+                SubprocessGitClient(thin_packs=False).fetch(other_repo.path, gitrepo)
 
                 gitrepo_remote = Repo(other_repo.path)
-                SubprocessGitClient(thin_packs=False).fetch(safe_str(org_repo.path), gitrepo_remote)
+                SubprocessGitClient(thin_packs=False).fetch(org_repo.path, gitrepo_remote)
 
                 revs = [
-                    x.commit.id
-                    for x in gitrepo_remote.get_walker(include=[other_rev],
-                                                       exclude=[org_rev])
+                    ascii_str(x.commit.id)
+                    for x in gitrepo_remote.get_walker(include=[ascii_bytes(other_rev)],
+                                                       exclude=[ascii_bytes(org_rev)])
                 ]
                 other_changesets = [other_repo.get_changeset(rev) for rev in reversed(revs)]
                 if other_changesets:
@@ -155,13 +156,13 @@ class CompareController(BaseRepoController):
                 gitrepo_remote.close()
 
             else:
-                so, se = org_repo.run_git_command(
+                so = org_repo.run_git_command(
                     ['log', '--reverse', '--pretty=format:%H',
                      '-s', '%s..%s' % (org_rev, other_rev)]
                 )
                 other_changesets = [org_repo.get_changeset(cs)
                               for cs in re.findall(r'[0-9a-fA-F]{40}', so)]
-                so, se = org_repo.run_git_command(
+                so = org_repo.run_git_command(
                     ['merge-base', org_rev, other_rev]
                 )
                 ancestors = [re.findall(r'[0-9a-fA-F]{40}', so)[0]]
@@ -277,7 +278,7 @@ class CompareController(BaseRepoController):
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
 
-        diff_processor = diffs.DiffProcessor(raw_diff or '', diff_limit=diff_limit)
+        diff_processor = diffs.DiffProcessor(raw_diff, diff_limit=diff_limit)
         c.limited_diff = diff_processor.limited_diff
         c.file_diff_data = []
         c.lines_added = 0

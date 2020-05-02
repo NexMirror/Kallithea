@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import cStringIO
 import logging
 import os
 import posixpath
@@ -42,7 +41,7 @@ from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, Ha
 from kallithea.lib.exceptions import IMCCommitError, NonRelativePathError
 from kallithea.lib.hooks import process_pushed_raw_ids
 from kallithea.lib.utils import action_logger, get_filesystem_repos, make_ui
-from kallithea.lib.utils2 import safe_str, safe_unicode, set_hook_environment
+from kallithea.lib.utils2 import safe_bytes, set_hook_environment
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
@@ -140,9 +139,11 @@ class ScmModel(object):
         cls = Repository
         if isinstance(instance, cls):
             return instance
-        elif isinstance(instance, int) or safe_str(instance).isdigit():
+        elif isinstance(instance, int):
             return cls.get(instance)
-        elif isinstance(instance, basestring):
+        elif isinstance(instance, str):
+            if instance.isdigit():
+                return cls.get(int(instance))
             return cls.get_by_repo_name(instance)
         elif instance is not None:
             raise Exception('given object must be int, basestr or Instance'
@@ -161,7 +162,8 @@ class ScmModel(object):
     def repo_scan(self, repos_path=None):
         """
         Listing of repositories in given path. This path should not be a
-        repository itself. Return a dictionary of repository objects
+        repository itself. Return a dictionary of repository objects mapping to
+        vcs instances.
 
         :param repos_path: path to directory containing repositories
         """
@@ -187,10 +189,10 @@ class ScmModel(object):
 
                     klass = get_backend(path[0])
 
-                    if path[0] == 'hg' and path[0] in BACKENDS.keys():
-                        repos[name] = klass(safe_str(path[1]), baseui=baseui)
+                    if path[0] == 'hg' and path[0] in BACKENDS:
+                        repos[name] = klass(path[1], baseui=baseui)
 
-                    if path[0] == 'git' and path[0] in BACKENDS.keys():
+                    if path[0] == 'git' and path[0] in BACKENDS:
                         repos[name] = klass(path[1])
             except OSError:
                 continue
@@ -394,17 +396,8 @@ class ScmModel(object):
         """
         user = User.guess_instance(user)
         IMC = self._get_IMC_module(repo.alias)
-
-        # decoding here will force that we have proper encoded values
-        # in any other case this will throw exceptions and deny commit
-        content = safe_str(content)
-        path = safe_str(f_path)
-        # message and author needs to be unicode
-        # proper backend should then translate that into required type
-        message = safe_unicode(message)
-        author = safe_unicode(author)
         imc = IMC(repo)
-        imc.change(FileNode(path, content, mode=cs.get_file_mode(f_path)))
+        imc.change(FileNode(f_path, content, mode=cs.get_file_mode(f_path)))
         try:
             tip = imc.commit(message=message, author=author,
                              parents=[cs], branch=cs.branch)
@@ -480,22 +473,14 @@ class ScmModel(object):
         for f_path in nodes:
             content = nodes[f_path]['content']
             f_path = self._sanitize_path(f_path)
-            f_path = safe_str(f_path)
-            # decoding here will force that we have proper encoded values
-            # in any other case this will throw exceptions and deny commit
-            if isinstance(content, (basestring,)):
-                content = safe_str(content)
-            elif isinstance(content, (file, cStringIO.OutputType,)):
+            if not isinstance(content, str) and not isinstance(content, bytes):
                 content = content.read()
-            else:
-                raise Exception('Content is of unrecognized type %s' % (
-                    type(content)
-                ))
             processed_nodes.append((f_path, content))
 
-        message = safe_unicode(message)
+        message = message
         committer = user.full_contact
-        author = safe_unicode(author) if author else committer
+        if not author:
+            author = committer
 
         IMC = self._get_IMC_module(scm_instance.alias)
         imc = IMC(scm_instance)
@@ -536,9 +521,10 @@ class ScmModel(object):
         user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
-        message = safe_unicode(message)
+        message = message
         committer = user.full_contact
-        author = safe_unicode(author) if author else committer
+        if not author:
+            author = committer
 
         imc_class = self._get_IMC_module(scm_instance.alias)
         imc = imc_class(scm_instance)
@@ -616,9 +602,10 @@ class ScmModel(object):
             content = nodes[f_path].get('content')
             processed_nodes.append((f_path, content))
 
-        message = safe_unicode(message)
+        message = message
         committer = user.full_contact
-        author = safe_unicode(author) if author else committer
+        if not author:
+            author = committer
 
         IMC = self._get_IMC_module(scm_instance.alias)
         imc = IMC(scm_instance)
@@ -672,19 +659,19 @@ class ScmModel(object):
 
         repo = repo.scm_instance
 
-        branches_group = ([(u'branch:%s' % k, k) for k, v in
-                           repo.branches.iteritems()], _("Branches"))
+        branches_group = ([('branch:%s' % k, k) for k, v in
+                           repo.branches.items()], _("Branches"))
         hist_l.append(branches_group)
         choices.extend([x[0] for x in branches_group[0]])
 
         if repo.alias == 'hg':
-            bookmarks_group = ([(u'book:%s' % k, k) for k, v in
-                                repo.bookmarks.iteritems()], _("Bookmarks"))
+            bookmarks_group = ([('book:%s' % k, k) for k, v in
+                                repo.bookmarks.items()], _("Bookmarks"))
             hist_l.append(bookmarks_group)
             choices.extend([x[0] for x in bookmarks_group[0]])
 
-        tags_group = ([(u'tag:%s' % k, k) for k, v in
-                       repo.tags.iteritems()], _("Tags"))
+        tags_group = ([('tag:%s' % k, k) for k, v in
+                       repo.tags.items()], _("Tags"))
         hist_l.append(tags_group)
         choices.extend([x[0] for x in tags_group[0]])
 
@@ -702,7 +689,7 @@ class ScmModel(object):
         # FIXME This may not work on Windows and may need a shell wrapper script.
         return (kallithea.CONFIG.get('git_hook_interpreter')
                 or sys.executable
-                or '/usr/bin/env python2')
+                or '/usr/bin/env python3')
 
     def install_git_hooks(self, repo, force_create=False):
         """
@@ -718,11 +705,11 @@ class ScmModel(object):
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
-        tmpl_post = "#!%s\n" % self._get_git_hook_interpreter()
+        tmpl_post = b"#!%s\n" % safe_bytes(self._get_git_hook_interpreter())
         tmpl_post += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'post_receive_tmpl.py')
         )
-        tmpl_pre = "#!%s\n" % self._get_git_hook_interpreter()
+        tmpl_pre = b"#!%s\n" % safe_bytes(self._get_git_hook_interpreter())
         tmpl_pre += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'pre_receive_tmpl.py')
         )
@@ -736,12 +723,11 @@ class ScmModel(object):
                 log.debug('hook exists, checking if it is from kallithea')
                 with open(_hook_file, 'rb') as f:
                     data = f.read()
-                    matches = re.compile(r'(?:%s)\s*=\s*(.*)'
-                                         % 'KALLITHEA_HOOK_VER').search(data)
+                    matches = re.search(br'^KALLITHEA_HOOK_VER\s*=\s*(.*)$', data, flags=re.MULTILINE)
                     if matches:
                         try:
                             ver = matches.groups()[0]
-                            log.debug('got %s it is kallithea', ver)
+                            log.debug('Found Kallithea hook - it has KALLITHEA_HOOK_VER %r', ver)
                             has_hook = True
                         except Exception:
                             log.error(traceback.format_exc())
@@ -753,9 +739,9 @@ class ScmModel(object):
                 log.debug('writing %s hook file !', h_type)
                 try:
                     with open(_hook_file, 'wb') as f:
-                        tmpl = tmpl.replace('_TMPL_', kallithea.__version__)
+                        tmpl = tmpl.replace(b'_TMPL_', safe_bytes(kallithea.__version__))
                         f.write(tmpl)
-                    os.chmod(_hook_file, 0755)
+                    os.chmod(_hook_file, 0o755)
                 except IOError as e:
                     log.error('error writing %s: %s', _hook_file, e)
             else:

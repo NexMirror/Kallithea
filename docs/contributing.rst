@@ -32,7 +32,7 @@ To get started with Kallithea development::
 
         hg clone https://kallithea-scm.org/repos/kallithea
         cd kallithea
-        virtualenv ../kallithea-venv
+        python3 -m venv ../kallithea-venv
         source ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install --upgrade -e . -r dev_requirements.txt python-ldap python-pam
@@ -92,8 +92,7 @@ Note that on unix systems, the temporary directory (``/tmp`` or where
 and the test suite creates repositories in the temporary directory. Linux
 systems with /tmp mounted noexec will thus fail.
 
-You can also use ``tox`` to run the tests with all supported Python versions
-(currently only Python 2.7).
+You can also use ``tox`` to run the tests with all supported Python versions.
 
 When running tests, Kallithea generates a `test.ini` based on template values
 in `kallithea/tests/conftest.py` and populates the SQLite database specified
@@ -199,8 +198,7 @@ of Mercurial's (https://www.mercurial-scm.org/wiki/CodingStyle), pep8, and
 consistency with existing code. Run ``scripts/run-all-cleanup`` before
 committing to ensure some basic code formatting consistency.
 
-We currently only support Python 2.7.x and nothing else. For now we don't care
-about Python 3 compatibility.
+We support Python 3.6 and later.
 
 We try to support the most common modern web browsers. IE9 is still supported
 to the extent it is feasible, IE8 is not.
@@ -238,8 +236,8 @@ Each HTTP request runs inside an independent SQLAlchemy session (as well
 as in an independent database transaction). ``Session`` is the session manager
 and factory. ``Session()`` will create a new session on-demand or return the
 current session for the active thread. Many database operations are methods on
-such session instances - only ``Session.remove()`` should be called directly on
-the manager.
+such session instances. The session will generally be removed by
+TurboGears automatically.
 
 Database model objects
 (almost) always belong to a particular SQLAlchemy session, which means
@@ -267,6 +265,20 @@ calling ``Session().flush`` is usually only necessary when the Python
 code needs the database to assign an "auto-increment" primary key ID to
 a freshly created model object (before flushing, the ID attribute will
 be ``None``).
+
+Debugging
+^^^^^^^^^
+
+A good way to trace what Kallithea is doing is to keep an eye on the output of
+stdout/stderr from the server process. Perhaps change ``my.ini`` to log at
+``DEBUG`` or ``INFO`` level, especially ``[logger_kallithea]``, but perhaps
+also other loggers. It is often easier to add additional ``log`` or ``print``
+statements than to use a Python debugger.
+
+Sometimes it is simpler to disable ``errorpage.enabled`` and perhaps also
+``trace_errors.enable`` to expose raw errors instead of adding extra
+processing. Enabling ``debug`` can be helpful for showing and exploring
+tracebacks in the browser, but is also insecure and will add extra processing.
 
 TurboGears2 DebugBar
 ^^^^^^^^^^^^^^^^^^^^

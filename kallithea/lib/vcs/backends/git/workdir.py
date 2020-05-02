@@ -1,5 +1,6 @@
 import re
 
+from kallithea.lib.utils2 import ascii_str, safe_str
 from kallithea.lib.vcs.backends.base import BaseWorkdir
 from kallithea.lib.vcs.exceptions import BranchDoesNotExistError, RepositoryError
 
@@ -7,9 +8,9 @@ from kallithea.lib.vcs.exceptions import BranchDoesNotExistError, RepositoryErro
 class GitWorkdir(BaseWorkdir):
 
     def get_branch(self):
-        headpath = self.repository._repo.refs.refpath('HEAD')
+        headpath = self.repository._repo.refs.refpath(b'HEAD')
         try:
-            content = open(headpath).read()
+            content = safe_str(open(headpath, 'rb').read())
             match = re.match(r'^ref: refs/heads/(?P<branch>.+)\n$', content)
             if match:
                 return match.groupdict()['branch']
@@ -20,7 +21,7 @@ class GitWorkdir(BaseWorkdir):
             raise RepositoryError("Couldn't compute workdir's branch")
 
     def get_changeset(self):
-        wk_dir_id = self.repository._repo.refs.as_dict().get('HEAD')
+        wk_dir_id = ascii_str(self.repository._repo.refs.as_dict().get(b'HEAD'))
         return self.repository.get_changeset(wk_dir_id)
 
     def checkout_branch(self, branch=None):

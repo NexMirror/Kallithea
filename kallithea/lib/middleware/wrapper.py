@@ -29,8 +29,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import time
 
-from kallithea.lib.base import _get_access_path, _get_ip_addr
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.base import _get_ip_addr, get_path_info
 
 
 log = logging.getLogger(__name__)
@@ -41,12 +40,14 @@ class Meter:
     def __init__(self, start_response):
         self._start_response = start_response
         self._start = time.time()
+        self.status = None
         self._size = 0
 
     def duration(self):
         return time.time() - self._start
 
     def start_response(self, status, response_headers, exc_info=None):
+        self.status = status
         write = self._start_response(status, response_headers, exc_info)
         def metered_write(s):
             self.measure(s)
@@ -64,21 +65,21 @@ class ResultIter:
 
     def __init__(self, result, meter, description):
         self._result_close = getattr(result, 'close', None) or (lambda: None)
-        self._next = iter(result).next
+        self._next = iter(result).__next__
         self._meter = meter
         self._description = description
 
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         chunk = self._next()
         self._meter.measure(chunk)
         return chunk
 
     def close(self):
         self._result_close()
-        log.info("%s responded after %.3fs with %s bytes", self._description, self._meter.duration(), self._meter.size())
+        log.info("%s responded %r after %.3fs with %s bytes", self._description, self._meter.status, self._meter.duration(), self._meter.size())
 
 
 class RequestWrapper(object):
@@ -91,10 +92,11 @@ class RequestWrapper(object):
         meter = Meter(start_response)
         description = "Request from %s for %s" % (
             _get_ip_addr(environ),
-            safe_unicode(_get_access_path(environ)),
+            get_path_info(environ),
         )
+        log.info("%s received", description)
         try:
             result = self.application(environ, meter.start_response)
         finally:
-            log.info("%s responding after %.3fs", description, meter.duration())
+            log.info("%s responding %r after %.3fs", description, meter.status, meter.duration())
         return ResultIter(result, meter, description)

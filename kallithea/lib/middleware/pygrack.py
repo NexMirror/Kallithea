@@ -33,7 +33,7 @@ import traceback
 from webob import Request, Response, exc
 
 import kallithea
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import ascii_bytes
 from kallithea.lib.vcs import subprocessio
 
 
@@ -87,7 +87,6 @@ class GitRepository(object):
 
         :param path:
         """
-        path = safe_unicode(path)
         assert path.startswith('/' + self.repo_name + '/')
         return path[len(self.repo_name) + 2:].strip('/')
 
@@ -113,14 +112,14 @@ class GitRepository(object):
         #                     ref_list
         #                     "0000"
         server_advert = '# service=%s\n' % git_command
-        packet_len = str(hex(len(server_advert) + 4)[2:].rjust(4, '0')).lower()
+        packet_len = hex(len(server_advert) + 4)[2:].rjust(4, '0').lower()
         _git_path = kallithea.CONFIG.get('git_path', 'git')
         cmd = [_git_path, git_command[4:],
                '--stateless-rpc', '--advertise-refs', self.content_path]
         log.debug('handling cmd %s', cmd)
         try:
             out = subprocessio.SubprocessIOChunker(cmd,
-                starting_values=[packet_len + server_advert + '0000']
+                starting_values=[ascii_bytes(packet_len + server_advert + '0000')]
             )
         except EnvironmentError as e:
             log.error(traceback.format_exc())
@@ -166,7 +165,7 @@ class GitRepository(object):
             log.error(traceback.format_exc())
             raise exc.HTTPExpectationFailed()
 
-        if git_command in [u'git-receive-pack']:
+        if git_command in ['git-receive-pack']:
             # updating refs manually after each push.
             # Needed for pre-1.7.0.4 git clients using regular HTTP mode.
             from kallithea.lib.vcs import get_repo
@@ -186,7 +185,7 @@ class GitRepository(object):
         _path = self._get_fixedpath(req.path_info)
         if _path.startswith('info/refs'):
             app = self.inforefs
-        elif [a for a in self.valid_accepts if a in req.accept]:
+        elif req.accept.acceptable_offers(self.valid_accepts):
             app = self.backend
         try:
             resp = app(req, environ)

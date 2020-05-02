@@ -25,6 +25,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import binascii
 import logging
 import traceback
 from collections import OrderedDict, defaultdict
@@ -32,7 +33,7 @@ from collections import OrderedDict, defaultdict
 from tg import request, response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPFound, HTTPNotFound
+from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPNotFound
 
 import kallithea.lib.helpers as h
 from kallithea.lib import diffs
@@ -40,7 +41,7 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import ascii_str, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
@@ -65,7 +66,7 @@ def anchor_url(revision, path, GET):
 
 def get_ignore_ws(fid, GET):
     ig_ws_global = GET.get('ignorews')
-    ig_ws = filter(lambda k: k.startswith('WS'), GET.getall(fid))
+    ig_ws = [k for k in GET.getall(fid) if k.startswith('WS')]
     if ig_ws:
         try:
             return int(ig_ws[0].split(':')[-1])
@@ -108,9 +109,9 @@ def _ignorews_url(GET, fileid=None):
 def get_line_ctx(fid, GET):
     ln_ctx_global = GET.get('context')
     if fid:
-        ln_ctx = filter(lambda k: k.startswith('C'), GET.getall(fid))
+        ln_ctx = [k for k in GET.getall(fid) if k.startswith('C')]
     else:
-        _ln_ctx = filter(lambda k: k.startswith('C'), GET)
+        _ln_ctx = [k for k in GET if k.startswith('C')]
         ln_ctx = GET.get(_ln_ctx[0]) if _ln_ctx else ln_ctx_global
         if ln_ctx:
             ln_ctx = [ln_ctx]
@@ -214,7 +215,6 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
             return {
                'location': h.url('my_pullrequests'), # or repo pr list?
             }
-            raise HTTPFound(location=h.url('my_pullrequests')) # or repo pr list?
         raise HTTPForbidden()
 
     text = request.POST.get('text', '').strip()
@@ -256,7 +256,7 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
     Session().commit()
 
     data = {
-       'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
+       'target_id': h.safeid(request.POST.get('f_path')),
     }
     if comment is not None:
         c.comment = comment
@@ -395,6 +395,8 @@ class ChangesetController(BaseRepoController):
             c.changeset = c.cs_ranges[0]
             c.parent_tmpl = ''.join(['# Parent  %s\n' % x.raw_id
                                      for x in c.changeset.parents])
+            c.changeset_graft_source_hash = ascii_str(c.changeset.extra.get(b'source', b''))
+            c.changeset_transplant_source_hash = ascii_str(binascii.hexlify(c.changeset.extra.get(b'transplant_source', b'')))
         if method == 'download':
             response.content_type = 'text/plain'
             response.content_disposition = 'attachment; filename=%s.diff' \
@@ -402,7 +404,7 @@ class ChangesetController(BaseRepoController):
             return raw_diff
         elif method == 'patch':
             response.content_type = 'text/plain'
-            c.diff = safe_unicode(raw_diff)
+            c.diff = safe_str(raw_diff)
             return render('changeset/patch_changeset.html')
         elif method == 'raw':
             response.content_type = 'text/plain'

@@ -38,8 +38,8 @@ from kallithea.config.routing import url
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.page import RepoPage
-from kallithea.lib.utils2 import safe_int, safe_str
+from kallithea.lib.page import Page
+from kallithea.lib.utils2 import safe_int
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, NodeDoesNotExistError, RepositoryError
 
 
@@ -67,7 +67,7 @@ class ChangelogController(BaseRepoController):
             h.flash(_('There are no changesets yet'), category='error')
         except RepositoryError as e:
             log.error(traceback.format_exc())
-            h.flash(safe_str(e), category='error')
+            h.flash(e, category='error')
         raise HTTPBadRequest()
 
     @LoginRequired(allow_default_user=True)
@@ -111,35 +111,34 @@ class ChangelogController(BaseRepoController):
                         cs = self.__get_cs(revision, repo_name)
                         collection = cs.get_file_history(f_path)
                     except RepositoryError as e:
-                        h.flash(safe_str(e), category='warning')
+                        h.flash(e, category='warning')
                         raise HTTPFound(location=h.url('changelog_home', repo_name=repo_name))
-                collection = list(reversed(collection))
             else:
                 collection = c.db_repo_scm_instance.get_changesets(start=0, end=revision,
-                                                        branch_name=branch_name)
+                                                        branch_name=branch_name, reverse=True)
             c.total_cs = len(collection)
 
-            c.cs_pagination = RepoPage(collection, page=p, item_count=c.total_cs,
-                                    items_per_page=c.size, branch=branch_name,)
+            c.cs_pagination = Page(collection, page=p, item_count=c.total_cs, items_per_page=c.size,
+                                   branch=branch_name)
 
             page_revisions = [x.raw_id for x in c.cs_pagination]
             c.cs_comments = c.db_repo.get_comments(page_revisions)
             c.cs_statuses = c.db_repo.statuses(page_revisions)
         except EmptyRepositoryError as e:
-            h.flash(safe_str(e), category='warning')
+            h.flash(e, category='warning')
             raise HTTPFound(location=url('summary_home', repo_name=c.repo_name))
         except (RepositoryError, ChangesetDoesNotExistError, Exception) as e:
             log.error(traceback.format_exc())
-            h.flash(safe_str(e), category='error')
+            h.flash(e, category='error')
             raise HTTPFound(location=url('changelog_home', repo_name=c.repo_name))
 
         c.branch_name = branch_name
         c.branch_filters = [('', _('None'))] + \
-            [(k, k) for k in c.db_repo_scm_instance.branches.keys()]
+            [(k, k) for k in c.db_repo_scm_instance.branches]
         if c.db_repo_scm_instance.closed_branches:
             prefix = _('(closed)') + ' '
             c.branch_filters += [('-', '-')] + \
-                [(k, prefix + k) for k in c.db_repo_scm_instance.closed_branches.keys()]
+                [(k, prefix + k) for k in c.db_repo_scm_instance.closed_branches]
         revs = []
         if not f_path:
             revs = [x.revision for x in c.cs_pagination]

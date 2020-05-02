@@ -332,11 +332,11 @@ To enable it, simply set::
 
   use_celery = true
 
-and add or change the ``celery.*`` and ``broker.*`` configuration variables.
+and add or change the ``celery.*`` configuration variables.
 
-Remember that the ini files use the format with '.' and not with '_' like
-Celery. So for example setting `BROKER_HOST` in Celery means setting
-`broker.host` in the configuration file.
+Configuration settings are prefixed with 'celery.', so for example setting
+`broker_url` in Celery means setting `celery.broker_url` in the configuration
+file.
 
 To start the Celery process, run::
 
@@ -557,7 +557,7 @@ that, you'll need to:
       os.chdir('/srv/kallithea/')
 
       import site
-      site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
+      site.addsitedir("/srv/kallithea/venv/lib/python3.7/site-packages")
 
       ini = '/srv/kallithea/my.ini'
       from logging.config import fileConfig
@@ -624,7 +624,6 @@ the ``init.d`` directory of the Kallithea source.
 .. __: https://kallithea-scm.org/repos/kallithea/files/tip/init.d/ .
 
 
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
 .. _Python regular expression documentation: https://docs.python.org/2/library/re.html
 .. _Mercurial: https://www.mercurial-scm.org/

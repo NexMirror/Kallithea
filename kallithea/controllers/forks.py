@@ -35,13 +35,14 @@ from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
+import kallithea
 import kallithea.lib.helpers as h
 from kallithea.config.routing import url
 from kallithea.lib.auth import HasPermissionAny, HasPermissionAnyDecorator, HasRepoPermissionLevel, HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
-from kallithea.model.db import Repository, Ui, User, UserFollowing
+from kallithea.model.db import Repository, Ui, UserFollowing
 from kallithea.model.forms import RepoForkForm
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import AvailableRepoGroupChoices, ScmModel
@@ -76,7 +77,7 @@ class ForksController(BaseRepoController):
             h.not_mapped_error(c.repo_name)
             raise HTTPFound(location=url('repos'))
 
-        c.default_user_id = User.get_default_user().user_id
+        c.default_user_id = kallithea.DEFAULT_USER_ID
         c.in_public_journal = UserFollowing.query() \
             .filter(UserFollowing.user_id == c.default_user_id) \
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()

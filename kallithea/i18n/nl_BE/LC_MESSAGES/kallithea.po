@@ -206,9 +206,6 @@ msgstr "Er is een fout opgetreden tijdens het aanmaken van veld: %r"
 msgid "Changeset %s not found"
 msgstr "Changeset %s werd niet gevonden"
 
-msgid "SSH key %r not found"
-msgstr "SSH key %r werd niet gevonden"
-
 msgid "Add repos"
 msgstr "Repositories toevoegen"
 

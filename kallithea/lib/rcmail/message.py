@@ -2,35 +2,6 @@ from kallithea.lib.rcmail.exceptions import BadHeaders, InvalidMessage
 from kallithea.lib.rcmail.response import MailResponse
 
 
-class Attachment(object):
-    """
-    Encapsulates file attachment information.
-
-    :param filename: filename of attachment
-    :param content_type: file mimetype
-    :param data: the raw file data, either as string or file obj
-    :param disposition: content-disposition (if any)
-    """
-
-    def __init__(self,
-                 filename=None,
-                 content_type=None,
-                 data=None,
-                 disposition=None):
-
-        self.filename = filename
-        self.content_type = content_type
-        self.disposition = disposition or 'attachment'
-        self._data = data
-
-    @property
-    def data(self):
-        if isinstance(self._data, basestring):
-            return self._data
-        self._data = self._data.read()
-        return self._data
-
-
 class Message(object):
     """
     Encapsulates an email message.

@@ -27,8 +27,8 @@
   <link href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s ATOM feed') % c.repo_name}" type="application/atom+xml" />
   <link href="${h.url('rss_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s RSS feed') % c.repo_name}" type="application/rss+xml" />
 
-  <script>
-  redirect_hash_branch = function(){
+  <script>'use strict';
+  function redirect_hash_branch(){
     var branch = window.location.hash.replace(/^#(.*)/, '$1');
     if (branch){
       window.location = ${h.js(h.url('changelog_home',repo_name=c.repo_name,branch='__BRANCH__'))}
@@ -238,9 +238,9 @@ hg push ${c.clone_repo_url}
 </div>
 %endif
 
-<script type="text/javascript">
+<script>'use strict';
 $(document).ready(function(){
-    $('#clone-url input').click(function(e){
+    $('#clone-url input').click(function(){
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
             return ;
@@ -254,17 +254,17 @@ $(document).ready(function(){
     var $clone_by_name = $('#clone_by_name');
     var $clone_by_id = $('#clone_by_id');
     var $clone_ssh = $('#clone_ssh');
-    $clone_url.on('click', '.btn.use-name', function(e){
+    $clone_url.on('click', '.btn.use-name', function(){
         $clone_by_name.show();
         $clone_by_id.hide();
         $clone_ssh.hide();
     });
-    $clone_url.on('click', '.btn.use-id', function(e){
+    $clone_url.on('click', '.btn.use-id', function(){
         $clone_by_id.show();
         $clone_by_name.hide();
         $clone_ssh.hide();
     });
-    $clone_url.on('click', '.btn.use-ssh', function(e){
+    $clone_url.on('click', '.btn.use-ssh', function(){
         $clone_by_id.hide();
         $clone_by_name.hide();
         $clone_ssh.show();
@@ -309,7 +309,7 @@ $(document).ready(function(){
     $('#download_options').change(function(e){
        var new_cs = e.added
 
-       for(k in tmpl_links){
+       for(let k in tmpl_links){
            var s = $('#'+k+'_link');
            if(s){
              var title_tmpl = ${h.jshtml(_('Download %s as %s') % ('__CS_NAME__','__CS_EXT__'))};
@@ -334,20 +334,18 @@ $(document).ready(function(){
 </script>
 
 %if c.show_stats:
-<script type="text/javascript">
+<script>'use strict';
 $(document).ready(function(){
     var data = ${h.js(c.trending_languages)};
     var total = 0;
-    var no_data = true;
     var tbl = document.createElement('table');
     tbl.setAttribute('class','table');
     var cnt = 0;
-    for (var i=0;i<data.length;i++){
+    for (let i=0;i<data.length;i++){
         total+= data[i][1].count;
     }
-    for (var i=0;i<data.length;i++){
+    for (let i=0;i<data.length;i++){
         cnt += 1;
-        no_data = false;
 
         var hide = cnt>2;
         var tr = document.createElement('tr');
@@ -395,7 +393,7 @@ $(document).ready(function(){
         if(cnt == 3){
             var show_more = document.createElement('tr');
             var td = document.createElement('td');
-            lnk = document.createElement('a');
+            let lnk = document.createElement('a');
 
             lnk.href='#';
             lnk.innerHTML = ${h.jshtml(_('Show more'))};

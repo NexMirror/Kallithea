@@ -24,11 +24,6 @@ __all__ = ['make_app']
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 
-def make_app_without_logging(global_conf, full_stack=True, **app_conf):
-    """The core of make_app for use from gearbox commands (other than 'serve')"""
-    return make_base_app(global_conf, full_stack=full_stack, **app_conf)
-
-
 def make_app(global_conf, full_stack=True, **app_conf):
     """
     Set up Kallithea with the settings found in the PasteDeploy configuration
@@ -47,4 +42,6 @@ def make_app(global_conf, full_stack=True, **app_conf):
     ``app_conf`` contains all the application-specific settings (those defined
     under ``[app:main]``.
     """
-    return make_app_without_logging(global_conf, full_stack=full_stack, **app_conf)
+    assert app_conf.get('sqlalchemy.url')  # must be called with a Kallithea .ini file, which for example must have this config option
+    assert global_conf.get('here') and global_conf.get('__file__')  # app config should be initialized the paste way ...
+    return make_base_app(global_conf, full_stack=full_stack, **app_conf)

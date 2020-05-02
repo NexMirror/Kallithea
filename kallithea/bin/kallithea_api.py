@@ -25,12 +25,11 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import print_function
-
 import argparse
+import json
 import sys
 
-from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call, json
+from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call
 
 
 def argparser(argv):
@@ -60,7 +59,7 @@ def argparser(argv):
                  'be also `%s`' % (FORMAT_PRETTY, FORMAT_JSON),
             default=FORMAT_PRETTY
     )
-    args, other = parser.parse_known_args()
+    args, other = parser.parse_known_args(args=argv[1:])
     return parser, args, other
 
 
@@ -101,7 +100,7 @@ def main(argv=None):
         parser.error('Please specify method name')
 
     try:
-        margs = dict(map(lambda s: s.split(':', 1), other))
+        margs = dict(s.split(':', 1) for s in other)
     except ValueError:
         sys.stderr.write('Error parsing arguments \n')
         sys.exit()

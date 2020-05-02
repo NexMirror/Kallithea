@@ -29,8 +29,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 
 from kallithea.lib import auth_modules
-from kallithea.lib.compat import formatted_json, hybrid_property
-from kallithea.model.db import User
+from kallithea.lib.compat import hybrid_property
 
 
 log = logging.getLogger(__name__)
@@ -77,7 +76,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             "admin": userobj.admin,
             "extern_name": userobj.user_id,
         }
-        log.debug(formatted_json(user_data))
+        log.debug('user data: %s', user_data)
 
         from kallithea.lib import auth
         password_match = auth.check_password(password, userobj.password)

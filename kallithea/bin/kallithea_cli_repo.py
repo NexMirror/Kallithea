@@ -26,10 +26,11 @@ import shutil
 
 import click
 
+import kallithea
 import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.utils import REMOVED_REPO_PAT, repo2db_mapper
-from kallithea.lib.utils2 import ask_ok, safe_str, safe_unicode
-from kallithea.model.db import Repository, Ui
+from kallithea.lib.utils2 import ask_ok
+from kallithea.model.db import Repository
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
 
@@ -74,7 +75,7 @@ def repo_update_metadata(repositories):
     if not repositories:
         repo_list = Repository.query().all()
     else:
-        repo_names = [safe_unicode(n.strip()) for n in repositories]
+        repo_names = [n.strip() for n in repositories]
         repo_list = list(Repository.query()
                         .filter(Repository.repo_name.in_(repo_names)))
 
@@ -110,7 +111,7 @@ def repo_purge_deleted(ask, older_than):
             return
         parts = parts.groupdict()
         time_params = {}
-        for (name, param) in parts.iteritems():
+        for name, param in parts.items():
             if param:
                 time_params[name] = int(param)
         return datetime.timedelta(**time_params)
@@ -125,9 +126,9 @@ def repo_purge_deleted(ask, older_than):
         date_part = name[4:19]  # 4:19 since we don't parse milliseconds
         return datetime.datetime.strptime(date_part, '%Y%m%d_%H%M%S')
 
-    repos_location = Ui.get_repos_location()
+    repos_location = kallithea.CONFIG['base_path']
     to_remove = []
-    for dn_, dirs, f in os.walk(safe_str(repos_location)):
+    for dn_, dirs, f in os.walk(repos_location):
         alldirs = list(dirs)
         del dirs[:]
         if ('.hg' in alldirs or
@@ -175,9 +176,8 @@ def repo_purge_deleted(ask, older_than):
         remove = True
     else:
         remove = ask_ok('The following repositories will be removed completely:\n%s\n'
-                'Do you want to proceed? [y/n] '
-                % '\n'.join(['%s deleted on %s' % (safe_str(x[0]), safe_str(x[1]))
-                                     for x in to_remove]))
+            'Do you want to proceed? [y/n] ' %
+            '\n'.join('%s deleted on %s' % (path, date_) for path, date_ in to_remove))
 
     if remove:
         for path, date_ in to_remove:

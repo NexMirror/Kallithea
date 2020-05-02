@@ -25,17 +25,17 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import binascii
 import os
 import sys
 import time
 
+import mercurial.scmutil
+
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserCreationError
-from kallithea.lib.utils import action_logger, make_ui, setup_cache_regions
-from kallithea.lib.utils2 import HookEnvironmentError, get_hook_environment, safe_str, safe_unicode
+from kallithea.lib.utils import action_logger, make_ui
+from kallithea.lib.utils2 import HookEnvironmentError, ascii_str, get_hook_environment, safe_bytes, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.vcs.utils.hgcompat import revrange
 from kallithea.model.db import Repository, User
 
 
@@ -44,7 +44,7 @@ def _get_scm_size(alias, root_path):
         alias += '.'
 
     size_scm, size_root = 0, 0
-    for path, dirs, files in os.walk(safe_str(root_path)):
+    for path, dirs, files in os.walk(root_path):
         if path.find(alias) != -1:
             for f in files:
                 try:
@@ -66,16 +66,16 @@ def _get_scm_size(alias, root_path):
 
 
 def repo_size(ui, repo, hooktype=None, **kwargs):
-    """Presents size of repository after push"""
-    size_hg_f, size_root_f, size_total_f = _get_scm_size('.hg', repo.root)
+    """Show size of Mercurial repository, to be called after push."""
+    size_hg_f, size_root_f, size_total_f = _get_scm_size('.hg', safe_str(repo.root))
 
     last_cs = repo[len(repo) - 1]
 
     msg = ('Repository size .hg: %s Checkout: %s Total: %s\n'
            'Last revision is now r%s:%s\n') % (
-        size_hg_f, size_root_f, size_total_f, last_cs.rev(), last_cs.hex()[:12]
+        size_hg_f, size_root_f, size_total_f, last_cs.rev(), ascii_str(last_cs.hex())[:12]
     )
-    ui.status(msg)
+    ui.status(safe_bytes(msg))
 
 
 def log_pull_action(ui, repo, **kwargs):
@@ -110,8 +110,7 @@ def log_push_action(ui, repo, node, node_last, **kwargs):
     Note: This hook is not only logging, but also the side effect invalidating
     cahes! The function should perhaps be renamed.
     """
-    _h = binascii.hexlify
-    revs = [_h(repo[r].node()) for r in revrange(repo, [node + ':' + node_last])]
+    revs = [ascii_str(repo[r].hex()) for r in mercurial.scmutil.revrange(repo, [b'%s:%s' % (node, node_last)])]
     process_pushed_raw_ids(revs)
     return 0
 
@@ -303,31 +302,23 @@ def _hook_environment(repo_path):
     they thus need enough info to be able to create an app environment and
     connect to the database.
     """
-    from paste.deploy import appconfig
-    from sqlalchemy import engine_from_config
-    from kallithea.config.environment import load_environment
-    from kallithea.model.base import init_model
+    import paste.deploy
+    import kallithea.config.middleware
 
     extras = get_hook_environment()
-    ini_file_path = extras['config']
+
+    path_to_ini_file = extras['config']
+    kallithea.CONFIG = paste.deploy.appconfig('config:' + path_to_ini_file)
     #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
-    app_conf = appconfig('config:%s' % ini_file_path)
-    conf = load_environment(app_conf.global_conf, app_conf.local_conf)
+    kallithea.config.middleware.make_app(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
 
-    setup_cache_regions(conf)
-
-    engine = engine_from_config(conf, 'sqlalchemy.')
-    init_model(engine)
-
-    repo_path = safe_unicode(repo_path)
     # fix if it's not a bare repo
     if repo_path.endswith(os.sep + '.git'):
         repo_path = repo_path[:-5]
 
     repo = Repository.get_by_full_path(repo_path)
     if not repo:
-        raise OSError('Repository %s not found in database'
-                      % (safe_str(repo_path)))
+        raise OSError('Repository %s not found in database' % repo_path)
 
     baseui = make_ui()
     return baseui, repo
@@ -368,19 +359,20 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
             if push_ref['old_rev'] == EmptyChangeset().raw_id:
                 # update the symbolic ref if we push new repo
                 if scm_repo.is_empty():
-                    scm_repo._repo.refs.set_symbolic_ref('HEAD',
-                                        'refs/heads/%s' % push_ref['name'])
+                    scm_repo._repo.refs.set_symbolic_ref(
+                        b'HEAD',
+                        b'refs/heads/%s' % safe_bytes(push_ref['name']))
 
                 # build exclude list without the ref
                 cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
-                stdout, stderr = scm_repo.run_git_command(cmd)
+                stdout = scm_repo.run_git_command(cmd)
                 ref = push_ref['ref']
                 heads = [head for head in stdout.splitlines() if head != ref]
                 # now list the git revs while excluding from the list
                 cmd = ['log', push_ref['new_rev'], '--reverse', '--pretty=format:%H']
                 cmd.append('--not')
                 cmd.extend(heads) # empty list is ok
-                stdout, stderr = scm_repo.run_git_command(cmd)
+                stdout = scm_repo.run_git_command(cmd)
                 git_revs += stdout.splitlines()
 
             elif push_ref['new_rev'] == EmptyChangeset().raw_id:
@@ -389,7 +381,7 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
             else:
                 cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,
                        '--reverse', '--pretty=format:%H']
-                stdout, stderr = scm_repo.run_git_command(cmd)
+                stdout = scm_repo.run_git_command(cmd)
                 git_revs += stdout.splitlines()
 
         elif _type == 'tags':
@@ -404,5 +396,5 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
 def rejectpush(ui, **kwargs):
     """Mercurial hook to be installed as pretxnopen and prepushkey for read-only repos"""
     ex = get_hook_environment()
-    ui.warn((b"Push access to %r denied\n") % safe_str(ex.repository))
+    ui.warn(safe_bytes("Push access to %r denied\n" % ex.repository))
     return 1

@@ -89,6 +89,16 @@ def config_create(config_file, key_value_pairs):
     mako_variable_values.update({
         'uuid': lambda: uuid.uuid4().hex,
     })
+
+    click.echo('Creating config file using:')
+    for key, value in inifile.default_variables.items():
+        if isinstance(value, str):
+            options = inifile.variable_options.get(key)
+            if options:
+                click.echo('  %s=%s  (options: %s)' % (key, mako_variable_values.get(key, value), ', '.join(options)))
+            else:
+                click.echo('  %s=%s' % (key, mako_variable_values.get(key, value)))
+
     try:
         config_file_abs = os.path.abspath(config_file)
         inifile.create(config_file_abs, mako_variable_values, ini_settings)

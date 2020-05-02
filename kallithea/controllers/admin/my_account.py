@@ -279,8 +279,8 @@ class MyAccountController(BaseController):
             Session().commit()
             SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
-        except SshKeyModelException as errors:
-            h.flash(errors.message, category='error')
+        except SshKeyModelException as e:
+            h.flash(e.args[0], category='error')
         raise HTTPFound(location=url('my_account_ssh_keys'))
 
     @IfSshEnabled
@@ -291,6 +291,6 @@ class MyAccountController(BaseController):
             Session().commit()
             SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key successfully deleted"), category='success')
-        except SshKeyModelException as errors:
-            h.flash(errors.message, category='error')
+        except SshKeyModelException as e:
+            h.flash(e.args[0], category='error')
         raise HTTPFound(location=url('my_account_ssh_keys'))

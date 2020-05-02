@@ -1,41 +1,44 @@
 import os
 import posixpath
 
+import mercurial.archival
+import mercurial.node
+import mercurial.obsutil
+
 from kallithea.lib.vcs.backends.base import BaseChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, VCSError
-from kallithea.lib.vcs.nodes import (
-    AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
-from kallithea.lib.vcs.utils import date_fromtimestamp, safe_str, safe_unicode
-from kallithea.lib.vcs.utils.hgcompat import archival, hex, obsutil
+from kallithea.lib.vcs.nodes import (AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode,
+                                     SubModuleNode)
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, date_fromtimestamp, safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 
 
 class MercurialChangeset(BaseChangeset):
     """
-    Represents state of the repository at the single revision.
+    Represents state of the repository at a revision.
     """
 
     def __init__(self, repository, revision):
         self.repository = repository
-        assert isinstance(revision, basestring), repr(revision)
-        self.raw_id = revision
-        self._ctx = repository._repo[revision]
+        assert isinstance(revision, str), repr(revision)
+        self._ctx = repository._repo[ascii_bytes(revision)]
+        self.raw_id = ascii_str(self._ctx.hex())
         self.revision = self._ctx._rev
         self.nodes = {}
 
     @LazyProperty
     def tags(self):
-        return map(safe_unicode, self._ctx.tags())
+        return [safe_str(tag) for tag in self._ctx.tags()]
 
     @LazyProperty
     def branch(self):
-        return safe_unicode(self._ctx.branch())
+        return safe_str(self._ctx.branch())
 
     @LazyProperty
     def branches(self):
-        return [safe_unicode(self._ctx.branch())]
+        return [safe_str(self._ctx.branch())]
 
     @LazyProperty
     def closesbranch(self):
@@ -47,17 +50,11 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def bumped(self):
-        try:
-            return self._ctx.phasedivergent()
-        except AttributeError: # renamed in Mercurial 4.6 (9fa874fb34e1)
-            return self._ctx.bumped()
+        return self._ctx.phasedivergent()
 
     @LazyProperty
     def divergent(self):
-        try:
-            return self._ctx.contentdivergent()
-        except AttributeError: # renamed in Mercurial 4.6 (8b2d7684407b)
-            return self._ctx.divergent()
+        return self._ctx.contentdivergent()
 
     @LazyProperty
     def extinct(self):
@@ -65,10 +62,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def unstable(self):
-        try:
-            return self._ctx.orphan()
-        except AttributeError: # renamed in Mercurial 4.6 (03039ff3082b)
-            return self._ctx.unstable()
+        return self._ctx.orphan()
 
     @LazyProperty
     def phase(self):
@@ -81,33 +75,30 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def successors(self):
-        successors = obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
-        if successors:
-            # flatten the list here handles both divergent (len > 1)
-            # and the usual case (len = 1)
-            successors = [hex(n)[:12] for sub in successors for n in sub if n != self._ctx.node()]
-
-        return successors
+        successors = mercurial.obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
+        # flatten the list here handles both divergent (len > 1)
+        # and the usual case (len = 1)
+        return [safe_str(mercurial.node.hex(n)[:12]) for sub in successors for n in sub if n != self._ctx.node()]
 
     @LazyProperty
     def predecessors(self):
-        return [hex(n)[:12] for n in obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
+        return [safe_str(mercurial.node.hex(n)[:12]) for n in mercurial.obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
 
     @LazyProperty
     def bookmarks(self):
-        return map(safe_unicode, self._ctx.bookmarks())
+        return [safe_str(bookmark) for bookmark in self._ctx.bookmarks()]
 
     @LazyProperty
     def message(self):
-        return safe_unicode(self._ctx.description())
+        return safe_str(self._ctx.description())
 
     @LazyProperty
     def committer(self):
-        return safe_unicode(self.author)
+        return safe_str(self.author)
 
     @LazyProperty
     def author(self):
-        return safe_unicode(self._ctx.user())
+        return safe_str(self._ctx.user())
 
     @LazyProperty
     def date(self):
@@ -127,7 +118,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def _file_paths(self):
-        return list(self._ctx)
+        return list(safe_str(f) for f in self._ctx)
 
     @LazyProperty
     def _dir_paths(self):
@@ -138,12 +129,6 @@ class MercurialChangeset(BaseChangeset):
     @LazyProperty
     def _paths(self):
         return self._dir_paths + self._file_paths
-
-    @LazyProperty
-    def id(self):
-        if self.last:
-            return u'tip'
-        return self.short_id
 
     @LazyProperty
     def short_id(self):
@@ -202,22 +187,11 @@ class MercurialChangeset(BaseChangeset):
                 return cs
 
     def diff(self):
-        # Only used for feed diffstat
-        return ''.join(self._ctx.diff())
-
-    def _fix_path(self, path):
-        """
-        Paths are stored without trailing slash so we need to get rid off it if
-        needed. Also mercurial keeps filenodes as str so we need to decode
-        from unicode to str
-        """
-        if path.endswith('/'):
-            path = path.rstrip('/')
-
-        return safe_str(path)
+        # Only used to feed diffstat
+        return b''.join(self._ctx.diff())
 
     def _get_kind(self, path):
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         if path in self._file_paths:
             return NodeKind.FILE
         elif path in self._dir_paths:
@@ -227,11 +201,11 @@ class MercurialChangeset(BaseChangeset):
                 % (path))
 
     def _get_filectx(self, path):
-        path = self._fix_path(path)
+        path = path.rstrip('/')
         if self._get_kind(path) != NodeKind.FILE:
             raise ChangesetError("File does not exist for revision %s at "
                 " '%s'" % (self.raw_id, path))
-        return self._ctx.filectx(path)
+        return self._ctx.filectx(safe_bytes(path))
 
     def _extract_submodules(self):
         """
@@ -245,10 +219,10 @@ class MercurialChangeset(BaseChangeset):
         Returns stat mode of the file at the given ``path``.
         """
         fctx = self._get_filectx(path)
-        if 'x' in fctx.flags():
-            return 0100755
+        if b'x' in fctx.flags():
+            return 0o100755
         else:
-            return 0100644
+            return 0o100644
 
     def get_file_content(self, path):
         """
@@ -280,7 +254,7 @@ class MercurialChangeset(BaseChangeset):
         cnt = 0
         for cs in reversed([x for x in fctx.filelog()]):
             cnt += 1
-            hist.append(hex(fctx.filectx(cs).node()))
+            hist.append(mercurial.node.hex(fctx.filectx(cs).node()))
             if limit is not None and cnt == limit:
                 break
 
@@ -292,13 +266,10 @@ class MercurialChangeset(BaseChangeset):
             lineno, sha, changeset lazy loader and line
         """
         annotations = self._get_filectx(path).annotate()
-        try:
-            annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
-        except AttributeError: # annotateline was introduced in Mercurial 4.6 (b33b91ca2ec2)
-            annotation_lines = [(aline.fctx, l) for aline, l in annotations]
-        for i, (fctx, l) in enumerate(annotation_lines):
-            sha = fctx.hex()
-            yield (i + 1, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)
+        annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
+        for i, (fctx, line) in enumerate(annotation_lines):
+            sha = ascii_str(fctx.hex())
+            yield (i + 1, sha, lambda sha=sha: self.repository.get_changeset(sha), line)
 
     def fill_archive(self, stream=None, kind='tgz', prefix=None,
                      subrepos=False):
@@ -316,11 +287,10 @@ class MercurialChangeset(BaseChangeset):
         :raise ImproperArchiveTypeError: If given kind is wrong.
         :raise VcsError: If given stream is None
         """
-
-        allowed_kinds = settings.ARCHIVE_SPECS.keys()
+        allowed_kinds = settings.ARCHIVE_SPECS
         if kind not in allowed_kinds:
             raise ImproperArchiveTypeError('Archive kind not supported use one'
-                'of %s' % allowed_kinds)
+                'of %s' % ' '.join(allowed_kinds))
 
         if stream is None:
             raise VCSError('You need to pass in a valid stream for filling'
@@ -333,8 +303,8 @@ class MercurialChangeset(BaseChangeset):
         elif prefix.strip() == '':
             raise VCSError("Prefix cannot be empty")
 
-        archival.archive(self.repository._repo, stream, self.raw_id,
-                         kind, prefix=prefix, subrepos=subrepos)
+        mercurial.archival.archive(self.repository._repo, stream, ascii_bytes(self.raw_id),
+                         safe_bytes(kind), prefix=safe_bytes(prefix), subrepos=subrepos)
 
     def get_nodes(self, path):
         """
@@ -346,8 +316,7 @@ class MercurialChangeset(BaseChangeset):
         if self._get_kind(path) != NodeKind.DIR:
             raise ChangesetError("Directory does not exist for revision %s at "
                 " '%s'" % (self.revision, path))
-        path = self._fix_path(path)
-
+        path = path.rstrip('/')
         filenodes = [FileNode(f, changeset=self) for f in self._file_paths
             if os.path.dirname(f) == path]
         dirs = path == '' and '' or [d for d in self._dir_paths
@@ -356,18 +325,16 @@ class MercurialChangeset(BaseChangeset):
             if os.path.dirname(d) == path]
 
         als = self.repository.alias
-        for k, vals in self._extract_submodules().iteritems():
+        for k, vals in self._extract_submodules().items():
             #vals = url,rev,type
             loc = vals[0]
             cs = vals[1]
             dirnodes.append(SubModuleNode(k, url=loc, changeset=cs,
                                           alias=als))
         nodes = dirnodes + filenodes
-        # cache nodes
         for node in nodes:
             self.nodes[node.path] = node
         nodes.sort()
-
         return nodes
 
     def get_node(self, path):
@@ -375,9 +342,7 @@ class MercurialChangeset(BaseChangeset):
         Returns ``Node`` object from the given ``path``. If there is no node at
         the given ``path``, ``ChangesetError`` would be raised.
         """
-
-        path = self._fix_path(path)
-
+        path = path.rstrip('/')
         if path not in self.nodes:
             if path in self._file_paths:
                 node = FileNode(path, changeset=self)
@@ -406,21 +371,21 @@ class MercurialChangeset(BaseChangeset):
         """
         Returns list of added ``FileNode`` objects.
         """
-        return AddedFileNodesGenerator([n for n in self.status[1]], self)
+        return AddedFileNodesGenerator([safe_str(n) for n in self.status.added], self)
 
     @property
     def changed(self):
         """
         Returns list of modified ``FileNode`` objects.
         """
-        return ChangedFileNodesGenerator([n for n in self.status[0]], self)
+        return ChangedFileNodesGenerator([safe_str(n) for n in self.status.modified], self)
 
     @property
     def removed(self):
         """
         Returns list of removed ``FileNode`` objects.
         """
-        return RemovedFileNodesGenerator([n for n in self.status[2]], self)
+        return RemovedFileNodesGenerator([safe_str(n) for n in self.status.removed], self)
 
     @LazyProperty
     def extra(self):

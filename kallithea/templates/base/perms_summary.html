@@ -5,7 +5,7 @@
 
 <%def name="perms_summary(permissions, show_all=False, actions=True)">
 <div id="perms">
-     %for section in sorted(permissions.keys()):
+     %for section in sorted(permissions):
         <div class="perms_section_head">
             <h4>${section.replace("_"," ").capitalize()}</h4>
             %if section != 'global':
@@ -97,9 +97,9 @@
         %endif
      %endfor
 </div>
-<script>
+<script>'use strict';
     $(document).ready(function(){
-        var show_empty = function(section){
+        function show_empty(section){
             var visible = $('.section_{0} tr.perm_row:visible'.format(section)).length;
             if(visible == 0){
                 $('#empty_{0}'.format(section)).show();
@@ -108,10 +108,10 @@
                 $('#empty_{0}'.format(section)).hide();
             }
         }
-        var update_show = function($checkbox){
+        function update_show($checkbox){
             var section = $checkbox.data('section');
 
-            var elems = $('.filter_' + section).each(function(el){
+            $('.filter_' + section).each(function(){
                 var perm_type = $checkbox.data('perm_type');
                 var checked = $checkbox.prop('checked');
                 if(checked){

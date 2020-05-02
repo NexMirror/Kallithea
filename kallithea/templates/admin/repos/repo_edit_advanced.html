@@ -9,7 +9,7 @@ ${h.form(url('edit_repo_advanced_fork', repo_name=c.repo_info.repo_name))}
 </div>
 ${h.end_form()}
 
-<script>
+<script>'use strict';
     $(document).ready(function(){
         $("#id_fork_of").select2({
             'dropdownAutoWidth': true

@@ -14,18 +14,12 @@
 
 import logging
 
-from mercurial import hg
+import mercurial.hg
+import mercurial.wireprotoserver
 
 from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
-
-
-try:
-    from mercurial.wireprotoserver import sshserver
-except ImportError:
-    from mercurial.sshserver import sshserver # moved in Mercurial 4.6 (1bf5263fe5cc)
-
+from kallithea.lib.vcs.utils import safe_bytes
 
 
 log = logging.getLogger(__name__)
@@ -40,11 +34,11 @@ class MercurialSshHandler(BaseSshHandler):
         >>> import shlex
 
         >>> MercurialSshHandler.make(shlex.split('hg -R "foo bar" serve --stdio')).repo_name
-        u'foo bar'
+        'foo bar'
         >>> MercurialSshHandler.make(shlex.split(' hg -R blåbærgrød serve --stdio ')).repo_name
-        u'bl\xe5b\xe6rgr\xf8d'
+        'bl\xe5b\xe6rgr\xf8d'
         >>> MercurialSshHandler.make(shlex.split('''hg -R 'foo"bar' serve --stdio''')).repo_name
-        u'foo"bar'
+        'foo"bar'
 
         >>> MercurialSshHandler.make(shlex.split('/bin/hg -R "foo" serve --stdio'))
         >>> MercurialSshHandler.make(shlex.split('''hg -R "foo"bar" serve --stdio''')) # ssh-serve will report: Error parsing SSH command "...": invalid syntax
@@ -53,7 +47,7 @@ class MercurialSshHandler(BaseSshHandler):
         >>> MercurialSshHandler.make(shlex.split('git-upload-pack "/foo"')) # not handled here
         """
         if ssh_command_parts[:2] == ['hg', '-R'] and ssh_command_parts[3:] == ['serve', '--stdio']:
-            return cls(safe_unicode(ssh_command_parts[2]))
+            return cls(ssh_command_parts[2])
 
         return None
 
@@ -61,9 +55,9 @@ class MercurialSshHandler(BaseSshHandler):
         # Note: we want a repo with config based on .hg/hgrc and can thus not use self.db_repo.scm_instance._repo.ui
         baseui = make_ui(repo_path=self.db_repo.repo_full_path)
         if not self.allow_push:
-            baseui.setconfig('hooks', 'pretxnopen._ssh_reject', 'python:kallithea.lib.hooks.rejectpush')
-            baseui.setconfig('hooks', 'prepushkey._ssh_reject', 'python:kallithea.lib.hooks.rejectpush')
+            baseui.setconfig(b'hooks', b'pretxnopen._ssh_reject', b'python:kallithea.lib.hooks.rejectpush')
+            baseui.setconfig(b'hooks', b'prepushkey._ssh_reject', b'python:kallithea.lib.hooks.rejectpush')
 
-        repo = hg.repository(baseui, safe_str(self.db_repo.repo_full_path))
+        repo = mercurial.hg.repository(baseui, safe_bytes(self.db_repo.repo_full_path))
         log.debug("Starting Mercurial sshserver for %s", self.db_repo.repo_full_path)
-        sshserver(baseui, repo).serve_forever()
+        mercurial.wireprotoserver.sshserver(baseui, repo).serve_forever()

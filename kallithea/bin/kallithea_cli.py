@@ -25,3 +25,8 @@ import kallithea.bin.kallithea_cli_repo
 import kallithea.bin.kallithea_cli_ssh
 # 'cli' is the main entry point for 'kallithea-cli', specified in setup.py as entry_points console_scripts
 from kallithea.bin.kallithea_cli_base import cli
+
+
+# mute pyflakes "imported but unused"
+assert kallithea.bin.kallithea_cli_ssh
+assert cli

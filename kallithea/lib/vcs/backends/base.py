@@ -13,9 +13,9 @@ import datetime
 import itertools
 
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import (
-    ChangesetError, EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError, NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError, RepositoryError)
-from kallithea.lib.vcs.utils import author_email, author_name, safe_unicode
+from kallithea.lib.vcs.exceptions import (ChangesetError, EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError,
+                                          NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError, RepositoryError)
+from kallithea.lib.vcs.utils import author_email, author_name
 from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
@@ -98,10 +98,6 @@ class BaseRepository(object):
         """
         raise NotImplementedError
 
-    @property
-    def name_unicode(self):
-        return safe_unicode(self.name)
-
     @LazyProperty
     def owner(self):
         raise NotImplementedError
@@ -173,14 +169,9 @@ class BaseRepository(object):
         """
         raise NotImplementedError
 
-    def __getslice__(self, i, j):
-        """
-        Returns a iterator of sliced repository
-        """
-        for rev in self.revisions[i:j]:
-            yield self.get_changeset(rev)
-
     def __getitem__(self, key):
+        if isinstance(key, slice):
+            return (self.get_changeset(rev) for rev in self.revisions[key])
         return self.get_changeset(key)
 
     def count(self):
@@ -267,8 +258,6 @@ class BaseRepository(object):
         """
         Persists current changes made on this repository and returns newly
         created changeset.
-
-        :raises ``NothingChangedError``: if no changes has been made
         """
         raise NotImplementedError
 
@@ -329,9 +318,6 @@ class BaseChangeset(object):
         ``repository``
             repository object within which changeset exists
 
-        ``id``
-            may be ``raw_id`` or i.e. for mercurial's tip just ``tip``
-
         ``raw_id``
             raw changeset representation (i.e. full 40 length sha for git
             backend)
@@ -354,10 +340,10 @@ class BaseChangeset(object):
             combined list of ``Node`` objects
 
         ``author``
-            author of the changeset, as unicode
+            author of the changeset, as str
 
         ``message``
-            message of the changeset, as unicode
+            message of the changeset, as str
 
         ``parents``
             list of parent changesets
@@ -374,10 +360,9 @@ class BaseChangeset(object):
     def __repr__(self):
         return self.__str__()
 
-    def __unicode__(self):
-        return u'%s:%s' % (self.revision, self.short_id)
-
     def __eq__(self, other):
+        if type(self) is not type(other):
+            return False
         return self.raw_id == other.raw_id
 
     def __json__(self, with_file_list=False):
@@ -389,9 +374,9 @@ class BaseChangeset(object):
                 message=self.message,
                 date=self.date,
                 author=self.author,
-                added=[safe_unicode(el.path) for el in self.added],
-                changed=[safe_unicode(el.path) for el in self.changed],
-                removed=[safe_unicode(el.path) for el in self.removed],
+                added=[el.path for el in self.added],
+                changed=[el.path for el in self.changed],
+                removed=[el.path for el in self.removed],
             )
         else:
             return dict(
@@ -420,13 +405,6 @@ class BaseChangeset(object):
     def children(self):
         """
         Returns list of children changesets.
-        """
-        raise NotImplementedError
-
-    @LazyProperty
-    def id(self):
-        """
-        Returns string identifying this changeset.
         """
         raise NotImplementedError
 
@@ -660,12 +638,12 @@ class BaseChangeset(object):
         """
         Returns dictionary with changeset's attributes and their values.
         """
-        data = get_dict_for_attrs(self, ['id', 'raw_id', 'short_id',
+        data = get_dict_for_attrs(self, ['raw_id', 'short_id',
             'revision', 'date', 'message'])
         data['author'] = {'name': self.author_name, 'email': self.author_email}
-        data['added'] = [safe_unicode(node.path) for node in self.added]
-        data['changed'] = [safe_unicode(node.path) for node in self.changed]
-        data['removed'] = [safe_unicode(node.path) for node in self.removed]
+        data['added'] = [node.path for node in self.added]
+        data['changed'] = [node.path for node in self.changed]
+        data['removed'] = [node.path for node in self.removed]
         return data
 
     @LazyProperty
@@ -936,18 +914,18 @@ class BaseInMemoryChangeset(object):
                         "at %s" % (node.path, p))
 
         # Check nodes marked as changed
-        missing = set(self.changed)
-        not_changed = set(self.changed)
+        missing = set(node.path for node in self.changed)
+        not_changed = set(node.path for node in self.changed)
         if self.changed and not parents:
-            raise NodeDoesNotExistError(str(self.changed[0].path))
+            raise NodeDoesNotExistError(self.changed[0].path)
         for p in parents:
             for node in self.changed:
                 try:
                     old = p.get_node(node.path)
-                    missing.remove(node)
+                    missing.remove(node.path)
                     # if content actually changed, remove node from unchanged
                     if old.content != node.content:
-                        not_changed.remove(node)
+                        not_changed.remove(node.path)
                 except NodeDoesNotExistError:
                     pass
         if self.changed and missing:
@@ -956,7 +934,7 @@ class BaseInMemoryChangeset(object):
 
         if self.changed and not_changed:
             raise NodeNotChangedError("Node at %s wasn't actually changed "
-                "since parents' changesets: %s" % (not_changed.pop().path,
+                "since parents' changesets: %s" % (not_changed.pop(),
                     parents)
             )
 
@@ -969,10 +947,10 @@ class BaseInMemoryChangeset(object):
             for node in self.removed:
                 try:
                     p.get_node(node.path)
-                    really_removed.add(node)
+                    really_removed.add(node.path)
                 except ChangesetError:
                     pass
-        not_removed = set(self.removed) - really_removed
+        not_removed = list(set(node.path for node in self.removed) - really_removed)
         if not_removed:
             raise NodeDoesNotExistError("Cannot remove node at %s from "
                 "following parents: %s" % (not_removed[0], parents))
@@ -1046,7 +1024,7 @@ class EmptyChangeset(BaseChangeset):
         return self
 
     def get_file_content(self, path):
-        return u''
+        return b''
 
     def get_file_size(self, path):
         return 0

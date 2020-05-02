@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import cStringIO
+import configparser
 import functools
 import logging.config
 import os
@@ -23,6 +23,7 @@ import click
 import paste.deploy
 
 import kallithea
+import kallithea.config.middleware
 
 
 # kallithea_cli is usually invoked through the 'kallithea-cli' wrapper script
@@ -71,12 +72,12 @@ def register_command(config_file=False, config_file_initialize_app=False, hidden
             def runtime_wrapper(config_file, *args, **kwargs):
                 path_to_ini_file = os.path.realpath(config_file)
                 kallithea.CONFIG = paste.deploy.appconfig('config:' + path_to_ini_file)
-                config_bytes = read_config(path_to_ini_file, strip_section_prefix=annotated.__name__)
-                logging.config.fileConfig(cStringIO.StringIO(config_bytes),
+                cp = configparser.ConfigParser(strict=False)
+                cp.read_string(read_config(path_to_ini_file, strip_section_prefix=annotated.__name__))
+                logging.config.fileConfig(cp,
                     {'__file__': path_to_ini_file, 'here': os.path.dirname(path_to_ini_file)})
                 if config_file_initialize_app:
-                    kallithea.config.middleware.make_app_without_logging(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
-                    kallithea.lib.utils.setup_cache_regions(kallithea.CONFIG)
+                    kallithea.config.middleware.make_app(kallithea.CONFIG.global_conf, **kallithea.CONFIG.local_conf)
                 return annotated(*args, **kwargs)
             return cli_command(runtime_wrapper)
         return annotator

@@ -26,24 +26,23 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import logging
+import email.utils
 import os
-import rfc822
 import traceback
 from collections import OrderedDict
 from operator import itemgetter
 from time import mktime
 
+import celery.utils.log
 from tg import config
 
-from kallithea import CELERY_ON
-from kallithea.lib import celerylib
-from kallithea.lib.compat import json
+import kallithea
+from kallithea.lib import celerylib, ext_json
 from kallithea.lib.helpers import person
 from kallithea.lib.hooks import log_create_repository
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import str2bool
+from kallithea.lib.utils2 import ascii_bytes, str2bool
 from kallithea.lib.vcs.utils import author_email
 from kallithea.model.db import RepoGroup, Repository, Statistics, User
 
@@ -51,7 +50,7 @@ from kallithea.model.db import RepoGroup, Repository, Statistics, User
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
 
 
-log = logging.getLogger(__name__)
+log = celery.utils.log.get_task_logger(__name__)
 
 
 @celerylib.task
@@ -67,6 +66,11 @@ def whoosh_index(repo_location, full_index):
                          .run(full_index=full_index)
 
 
+# for js data compatibility cleans the key for person from '
+def akc(k):
+    return person(k).replace('"', '')
+
+
 @celerylib.task
 @celerylib.dbsession
 def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
@@ -79,9 +83,6 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
     try:
         lock = celerylib.DaemonLock(os.path.join(lockkey_path, lockkey))
-
-        # for js data compatibility cleans the key for person from '
-        akc = lambda k: person(k).replace('"', "")
 
         co_day_auth_aggr = {}
         commits_by_day_aggregate = {}
@@ -118,22 +119,21 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             return True
 
         if cur_stats:
-            commits_by_day_aggregate = OrderedDict(json.loads(
+            commits_by_day_aggregate = OrderedDict(ext_json.loads(
                                         cur_stats.commit_activity_combined))
-            co_day_auth_aggr = json.loads(cur_stats.commit_activity)
+            co_day_auth_aggr = ext_json.loads(cur_stats.commit_activity)
 
         log.debug('starting parsing %s', parse_limit)
-        lmktime = mktime
 
-        last_rev = last_rev + 1 if last_rev >= 0 else 0
+        last_rev = last_rev + 1 if last_rev and last_rev >= 0 else 0
         log.debug('Getting revisions from %s to %s',
              last_rev, last_rev + parse_limit
         )
         for cs in repo[last_rev:last_rev + parse_limit]:
             log.debug('parsing %s', cs)
             last_cs = cs  # remember last parsed changeset
-            k = lmktime([cs.date.timetuple()[0], cs.date.timetuple()[1],
-                          cs.date.timetuple()[2], 0, 0, 0, 0, 0, 0])
+            tt = cs.date.timetuple()
+            k = mktime(tt[:3] + (0, 0, 0, 0, 0, 0))
 
             if akc(cs.author) in co_day_auth_aggr:
                 try:
@@ -143,8 +143,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                 except ValueError:
                     time_pos = None
 
-                if time_pos >= 0 and time_pos is not None:
-
+                if time_pos is not None and time_pos >= 0:
                     datadict = \
                         co_day_auth_aggr[akc(cs.author)]['data'][time_pos]
 
@@ -195,8 +194,8 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             }
 
         stats = cur_stats if cur_stats else Statistics()
-        stats.commit_activity = json.dumps(co_day_auth_aggr)
-        stats.commit_activity_combined = json.dumps(overview_data)
+        stats.commit_activity = ascii_bytes(ext_json.dumps(co_day_auth_aggr))
+        stats.commit_activity_combined = ascii_bytes(ext_json.dumps(overview_data))
 
         log.debug('last revision %s', last_rev)
         leftovers = len(repo.revisions[last_rev:])
@@ -204,7 +203,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
         if last_rev == 0 or leftovers < parse_limit:
             log.debug('getting code trending stats')
-            stats.languages = json.dumps(__get_codes_stats(repo_name))
+            stats.languages = ascii_bytes(ext_json.dumps(__get_codes_stats(repo_name)))
 
         try:
             stats.repository = dbrepo
@@ -221,7 +220,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
         lock.release()
 
         # execute another task if celery is enabled
-        if len(repo.revisions) > 1 and CELERY_ON and recurse_limit > 0:
+        if len(repo.revisions) > 1 and kallithea.CELERY_APP and recurse_limit > 0:
             get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit - 1)
         elif recurse_limit <= 0:
             log.debug('Not recursing - limit has been reached')
@@ -234,7 +233,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
 @celerylib.task
 @celerylib.dbsession
-def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+def send_email(recipients, subject, body='', html_body='', headers=None, from_name=None):
     """
     Sends an email with defined parameters from the .ini files.
 
@@ -244,7 +243,8 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
     :param body: body of the mail
     :param html_body: html version of body
     :param headers: dictionary of prepopulated e-mail headers
-    :param author: User object of the author of this mail, if known and relevant
+    :param from_name: full name to be used as sender of this mail - often a
+    .full_name_or_username value
     """
     assert isinstance(recipients, list), recipients
     if headers is None:
@@ -276,13 +276,13 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
     # SMTP sender
     envelope_from = email_config.get('app_email_from', 'Kallithea')
     # 'From' header
-    if author is not None:
-        # set From header based on author but with a generic e-mail address
+    if from_name is not None:
+        # set From header based on from_name but with a generic e-mail address
         # In case app_email_from is in "Some Name <e-mail>" format, we first
         # extract the e-mail address.
         envelope_addr = author_email(envelope_from)
         headers['From'] = '"%s" <%s>' % (
-            rfc822.quote('%s (no-reply)' % author.full_name_or_username),
+            email.utils.quote('%s (no-reply)' % from_name),
             envelope_addr)
 
     user = email_config.get('smtp_username')
@@ -414,7 +414,7 @@ def create_repo_fork(form_data, cur_user):
 
     DBS = celerylib.get_session()
 
-    base_path = Repository.base_path()
+    base_path = kallithea.CONFIG['base_path']
     cur_user = User.guess_instance(cur_user)
 
     repo_name = form_data['repo_name']  # fork in this case
@@ -489,7 +489,7 @@ def __get_codes_stats(repo_name):
     for _topnode, _dirnodes, filenodes in tip.walk('/'):
         for filenode in filenodes:
             ext = filenode.extension.lower()
-            if ext in LANGUAGES_EXTENSIONS_MAP.keys() and not filenode.is_binary:
+            if ext in LANGUAGES_EXTENSIONS_MAP and not filenode.is_binary:
                 if ext in code_stats:
                     code_stats[ext] += 1
                 else:

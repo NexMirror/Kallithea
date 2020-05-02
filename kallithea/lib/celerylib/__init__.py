@@ -33,9 +33,9 @@ from hashlib import md5
 from decorator import decorator
 from tg import config
 
-from kallithea import CELERY_EAGER, CELERY_ON
+import kallithea
 from kallithea.lib.pidlock import DaemonLock, LockHeld
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import safe_bytes
 from kallithea.model import meta
 
 
@@ -57,10 +57,10 @@ class FakeTask(object):
 
 
 def task(f_org):
-    """Wrapper of celery.task.task, running async if CELERY_ON
+    """Wrapper of celery.task.task, running async if CELERY_APP
     """
 
-    if CELERY_ON:
+    if kallithea.CELERY_APP:
         def f_async(*args, **kwargs):
             log.info('executing %s task', f_org.__name__)
             try:
@@ -68,8 +68,7 @@ def task(f_org):
             finally:
                 log.info('executed %s task', f_org.__name__)
         f_async.__name__ = f_org.__name__
-        from kallithea.lib import celerypylons
-        runner = celerypylons.task(ignore_result=True)(f_async)
+        runner = kallithea.CELERY_APP.task(ignore_result=True)(f_async)
 
         def f_wrapped(*args, **kwargs):
             t = runner.apply_async(args=args, kwargs=kwargs)
@@ -95,7 +94,7 @@ def __get_lockkey(func, *fargs, **fkwargs):
     func_name = str(func.__name__) if hasattr(func, '__name__') else str(func)
 
     lockkey = 'task_%s.lock' % \
-        md5(func_name + '-' + '-'.join(map(safe_str, params))).hexdigest()
+        md5(safe_bytes(func_name + '-' + '-'.join(str(x) for x in params))).hexdigest()
     return lockkey
 
 
@@ -128,7 +127,7 @@ def dbsession(func):
             ret = func(*fargs, **fkwargs)
             return ret
         finally:
-            if CELERY_ON and not CELERY_EAGER:
+            if kallithea.CELERY_APP and not kallithea.CELERY_EAGER:
                 meta.Session.remove()
 
     return decorator(__wrapper, func)

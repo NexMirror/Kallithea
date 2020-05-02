@@ -1,11 +1,11 @@
 ## -*- coding: utf-8 -*-
-<%text>################################################################################</%text>
-<%text>################################################################################</%text>
-# Kallithea - config file generated with kallithea-config                      #
-#                                                                              #
-# The %(here)s variable will be replaced with the parent directory of this file#
-<%text>################################################################################</%text>
-<%text>################################################################################</%text>
+<%text>###################################################################################</%text>
+<%text>###################################################################################</%text>
+<%text>## Kallithea config file generated with kallithea-config                         ##</%text>
+<%text>##                                                                               ##</%text>
+<%text>## The %(here)s variable will be replaced with the parent directory of this file ##</%text>
+<%text>###################################################################################</%text>
+<%text>###################################################################################</%text>
 
 [DEFAULT]
 
@@ -111,64 +111,33 @@ timeout = 3600
 %endif
 %else:
 <%text>## UWSGI ##</%text>
-<%text>## run with uwsgi --ini-paste-logged <inifile.ini></%text>
 [uwsgi]
-socket = /tmp/uwsgi.sock
-master = true
-http = ${host}:${port}
+<%text>## Note: this section is parsed by the uWSGI .ini parser when run as:</%text>
+<%text>## uwsgi --venv /srv/kallithea/venv --ini-paste-logged my.ini</%text>
+<%text>## Note: in uWSGI 2.0.18 or older, pastescript needs to be installed to</%text>
+<%text>## get correct application logging. In later versions this is not necessary.</%text>
+<%text>## pip install pastescript</%text>
 
-<%text>## set as daemon and redirect all output to file</%text>
-#daemonize = ./uwsgi_kallithea.log
+<%text>## HTTP Basics:</%text>
+http-socket = ${host}:${port}
+buffer-size = 65535                    ; Mercurial will use huge GET headers for discovery
 
-<%text>## master process PID</%text>
-pidfile = ./uwsgi_kallithea.pid
+<%text>## Scaling:</%text>
+master = true                          ; Use separate master and worker processes
+auto-procname = true                   ; Name worker processes accordingly
+lazy = true                            ; App *must* be loaded in workers - db connections can't be shared
+workers = 4                            ; On demand scaling up to this many worker processes
+cheaper = 1                            ; Initial and on demand scaling down to this many worker processes
+max-requests = 1000                    ; Graceful reload of worker processes to avoid leaks
 
-<%text>## stats server with workers statistics, use uwsgitop</%text>
-<%text>## for monitoring, `uwsgitop 127.0.0.1:1717`</%text>
-stats = 127.0.0.1:1717
-memory-report = true
-
-<%text>## log 5XX errors</%text>
-log-5xx = true
-
-<%text>## Set the socket listen queue size.</%text>
-listen = 128
-
-<%text>## Gracefully Reload workers after the specified amount of managed requests</%text>
-<%text>## (avoid memory leaks).</%text>
-max-requests = 1000
-
-<%text>## enable large buffers</%text>
-buffer-size = 65535
-
-<%text>## socket and http timeouts ##</%text>
-http-timeout = 3600
-socket-timeout = 3600
-
-<%text>## Log requests slower than the specified number of milliseconds.</%text>
-log-slow = 10
-
-<%text>## Exit if no app can be loaded.</%text>
-need-app = true
-
-<%text>## Set lazy mode (load apps in workers instead of master).</%text>
-lazy = true
-
-<%text>## scaling ##</%text>
-<%text>## set cheaper algorithm to use, if not set default will be used</%text>
-cheaper-algo = spare
-
-<%text>## minimum number of workers to keep at all times</%text>
-cheaper = 1
-
-<%text>## number of workers to spawn at startup</%text>
-cheaper-initial = 1
-
-<%text>## maximum number of workers that can be spawned</%text>
-workers = 4
-
-<%text>## how many workers should be spawned at a time</%text>
-cheaper-step = 1
+<%text>## Tweak defaults:</%text>
+strict = true                          ; Fail on unknown config directives
+enable-threads = true                  ; Enable Python threads (not threaded workers)
+vacuum = true                          ; Delete sockets during shutdown
+single-interpreter = true
+die-on-term = true                     ; Shutdown when receiving SIGTERM (default is respawn)
+need-app = true                        ; Exit early if no app can be loaded.
+reload-on-exception = true             ; Don't assume that the application worker can process more requests after a severe error
 
 %endif
 <%text>## middleware for hosting the WSGI application under a URL prefix</%text>
@@ -220,7 +189,7 @@ commit_parse_limit = 25
 <%text>## used, which is correct in many cases but for example not when using uwsgi.</%text>
 <%text>## If you change this setting, you should reinstall the Git hooks via</%text>
 <%text>## Admin > Settings > Remap and Rescan.</%text>
-# git_hook_interpreter = /srv/kallithea/venv/bin/python2
+#git_hook_interpreter = /srv/kallithea/venv/bin/python3
 %if git_hook_interpreter:
 git_hook_interpreter = ${git_hook_interpreter}
 %endif
@@ -295,7 +264,7 @@ issue_sub =
 <%text>## issue_pat, issue_server_link and issue_sub can have suffixes to specify</%text>
 <%text>## multiple patterns, to other issues server, wiki or others</%text>
 <%text>## below an example how to create a wiki pattern</%text>
-# wiki-some-id -> https://wiki.example.com/some-id
+<%text>## wiki-some-id -> https://wiki.example.com/some-id</%text>
 
 #issue_pat_wiki = wiki-(\S+)
 #issue_server_link_wiki = https://wiki.example.com/\1
@@ -313,12 +282,12 @@ allow_repo_location_change = True
 allow_custom_hooks_settings = True
 
 <%text>## extra extensions for indexing, space separated and without the leading '.'.</%text>
-# index.extensions =
+#index.extensions =
 #    gemfile
 #    lock
 
 <%text>## extra filenames for indexing, space separated</%text>
-# index.filenames =
+#index.filenames =
 #    .dockerignore
 #    .editorconfig
 #    INSTALL
@@ -356,25 +325,23 @@ ssh_locale = ${ssh_locale}
 <%text>###        CELERY CONFIG        ####</%text>
 <%text>####################################</%text>
 
+<%text>## Note: Celery doesn't support Windows.</%text>
 use_celery = false
 
-<%text>## Example: connect to the virtual host 'rabbitmqhost' on localhost as rabbitmq:</%text>
-broker.url = amqp://rabbitmq:qewqew@localhost:5672/rabbitmqhost
+<%text>## Celery config settings from https://docs.celeryproject.org/en/4.4.0/userguide/configuration.html prefixed with 'celery.'.</%text>
 
-celery.imports = kallithea.lib.celerylib.tasks
-celery.accept.content = pickle
-celery.result.backend = amqp
-celery.result.dburi = amqp://
-celery.result.serializer = json
+<%text>## Example: use the message queue on the local virtual host 'kallitheavhost' as the RabbitMQ user 'kallithea':</%text>
+celery.broker_url = amqp://kallithea:thepassword@localhost:5672/kallitheavhost
 
-#celery.send.task.error.emails = true
+celery.result.backend = db+sqlite:///celery-results.db
+
 #celery.amqp.task.result.expires = 18000
 
-celeryd.concurrency = 2
-celeryd.max.tasks.per.child = 1
+celery.worker_concurrency = 2
+celery.worker_max_tasks_per_child = 1
 
 <%text>## If true, tasks will never be sent to the queue, but executed locally instead.</%text>
-celery.always.eager = false
+celery.task_always_eager = false
 
 <%text>####################################</%text>
 <%text>###         BEAKER CACHE        ####</%text>
@@ -383,19 +350,15 @@ celery.always.eager = false
 beaker.cache.data_dir = %(here)s/data/cache/data
 beaker.cache.lock_dir = %(here)s/data/cache/lock
 
-beaker.cache.regions = short_term,long_term,sql_cache_short
-
-beaker.cache.short_term.type = memory
-beaker.cache.short_term.expire = 60
-beaker.cache.short_term.key_length = 256
+beaker.cache.regions = long_term,long_term_file
 
 beaker.cache.long_term.type = memory
 beaker.cache.long_term.expire = 36000
 beaker.cache.long_term.key_length = 256
 
-beaker.cache.sql_cache_short.type = memory
-beaker.cache.sql_cache_short.expire = 10
-beaker.cache.sql_cache_short.key_length = 256
+beaker.cache.long_term_file.type = file
+beaker.cache.long_term_file.expire = 604800
+beaker.cache.long_term_file.key_length = 256
 
 <%text>####################################</%text>
 <%text>###       BEAKER SESSION        ####</%text>
@@ -429,12 +392,24 @@ session.secret = ${uuid()}
 #session.sa.url = postgresql://postgres:qwe@localhost/kallithea
 #session.table_name = db_session
 
-<%text>############################</%text>
-<%text>## ERROR HANDLING SYSTEMS ##</%text>
-<%text>############################</%text>
+<%text>####################################</%text>
+<%text>###       ERROR HANDLING        ####</%text>
+<%text>####################################</%text>
 
-# Propagate email settings to ErrorReporter of TurboGears2
-# You do not normally need to change these lines
+<%text>## Show a nice error page for application HTTP errors and exceptions (default true)</%text>
+#errorpage.enabled = true
+
+<%text>## Enable Backlash client-side interactive debugger (default false)</%text>
+<%text>## WARNING: *THIS MUST BE false IN PRODUCTION ENVIRONMENTS!!!*</%text>
+<%text>## This debug mode will allow all visitors to execute malicious code.</%text>
+#debug = false
+
+<%text>## Enable Backlash server-side error reporting (unless debug mode handles it client-side) (default true)</%text>
+#trace_errors.enable = true
+<%text>## Errors will be reported by mail if trace_errors.error_email is set.</%text>
+
+<%text>## Propagate email settings to ErrorReporter of TurboGears2</%text>
+<%text>## You do not normally need to change these lines</%text>
 get trace_errors.smtp_server = smtp_server
 get trace_errors.smtp_port = smtp_port
 get trace_errors.from_address = error_email_from
@@ -443,63 +418,7 @@ get trace_errors.smtp_username = smtp_username
 get trace_errors.smtp_password = smtp_password
 get trace_errors.smtp_use_tls = smtp_use_tls
 
-%if error_aggregation_service == 'appenlight':
-<%text>####################</%text>
-<%text>### [appenlight] ###</%text>
-<%text>####################</%text>
-
-<%text>## AppEnlight is tailored to work with Kallithea, see</%text>
-<%text>## http://appenlight.com for details how to obtain an account</%text>
-<%text>## you must install python package `appenlight_client` to make it work</%text>
-
-<%text>## appenlight enabled</%text>
-appenlight = false
-
-appenlight.server_url = https://api.appenlight.com
-appenlight.api_key = YOUR_API_KEY
-
-<%text>## TWEAK AMOUNT OF INFO SENT HERE</%text>
-
-<%text>## enables 404 error logging (default False)</%text>
-appenlight.report_404 = false
-
-<%text>## time in seconds after request is considered being slow (default 1)</%text>
-appenlight.slow_request_time = 1
-
-<%text>## record slow requests in application</%text>
-<%text>## (needs to be enabled for slow datastore recording and time tracking)</%text>
-appenlight.slow_requests = true
-
-<%text>## enable hooking to application loggers</%text>
-#appenlight.logging = true
-
-<%text>## minimum log level for log capture</%text>
-#appenlight.logging.level = WARNING
-
-<%text>## send logs only from erroneous/slow requests</%text>
-<%text>## (saves API quota for intensive logging)</%text>
-appenlight.logging_on_error = false
-
-<%text>## list of additional keywords that should be grabbed from environ object</%text>
-<%text>## can be string with comma separated list of words in lowercase</%text>
-<%text>## (by default client will always send following info:</%text>
-<%text>## 'REMOTE_USER', 'REMOTE_ADDR', 'SERVER_NAME', 'CONTENT_TYPE' + all keys that</%text>
-<%text>## start with HTTP* this list be extended with additional keywords here</%text>
-appenlight.environ_keys_whitelist =
-
-<%text>## list of keywords that should be blanked from request object</%text>
-<%text>## can be string with comma separated list of words in lowercase</%text>
-<%text>## (by default client will always blank keys that contain following words</%text>
-<%text>## 'password', 'passwd', 'pwd', 'auth_tkt', 'secret', 'csrf'</%text>
-<%text>## this list be extended with additional keywords set here</%text>
-appenlight.request_keys_blacklist =
-
-<%text>## list of namespaces that should be ignores when gathering log entries</%text>
-<%text>## can be string with comma separated list of namespaces</%text>
-<%text>## (by default the client ignores own entries: appenlight_client.client)</%text>
-appenlight.log_namespace_blacklist =
-
-%elif error_aggregation_service == 'sentry':
+%if error_aggregation_service == 'sentry':
 <%text>################</%text>
 <%text>### [sentry] ###</%text>
 <%text>################</%text>
@@ -519,12 +438,6 @@ sentry.include_paths =
 sentry.exclude_paths =
 
 %endif
-<%text>################################################################################</%text>
-<%text>## WARNING: *DEBUG MODE MUST BE OFF IN A PRODUCTION ENVIRONMENT*              ##</%text>
-<%text>## Debug mode will enable the interactive debugging tool, allowing ANYONE to  ##</%text>
-<%text>## execute malicious code after an exception is raised.                       ##</%text>
-<%text>################################################################################</%text>
-debug = false
 
 <%text>##################################</%text>
 <%text>###       LOGVIEW CONFIG       ###</%text>
@@ -539,19 +452,19 @@ logview.pylons.util = #eee
 <%text>#########################################################</%text>
 
 %if database_engine == 'sqlite':
-# SQLITE [default]
+<%text>## SQLITE [default]</%text>
 sqlalchemy.url = sqlite:///%(here)s/kallithea.db?timeout=60
 
 %elif database_engine == 'postgres':
-# POSTGRESQL
+<%text>## POSTGRESQL</%text>
 sqlalchemy.url = postgresql://user:pass@localhost/kallithea
 
 %elif database_engine == 'mysql':
-# MySQL
+<%text>## MySQL</%text>
 sqlalchemy.url = mysql://user:pass@localhost/kallithea?charset=utf8
 
 %endif
-# see sqlalchemy docs for others
+<%text>## see sqlalchemy docs for other backends</%text>
 
 sqlalchemy.pool_recycle = 3600
 
@@ -582,8 +495,8 @@ keys = generic, color_formatter, color_formatter_sql
 [logger_root]
 level = NOTSET
 handlers = console
-# For coloring based on log level:
-# handlers = console_color
+<%text>## For coloring based on log level:</%text>
+#handlers = console_color
 
 [logger_routes]
 level = WARN
@@ -620,10 +533,10 @@ qualname = gearbox
 level = WARN
 handlers =
 qualname = sqlalchemy.engine
-# For coloring based on log level and pretty printing of SQL:
-# level = INFO
-# handlers = console_color_sql
-# propagate = 0
+<%text>## For coloring based on log level and pretty printing of SQL:</%text>
+#level = INFO
+#handlers = console_color_sql
+#propagate = 0
 
 [logger_whoosh_indexer]
 level = WARN
@@ -650,13 +563,13 @@ args = (sys.stderr,)
 formatter = generic
 
 [handler_console_color]
-# ANSI color coding based on log level
+<%text>## ANSI color coding based on log level</%text>
 class = StreamHandler
 args = (sys.stderr,)
 formatter = color_formatter
 
 [handler_console_color_sql]
-# ANSI color coding and pretty printing of SQL statements
+<%text>## ANSI color coding and pretty printing of SQL statements</%text>
 class = StreamHandler
 args = (sys.stderr,)
 formatter = color_formatter_sql
@@ -687,16 +600,16 @@ datefmt = %Y-%m-%d %H:%M:%S
 <%text>## SSH LOGGING ##</%text>
 <%text>#################</%text>
 
-# The default loggers use 'handler_console' that uses StreamHandler with
-# destination 'sys.stderr'. In the context of the SSH server process, these log
-# messages would be sent to the client, which is normally not what you want.
-# By default, when running ssh-serve, just use NullHandler and disable logging
-# completely. For other logging options, see:
-# https://docs.python.org/2/library/logging.handlers.html
+<%text>## The default loggers use 'handler_console' that uses StreamHandler with</%text>
+<%text>## destination 'sys.stderr'. In the context of the SSH server process, these log</%text>
+<%text>## messages would be sent to the client, which is normally not what you want.</%text>
+<%text>## By default, when running ssh-serve, just use NullHandler and disable logging</%text>
+<%text>## completely. For other logging options, see:</%text>
+<%text>## https://docs.python.org/2/library/logging.handlers.html</%text>
 
 [ssh_serve:logger_root]
 level = CRITICAL
 handlers = null
 
-# Note: If logging is configured with other handlers, they might need similar
-# muting for ssh-serve too.
+<%text>## Note: If logging is configured with other handlers, they might need similar</%text>
+<%text>## muting for ssh-serve too.</%text>

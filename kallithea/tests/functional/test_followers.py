@@ -1,24 +1,24 @@
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-class TestFollowersController(TestController):
+class TestFollowersController(base.TestController):
 
     def test_index_hg(self):
         self.log_user()
-        repo_name = HG_REPO
-        response = self.app.get(url(controller='followers',
+        repo_name = base.HG_REPO
+        response = self.app.get(base.url(controller='followers',
                                     action='followers',
                                     repo_name=repo_name))
 
-        response.mustcontain(TEST_USER_ADMIN_LOGIN)
+        response.mustcontain(base.TEST_USER_ADMIN_LOGIN)
         response.mustcontain("""Started following""")
 
     def test_index_git(self):
         self.log_user()
-        repo_name = GIT_REPO
-        response = self.app.get(url(controller='followers',
+        repo_name = base.GIT_REPO
+        response = self.app.get(base.url(controller='followers',
                                     action='followers',
                                     repo_name=repo_name))
 
-        response.mustcontain(TEST_USER_ADMIN_LOGIN)
+        response.mustcontain(base.TEST_USER_ADMIN_LOGIN)
         response.mustcontain("""Started following""")

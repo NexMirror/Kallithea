@@ -27,12 +27,10 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-import urllib
 
 from tg import config, request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webhelpers2.html.tools import update_params
 from whoosh.index import EmptyIndexError, exists_in, open_dir
 from whoosh.qparser import QueryParser, QueryParserError
 from whoosh.query import Phrase, Prefix
@@ -41,7 +39,7 @@ from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA, WhooshResultWrapper
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_int, safe_str
+from kallithea.lib.utils2 import safe_int
 from kallithea.model.repo import RepoModel
 
 
@@ -96,9 +94,9 @@ class SearchController(BaseRepoController):
                 if c.repo_name:
                     # use "repository_rawname:" instead of "repository:"
                     # for case-sensitive matching
-                    cur_query = u'repository_rawname:%s %s' % (c.repo_name, cur_query)
+                    cur_query = 'repository_rawname:%s %s' % (c.repo_name, cur_query)
                 try:
-                    query = qp.parse(unicode(cur_query))
+                    query = qp.parse(cur_query)
                     # extract words for highlight
                     if isinstance(query, Phrase):
                         highlight_items.update(query.words)
@@ -119,9 +117,6 @@ class SearchController(BaseRepoController):
                         res_ln, results.runtime
                     )
 
-                    def url_generator(**kw):
-                        q = urllib.quote(safe_str(c.cur_query))
-                        return update_params("?q=%s&type=%s" % (q, safe_str(c.cur_type)), **kw)
                     repo_location = RepoModel().repos_path
                     c.formated_results = Page(
                         WhooshResultWrapper(search_type, searcher, matcher,
@@ -129,7 +124,8 @@ class SearchController(BaseRepoController):
                         page=p,
                         item_count=res_ln,
                         items_per_page=10,
-                        url=url_generator
+                        type=c.cur_type,
+                        q=c.cur_query,
                     )
 
                 except QueryParserError:

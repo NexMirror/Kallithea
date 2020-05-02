@@ -21,11 +21,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import binascii
+import base64
 import logging
 import re
 
 from tg.i18n import ugettext as _
+
+from kallithea.lib.utils2 import ascii_bytes, ascii_str
 
 
 log = logging.getLogger(__name__)
@@ -42,32 +44,32 @@ def parse_pub_key(ssh_key):
     >>> parse_pub_key('')
     Traceback (most recent call last):
     ...
-    SshKeyParseError: SSH key is missing
+    kallithea.lib.ssh.SshKeyParseError: SSH key is missing
     >>> parse_pub_key('''AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ''')
     Traceback (most recent call last):
     ...
-    SshKeyParseError: Incorrect SSH key - it must have both a key type and a base64 part, like 'ssh-rsa ASRNeaZu4FA...xlJp='
+    kallithea.lib.ssh.SshKeyParseError: Incorrect SSH key - it must have both a key type and a base64 part, like 'ssh-rsa ASRNeaZu4FA...xlJp='
     >>> parse_pub_key('''abc AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ''')
     Traceback (most recent call last):
     ...
-    SshKeyParseError: Incorrect SSH key - it must start with 'ssh-(rsa|dss|ed25519)'
+    kallithea.lib.ssh.SshKeyParseError: Incorrect SSH key - it must start with 'ssh-(rsa|dss|ed25519)'
     >>> parse_pub_key('''ssh-rsa  AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ''')
     Traceback (most recent call last):
     ...
-    SshKeyParseError: Incorrect SSH key - failed to decode base64 part 'AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ'
+    kallithea.lib.ssh.SshKeyParseError: Incorrect SSH key - failed to decode base64 part 'AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ'
     >>> parse_pub_key('''ssh-rsa  AAAAB2NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ==''')
     Traceback (most recent call last):
     ...
-    SshKeyParseError: Incorrect SSH key - base64 part is not 'ssh-rsa' as claimed but 'csh-rsa'
+    kallithea.lib.ssh.SshKeyParseError: Incorrect SSH key - base64 part is not 'ssh-rsa' as claimed but 'csh-rsa'
     >>> parse_pub_key('''ssh-rsa  AAAAB3NzaC1yc2EAAAA'LVGhpcyBpcyBmYWtlIQ''')
     Traceback (most recent call last):
     ...
-    SshKeyParseError: Incorrect SSH key - unexpected characters in base64 part "AAAAB3NzaC1yc2EAAAA'LVGhpcyBpcyBmYWtlIQ"
+    kallithea.lib.ssh.SshKeyParseError: Incorrect SSH key - unexpected characters in base64 part "AAAAB3NzaC1yc2EAAAA'LVGhpcyBpcyBmYWtlIQ"
     >>> parse_pub_key(''' ssh-rsa  AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ== and a comment
     ... ''')
-    ('ssh-rsa', '\x00\x00\x00\x07ssh-rsa\x00\x00\x00\x0bThis is fake!', 'and a comment\n')
+    ('ssh-rsa', b'\x00\x00\x00\x07ssh-rsa\x00\x00\x00\x0bThis is fake!', 'and a comment\n')
     >>> parse_pub_key('''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1NA2kBQIKe74afUXmIWD9ByDYQJqUwW44Y4gJOBRuo''')
-    ('ssh-ed25519', '\x00\x00\x00\x0bssh-ed25519\x00\x00\x00 \xfdM\x03i\x01@\x82\x9e\xef\x86\x9fQy\x88X?A\xc86\x10&\xa50[\x8e\x18\xe2\x02N\x05\x1b\xa8', '')
+    ('ssh-ed25519', b'\x00\x00\x00\x0bssh-ed25519\x00\x00\x00 \xfdM\x03i\x01@\x82\x9e\xef\x86\x9fQy\x88X?A\xc86\x10&\xa50[\x8e\x18\xe2\x02N\x05\x1b\xa8', '')
     """
     if not ssh_key:
         raise SshKeyParseError(_("SSH key is missing"))
@@ -84,14 +86,14 @@ def parse_pub_key(ssh_key):
         raise SshKeyParseError(_("Incorrect SSH key - unexpected characters in base64 part %r") % keyvalue)
 
     try:
-        decoded = keyvalue.decode('base64')
-    except binascii.Error:
+        key_bytes = base64.b64decode(keyvalue)
+    except base64.binascii.Error:
         raise SshKeyParseError(_("Incorrect SSH key - failed to decode base64 part %r") % keyvalue)
 
-    if not decoded.startswith('\x00\x00\x00' + chr(len(keytype)) + str(keytype) + '\x00'):
-        raise SshKeyParseError(_("Incorrect SSH key - base64 part is not %r as claimed but %r") % (str(keytype), str(decoded[4:].split('\0', 1)[0])))
+    if not key_bytes.startswith(b'\x00\x00\x00%c%s\x00' % (len(keytype), ascii_bytes(keytype))):
+        raise SshKeyParseError(_("Incorrect SSH key - base64 part is not %r as claimed but %r") % (keytype, ascii_str(key_bytes[4:].split(b'\0', 1)[0])))
 
-    return keytype, decoded, comment
+    return keytype, key_bytes, comment
 
 
 SSH_OPTIONS = 'no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding'
@@ -121,13 +123,14 @@ def authorized_keys_line(kallithea_cli_path, config_file, key):
     'no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding,command="/srv/kallithea/venv/bin/kallithea-cli ssh-serve -c /srv/kallithea/my.ini 7 17" ssh-rsa AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ==\\n'
     """
     try:
-        keytype, decoded, comment = parse_pub_key(key.public_key)
+        keytype, key_bytes, comment = parse_pub_key(key.public_key)
     except SshKeyParseError:
         return '# Invalid Kallithea SSH key: %s %s\n' % (key.user.user_id, key.user_ssh_key_id)
-    mimekey = decoded.encode('base64').replace('\n', '')
-    if not _safe_check(mimekey):
+    base64_key = ascii_str(base64.b64encode(key_bytes))
+    assert '\n' not in base64_key
+    if not _safe_check(base64_key):
         return '# Invalid Kallithea SSH key - bad base64 encoding: %s %s\n' % (key.user.user_id, key.user_ssh_key_id)
     return '%s,command="%s ssh-serve -c %s %s %s" %s %s\n' % (
         SSH_OPTIONS, kallithea_cli_path, config_file,
         key.user.user_id, key.user_ssh_key_id,
-        keytype, mimekey)
+        keytype, base64_key)

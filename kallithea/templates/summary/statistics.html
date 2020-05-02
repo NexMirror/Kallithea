@@ -15,9 +15,9 @@
 <%block name="head_extra">
   <link href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s ATOM feed') % c.repo_name}" type="application/atom+xml" />
   <link href="${h.url('rss_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s RSS feed') % c.repo_name}" type="application/rss+xml" />
-  <script type="text/javascript" src="${h.url('/js/jquery.flot.js', ver=c.kallithea_version)}"></script>
-  <script type="text/javascript" src="${h.url('/js/jquery.flot.selection.js', ver=c.kallithea_version)}"></script>
-  <script type="text/javascript" src="${h.url('/js/jquery.flot.time.js', ver=c.kallithea_version)}"></script>
+  <script src="${h.url('/js/jquery.flot.js', ver=c.kallithea_version)}"></script>
+  <script src="${h.url('/js/jquery.flot.selection.js', ver=c.kallithea_version)}"></script>
+  <script src="${h.url('/js/jquery.flot.time.js', ver=c.kallithea_version)}"></script>
 </%block>
 
 <%def name="main()">
@@ -28,8 +28,8 @@ ${self.repo_context_bar('summary')}
     </div>
 
     <div class="graph panel-body">
-         <div>
-         %if c.no_data:
+        <div>
+        %if not c.stats_percentage:
            ${c.no_data_msg}
            %if h.HasPermissionAny('hg.admin')('enable stats on from summary'):
                 ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name),class_="btn btn-default btn-xs")}
@@ -51,19 +51,17 @@ ${self.repo_context_bar('summary')}
     </div>
 </div>
 
-<script type="text/javascript">
+<script>'use strict';
 var data = ${h.js(c.trending_languages)};
 var total = 0;
-var no_data = true;
 var tbl = document.createElement('table');
 tbl.setAttribute('class','trending_language_tbl');
 var cnt = 0;
-for (var i=0;i<data.length;i++){
+for (let i=0;i<data.length;i++){
     total+= data[i][1].count;
 }
-for (var i=0;i<data.length;i++){
+for (let i=0;i<data.length;i++){
     cnt += 1;
-    no_data = false;
 
     var hide = cnt>2;
     var tr = document.createElement('tr');
@@ -105,7 +103,7 @@ for (var i=0;i<data.length;i++){
     if(cnt == 3){
         var show_more = document.createElement('tr');
         var td = document.createElement('td');
-        lnk = document.createElement('a');
+        let lnk = document.createElement('a');
 
         lnk.href='#';
         lnk.innerHTML = ${h.jshtml(_('Show more'))};
@@ -120,7 +118,7 @@ for (var i=0;i<data.length;i++){
 }
 
 </script>
-<script type="text/javascript">
+<script>'use strict';
 
 /**
  * Plots summary graph
@@ -138,17 +136,15 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             "to":to
         }
     };
-    for(var key in dataset){
-      var data = dataset[key].data;
+    for(let key in dataset){
+      let data = dataset[key].data;
       for(var d in data){
         data[d].time *= 1000;
       }
     }
-    for(var key in overview_dataset){
+    for(let key in overview_dataset){
       overview_dataset[key][0] *= 1000;
     }
-    var dataset = dataset;
-    var overview_dataset = [overview_dataset];
     var choiceContainer = $("#legend_choices")[0];
     var choiceContainerTable = $("#legend_choices_tables")[0];
     var $plotContainer = $('#commit_history');
@@ -160,8 +156,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
         bars: {show:true, align: 'center', lineWidth: 4},
         legend: {show:true,
                 container: "#legend_container",
-                labelFormatter: function(label, series) {
-                        // series is the series object for the label
+                labelFormatter: function(label) {
                         return '<a href="javascript:void(0)"> ' + label + '</a>';
                     }
         },
@@ -209,8 +204,6 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
 
     /**
      * generate checkboxes accordingly to data
-     * @param keys
-     * @returns
      */
     function generateCheckboxes(data) {
         //append checkboxes
@@ -259,12 +252,9 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
 
         var data = [];
         var new_dataset = {};
-        var keys = [];
-        var max_commits = 0;
         for(var key in dataset){
-
             for(var ds in dataset[key].data){
-                commit_data = dataset[key].data[ds];
+                let commit_data = dataset[key].data[ds];
                 if (commit_data.time >= ranges.xaxis.from && commit_data.time <= ranges.xaxis.to){
                     if(new_dataset[key] === undefined){
                         new_dataset[key] = {data:[],label:key};
@@ -292,7 +282,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     * redraw using new checkbox data
     */
     function plotchoiced(e){
-        args = e.data;
+        let args = e.data;
         var cur_data = args[0];
         var cur_ranges = args[1];
 
@@ -384,7 +374,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             if (previousPoint != item.datapoint) {
                 previousPoint = item.datapoint;
 
-                var tooltip = $("#tooltip")[0];
+                let tooltip = $("#tooltip")[0];
                 if(tooltip) {
                       tooltip.parentNode.removeChild(tooltip);
                 }
@@ -421,7 +411,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             }
         }
         else {
-              var tooltip = $("#tooltip")[0];
+              let tooltip = $("#tooltip")[0];
 
               if(tooltip) {
                     tooltip.parentNode.removeChild(tooltip);
@@ -434,14 +424,14 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
      * MAIN EXECUTION
      */
 
-    var data = getDataAccordingToRanges(initial_ranges);
+    let data = getDataAccordingToRanges(initial_ranges);
     generateCheckboxes(data);
 
     //main plot
     var plot = $.plot(plotContainer,data,plot_options);
 
     //overview
-    var overview = $.plot(overviewContainer, overview_dataset, overview_options);
+    var overview = $.plot(overviewContainer, [overview_dataset], overview_options);
 
     //show initial selection on overview
     overview.setSelection(initial_ranges);

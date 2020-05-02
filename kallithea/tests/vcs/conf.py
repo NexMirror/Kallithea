@@ -7,8 +7,8 @@ import uuid
 # Retrieve the necessary configuration options from the test base
 # module. Some of these configuration options are subsequently
 # consumed by the VCS test module.
-from kallithea.tests.base import (
-    GIT_REMOTE_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, TEST_GIT_REPO_CLONE, TEST_HG_REPO, TEST_HG_REPO_CLONE, TEST_HG_REPO_PULL, TESTS_TMP_PATH)
+from kallithea.tests.base import (GIT_REMOTE_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, TEST_GIT_REPO_CLONE, TEST_HG_REPO, TEST_HG_REPO_CLONE, TEST_HG_REPO_PULL,
+                                  TESTS_TMP_PATH)
 
 
 __all__ = (

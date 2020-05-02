@@ -61,7 +61,7 @@
             <div class="text-muted">${gist.gist_description}</div>
           </div>
         % endfor
-        ${c.gists_pager.pager(**request.GET.mixed())}
+        ${c.gists_pager.pager()}
       %else:
         <div>${_('There are no gists yet')}</div>
       %endif

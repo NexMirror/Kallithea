@@ -9,6 +9,8 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
+from kallithea.lib.vcs.utils import hgcompat
+
 from .changeset import MercurialChangeset
 from .inmemory import MercurialInMemoryChangeset
 from .repository import MercurialRepository
@@ -19,3 +21,5 @@ __all__ = [
     'MercurialRepository', 'MercurialChangeset',
     'MercurialInMemoryChangeset', 'MercurialWorkdir',
 ]
+
+hgcompat.monkey_do()

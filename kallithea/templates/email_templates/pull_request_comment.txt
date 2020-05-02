@@ -19,4 +19,5 @@ ${pr_target_repo|n,unicode} \
 ${_('branch')|n,unicode} \
 ${pr_target_branch|n,unicode}
 
-<%include file="button.txt" args="url=pr_comment_url,title=_('View Comment')"/>\
+<% title = _('View Comment') %>\
+<%include file="button.txt" args="url=pr_comment_url,title=title"/>\

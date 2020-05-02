@@ -91,12 +91,12 @@ ${self.repo_context_bar('showpullrequest')}
 
 </div>
 
-<script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
-<script type="text/javascript">
+<script src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
+<script>'use strict';
   pyroutes.register('pullrequest_repo_info', ${h.js(url('pullrequest_repo_info',repo_name='%(repo_name)s'))}, ['repo_name']);
 
   var pendingajax = undefined;
-  var otherrepoChanged = function(){
+  function otherrepoChanged(){
       var $other_ref = $('#other_ref');
       $other_ref.prop('disabled', true);
       var repo_name = $('#other_repo').val();
@@ -132,9 +132,9 @@ ${self.repo_context_bar('showpullrequest')}
               $other_ref.prop('disabled', false);
               loadPreview();
           });
-  };
+  }
 
-  var loadPreview = function(){
+  function loadPreview(){
       //url template
       var url = ${h.js(h.url('compare_url',
                          repo_name='__other_repo__',
@@ -162,7 +162,7 @@ ${self.repo_context_bar('showpullrequest')}
           '__other_ref_name__': other_ref[2]
       }; // gather the org/other ref and repo here
 
-      for (k in rev_data){
+      for (let k in rev_data){
           url = url.replace(k,rev_data[k]);
       }
 
@@ -170,7 +170,7 @@ ${self.repo_context_bar('showpullrequest')}
           pendingajax.abort();
           pendingajax = undefined;
       }
-      pendingajax = asynchtml(url, $('#pull_request_overview'), function(o){
+      pendingajax = asynchtml(url, $('#pull_request_overview'), function(){
           pendingajax = undefined;
       });
   }
@@ -186,14 +186,14 @@ ${self.repo_context_bar('showpullrequest')}
           maxResults: 50,
           sortResults: branchSort
       });
-      $("#org_ref").on("change", function(e){
+      $("#org_ref").on("change", function(){
           loadPreview();
       });
 
       $("#other_repo").select2({
           dropdownAutoWidth: true
       });
-      $("#other_repo").on("change", function(e){
+      $("#other_repo").on("change", function(){
           otherrepoChanged();
       });
 
@@ -202,7 +202,7 @@ ${self.repo_context_bar('showpullrequest')}
           maxResults: 50,
           sortResults: branchSort
       });
-      $("#other_ref").on("change", function(e){
+      $("#other_ref").on("change", function(){
           loadPreview();
       });
 

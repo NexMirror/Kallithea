@@ -3,7 +3,6 @@ import os
 import mock
 import pytest
 
-from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.backends.hg import MercurialChangeset, MercurialRepository
 from kallithea.lib.vcs.exceptions import NodeDoesNotExistError, RepositoryError, VCSError
 from kallithea.lib.vcs.nodes import NodeKind, NodeState
@@ -19,7 +18,7 @@ class TestMercurialRepository(object):
                       % TEST_HG_REPO_CLONE)
 
     def setup_method(self):
-        self.repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        self.repo = MercurialRepository(TEST_HG_REPO)
 
     def test_wrong_repo_path(self):
         wrong_repo_path = os.path.join(TESTS_TMP_PATH, 'errorrepo')
@@ -28,11 +27,11 @@ class TestMercurialRepository(object):
 
     def test_unicode_path_repo(self):
         with pytest.raises(VCSError):
-            MercurialRepository(u'iShouldFail')
+            MercurialRepository('iShouldFail')
 
     def test_repo_clone(self):
         self.__check_for_existing_repo()
-        repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        repo = MercurialRepository(TEST_HG_REPO)
         repo_clone = MercurialRepository(TEST_HG_REPO_CLONE,
             src_url=TEST_HG_REPO, update_after_clone=True)
         assert len(repo.revisions) == len(repo_clone.revisions)
@@ -42,7 +41,7 @@ class TestMercurialRepository(object):
             assert raw_id == repo_clone.get_changeset(raw_id).raw_id
 
     def test_repo_clone_with_update(self):
-        repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        repo = MercurialRepository(TEST_HG_REPO)
         repo_clone = MercurialRepository(TEST_HG_REPO_CLONE + '_w_update',
             src_url=TEST_HG_REPO, update_after_clone=True)
         assert len(repo.revisions) == len(repo_clone.revisions)
@@ -55,7 +54,7 @@ class TestMercurialRepository(object):
         )
 
     def test_repo_clone_without_update(self):
-        repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        repo = MercurialRepository(TEST_HG_REPO)
         repo_clone = MercurialRepository(TEST_HG_REPO_CLONE + '_wo_update',
             src_url=TEST_HG_REPO, update_after_clone=False)
         assert len(repo.revisions) == len(repo_clone.revisions)
@@ -219,7 +218,7 @@ class TestMercurialRepository(object):
     def test_changeset10(self):
 
         chset10 = self.repo.get_changeset(10)
-        readme = """===
+        readme = b"""===
 VCS
 ===
 
@@ -235,7 +234,7 @@ TODO: To be written...
         assert node.kind == NodeKind.FILE
         assert node.content == readme
 
-    @mock.patch('kallithea.lib.vcs.backends.hg.repository.diffopts')
+    @mock.patch('mercurial.mdiff.diffopts')
     def test_get_diff_does_not_sanitize_zero_context(self, mock_diffopts):
         zero_context = 0
 
@@ -243,7 +242,7 @@ TODO: To be written...
 
         mock_diffopts.assert_called_once_with(git=True, showfunc=True, ignorews=False, context=zero_context)
 
-    @mock.patch('kallithea.lib.vcs.backends.hg.repository.diffopts')
+    @mock.patch('mercurial.mdiff.diffopts')
     def test_get_diff_sanitizes_negative_context(self, mock_diffopts):
         negative_context = -10
         zero_context = 0
@@ -256,7 +255,7 @@ TODO: To be written...
 class TestMercurialChangeset(object):
 
     def setup_method(self):
-        self.repo = MercurialRepository(safe_str(TEST_HG_REPO))
+        self.repo = MercurialRepository(TEST_HG_REPO)
 
     def _test_equality(self, changeset):
         revision = changeset.revision
@@ -444,20 +443,20 @@ class TestMercurialChangeset(object):
         #    added:   20
         #    removed: 1
         changed = set(['.hgignore'
-            , 'README.rst' , 'docs/conf.py' , 'docs/index.rst' , 'setup.py'
-            , 'tests/test_hg.py' , 'tests/test_nodes.py' , 'vcs/__init__.py'
-            , 'vcs/backends/__init__.py' , 'vcs/backends/base.py'
-            , 'vcs/backends/hg.py' , 'vcs/nodes.py' , 'vcs/utils/__init__.py'])
+            , 'README.rst', 'docs/conf.py', 'docs/index.rst', 'setup.py'
+            , 'tests/test_hg.py', 'tests/test_nodes.py', 'vcs/__init__.py'
+            , 'vcs/backends/__init__.py', 'vcs/backends/base.py'
+            , 'vcs/backends/hg.py', 'vcs/nodes.py', 'vcs/utils/__init__.py'])
 
         added = set(['docs/api/backends/hg.rst'
-            , 'docs/api/backends/index.rst' , 'docs/api/index.rst'
-            , 'docs/api/nodes.rst' , 'docs/api/web/index.rst'
-            , 'docs/api/web/simplevcs.rst' , 'docs/installation.rst'
-            , 'docs/quickstart.rst' , 'setup.cfg' , 'vcs/utils/baseui_config.py'
-            , 'vcs/utils/web.py' , 'vcs/web/__init__.py' , 'vcs/web/exceptions.py'
-            , 'vcs/web/simplevcs/__init__.py' , 'vcs/web/simplevcs/exceptions.py'
-            , 'vcs/web/simplevcs/middleware.py' , 'vcs/web/simplevcs/models.py'
-            , 'vcs/web/simplevcs/settings.py' , 'vcs/web/simplevcs/utils.py'
+            , 'docs/api/backends/index.rst', 'docs/api/index.rst'
+            , 'docs/api/nodes.rst', 'docs/api/web/index.rst'
+            , 'docs/api/web/simplevcs.rst', 'docs/installation.rst'
+            , 'docs/quickstart.rst', 'setup.cfg', 'vcs/utils/baseui_config.py'
+            , 'vcs/utils/web.py', 'vcs/web/__init__.py', 'vcs/web/exceptions.py'
+            , 'vcs/web/simplevcs/__init__.py', 'vcs/web/simplevcs/exceptions.py'
+            , 'vcs/web/simplevcs/middleware.py', 'vcs/web/simplevcs/models.py'
+            , 'vcs/web/simplevcs/settings.py', 'vcs/web/simplevcs/utils.py'
             , 'vcs/web/simplevcs/views.py'])
 
         removed = set(['docs/api.rst'])
@@ -536,19 +535,19 @@ class TestMercurialChangeset(object):
         # but it would be one of ``removed`` (changeset's attribute)
         assert path in [rf.path for rf in chset.removed]
 
-    def test_commit_message_is_unicode(self):
+    def test_commit_message_is_str(self):
         for cm in self.repo:
-            assert type(cm.message) == unicode
+            assert isinstance(cm.message, str)
 
-    def test_changeset_author_is_unicode(self):
+    def test_changeset_author_is_str(self):
         for cm in self.repo:
-            assert type(cm.author) == unicode
+            assert isinstance(cm.author, str)
 
-    def test_repo_files_content_is_unicode(self):
+    def test_repo_files_content_is_bytes(self):
         test_changeset = self.repo.get_changeset(100)
         for node in test_changeset.get_node('/'):
             if node.is_file():
-                assert type(node.content) == unicode
+                assert isinstance(node.content, bytes)
 
     def test_wrong_path(self):
         # There is 'setup.py' in the root dir but not there:

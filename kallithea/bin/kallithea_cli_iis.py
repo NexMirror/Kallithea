@@ -67,6 +67,7 @@ def iis_install(virtualdir):
 
     try:
         import isapi_wsgi
+        assert isapi_wsgi
     except ImportError:
         sys.stderr.write('missing requirement: isapi-wsgi not installed\n')
         sys.exit(1)

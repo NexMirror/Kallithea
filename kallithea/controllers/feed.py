@@ -32,21 +32,17 @@ from beaker.cache import cache_region
 from tg import response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from kallithea import CONFIG
+from kallithea.lib import feeds
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController
 from kallithea.lib.diffs import DiffProcessor
-from kallithea.lib.utils2 import safe_int, safe_unicode, str2bool
+from kallithea.lib.utils2 import safe_int, safe_str, str2bool
 
 
 log = logging.getLogger(__name__)
-
-
-language = 'en-us'
-ttl = "5"
 
 
 class FeedController(BaseRepoController):
@@ -98,64 +94,41 @@ class FeedController(BaseRepoController):
         desc_msg.extend(changes)
         if str2bool(CONFIG.get('rss_include_diff', False)):
             desc_msg.append('\n\n')
-            desc_msg.append(raw_diff)
+            desc_msg.append(safe_str(raw_diff))
         desc_msg.append('</pre>')
-        return map(safe_unicode, desc_msg)
+        return desc_msg
+
+    def _feed(self, repo_name, feeder):
+        """Produce a simple feed"""
+
+        @cache_region('long_term_file', '_get_feed_from_cache')
+        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
+            header = dict(
+                title=_('%s %s feed') % (c.site_name, repo_name),
+                link=h.canonical_url('summary_home', repo_name=repo_name),
+                description=_('Changes on %s repository') % repo_name,
+            )
+
+            rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
+            entries=[]
+            for cs in reversed(list(c.db_repo_scm_instance[-rss_items_per_page:])):
+                entries.append(dict(
+                    title=self._get_title(cs),
+                    link=h.canonical_url('changeset_home', repo_name=repo_name, revision=cs.raw_id),
+                    author_email=cs.author_email,
+                    author_name=cs.author_name,
+                    description=''.join(self.__get_desc(cs)),
+                    pubdate=cs.date,
+                ))
+            return feeder.render(header, entries)
+
+        response.content_type = feeder.content_type
+        return _get_feed_from_cache(repo_name, feeder.__name__)
 
     def atom(self, repo_name):
-        """Produce an atom-1.0 feed via feedgenerator module"""
-
-        @cache_region('long_term', '_get_feed_from_cache')
-        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
-            feed = Atom1Feed(
-                title=_('%s %s feed') % (c.site_name, repo_name),
-                link=h.canonical_url('summary_home', repo_name=repo_name),
-                description=_('Changes on %s repository') % repo_name,
-                language=language,
-                ttl=ttl
-            )
-
-            rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
-            for cs in reversed(list(c.db_repo_scm_instance[-rss_items_per_page:])):
-                feed.add_item(title=self._get_title(cs),
-                              link=h.canonical_url('changeset_home', repo_name=repo_name,
-                                       revision=cs.raw_id),
-                              author_name=cs.author,
-                              description=''.join(self.__get_desc(cs)),
-                              pubdate=cs.date,
-                              )
-
-            response.content_type = feed.mime_type
-            return feed.writeString('utf-8')
-
-        kind = 'ATOM'
-        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
+        """Produce a simple atom-1.0 feed"""
+        return self._feed(repo_name, feeds.AtomFeed)
 
     def rss(self, repo_name):
-        """Produce an rss2 feed via feedgenerator module"""
-
-        @cache_region('long_term', '_get_feed_from_cache')
-        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
-            feed = Rss201rev2Feed(
-                title=_('%s %s feed') % (c.site_name, repo_name),
-                link=h.canonical_url('summary_home', repo_name=repo_name),
-                description=_('Changes on %s repository') % repo_name,
-                language=language,
-                ttl=ttl
-            )
-
-            rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
-            for cs in reversed(list(c.db_repo_scm_instance[-rss_items_per_page:])):
-                feed.add_item(title=self._get_title(cs),
-                              link=h.canonical_url('changeset_home', repo_name=repo_name,
-                                       revision=cs.raw_id),
-                              author_name=cs.author,
-                              description=''.join(self.__get_desc(cs)),
-                              pubdate=cs.date,
-                             )
-
-            response.content_type = feed.mime_type
-            return feed.writeString('utf-8')
-
-        kind = 'RSS'
-        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
+        """Produce a simple rss2 feed"""
+        return self._feed(repo_name, feeds.RssFeed)

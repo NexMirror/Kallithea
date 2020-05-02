@@ -9,13 +9,14 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
+import functools
 import mimetypes
 import posixpath
 import stat
 
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import NodeError, RemovedFileNodeError
-from kallithea.lib.vcs.utils import safe_str, safe_unicode
+from kallithea.lib.vcs.utils import safe_bytes, safe_str
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
@@ -26,10 +27,10 @@ class NodeKind:
 
 
 class NodeState:
-    ADDED = u'added'
-    CHANGED = u'changed'
-    NOT_CHANGED = u'not changed'
-    REMOVED = u'removed'
+    ADDED = 'added'
+    CHANGED = 'changed'
+    NOT_CHANGED = 'not changed'
+    REMOVED = 'removed'
 
 
 class NodeGeneratorBase(object):
@@ -44,11 +45,9 @@ class NodeGeneratorBase(object):
         self.cs = cs
         self.current_paths = current_paths
 
-    def __call__(self):
-        return [n for n in self]
-
-    def __getslice__(self, i, j):
-        for p in self.current_paths[i:j]:
+    def __getitem__(self, key):
+        assert isinstance(key, slice), key
+        for p in self.current_paths[key]:
             yield self.cs.get_node(p)
 
     def __len__(self):
@@ -81,11 +80,13 @@ class RemovedFileNodesGenerator(NodeGeneratorBase):
         for p in self.current_paths:
             yield RemovedFileNode(path=p)
 
-    def __getslice__(self, i, j):
-        for p in self.current_paths[i:j]:
+    def __getitem__(self, key):
+        assert isinstance(key, slice), key
+        for p in self.current_paths[key]:
             yield RemovedFileNode(path=p)
 
 
+@functools.total_ordering
 class Node(object):
     """
     Simplest class representing file or directory on repository.  SCM backends
@@ -101,7 +102,7 @@ class Node(object):
         if path.startswith('/'):
             raise NodeError("Cannot initialize Node objects with slash at "
                             "the beginning as only relative paths are supported")
-        self.path = safe_str(path.rstrip('/'))  # we store paths as str
+        self.path = path.rstrip('/')
         if path == '' and kind != NodeKind.DIR:
             raise NodeError("Only DirNode and its subclasses may be "
                             "initialized with empty path")
@@ -120,66 +121,33 @@ class Node(object):
         return None
 
     @LazyProperty
-    def unicode_path(self):
-        return safe_unicode(self.path)
-
-    @LazyProperty
     def name(self):
         """
         Returns name of the node so if its path
         then only last part is returned.
         """
-        return safe_unicode(self.path.rstrip('/').split('/')[-1])
-
-    def _get_kind(self):
-        return self._kind
-
-    def _set_kind(self, kind):
-        if hasattr(self, '_kind'):
-            raise NodeError("Cannot change node's kind")
-        else:
-            self._kind = kind
-            # Post setter check (path's trailing slash)
-            if self.path.endswith('/'):
-                raise NodeError("Node's path cannot end with slash")
-
-    kind = property(_get_kind, _set_kind)
-
-    def __cmp__(self, other):
-        """
-        Comparator using name of the node, needed for quick list sorting.
-        """
-        kind_cmp = cmp(self.kind, other.kind)
-        if kind_cmp:
-            return kind_cmp
-        return cmp(self.name, other.name)
+        return self.path.rstrip('/').split('/')[-1]
 
     def __eq__(self, other):
-        for attr in ['name', 'path', 'kind']:
-            if getattr(self, attr) != getattr(other, attr):
-                return False
-        if self.is_file():
-            if self.content != other.content:
-                return False
-        else:
-            # For DirNode's check without entering each dir
-            self_nodes_paths = list(sorted(n.path for n in self.nodes))
-            other_nodes_paths = list(sorted(n.path for n in self.nodes))
-            if self_nodes_paths != other_nodes_paths:
-                return False
-        return True
+        if type(self) is not type(other):
+            return False
+        if self.kind != other.kind:
+            return False
+        if self.path != other.path:
+            return False
 
-    def __nq__(self, other):
-        return not self.__eq__(other)
+    def __lt__(self, other):
+        if self.kind < other.kind:
+            return True
+        if self.kind > other.kind:
+            return False
+        if self.path < other.path:
+            return True
+        if self.path > other.path:
+            return False
 
     def __repr__(self):
         return '<%s %r>' % (self.__class__.__name__, self.path)
-
-    def __str__(self):
-        return self.__repr__()
-
-    def __unicode__(self):
-        return self.name
 
     def get_parent_path(self):
         """
@@ -258,8 +226,24 @@ class FileNode(Node):
             raise NodeError("Cannot use both content and changeset")
         super(FileNode, self).__init__(path, kind=NodeKind.FILE)
         self.changeset = changeset
+        if not isinstance(content, bytes) and content is not None:
+            # File content is one thing that inherently must be bytes ... but
+            # VCS module tries to be "user friendly" and support unicode ...
+            content = safe_bytes(content)
         self._content = content
-        self._mode = mode or 0100644
+        self._mode = mode or 0o100644
+
+    def __eq__(self, other):
+        eq = super(FileNode, self).__eq__(other)
+        if eq is not None:
+            return eq
+        return self.content == other.content
+
+    def __lt__(self, other):
+        lt = super(FileNode, self).__lt__(other)
+        if lt is not None:
+            return lt
+        return self.content < other.content
 
     @LazyProperty
     def mode(self):
@@ -273,24 +257,16 @@ class FileNode(Node):
             mode = self._mode
         return mode
 
-    def _get_content(self):
+    @property
+    def content(self):
+        """
+        Returns lazily byte content of the FileNode.
+        """
         if self.changeset:
             content = self.changeset.get_file_content(self.path)
         else:
             content = self._content
         return content
-
-    @property
-    def content(self):
-        """
-        Returns lazily content of the FileNode. If possible, would try to
-        decode content from UTF-8.
-        """
-        content = self._get_content()
-
-        if bool(content and '\0' in content):
-            return content
-        return safe_unicode(content)
 
     @LazyProperty
     def size(self):
@@ -361,7 +337,7 @@ class FileNode(Node):
         """
         from pygments import lexers
         try:
-            lexer = lexers.guess_lexer_for_filename(self.name, self.content, stripnl=False)
+            lexer = lexers.guess_lexer_for_filename(self.name, safe_str(self.content), stripnl=False)
         except lexers.ClassNotFound:
             lexer = lexers.TextLexer(stripnl=False)
         # returns first alias
@@ -409,8 +385,7 @@ class FileNode(Node):
         """
         Returns True if file has binary content.
         """
-        _bin = '\0' in self._get_content()
-        return _bin
+        return b'\0' in self.content
 
     def is_browser_compatible_image(self):
         return self.mimetype in [
@@ -488,10 +463,23 @@ class DirNode(Node):
         self.changeset = changeset
         self._nodes = nodes
 
-    @LazyProperty
-    def content(self):
-        raise NodeError("%s represents a dir and has no ``content`` attribute"
-            % self)
+    def __eq__(self, other):
+        eq = super(DirNode, self).__eq__(other)
+        if eq is not None:
+            return eq
+        # check without entering each dir
+        self_nodes_paths = list(sorted(n.path for n in self.nodes))
+        other_nodes_paths = list(sorted(n.path for n in self.nodes))
+        return self_nodes_paths == other_nodes_paths
+
+    def __lt__(self, other):
+        lt = super(DirNode, self).__lt__(other)
+        if lt is not None:
+            return lt
+        # check without entering each dir
+        self_nodes_paths = list(sorted(n.path for n in self.nodes))
+        other_nodes_paths = list(sorted(n.path for n in self.nodes))
+        return self_nodes_paths < other_nodes_paths
 
     @LazyProperty
     def nodes(self):
@@ -595,12 +583,13 @@ class SubModuleNode(Node):
     size = 0
 
     def __init__(self, name, url, changeset=None, alias=None):
-        self.path = name
+        # Note: Doesn't call Node.__init__!
+        self.path = name.rstrip('/')
         self.kind = NodeKind.SUBMODULE
         self.alias = alias
         # we have to use emptyChangeset here since this can point to svn/git/hg
         # submodules we cannot get from repository
-        self.changeset = EmptyChangeset(str(changeset), alias=alias)
+        self.changeset = EmptyChangeset(changeset, alias=alias)
         self.url = url
 
     def __repr__(self):
@@ -613,5 +602,5 @@ class SubModuleNode(Node):
         Returns name of the node so if its path
         then only last part is returned.
         """
-        org = safe_unicode(self.path.rstrip('/').split('/')[-1])
-        return u'%s @ %s' % (org, self.changeset.short_id)
+        org = self.path.rstrip('/').rsplit('/', 1)[-1]
+        return '%s @ %s' % (org, self.changeset.short_id)

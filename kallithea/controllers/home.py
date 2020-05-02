@@ -37,7 +37,7 @@ from webob.exc import HTTPBadRequest
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseController, jsonify, render
-from kallithea.lib.utils import conditional_cache
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import RepoGroup, Repository, User, UserGroup
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import UserGroupList
@@ -67,9 +67,7 @@ class HomeController(BaseController):
     @LoginRequired(allow_default_user=True)
     @jsonify
     def repo_switcher_data(self):
-        # wrapper for conditional cache
-        def _c():
-            log.debug('generating switcher repo/groups list')
+        if request.is_xhr:
             all_repos = Repository.query(sorted=True).all()
             repo_iter = self.scm_model.get_repos(all_repos)
             all_groups = RepoGroup.query(sorted=True).all()
@@ -96,17 +94,16 @@ class HomeController(BaseController):
                     ],
                    }]
 
+            for res_dict in res:
+                for child in (res_dict['children']):
+                    child['obj'].pop('_changeset_cache', None)  # bytes cannot be encoded in json ... but this value isn't relevant on client side at all ...
+
             data = {
                 'more': False,
                 'results': res,
             }
             return data
 
-        if request.is_xhr:
-            condition = False
-            compute = conditional_cache('short_term', 'cache_desc',
-                                        condition=condition, func=_c)
-            return compute()
         else:
             raise HTTPBadRequest()
 
@@ -120,25 +117,25 @@ class HomeController(BaseController):
         if _branches:
             res.append({
                 'text': _('Branch'),
-                'children': [{'id': rev, 'text': name, 'type': 'branch'} for name, rev in _branches]
+                'children': [{'id': safe_str(rev), 'text': safe_str(name), 'type': 'branch'} for name, rev in _branches]
             })
         _closed_branches = repo.closed_branches.items()
         if _closed_branches:
             res.append({
                 'text': _('Closed Branches'),
-                'children': [{'id': rev, 'text': name, 'type': 'closed-branch'} for name, rev in _closed_branches]
+                'children': [{'id': safe_str(rev), 'text': safe_str(name), 'type': 'closed-branch'} for name, rev in _closed_branches]
             })
         _tags = repo.tags.items()
         if _tags:
             res.append({
                 'text': _('Tag'),
-                'children': [{'id': rev, 'text': name, 'type': 'tag'} for name, rev in _tags]
+                'children': [{'id': safe_str(rev), 'text': safe_str(name), 'type': 'tag'} for name, rev in _tags]
             })
         _bookmarks = repo.bookmarks.items()
         if _bookmarks:
             res.append({
                 'text': _('Bookmark'),
-                'children': [{'id': rev, 'text': name, 'type': 'book'} for name, rev in _bookmarks]
+                'children': [{'id': safe_str(rev), 'text': safe_str(name), 'type': 'book'} for name, rev in _bookmarks]
             })
         data = {
             'more': False,

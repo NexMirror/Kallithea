@@ -41,7 +41,6 @@ from kallithea.config.routing import url
 from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
-from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Setting, User
 from kallithea.model.forms import LoginForm, PasswordResetConfirmationForm, PasswordResetRequestForm, RegisterForm
 from kallithea.model.meta import Session
@@ -68,7 +67,7 @@ class LoginController(BaseController):
         return _re.match(came_from) is not None
 
     def index(self):
-        c.came_from = safe_str(request.GET.get('came_from', ''))
+        c.came_from = request.GET.get('came_from', '')
         if c.came_from:
             if not self._validate_came_from(c.came_from):
                 log.error('Invalid came_from (not server-relative): %r', c.came_from)
@@ -80,10 +79,11 @@ class LoginController(BaseController):
             # import Login Form validator class
             login_form = LoginForm()()
             try:
+                # login_form will check username/password using ValidAuth and report failure to the user
                 c.form_result = login_form.to_python(dict(request.POST))
-                # form checks for username/password, now we're authenticated
                 username = c.form_result['username']
-                user = User.get_by_username_or_email(username, case_insensitive=True)
+                user = User.get_by_username_or_email(username)
+                assert user is not None  # the same user get just passed in the form validation
             except formencode.Invalid as errors:
                 defaults = errors.value
                 # remove password from filling in form again
@@ -102,9 +102,11 @@ class LoginController(BaseController):
                 # Exception itself
                 h.flash(e, 'error')
             else:
+                # login_form already validated the password - now set the session cookie accordingly
                 auth_user = log_in_user(user, c.form_result['remember'], is_external_auth=False, ip_addr=request.ip_addr)
-                # TODO: handle auth_user is None as failed authentication?
-                raise HTTPFound(location=c.came_from)
+                if auth_user:
+                    raise HTTPFound(location=c.came_from)
+                h.flash(_('Authentication failed.'), 'error')
         else:
             # redirect if already logged in
             if not request.authuser.is_anonymous:

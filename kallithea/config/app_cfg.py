@@ -28,20 +28,21 @@ import tg
 from alembic.migration import MigrationContext
 from alembic.script.base import ScriptDirectory
 from sqlalchemy import create_engine
-from tg import hooks
 from tg.configuration import AppConfig
 from tg.support.converters import asbool
 
 import kallithea.lib.locale
 import kallithea.model.base
-from kallithea.lib.auth import set_available_permissions
+import kallithea.model.meta
+from kallithea.lib import celerypylons
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
 from kallithea.lib.middleware.wrapper import RequestWrapper
-from kallithea.lib.utils import check_git_version, load_rcextensions, make_ui, set_app_settings, set_indexer_config, set_vcs_config
+from kallithea.lib.utils import check_git_version, load_rcextensions, set_app_settings, set_indexer_config, set_vcs_config
 from kallithea.lib.utils2 import str2bool
+from kallithea.model import db
 
 
 log = logging.getLogger(__name__)
@@ -98,16 +99,11 @@ class KallitheaAppConfig(AppConfig):
         # Disable transaction manager -- currently Kallithea takes care of transactions itself
         self['tm.enabled'] = False
 
-        # Set the i18n source language so TG doesn't search beyond 'en' in Accept-Language.
-        # Don't force the default here if configuration force something else.
-        if not self.get('i18n.lang'):
-            self['i18n.lang'] = 'en'
+        # Set the default i18n source language so TG doesn't search beyond 'en' in Accept-Language.
+        self['i18n.lang'] = 'en'
 
 
 base_config = KallitheaAppConfig()
-
-# TODO still needed as long as we use pylonslib
-sys.modules['pylons'] = tg
 
 # DebugBar, a debug toolbar for TurboGears2.
 # (https://github.com/TurboGears/tgext.debugbar)
@@ -117,6 +113,7 @@ sys.modules['pylons'] = tg
 try:
     from tgext.debugbar import enable_debugbar
     import kajiki # only to check its existence
+    assert kajiki
 except ImportError:
     pass
 else:
@@ -161,15 +158,14 @@ def setup_configuration(app):
             sys.exit(1)
 
     # store some globals into kallithea
-    kallithea.CELERY_ON = str2bool(config.get('use_celery'))
-    kallithea.CELERY_EAGER = str2bool(config.get('celery.always.eager'))
+    kallithea.DEFAULT_USER_ID = db.User.get_default_user().user_id
+
+    if str2bool(config.get('use_celery')):
+        kallithea.CELERY_APP = celerypylons.make_app()
     kallithea.CONFIG = config
 
     load_rcextensions(root_path=config['here'])
 
-    set_available_permissions(config)
-    repos_path = make_ui().configitems('paths')[0][1]
-    config['base_path'] = repos_path
     set_app_settings(config)
 
     instance_id = kallithea.CONFIG.get('instance_id', '*')
@@ -188,8 +184,10 @@ def setup_configuration(app):
 
     check_git_version()
 
+    kallithea.model.meta.Session.remove()
 
-hooks.register('configure_new_app', setup_configuration)
+
+tg.hooks.register('configure_new_app', setup_configuration)
 
 
 def setup_application(app):
@@ -213,4 +211,4 @@ def setup_application(app):
     return app
 
 
-hooks.register('before_config', setup_application)
+tg.hooks.register('before_config', setup_application)

@@ -7,7 +7,7 @@ from dulwich import objects
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils import safe_str
+from kallithea.lib.vcs.utils import ascii_str, safe_bytes
 
 
 class GitInMemoryChangeset(BaseInMemoryChangeset):
@@ -39,7 +39,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         repo = self.repository._repo
         object_store = repo.object_store
 
-        ENCODING = "UTF-8"
+        ENCODING = b"UTF-8"  # TODO: should probably be kept in sync with safe_str/safe_bytes and vcs/conf/settings.py DEFAULT_ENCODINGS
 
         # Create tree and populates it with blobs
         commit_tree = self.parents[0] and repo[self.parents[0]._commit.tree] or \
@@ -47,7 +47,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         for node in self.added + self.changed:
             # Compute subdirs if needed
             dirpath, nodename = posixpath.split(node.path)
-            dirnames = map(safe_str, dirpath and dirpath.split('/') or [])
+            dirnames = safe_bytes(dirpath).split(b'/') if dirpath else []
             parent = commit_tree
             ancestors = [('', parent)]
 
@@ -68,13 +68,9 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             # for dirnames (in reverse order) [this only applies for nodes from added]
             new_trees = []
 
-            if not node.is_binary:
-                content = node.content.encode(ENCODING)
-            else:
-                content = node.content
-            blob = objects.Blob.from_string(content)
+            blob = objects.Blob.from_string(node.content)
 
-            node_path = node.name.encode(ENCODING)
+            node_path = safe_bytes(node.name)
             if dirnames:
                 # If there are trees which should be created we need to build
                 # them now (in reverse order)
@@ -104,7 +100,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             for tree in new_trees:
                 object_store.add_object(tree)
         for node in self.removed:
-            paths = node.path.split('/')
+            paths = safe_bytes(node.path).split(b'/')
             tree = commit_tree
             trees = [tree]
             # Traverse deep into the forest...
@@ -117,7 +113,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
                 except KeyError:
                     break
             # Cut down the blob and all rotten trees on the way back...
-            for path, tree in reversed(zip(paths, trees)):
+            for path, tree in reversed(list(zip(paths, trees))):
                 del tree[path]
                 if tree:
                     # This tree still has elements - don't remove it or any
@@ -130,9 +126,9 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         commit = objects.Commit()
         commit.tree = commit_tree.id
         commit.parents = [p._commit.id for p in self.parents if p]
-        commit.author = commit.committer = safe_str(author)
+        commit.author = commit.committer = safe_bytes(author)
         commit.encoding = ENCODING
-        commit.message = safe_str(message)
+        commit.message = safe_bytes(message)
 
         # Compute date
         if date is None:
@@ -150,11 +146,10 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
 
         object_store.add_object(commit)
 
-        ref = 'refs/heads/%s' % branch
-        repo.refs[ref] = commit.id
-
         # Update vcs repository object & recreate dulwich repo
-        self.repository.revisions.append(commit.id)
+        ref = b'refs/heads/%s' % safe_bytes(branch)
+        repo.refs[ref] = commit.id
+        self.repository.revisions.append(ascii_str(commit.id))
         # invalidate parsed refs after commit
         self.repository._parsed_refs = self.repository._get_parsed_refs()
         tip = self.repository.get_changeset()
@@ -177,15 +172,15 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             return []
 
         def get_tree_for_dir(tree, dirname):
-            for name, mode, id in tree.iteritems():
+            for name, mode, id in tree.items():
                 if name == dirname:
                     obj = self.repository._repo[id]
                     if isinstance(obj, objects.Tree):
                         return obj
                     else:
                         raise RepositoryError("Cannot create directory %s "
-                        "at tree %s as path is occupied and is not a "
-                        "Tree" % (dirname, tree))
+                            "at tree %s as path is occupied and is not a "
+                            "Tree" % (dirname, tree))
             return None
 
         trees = []

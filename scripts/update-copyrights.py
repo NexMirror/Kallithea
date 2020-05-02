@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -51,11 +51,14 @@ def sortkey(x):
     * first contribution
     * number of contribution years
     * name (with some unicode normalization)
-    The entries must be 2-tuples of a list of string years and the unicode name"""
-    return (x[0] and -int(x[0][-1]),
-            x[0] and int(x[0][0]),
-            -len(x[0]),
-            x[1].decode('utf-8').lower().replace(u'\xe9', u'e').replace(u'\u0142', u'l')
+    The entries must be 2-tuples of a list of string years and the name"""
+    years, name = x
+    if not years:
+        years = ['0']
+    return (-int(years[-1]),  # primarily sort by latest contribution
+            int(years[0]),  # then sort by first contribution
+            -len(years),  # then sort by length of contribution (no gaps)
+            name.lower().replace('\xe9', 'e').replace('\u0142', 'l')  # finally sort by name
         )
 
 
@@ -134,7 +137,7 @@ def main():
         all_entries=repo_entries + contributor_data.other_about + contributor_data.other,
         no_entries=contributor_data.no_about,
         domain_extra=contributor_data.domain_extra,
-        split_re=r'(?:  <li>Copyright &copy; [^\n]*</li>\n)*',
+        split_re=r'(?:  <li>Copyright &copy; [^\n]+</li>\n)+',
         normalize_name=lambda name: name.split('<', 1)[0].strip(),
         format_f=lambda years, name: '  <li>Copyright &copy; %s, %s</li>\n' % (nice_years(years, '&ndash;', ', '), name),
         )
@@ -144,7 +147,7 @@ def main():
         all_entries=repo_entries + contributor_data.other_contributors + contributor_data.other,
         no_entries=contributor_data.total_ignore,
         domain_extra=contributor_data.domain_extra,
-        split_re=r'(?:    [^\n]*\n)*',
+        split_re=r'(?:    [^\n]+\n)+',
         normalize_name=lambda name: name,
         format_f=lambda years, name: ('    %s%s%s\n' % (name, ' ' if years else '', nice_years(years))),
         )
@@ -154,7 +157,7 @@ def main():
         all_entries=repo_entries,
         no_entries=contributor_data.total_ignore,
         domain_extra={},
-        split_re=r'(?<=&copy;) .* (?=by various authors)',
+        split_re=r'(?<=&copy;) .+ (?=by various authors)',
         normalize_name=lambda name: '',
         format_f=lambda years, name: ' ' + nice_years(years, '&ndash;', ', ') + ' ',
         )
@@ -165,7 +168,7 @@ def main():
         all_entries=repo_entries,
         no_entries=contributor_data.total_ignore,
         domain_extra={},
-        split_re=r"(?<=copyright = u').*(?= by various authors)",
+        split_re=r"(?<=copyright = ').+(?= by various authors)",
         normalize_name=lambda name: '',
         format_f=lambda years, name: nice_years(years, '-', ', '),
         )

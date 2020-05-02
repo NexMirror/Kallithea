@@ -25,15 +25,14 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import print_function
-
-import urllib2
+import urllib.request
 import uuid
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 import ldap
 
-from kallithea.lib.compat import json
+from kallithea.lib import ext_json
+from kallithea.lib.utils2 import ascii_bytes
 
 
 config = ConfigParser()
@@ -80,12 +79,12 @@ class API(object):
         uid = str(uuid.uuid1())
         data = self.get_api_data(uid, method, args)
 
-        data = json.dumps(data)
+        data = ascii_bytes(ext_json.dumps(data))
         headers = {'content-type': 'text/plain'}
-        req = urllib2.Request(self.url, data, headers)
+        req = urllib.request.Request(self.url, data, headers)
 
-        response = urllib2.urlopen(req)
-        response = json.load(response)
+        response = urllib.request.urlopen(req)
+        response = ext_json.load(response)
 
         if uid != response["id"]:
             raise InvalidResponseIDError("UUID does not match.")

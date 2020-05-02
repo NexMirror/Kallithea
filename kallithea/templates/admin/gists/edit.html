@@ -6,9 +6,9 @@
 </%block>
 
 <%block name="js_extra">
-  <script type="text/javascript" src="${h.url('/codemirror/lib/codemirror.js')}"></script>
-  <script type="text/javascript" src="${h.url('/js/codemirror_loadmode.js')}"></script>
-  <script type="text/javascript" src="${h.url('/codemirror/mode/meta.js')}"></script>
+  <script src="${h.url('/codemirror/lib/codemirror.js')}"></script>
+  <script src="${h.url('/js/codemirror_loadmode.js')}"></script>
+  <script src="${h.url('/codemirror/mode/meta.js')}"></script>
 </%block>
 <%block name="css_extra">
   <link rel="stylesheet" type="text/css" href="${h.url('/codemirror/lib/codemirror.css')}"/>
@@ -35,7 +35,7 @@
               ${(h.HTML(_('Gist was updated since you started editing. Copy your changes and click %(here)s to reload new version.'))
                              % {'here': h.link_to(_('here'),h.url('edit_gist', gist_id=c.gist.gist_access_id))})}
             </div>
-            <script>
+            <script>'use strict';
             if (typeof jQuery != 'undefined') {
                 $(".alert").alert();
             }
@@ -67,19 +67,19 @@
             % for cnt, file in enumerate(c.files):
                 <div id="body" class="panel panel-default form-inline">
                     <div class="panel-heading">
-                        <input type="hidden" value="${h.safe_unicode(file.path)}" name="org_files">
-                        <input class="form-control" id="filename_${h.FID('f',file.path)}" name="files" size="30" type="text" value="${h.safe_unicode(file.path)}">
+                        <input type="hidden" value="${file.path}" name="org_files">
+                        <input class="form-control" id="filename_${h.FID('f',file.path)}" name="files" size="30" type="text" value="${file.path}">
                         <select class="form-control" id="mimetype_${h.FID('f',file.path)}" name="mimetypes"></select>
                     </div>
                     <div class="panel-body no-padding">
                         <div id="editor_container">
-                            <textarea id="editor_${h.FID('f',file.path)}" name="contents" style="display:none">${file.content}</textarea>
+                            <textarea id="editor_${h.FID('f',file.path)}" name="contents" style="display:none">${safe_str(file.content)}</textarea>
                         </div>
                     </div>
                 </div>
 
                 ## dynamic edit box.
-                <script type="text/javascript">
+                <script>'use strict';
                     $(document).ready(function(){
                         var myCodeMirror = initCodeMirror(${h.js('editor_' + h.FID('f',file.path))}, ${h.jshtml(request.script_name)}, '');
 
@@ -117,7 +117,7 @@
                         });
 
                         // on type the new filename set mode
-                        $filename_input.keyup(function(e){
+                        $filename_input.keyup(function(){
                             var file_data = CodeMirror.getFilenameAndExt(this.value);
                             if(file_data['ext'] != null){
                                 var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
@@ -146,7 +146,7 @@
             <a class="btn btn-default" href="${h.url('gist', gist_id=c.gist.gist_access_id)}">${_('Cancel')}</a>
             </div>
           ${h.end_form()}
-          <script>
+          <script>'use strict';
               $('#update').on('click', function(e){
                   e.preventDefault();
 

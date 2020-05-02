@@ -29,9 +29,9 @@
     </div>
 
 </div>
-<script>
+<script>'use strict';
   var data = ${h.js(c.data)};
-  var myDataTable = $("#datatable_list_wrap").DataTable({
+  $("#datatable_list_wrap").DataTable({
         data: data.records,
         columns: [
             {data: "raw_name", visible: false, searchable: false},

@@ -25,7 +25,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import cgi
+import html
 import logging
 
 from tg import config, expose, request
@@ -64,8 +64,7 @@ class ErrorController(BaseController):
             'protocol': e.get('wsgi.url_scheme'),
             'host': e.get('HTTP_HOST'), }
         if resp:
-            c.error_message = cgi.escape(request.GET.get('code',
-                                                         str(resp.status)))
+            c.error_message = html.escape(request.GET.get('code', str(resp.status)))
             c.error_explanation = self.get_error_explanation(resp.status_int)
         else:
             c.error_message = _('No response')

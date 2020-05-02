@@ -12,7 +12,7 @@ Python environment
 ------------------
 
 **Kallithea** is written entirely in Python_ and requires Python version
-2.7 or higher. Python 3.x is currently not supported.
+3.6 or higher.
 
 Given a Python installation, there are different ways of providing the
 environment for running Python applications. Each of them pretty much
@@ -30,7 +30,7 @@ environment used for running Kallithea.
 - Packages could also be installed in ``~/.local`` ... but that is probably
   only a good idea if using a dedicated user per application or instance.
 
-- Finally, it can be installed in a virtualenv_. That is a very lightweight
+- Finally, it can be installed in a virtualenv. That is a very lightweight
   "container" where each Kallithea instance can get its own dedicated and
   self-contained virtual environment.
 
@@ -98,7 +98,7 @@ installed.
   installed with all dependencies using ``pip install kallithea``.
 
   With this method, Kallithea is installed in the Python environment as any
-  other package, usually as a ``.../site-packages/Kallithea-X-py2.7.egg/``
+  other package, usually as a ``.../site-packages/Kallithea-X-py3.8.egg/``
   directory with Python files and everything else that is needed.
 
   (``pip install kallithea`` from a source tree will do pretty much the same
@@ -165,7 +165,6 @@ continuous hammering from the internet.
 .. _Python: http://www.python.org/
 .. _Gunicorn: http://gunicorn.org/
 .. _Waitress: http://waitress.readthedocs.org/en/latest/
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _Gearbox: http://turbogears.readthedocs.io/en/latest/turbogears/gearbox.html
 .. _PyPI: https://pypi.python.org/pypi
 .. _Apache httpd: http://httpd.apache.org/

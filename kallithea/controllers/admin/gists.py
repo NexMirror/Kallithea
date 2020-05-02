@@ -40,7 +40,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, jsonify, render
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
+from kallithea.lib.utils2 import safe_int, safe_str, time_to_datetime
 from kallithea.lib.vcs.exceptions import NodeNotChangedError, VCSError
 from kallithea.model.db import Gist
 from kallithea.model.forms import GistForm
@@ -71,6 +71,11 @@ class GistsController(BaseController):
         not_default_user = not request.authuser.is_default_user
         c.show_private = request.GET.get('private') and not_default_user
         c.show_public = request.GET.get('public') and not_default_user
+        url_params = {}
+        if c.show_public:
+            url_params['public'] = 1
+        elif c.show_private:
+            url_params['private'] = 1
 
         gists = Gist().query() \
             .filter_by(is_expired=False) \
@@ -97,7 +102,8 @@ class GistsController(BaseController):
 
         c.gists = gists
         p = safe_int(request.GET.get('page'), 1)
-        c.gists_pager = Page(c.gists, page=p, items_per_page=10)
+        c.gists_pager = Page(c.gists, page=p, items_per_page=10,
+                             **url_params)
         return render('admin/gists/index.html')
 
     @LoginRequired()
@@ -176,7 +182,10 @@ class GistsController(BaseController):
             log.error(traceback.format_exc())
             raise HTTPNotFound()
         if format == 'raw':
-            content = '\n\n'.join([f.content for f in c.files if (f_path is None or safe_unicode(f.path) == f_path)])
+            content = '\n\n'.join(
+                safe_str(f.content)
+                for f in c.files if (f_path is None or f.path == f_path)
+            )
             response.content_type = 'text/plain'
             return content
         return render('admin/gists/show.html')

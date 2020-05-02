@@ -19,12 +19,32 @@ may take precedent over the more generic routes. For more information
 refer to the routes manual at http://routes.groovie.org/docs/
 """
 
-from routes import Mapper
+import routes
 from tg import request
+
+from kallithea.lib.utils2 import safe_str
 
 
 # prefix for non repository related links needs to be prefixed with `/`
 ADMIN_PREFIX = '/_admin'
+
+
+class Mapper(routes.Mapper):
+    """
+    Subclassed Mapper with routematch patched to decode "unicode" str url to
+    *real* unicode str before applying matches and invoking controller methods.
+    """
+
+    def routematch(self, url=None, environ=None):
+        """
+        routematch that also decode url from "fake bytes" to real unicode
+        string before matching and invoking controllers.
+        """
+        # Process url like get_path_info does ... but PATH_INFO has already
+        # been retrieved from environ and is passed, so - let's just use that
+        # instead.
+        url = safe_str(url.encode('latin1'))
+        return super().routematch(url=url, environ=environ)
 
 
 def make_map(config):
@@ -86,7 +106,7 @@ def make_map(config):
     #==========================================================================
 
     # MAIN PAGE
-    rmap.connect('home', '/', controller='home', action='index')
+    rmap.connect('home', '/', controller='home')
     rmap.connect('about', '/about', controller='home', action='about')
     rmap.redirect('/favicon.ico', '/images/favicon.ico')
     rmap.connect('repo_switcher_data', '/_repos', controller='home',
@@ -106,7 +126,7 @@ def make_map(config):
         m.connect("repos", "/repos",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("repos", "/repos",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_repo", "/create_repository",
                   action="create_repository", conditions=dict(method=["GET"]))
         m.connect("update_repo", "/repos/{repo_name:.*?}",
@@ -121,7 +141,7 @@ def make_map(config):
         m.connect("repos_groups", "/repo_groups",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("repos_groups", "/repo_groups",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_repos_group", "/repo_groups/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_repos_group", "/repo_groups/{group_name:.*?}",
@@ -161,9 +181,9 @@ def make_map(config):
         m.connect("new_user", "/users/new",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("users", "/users",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("formatted_users", "/users.{format}",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_user", "/users/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_user", "/users/{id}",
@@ -216,7 +236,7 @@ def make_map(config):
         m.connect("users_groups", "/user_groups",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("users_groups", "/user_groups",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_users_group", "/user_groups/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_users_group", "/user_groups/{id}",
@@ -263,8 +283,7 @@ def make_map(config):
     # ADMIN DEFAULTS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/defaults') as m:
-        m.connect('defaults', '/defaults',
-                  action="index")
+        m.connect('defaults', '/defaults')
         m.connect('defaults_update', 'defaults/{id}/update',
                   action="update", conditions=dict(method=["POST"]))
 
@@ -370,7 +389,7 @@ def make_map(config):
         m.connect("gists", "/gists",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("gists", "/gists",
-                  action="index", conditions=dict(method=["GET"]))
+                  conditions=dict(method=["GET"]))
         m.connect("new_gist", "/gists/new",
                   action="new", conditions=dict(method=["GET"]))
 
@@ -396,7 +415,7 @@ def make_map(config):
     # ADMIN MAIN PAGES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/admin') as m:
-        m.connect('admin_home', '', action='index')
+        m.connect('admin_home', '')
         m.connect('admin_add_repo', '/add_repo/{new_repo:[a-z0-9. _-]*}',
                   action='add_repo')
     #==========================================================================
@@ -408,7 +427,7 @@ def make_map(config):
 
     # USER JOURNAL
     rmap.connect('journal', '%s/journal' % ADMIN_PREFIX,
-                 controller='journal', action='index')
+                 controller='journal')
     rmap.connect('journal_rss', '%s/journal/rss' % ADMIN_PREFIX,
                  controller='journal', action='journal_rss')
     rmap.connect('journal_atom', '%s/journal/atom' % ADMIN_PREFIX,
@@ -475,7 +494,7 @@ def make_map(config):
     #==========================================================================
     rmap.connect('repo_creating_home', '/{repo_name:.*?}/repo_creating',
                 controller='admin/repos', action='repo_creating')
-    rmap.connect('repo_check_home', '/{repo_name:.*?}/crepo_check',
+    rmap.connect('repo_check_home', '/{repo_name:.*?}/repo_check_creating',
                 controller='admin/repos', action='repo_check')
 
     rmap.connect('summary_home', '/{repo_name:.*?}',
@@ -544,13 +563,6 @@ def make_map(config):
                  controller='admin/repos', action="edit_advanced_fork",
                  conditions=dict(method=["POST"], function=check_repo))
 
-    rmap.connect("edit_repo_caches", "/{repo_name:.*?}/settings/caches",
-                 controller='admin/repos', action="edit_caches",
-                 conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("update_repo_caches", "/{repo_name:.*?}/settings/caches",
-                 controller='admin/repos', action="edit_caches",
-                 conditions=dict(method=["POST"], function=check_repo))
-
     rmap.connect("edit_repo_remote", "/{repo_name:.*?}/settings/remote",
                  controller='admin/repos', action="edit_remote",
                  conditions=dict(method=["GET"], function=check_repo))
@@ -602,7 +614,7 @@ def make_map(config):
 
     rmap.connect('compare_home',
                  '/{repo_name:.*?}/compare',
-                 controller='compare', action='index',
+                 controller='compare',
                  conditions=dict(function=check_repo))
 
     rmap.connect('compare_url',
@@ -616,7 +628,7 @@ def make_map(config):
 
     rmap.connect('pullrequest_home',
                  '/{repo_name:.*?}/pull-request/new', controller='pullrequests',
-                 action='index', conditions=dict(function=check_repo,
+                 conditions=dict(function=check_repo,
                                                  method=["GET"]))
 
     rmap.connect('pullrequest_repo_info',
@@ -674,7 +686,7 @@ def make_map(config):
                 controller='changelog', conditions=dict(function=check_repo))
 
     rmap.connect('changelog_file_home', '/{repo_name:.*?}/changelog/{revision}/{f_path:.*}',
-                controller='changelog', f_path=None,
+                controller='changelog',
                 conditions=dict(function=check_repo))
 
     rmap.connect('changelog_details', '/{repo_name:.*?}/changelog_details/{cs}',
@@ -719,8 +731,8 @@ def make_map(config):
 
     rmap.connect('files_annotate_home',
                  '/{repo_name:.*?}/annotate/{revision}/{f_path:.*}',
-                 controller='files', action='index', revision='tip',
-                 f_path='', annotate=True, conditions=dict(function=check_repo))
+                 controller='files', revision='tip',
+                 f_path='', annotate='1', conditions=dict(function=check_repo))
 
     rmap.connect('files_edit_home',
                  '/{repo_name:.*?}/edit/{revision}/{f_path:.*}',

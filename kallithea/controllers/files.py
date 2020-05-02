@@ -49,10 +49,10 @@ from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_str, str2bool
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import (
-    ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, ImproperArchiveTypeError, NodeAlreadyExistsError, NodeDoesNotExistError, NodeError, RepositoryError, VCSError)
+from kallithea.lib.vcs.exceptions import (ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, ImproperArchiveTypeError, NodeAlreadyExistsError,
+                                          NodeDoesNotExistError, NodeError, RepositoryError, VCSError)
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.model.db import Repository
+from kallithea.model import db
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
 
@@ -90,7 +90,7 @@ class FilesController(BaseRepoController):
             h.flash(msg, category='error')
             raise HTTPNotFound()
         except RepositoryError as e:
-            h.flash(safe_str(e), category='error')
+            h.flash(e, category='error')
             raise HTTPNotFound()
 
     def __get_filenode(self, cs, path):
@@ -110,7 +110,7 @@ class FilesController(BaseRepoController):
             h.flash(msg, category='error')
             raise HTTPNotFound()
         except RepositoryError as e:
-            h.flash(safe_str(e), category='error')
+            h.flash(e, category='error')
             raise HTTPNotFound()
 
         return file_node
@@ -163,7 +163,7 @@ class FilesController(BaseRepoController):
                 c.load_full_history = False
                 # determine if we're on branch head
                 _branches = c.db_repo_scm_instance.branches
-                c.on_branch_head = revision in _branches.keys() + _branches.values()
+                c.on_branch_head = revision in _branches or revision in _branches.values()
                 _hist = []
                 c.file_history = []
                 if c.load_full_history:
@@ -175,7 +175,7 @@ class FilesController(BaseRepoController):
             else:
                 c.authors = c.file_history = []
         except RepositoryError as e:
-            h.flash(safe_str(e), category='error')
+            h.flash(e, category='error')
             raise HTTPNotFound()
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
@@ -232,8 +232,8 @@ class FilesController(BaseRepoController):
         cs = self.__get_cs(revision)
         file_node = self.__get_filenode(cs, f_path)
 
-        response.content_disposition = 'attachment; filename=%s' % \
-            safe_str(f_path.split(Repository.url_sep())[-1])
+        response.content_disposition = \
+            'attachment; filename=%s' % f_path.split(db.URL_SEP)[-1]
 
         response.content_type = file_node.mimetype
         return file_node.content
@@ -277,8 +277,7 @@ class FilesController(BaseRepoController):
                 mimetype, dispo = 'text/plain', 'inline'
 
         if dispo == 'attachment':
-            dispo = 'attachment; filename=%s' % \
-                        safe_str(f_path.split(os.sep)[-1])
+            dispo = 'attachment; filename=%s' % f_path.split(os.sep)[-1]
 
         response.content_disposition = dispo
         response.content_type = mimetype
@@ -292,7 +291,7 @@ class FilesController(BaseRepoController):
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
         # check if revision is a branch name or branch hash
-        if revision not in _branches.keys() + _branches.values():
+        if revision not in _branches and revision not in _branches.values():
             h.flash(_('You can only delete files with revision '
                       'being a valid branch'), category='warning')
             raise HTTPFound(location=h.url('files_home',
@@ -346,7 +345,7 @@ class FilesController(BaseRepoController):
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
         # check if revision is a branch name or branch hash
-        if revision not in _branches.keys() + _branches.values():
+        if revision not in _branches and revision not in _branches.values():
             h.flash(_('You can only edit files with revision '
                       'being a valid branch'), category='warning')
             raise HTTPFound(location=h.url('files_home',
@@ -365,8 +364,7 @@ class FilesController(BaseRepoController):
         c.f_path = f_path
 
         if r_post:
-
-            old_content = c.file.content
+            old_content = safe_str(c.file.content)
             sl = old_content.splitlines(1)
             first_line = sl[0] if sl else ''
             # modes:  0 - Unix, 1 - Mac, 2 - DOS
@@ -509,8 +507,7 @@ class FilesController(BaseRepoController):
 
         from kallithea import CONFIG
         rev_name = cs.raw_id[:12]
-        archive_name = '%s-%s%s' % (safe_str(repo_name.replace('/', '_')),
-                                    safe_str(rev_name), ext)
+        archive_name = '%s-%s%s' % (repo_name.replace('/', '_'), rev_name, ext)
 
         archive_path = None
         cached_archive_path = None

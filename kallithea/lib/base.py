@@ -28,9 +28,9 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import base64
 import datetime
 import logging
-import time
 import traceback
 import warnings
 
@@ -45,12 +45,11 @@ from tg.i18n import ugettext as _
 
 from kallithea import BACKENDS, __version__
 from kallithea.config.routing import url
-from kallithea.lib import auth_modules
+from kallithea.lib import auth_modules, ext_json
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
-from kallithea.lib.compat import json
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import get_repo_slug, is_valid_repo
-from kallithea.lib.utils2 import AttributeDict, safe_int, safe_str, safe_unicode, set_hook_environment, str2bool
+from kallithea.lib.utils2 import AttributeDict, ascii_bytes, safe_int, safe_str, set_hook_environment, str2bool
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model import meta
 from kallithea.model.db import PullRequest, Repository, Setting, User
@@ -97,12 +96,18 @@ def _get_ip_addr(environ):
     return _filter_proxy(ip)
 
 
-def _get_access_path(environ):
-    """Return PATH_INFO from environ ... using tg.original_request if available."""
+def get_path_info(environ):
+    """Return PATH_INFO from environ ... using tg.original_request if available.
+
+    In Python 3 WSGI, PATH_INFO is a unicode str, but kind of contains encoded
+    bytes. The code points are guaranteed to only use the lower 8 bit bits, and
+    encoding the string with the 1:1 encoding latin1 will give the
+    corresponding byte string ... which then can be decoded to proper unicode.
+    """
     org_req = environ.get('tg.original_request')
     if org_req is not None:
         environ = org_req.environ
-    return environ.get('PATH_INFO')
+    return safe_str(environ['PATH_INFO'].encode('latin1'))
 
 
 def log_in_user(user, remember, is_external_auth, ip_addr):
@@ -172,7 +177,7 @@ class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
         (authmeth, auth) = authorization.split(' ', 1)
         if 'basic' != authmeth.lower():
             return self.build_authentication(environ)
-        auth = auth.strip().decode('base64')
+        auth = safe_str(base64.b64decode(auth.strip()))
         _parts = auth.split(':', 1)
         if len(_parts) == 2:
             username, password = _parts
@@ -218,7 +223,7 @@ class BaseVCSController(object):
         Returns (None, wsgi_app) to send the wsgi_app response to the client.
         """
         # Use anonymous access if allowed for action on repo.
-        default_user = User.get_default_user(cache=True)
+        default_user = User.get_default_user()
         default_authuser = AuthUser.make(dbuser=default_user, ip_addr=ip_addr)
         if default_authuser is None:
             log.debug('No anonymous access at all') # move on to proper user auth
@@ -242,7 +247,7 @@ class BaseVCSController(object):
 
         # If not authenticated by the container, running basic auth
         if not username:
-            self.authenticate.realm = safe_str(self.config['realm'])
+            self.authenticate.realm = self.config['realm']
             result = self.authenticate(environ)
             if isinstance(result, str):
                 paste.httpheaders.AUTH_TYPE.update(environ, 'basic')
@@ -273,11 +278,8 @@ class BaseVCSController(object):
 
     def _check_permission(self, action, authuser, repo_name):
         """
-        Checks permissions using action (push/pull) user and repository
-        name
-
-        :param action: 'push' or 'pull' action
-        :param user: `User` instance
+        :param action: 'push' or 'pull'
+        :param user: `AuthUser` instance
         :param repo_name: repository name
         """
         if action == 'push':
@@ -286,7 +288,7 @@ class BaseVCSController(object):
                                                                   repo_name):
                 return False
 
-        else:
+        elif action == 'pull':
             #any other action need at least read permission
             if not HasPermissionAnyMiddleware('repository.read',
                                               'repository.write',
@@ -294,13 +296,15 @@ class BaseVCSController(object):
                                                                   repo_name):
                 return False
 
+        else:
+            assert False, action
+
         return True
 
     def _get_ip_addr(self, environ):
         return _get_ip_addr(environ)
 
     def __call__(self, environ, start_response):
-        start = time.time()
         try:
             # try parsing a request for this VCS - if it fails, call the wrapped app
             parsed_request = self.parse_request(environ)
@@ -334,7 +338,7 @@ class BaseVCSController(object):
 
             try:
                 log.info('%s action on %s repo "%s" by "%s" from %s',
-                         parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
+                         parsed_request.action, self.scm_alias, parsed_request.repo_name, user.username, ip_addr)
                 app = self._make_app(parsed_request)
                 return app(environ, start_response)
             except Exception:
@@ -343,10 +347,6 @@ class BaseVCSController(object):
 
         except webob.exc.HTTPException as e:
             return e(environ, start_response)
-        finally:
-            log_ = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log_.debug('Request time: %.3fs', time.time() - start)
-            meta.Session.remove()
 
 
 class BaseController(TGController):
@@ -413,7 +413,7 @@ class BaseController(TGController):
         # END CONFIG VARS
 
         c.repo_name = get_repo_slug(request)  # can be empty
-        c.backends = BACKENDS.keys()
+        c.backends = list(BACKENDS)
 
         self.cut_off_limit = safe_int(config.get('cut_off_limit'))
 
@@ -454,7 +454,7 @@ class BaseController(TGController):
                     return log_in_user(user, remember=False, is_external_auth=True, ip_addr=ip_addr)
 
         # User is default user (if active) or anonymous
-        default_user = User.get_default_user(cache=True)
+        default_user = User.get_default_user()
         authuser = AuthUser.make(dbuser=default_user, ip_addr=ip_addr)
         if authuser is None: # fall back to anonymous
             authuser = AuthUser(dbuser=default_user) # TODO: somehow use .make?
@@ -529,9 +529,9 @@ class BaseController(TGController):
             request.ip_addr = ip_addr
             request.needs_csrf_check = needs_csrf_check
 
-            log.info('IP: %s User: %s accessed %s',
+            log.info('IP: %s User: %s Request: %s',
                 request.ip_addr, request.authuser,
-                safe_unicode(_get_access_path(environ)),
+                get_path_info(environ),
             )
             return super(BaseController, self).__call__(environ, context)
         except webob.exc.HTTPException as e:
@@ -552,13 +552,13 @@ class BaseRepoController(BaseController):
 
     def _before(self, *args, **kwargs):
         super(BaseRepoController, self)._before(*args, **kwargs)
-        if c.repo_name:  # extracted from routes
+        if c.repo_name:  # extracted from request by base-base BaseController._before
             _dbr = Repository.get_by_repo_name(c.repo_name)
             if not _dbr:
                 return
 
             log.debug('Found repository in database %s with state `%s`',
-                      safe_unicode(_dbr), safe_unicode(_dbr.repo_state))
+                      _dbr, _dbr.repo_state)
             route = getattr(request.environ.get('routes.route'), 'name', '')
 
             # allow to delete repos that are somehow damages in filesystem
@@ -608,7 +608,7 @@ class BaseRepoController(BaseController):
             raise webob.exc.HTTPNotFound()
         except RepositoryError as e:
             log.error(traceback.format_exc())
-            h.flash(safe_str(e), category='error')
+            h.flash(e, category='error')
             raise webob.exc.HTTPBadRequest()
 
 
@@ -634,7 +634,7 @@ def jsonify(func, *args, **kwargs):
         warnings.warn(msg, Warning, 2)
         log.warning(msg)
     log.debug("Returning JSON wrapped action output")
-    return json.dumps(data, encoding='utf-8')
+    return ascii_bytes(ext_json.dumps(data))
 
 @decorator.decorator
 def IfSshEnabled(func, *args, **kwargs):

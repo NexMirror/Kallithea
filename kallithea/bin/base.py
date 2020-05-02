@@ -29,9 +29,10 @@ import os
 import pprint
 import random
 import sys
-import urllib2
+import urllib.request
 
-from kallithea.lib.compat import json
+from kallithea.lib import ext_json
+from kallithea.lib.utils2 import ascii_bytes
 
 
 CONFIG_NAME = '.config/kallithea'
@@ -67,12 +68,12 @@ def api_call(apikey, apihost, method=None, **kw):
         raise Exception('please specify method name !')
     apihost = apihost.rstrip('/')
     id_ = random.randrange(1, 9999)
-    req = urllib2.Request('%s/_admin/api' % apihost,
-                      data=json.dumps(_build_data(id_)),
+    req = urllib.request.Request('%s/_admin/api' % apihost,
+                      data=ascii_bytes(ext_json.dumps(_build_data(id_))),
                       headers={'content-type': 'text/plain'})
-    ret = urllib2.urlopen(req)
+    ret = urllib.request.urlopen(req)
     raw_json = ret.read()
-    json_data = json.loads(raw_json)
+    json_data = ext_json.loads(raw_json)
     id_ret = json_data['id']
     if id_ret == id_:
         return json_data
@@ -107,7 +108,7 @@ class RcConf(object):
     def __getitem__(self, key):
         return self._conf[key]
 
-    def __nonzero__(self):
+    def __bool__(self):
         if self._conf:
             return True
         return False
@@ -128,7 +129,7 @@ class RcConf(object):
         if os.path.exists(self._conf_name):
             update = True
         with open(self._conf_name, 'wb') as f:
-            json.dump(config, f, indent=4)
+            ext_json.dump(config, f, indent=4)
             f.write('\n')
 
         if update:
@@ -146,7 +147,7 @@ class RcConf(object):
         config = {}
         try:
             with open(self._conf_name, 'rb') as conf:
-                config = json.load(conf)
+                config = ext_json.load(conf)
         except IOError as e:
             sys.stderr.write(str(e) + '\n')
 
@@ -159,7 +160,7 @@ class RcConf(object):
         """
         try:
             with open(self._conf_name, 'rb') as conf:
-                return json.load(conf)
+                return ext_json.load(conf)
         except IOError as e:
             #sys.stderr.write(str(e) + '\n')
             pass

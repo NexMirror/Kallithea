@@ -1,7 +1,6 @@
 import datetime
 import os
 import sys
-import urllib2
 
 import mock
 import pytest
@@ -31,8 +30,8 @@ class TestGitRepository(object):
             GitRepository(wrong_repo_path)
 
     def test_git_cmd_injection(self):
-        repo_inject_path = TEST_GIT_REPO + '; echo "Cake";'
-        with pytest.raises(urllib2.URLError):
+        repo_inject_path = 'file:/%s; echo "Cake";' % TEST_GIT_REPO
+        with pytest.raises(RepositoryError):
             # Should fail because URL will contain the parts after ; too
             GitRepository(get_new_dir('injection-repo'), src_url=repo_inject_path, update_after_clone=True, create=True)
 
@@ -229,7 +228,7 @@ class TestGitRepository(object):
     def test_changeset10(self):
 
         chset10 = self.repo.get_changeset(self.repo.revisions[9])
-        readme = """===
+        readme = b"""===
 VCS
 ===
 
@@ -343,7 +342,7 @@ class TestGitChangeset(object):
         start = offset
         end = limit and offset + limit or None
         sliced = list(self.repo[start:end])
-        pytest.failUnlessEqual(result, sliced,
+        pytest.assertEqual(result, sliced,
             msg="Comparison failed for limit=%s, offset=%s"
             "(get_changeset returned: %s and sliced: %s"
             % (limit, offset, result, sliced))
@@ -588,19 +587,19 @@ class TestGitChangeset(object):
             'vcs/nodes.py']
         assert set(changed) == set([f.path for f in chset.changed])
 
-    def test_commit_message_is_unicode(self):
+    def test_commit_message_is_str(self):
         for cs in self.repo:
-            assert type(cs.message) == unicode
+            assert isinstance(cs.message, str)
 
-    def test_changeset_author_is_unicode(self):
+    def test_changeset_author_is_str(self):
         for cs in self.repo:
-            assert type(cs.author) == unicode
+            assert isinstance(cs.author, str)
 
-    def test_repo_files_content_is_unicode(self):
+    def test_repo_files_content_is_bytes(self):
         changeset = self.repo.get_changeset()
         for node in changeset.get_node('/'):
             if node.is_file():
-                assert type(node.content) == unicode
+                assert isinstance(node.content, bytes)
 
     def test_wrong_path(self):
         # There is 'setup.py' in the root dir but not there:
@@ -620,30 +619,6 @@ class TestGitChangeset(object):
         assert 'marcink none@none' == self.repo.get_changeset('8430a588b43b5d6da365400117c89400326e7992').author_name
 
 
-class TestGitSpecific():
-
-    def test_error_is_raised_for_added_if_diff_name_status_is_wrong(self):
-        repo = mock.MagicMock()
-        changeset = GitChangeset(repo, 'foobar')
-        changeset._diff_name_status = 'foobar'
-        with pytest.raises(VCSError):
-            changeset.added
-
-    def test_error_is_raised_for_changed_if_diff_name_status_is_wrong(self):
-        repo = mock.MagicMock()
-        changeset = GitChangeset(repo, 'foobar')
-        changeset._diff_name_status = 'foobar'
-        with pytest.raises(VCSError):
-            changeset.added
-
-    def test_error_is_raised_for_removed_if_diff_name_status_is_wrong(self):
-        repo = mock.MagicMock()
-        changeset = GitChangeset(repo, 'foobar')
-        changeset._diff_name_status = 'foobar'
-        with pytest.raises(VCSError):
-            changeset.added
-
-
 class TestGitSpecificWithRepo(_BackendTestMixin):
     backend_alias = 'git'
 
@@ -657,7 +632,7 @@ class TestGitSpecificWithRepo(_BackendTestMixin):
                 'added': [
                     FileNode('foobar/static/js/admin/base.js', content='base'),
                     FileNode('foobar/static/admin', content='admin',
-                        mode=0120000), # this is a link
+                        mode=0o120000), # this is a link
                     FileNode('foo', content='foo'),
                 ],
             },
@@ -673,11 +648,11 @@ class TestGitSpecificWithRepo(_BackendTestMixin):
 
     def test_paths_slow_traversing(self):
         cs = self.repo.get_changeset()
-        assert cs.get_node('foobar').get_node('static').get_node('js').get_node('admin').get_node('base.js').content == 'base'
+        assert cs.get_node('foobar').get_node('static').get_node('js').get_node('admin').get_node('base.js').content == b'base'
 
     def test_paths_fast_traversing(self):
         cs = self.repo.get_changeset()
-        assert cs.get_node('foobar/static/js/admin/base.js').content == 'base'
+        assert cs.get_node('foobar/static/js/admin/base.js').content == b'base'
 
     def test_workdir_get_branch(self):
         self.repo.run_git_command(['checkout', '-b', 'production'])
@@ -689,65 +664,65 @@ class TestGitSpecificWithRepo(_BackendTestMixin):
         assert self.repo.workdir.get_branch() == 'master'
 
     def test_get_diff_runs_git_command_with_hashes(self):
-        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo._run_git_command = mock.Mock(return_value=(b'', b''))
         self.repo.get_diff(0, 1)
-        self.repo.run_git_command.assert_called_once_with(
+        self.repo._run_git_command.assert_called_once_with(
             ['diff', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
-             self.repo._get_revision(0), self.repo._get_revision(1)])
+             self.repo._get_revision(0), self.repo._get_revision(1)], cwd=self.repo.path)
 
     def test_get_diff_runs_git_command_with_str_hashes(self):
-        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo._run_git_command = mock.Mock(return_value=(b'', b''))
         self.repo.get_diff(self.repo.EMPTY_CHANGESET, 1)
-        self.repo.run_git_command.assert_called_once_with(
+        self.repo._run_git_command.assert_called_once_with(
             ['show', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
-             self.repo._get_revision(1)])
+             self.repo._get_revision(1)], cwd=self.repo.path)
 
     def test_get_diff_runs_git_command_with_path_if_its_given(self):
-        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo._run_git_command = mock.Mock(return_value=(b'', b''))
         self.repo.get_diff(0, 1, 'foo')
-        self.repo.run_git_command.assert_called_once_with(
+        self.repo._run_git_command.assert_called_once_with(
             ['diff', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
-             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'], cwd=self.repo.path)
 
     def test_get_diff_does_not_sanitize_valid_context(self):
         almost_overflowed_long_int = 2**31-1
 
-        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo._run_git_command = mock.Mock(return_value=(b'', b''))
         self.repo.get_diff(0, 1, 'foo', context=almost_overflowed_long_int)
-        self.repo.run_git_command.assert_called_once_with(
+        self.repo._run_git_command.assert_called_once_with(
             ['diff', '-U' + str(almost_overflowed_long_int), '--full-index', '--binary', '-p', '-M', '--abbrev=40',
-             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'], cwd=self.repo.path)
 
     def test_get_diff_sanitizes_overflowing_context(self):
         overflowed_long_int = 2**31
         sanitized_overflowed_long_int = overflowed_long_int-1
 
-        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo._run_git_command = mock.Mock(return_value=(b'', b''))
         self.repo.get_diff(0, 1, 'foo', context=overflowed_long_int)
 
-        self.repo.run_git_command.assert_called_once_with(
+        self.repo._run_git_command.assert_called_once_with(
             ['diff', '-U' + str(sanitized_overflowed_long_int), '--full-index', '--binary', '-p', '-M', '--abbrev=40',
-             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'], cwd=self.repo.path)
 
     def test_get_diff_does_not_sanitize_zero_context(self):
         zero_context = 0
 
-        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo._run_git_command = mock.Mock(return_value=(b'', b''))
         self.repo.get_diff(0, 1, 'foo', context=zero_context)
 
-        self.repo.run_git_command.assert_called_once_with(
+        self.repo._run_git_command.assert_called_once_with(
             ['diff', '-U' + str(zero_context), '--full-index', '--binary', '-p', '-M', '--abbrev=40',
-             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'], cwd=self.repo.path)
 
     def test_get_diff_sanitizes_negative_context(self):
         negative_context = -10
 
-        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo._run_git_command = mock.Mock(return_value=(b'', b''))
         self.repo.get_diff(0, 1, 'foo', context=negative_context)
 
-        self.repo.run_git_command.assert_called_once_with(
+        self.repo._run_git_command.assert_called_once_with(
             ['diff', '-U0', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
-             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'], cwd=self.repo.path)
 
 
 class TestGitRegression(_BackendTestMixin):
@@ -804,22 +779,24 @@ class TestGitHooks(object):
         self.repo = GitRepository(self.repo_directory, create=True)
 
         # Create a dictionary where keys are hook names, and values are paths to
-        # them. Deduplicates code in tests a bit.
-        self.hook_directory = self.repo.get_hook_location()
-        self.kallithea_hooks = dict((h, os.path.join(self.hook_directory, h)) for h in ("pre-receive", "post-receive"))
+        # them in the non-bare repo. Deduplicates code in tests a bit.
+        self.kallithea_hooks = {
+            "pre-receive": os.path.join(self.repo.path, '.git', 'hooks', "pre-receive"),
+            "post-receive": os.path.join(self.repo.path, '.git', 'hooks', "post-receive"),
+        }
 
     def test_hooks_created_if_missing(self):
         """
         Tests if hooks are installed in repository if they are missing.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             if os.path.exists(hook_path):
                 os.remove(hook_path)
 
         ScmModel().install_git_hooks(repo=self.repo)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             assert os.path.exists(hook_path)
 
     def test_kallithea_hooks_updated(self):
@@ -827,13 +804,13 @@ class TestGitHooks(object):
         Tests if hooks are updated if they are Kallithea hooks already.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path, "w") as f:
                 f.write("KALLITHEA_HOOK_VER=0.0.0\nJUST_BOGUS")
 
         ScmModel().install_git_hooks(repo=self.repo)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path) as f:
                 assert "JUST_BOGUS" not in f.read()
 
@@ -842,13 +819,13 @@ class TestGitHooks(object):
         Tests if hooks are left untouched if they are not Kallithea hooks.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path, "w") as f:
                 f.write("#!/bin/bash\n#CUSTOM_HOOK")
 
         ScmModel().install_git_hooks(repo=self.repo)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path) as f:
                 assert "CUSTOM_HOOK" in f.read()
 
@@ -857,12 +834,12 @@ class TestGitHooks(object):
         Tests if hooks are forcefully updated even though they are custom hooks.
         """
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path, "w") as f:
                 f.write("#!/bin/bash\n#CUSTOM_HOOK")
 
         ScmModel().install_git_hooks(repo=self.repo, force_create=True)
 
-        for hook, hook_path in self.kallithea_hooks.iteritems():
+        for hook, hook_path in self.kallithea_hooks.items():
             with open(hook_path) as f:
                 assert "KALLITHEA_HOOK_VER" in f.read()

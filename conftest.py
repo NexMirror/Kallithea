@@ -2,9 +2,18 @@ import os
 
 import mock
 import pytest
+import tg
 
 
 here = os.path.dirname(__file__)
+
+# HACK:
+def pytest_configure():
+    # Register global dummy tg.context to avoid "TypeError: No object (name: context) has been registered for this thread"
+    tg.request_local.context._push_object(tg.util.bunch.Bunch())
+    # could be removed again after use with
+    # tg.request_local.context._pop_object ... but we keep it around forever as
+    # a reasonable sentinel
 
 def pytest_ignore_collect(path):
     # ignore all files outside the 'kallithea' directory
@@ -36,3 +45,10 @@ def doctest_mock_ugettext(request):
     m = __import__(request.module.__name__, globals(), locals(), [None], 0)
     with mock.patch.object(m, '_', lambda s: s):
         yield
+
+if getattr(pytest, 'register_assert_rewrite', None):
+    # make sure that all asserts under kallithea/tests benefit from advanced
+    # assert reporting with pytest-3.0.0+, including api/api_base.py,
+    # models/common.py etc.
+    # See also: https://docs.pytest.org/en/latest/assert.html#advanced-assertion-introspection
+    pytest.register_assert_rewrite('kallithea.tests')

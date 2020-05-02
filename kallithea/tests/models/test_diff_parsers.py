@@ -1,5 +1,5 @@
 from kallithea.lib.diffs import BIN_FILENODE, CHMOD_FILENODE, COPIED_FILENODE, DEL_FILENODE, MOD_FILENODE, NEW_FILENODE, RENAMED_FILENODE, DiffProcessor
-from kallithea.tests.base import *
+from kallithea.tests import base
 from kallithea.tests.fixture import Fixture
 
 
@@ -271,9 +271,9 @@ DIFF_FIXTURES = {
 }
 
 
-class TestDiffLib(TestController):
+class TestDiffLib(base.TestController):
 
-    @parametrize('diff_fixture', DIFF_FIXTURES)
+    @base.parametrize('diff_fixture', DIFF_FIXTURES)
     def test_diff(self, diff_fixture):
         raw_diff = fixture.load_resource(diff_fixture, strip=False)
         vcs = 'hg'
@@ -295,20 +295,20 @@ class TestDiffLib(TestController):
             l.append('%(action)-7s %(new_lineno)3s %(old_lineno)3s %(line)r\n' % d)
         s = ''.join(l)
         assert s == r'''
-context ... ... u'@@ -51,6 +51,13 @@\n'
-unmod    51  51 u'<u>\t</u>begin();\n'
-unmod    52  52 u'<u>\t</u>\n'
-add      53     u'<u>\t</u>int foo;<u class="cr"></u>\n'
-add      54     u'<u>\t</u>int bar; <u class="cr"></u>\n'
-add      55     u'<u>\t</u>int baz;<u>\t</u><u class="cr"></u>\n'
-add      56     u'<u>\t</u>int space; <i></i>'
-add      57     u'<u>\t</u>int tab;<u>\t</u>\n'
-add      58     u'<u>\t</u>\n'
-unmod    59  53 u' <i></i>'
-del          54 u'<u>\t</u>#define MAX_STEPS (48)\n'
-add      60     u'<u>\t</u><u class="cr"></u>\n'
-add      61     u'<u>\t</u>#define MAX_STEPS (64)<u class="cr"></u>\n'
-unmod    62  55 u'\n'
-del          56 u'<u>\t</u>#define MIN_STEPS (<del>48</del>)\n'
-add      63     u'<u>\t</u>#define MIN_STEPS (<ins>42</ins>)\n'
+context ... ... '@@ -51,6 +51,13 @@\n'
+unmod    51  51 '<u>\t</u>begin();\n'
+unmod    52  52 '<u>\t</u>\n'
+add      53     '<u>\t</u>int foo;<u class="cr"></u>\n'
+add      54     '<u>\t</u>int bar; <u class="cr"></u>\n'
+add      55     '<u>\t</u>int baz;<u>\t</u><u class="cr"></u>\n'
+add      56     '<u>\t</u>int space; <i></i>'
+add      57     '<u>\t</u>int tab;<u>\t</u>\n'
+add      58     '<u>\t</u>\n'
+unmod    59  53 ' <i></i>'
+del          54 '<u>\t</u>#define MAX_STEPS (48)\n'
+add      60     '<u>\t</u><u class="cr"></u>\n'
+add      61     '<u>\t</u>#define MAX_STEPS (64)<u class="cr"></u>\n'
+unmod    62  55 '\n'
+del          56 '<u>\t</u>#define MIN_STEPS (<del>48</del>)\n'
+add      63     '<u>\t</u>#define MIN_STEPS (<ins>42</ins>)\n'
 '''

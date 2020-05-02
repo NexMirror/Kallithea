@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import itertools
 import logging
 import traceback
 
@@ -37,7 +36,6 @@ from tg.i18n import ugettext as _
 from tg.i18n import ungettext
 from webob.exc import HTTPForbidden, HTTPFound, HTTPInternalServerError, HTTPNotFound
 
-import kallithea
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoGroupPermissionLevelDecorator, LoginRequired
@@ -93,10 +91,8 @@ class RepoGroupsController(BaseController):
         return data
 
     def _revoke_perms_on_yourself(self, form_result):
-        _up = filter(lambda u: request.authuser.username == u[0],
-                     form_result['perms_updates'])
-        _new = filter(lambda u: request.authuser.username == u[0],
-                      form_result['perms_new'])
+        _up = [u for u in form_result['perms_updates'] if request.authuser.username == u[0]]
+        _new = [u for u in form_result['perms_new'] if request.authuser.username == u[0]]
         if _new and _new[0][1] != 'group.admin' or _up and _up[0][1] != 'group.admin':
             return True
         return False
@@ -105,24 +101,20 @@ class RepoGroupsController(BaseController):
         _list = RepoGroup.query(sorted=True).all()
         group_iter = RepoGroupList(_list, perm_level='admin')
         repo_groups_data = []
-        total_records = len(group_iter)
         _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
-        repo_group_name = lambda repo_group_name, children_groups: (
-            template.get_def("repo_group_name")
-            .render(repo_group_name, children_groups, _=_, h=h, c=c)
-        )
-        repo_group_actions = lambda repo_group_id, repo_group_name, gr_count: (
-            template.get_def("repo_group_actions")
-            .render(repo_group_id, repo_group_name, gr_count, _=_, h=h, c=c,
-                    ungettext=ungettext)
-        )
+        def repo_group_name(repo_group_name, children_groups):
+            return template.get_def("repo_group_name") \
+                .render_unicode(repo_group_name, children_groups, _=_, h=h, c=c)
+
+        def repo_group_actions(repo_group_id, repo_group_name, gr_count):
+            return template.get_def("repo_group_actions") \
+                .render_unicode(repo_group_id, repo_group_name, gr_count, _=_, h=h, c=c,
+                        ungettext=ungettext)
 
         for repo_gr in group_iter:
-            children_groups = map(h.safe_unicode,
-                itertools.chain((g.name for g in repo_gr.parents),
-                                (x.name for x in [repo_gr])))
+            children_groups = [g.name for g in repo_gr.parents] + [repo_gr.name]
             repo_count = repo_gr.repositories.count()
             repo_groups_data.append({
                 "raw_name": repo_gr.group_name,

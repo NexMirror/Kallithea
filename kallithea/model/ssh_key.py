@@ -29,7 +29,7 @@ from tg import config
 from tg.i18n import ugettext as _
 
 from kallithea.lib import ssh
-from kallithea.lib.utils2 import safe_str, str2bool
+from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.exceptions import RepositoryError
 from kallithea.model.db import User, UserSshKeys
 from kallithea.model.meta import Session
@@ -52,9 +52,9 @@ class SshKeyModel(object):
         Will raise SshKeyModelException on errors
         """
         try:
-            keytype, pub, comment = ssh.parse_pub_key(public_key)
+            keytype, _pub, comment = ssh.parse_pub_key(public_key)
         except ssh.SshKeyParseError as e:
-            raise SshKeyModelException(_('SSH key %r is invalid: %s') % (safe_str(public_key), e.message))
+            raise SshKeyModelException(_('SSH key %r is invalid: %s') % (public_key, e.args[0]))
         if not description.strip():
             description = comment.strip()
 
@@ -85,7 +85,7 @@ class SshKeyModel(object):
 
         ssh_key = ssh_key.scalar()
         if ssh_key is None:
-            raise SshKeyModelException(_('SSH key with fingerprint %r found') % safe_str(fingerprint))
+            raise SshKeyModelException(_('SSH key with fingerprint %r found') % fingerprint)
         Session().delete(ssh_key)
 
     def get_ssh_keys(self, user):
@@ -134,8 +134,5 @@ class SshKeyModel(object):
             for key in UserSshKeys.query().join(UserSshKeys.user).filter(User.active == True):
                 f.write(ssh.authorized_keys_line(kallithea_cli_path, config['__file__'], key))
         os.chmod(tmp_authorized_keys, stat.S_IRUSR | stat.S_IWUSR)
-        # This preliminary remove is needed for Windows, not for Unix.
-        # TODO In Python 3, the remove+rename sequence below should become os.replace.
-        if os.path.exists(authorized_keys):
-            os.remove(authorized_keys)
-        os.rename(tmp_authorized_keys, authorized_keys)
+        # Note: simple overwrite / rename isn't enough to replace the file on Windows
+        os.replace(tmp_authorized_keys, authorized_keys)

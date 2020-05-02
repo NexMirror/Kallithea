@@ -1,24 +1,7 @@
-import os
-import tempfile
-
 from kallithea.lib.vcs.utils import aslist
-from kallithea.lib.vcs.utils.paths import get_user_home
 
 
-abspath = lambda * p: os.path.abspath(os.path.join(*p))
-
-VCSRC_PATH = os.environ.get('VCSRC_PATH')
-
-if not VCSRC_PATH:
-    HOME_ = get_user_home()
-    if not HOME_:
-        HOME_ = tempfile.gettempdir()
-
-VCSRC_PATH = VCSRC_PATH or abspath(HOME_, '.vcsrc')
-if os.path.isdir(VCSRC_PATH):
-    VCSRC_PATH = os.path.join(VCSRC_PATH, '__init__.py')
-
-# list of default encoding used in safe_unicode/safe_str methods
+# list of default encoding used in safe_str/safe_bytes methods
 DEFAULT_ENCODINGS = aslist('utf-8')
 
 # path to git executable run by run_git_command function

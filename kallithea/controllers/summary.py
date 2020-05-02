@@ -38,14 +38,15 @@ from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPBadRequest
 
+import kallithea.lib.helpers as h
 from kallithea.config.conf import ALL_EXTS, ALL_READMES, LANGUAGES_EXTENSIONS_MAP
+from kallithea.lib import ext_json
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.celerylib.tasks import get_commits_stats
-from kallithea.lib.compat import json
 from kallithea.lib.markup_renderer import MarkupRenderer
-from kallithea.lib.page import RepoPage
-from kallithea.lib.utils2 import safe_int
+from kallithea.lib.page import Page
+from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import FileNode
@@ -65,7 +66,7 @@ class SummaryController(BaseRepoController):
         repo_name = db_repo.repo_name
         log.debug('Looking for README file')
 
-        @cache_region('long_term', '_get_readme_from_cache')
+        @cache_region('long_term_file', '_get_readme_from_cache')
         def _get_readme_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             readme_data = None
             readme_file = None
@@ -83,7 +84,7 @@ class SummaryController(BaseRepoController):
                         readme_file = f
                         log.debug('Found README file `%s` rendering...',
                                   readme_file)
-                        readme_data = renderer.render(readme.content,
+                        readme_data = renderer.render(safe_str(readme.content),
                                                       filename=f)
                         break
                     except NodeDoesNotExistError:
@@ -104,8 +105,12 @@ class SummaryController(BaseRepoController):
     def index(self, repo_name):
         p = safe_int(request.GET.get('page'), 1)
         size = safe_int(request.GET.get('size'), 10)
-        collection = c.db_repo_scm_instance
-        c.cs_pagination = RepoPage(collection, page=p, items_per_page=size)
+        try:
+            collection = c.db_repo_scm_instance.get_changesets(reverse=True)
+        except EmptyRepositoryError as e:
+            h.flash(e, category='warning')
+            collection = []
+        c.cs_pagination = Page(collection, page=p, items_per_page=size)
         page_revisions = [x.raw_id for x in list(c.cs_pagination)]
         c.cs_comments = c.db_repo.get_comments(page_revisions)
         c.cs_statuses = c.db_repo.statuses(page_revisions)
@@ -133,17 +138,13 @@ class SummaryController(BaseRepoController):
         c.stats_percentage = 0
 
         if stats and stats.languages:
-            c.no_data = False is c.db_repo.enable_statistics
-            lang_stats_d = json.loads(stats.languages)
-
+            lang_stats_d = ext_json.loads(stats.languages)
             lang_stats = [(x, {"count": y,
                                "desc": LANGUAGES_EXTENSIONS_MAP.get(x, '?')})
                           for x, y in lang_stats_d.items()]
             lang_stats.sort(key=lambda k: (-k[1]['count'], k[0]))
-
             c.trending_languages = lang_stats[:10]
         else:
-            c.no_data = True
             c.trending_languages = []
 
         c.enable_downloads = c.db_repo.enable_downloads
@@ -171,7 +172,7 @@ class SummaryController(BaseRepoController):
             c.no_data_msg = _('Statistics are disabled for this repository')
 
         td = date.today() + timedelta(days=1)
-        td_1m = td - timedelta(days=calendar.mdays[td.month])
+        td_1m = td - timedelta(days=calendar.monthrange(td.year, td.month)[1])
         td_1y = td - timedelta(days=365)
 
         ts_min_m = mktime(td_1m.timetuple())
@@ -185,18 +186,16 @@ class SummaryController(BaseRepoController):
             .scalar()
         c.stats_percentage = 0
         if stats and stats.languages:
-            c.no_data = False is c.db_repo.enable_statistics
-            lang_stats_d = json.loads(stats.languages)
-            c.commit_data = json.loads(stats.commit_activity)
-            c.overview_data = json.loads(stats.commit_activity_combined)
+            c.commit_data = ext_json.loads(stats.commit_activity)
+            c.overview_data = ext_json.loads(stats.commit_activity_combined)
 
-            lang_stats = ((x, {"count": y,
-                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})
-                          for x, y in lang_stats_d.items())
+            lang_stats_d = ext_json.loads(stats.languages)
+            lang_stats = [(x, {"count": y,
+                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x, '?')})
+                          for x, y in lang_stats_d.items()]
+            lang_stats.sort(key=lambda k: (-k[1]['count'], k[0]))
+            c.trending_languages = lang_stats[:10]
 
-            c.trending_languages = (
-                sorted(lang_stats, reverse=True, key=lambda k: k[1])[:10]
-            )
             last_rev = stats.stat_on_revision + 1
             c.repo_last_rev = c.db_repo_scm_instance.count() \
                 if c.db_repo_scm_instance.revisions else 0
@@ -208,8 +207,7 @@ class SummaryController(BaseRepoController):
         else:
             c.commit_data = {}
             c.overview_data = ([[ts_min_y, 0], [ts_max_y, 10]])
-            c.trending_languages = {}
-            c.no_data = True
+            c.trending_languages = []
 
         recurse_limit = 500  # don't recurse more than 500 times when parsing
         get_commits_stats(c.db_repo.repo_name, ts_min_y, ts_max_y, recurse_limit)

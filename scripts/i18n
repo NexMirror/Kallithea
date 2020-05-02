@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+
+# -*- coding: utf-8 -*-
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import shutil
+import sys
+
+import click
+
+import i18n_utils
+
+
+"""
+Tool for maintenance of .po and .pot files
+
+Normally, the i18n-related files contain for each translatable string a
+reference to all the source code locations where this string is found. This
+meta data is useful for translators to assess how strings are used, but is not
+relevant for normal development nor for running Kallithea. Such meta data, or
+derived data like kallithea.pot, will inherently be outdated, and create
+unnecessary churn and repository growth, making it harder to spot actual and
+important changes.
+"""
+
+@click.group()
+@click.option('--debug/--no-debug', default=False)
+def cli(debug):
+    if (debug):
+        i18n_utils.do_debug = True
+    pass
+
+@cli.command()
+@click.argument('po_files', nargs=-1)
+@click.option('--merge-pot-file', default=None)
+@click.option('--strip/--no-strip', default=False)
+def normalize_po_files(po_files, merge_pot_file, strip):
+    """Normalize the specified .po and .pot files.
+
+    By default, only actual translations and essential headers will be
+    preserved, just as we want it in the main branches with minimal noise.
+
+    If a .pot file is specified, the po files will instead be updated by
+    running GNU msgmerge with this .pot file, thus updating source code
+    references and preserving comments and outdated translations.
+    """
+    for po_file in po_files:
+        i18n_utils._normalize_po_file(po_file, merge_pot_file=merge_pot_file, strip=strip)
+
+@cli.command()
+@click.argument('local')
+@click.argument('base')
+@click.argument('other')
+@click.argument('output')
+@click.option('--merge-pot-file', default=None)
+@click.option('--strip/--no-strip', default=False)
+def normalized_merge(local, base, other, output, merge_pot_file, strip):
+    """Merge tool for use with 'hg merge/rebase/graft --tool'
+
+    i18n files are partially manually editored original source of content, and
+    partially automatically generated and updated. That create a lot of churn
+    and often cause a lot of merge conflicts.
+
+    To avoid that, this merge tool wrapper will normalize .po content before
+    running the merge tool.
+
+    By default, only actual translations and essential headers will be
+    preserved, just as we want it in the main branches with minimal noise.
+
+    If a .pot file is specified, the po files will instead be updated by
+    running GNU msgmerge with this .pot file, thus updating source code
+    references and preserving comments and outdated translations.
+
+    Add the following to your user or repository-specific .hgrc file to use it:
+        [merge-tools]
+        i18n.executable = /path/to/scripts/i18n
+        i18n.args = normalized-merge $local $base $other $output
+
+    and then invoke merge/rebase/graft with the additional argument '--tool i18n'.
+    """
+    from mercurial import (
+        context,
+        simplemerge,
+        ui as uimod,
+    )
+
+    print('i18n normalized-merge: normalizing and merging %s' % output)
+
+    i18n_utils._normalize_po_file(local, merge_pot_file=merge_pot_file, strip=strip)
+    i18n_utils._normalize_po_file(base, merge_pot_file=merge_pot_file, strip=strip)
+    i18n_utils._normalize_po_file(other, merge_pot_file=merge_pot_file, strip=strip)
+    i18n_utils._normalize_po_file(output, merge_pot_file=merge_pot_file, strip=strip)
+
+    # simplemerge will write markers to 'local' if it fails, keep a copy without markers
+    localkeep = local + '.keep'
+    shutil.copyfile(local, localkeep)
+
+    ret = simplemerge.simplemerge(uimod.ui.load(),
+         context.arbitraryfilectx(local.encode('utf-8')),
+         context.arbitraryfilectx(base.encode('utf-8')),
+         context.arbitraryfilectx(other.encode('utf-8')),
+         label=[b'local', b'other', b'base'],
+         mode='merge',
+    )
+    shutil.copyfile(local, output)  # simplemerge wrote to local - either resolved or with conflict markers
+    if ret:
+        shutil.copyfile(localkeep, local)
+        basekeep = base + '.keep'
+        otherkeep = other + '.keep'
+        shutil.copyfile(base, basekeep)
+        shutil.copyfile(other, otherkeep)
+        sys.stderr.write("Error: simple merge failed and %s is left with conflict markers. Resolve the conflicts, then use 'hg resolve -m'.\n" % output)
+        sys.stderr.write('Resolve with e.g.: kdiff3 %s %s %s -o %s\n' % (basekeep, localkeep, otherkeep, output))
+        sys.exit(ret)
+
+    os.remove(localkeep)
+
+@cli.command()
+@click.argument('file1')
+@click.argument('file2')
+@click.option('--merge-pot-file', default=None)
+@click.option('--strip/--no-strip', default=False)
+def normalized_diff(file1, file2, merge_pot_file, strip):
+    """Compare two files while transparently normalizing them."""
+    sys.exit(i18n_utils._normalized_diff(file1, file2, merge_pot_file=merge_pot_file, strip=strip))
+
+if __name__ == '__main__':
+    cli()

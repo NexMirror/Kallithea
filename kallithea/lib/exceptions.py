@@ -74,9 +74,8 @@ class UserCreationError(Exception):
     pass
 
 
-class RepositoryCreationError(Exception):
+class HgsubversionImportError(Exception):
     pass
 
-
-class HgsubversionImportError(Exception):
+class InvalidCloneUriException(Exception):
     pass

@@ -31,7 +31,6 @@ import traceback
 import formencode
 from formencode import htmlfill
 from tg import request
-from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
@@ -69,7 +68,7 @@ class DefaultsController(BaseController):
 
         try:
             form_result = _form.to_python(dict(request.POST))
-            for k, v in form_result.iteritems():
+            for k, v in form_result.items():
                 setting = Setting.create_or_update(k, v)
             Session().commit()
             h.flash(_('Default settings updated successfully'),

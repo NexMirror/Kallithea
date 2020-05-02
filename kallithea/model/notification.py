@@ -33,9 +33,7 @@ from tg import app_globals
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 
-import kallithea
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import User
 
 
@@ -44,12 +42,12 @@ log = logging.getLogger(__name__)
 
 class NotificationModel(object):
 
-    TYPE_CHANGESET_COMMENT = u'cs_comment'
-    TYPE_MESSAGE = u'message'
-    TYPE_MENTION = u'mention' # not used
-    TYPE_REGISTRATION = u'registration'
-    TYPE_PULL_REQUEST = u'pull_request'
-    TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
+    TYPE_CHANGESET_COMMENT = 'cs_comment'
+    TYPE_MESSAGE = 'message'
+    TYPE_MENTION = 'mention' # not used
+    TYPE_REGISTRATION = 'registration'
+    TYPE_PULL_REQUEST = 'pull_request'
+    TYPE_PULL_REQUEST_COMMENT = 'pull_request_comment'
 
     def create(self, created_by, subject, body, recipients=None,
                type_=TYPE_MESSAGE, with_email=True,
@@ -134,7 +132,8 @@ class NotificationModel(object):
         # send email with notification to all other participants
         for rec in rec_objs:
             tasks.send_email([rec.email], email_subject, email_txt_body,
-                     email_html_body, headers, author=created_by_obj)
+                     email_html_body, headers,
+                     from_name=created_by_obj.full_name_or_username)
 
 
 class EmailNotificationModel(object):
@@ -150,7 +149,6 @@ class EmailNotificationModel(object):
 
     def __init__(self):
         super(EmailNotificationModel, self).__init__()
-        self._template_root = kallithea.CONFIG['paths']['templates'][0]
         self._tmpl_lookup = app_globals.mako_lookup
         self.email_types = {
             self.TYPE_CHANGESET_COMMENT: 'changeset_comment',
@@ -178,14 +176,21 @@ class EmailNotificationModel(object):
         try:
             subj = tmpl % kwargs
         except KeyError as e:
-            log.error('error generating email subject for %r from %s: %s', type_, ','.join(self._subj_map.keys()), e)
+            log.error('error generating email subject for %r from %s: %s', type_, ', '.join(self._subj_map), e)
             raise
-        l = [safe_unicode(x) for x in [kwargs.get('status_change'), kwargs.get('closing_pr') and _('Closing')] if x]
-        if l:
+        # gmail doesn't do proper threading but will ignore leading square
+        # bracket content ... so that is where we put status info
+        bracket_tags = []
+        status_change = kwargs.get('status_change')
+        if status_change:
+            bracket_tags.append(str(status_change))  # apply str to evaluate LazyString before .join
+        if kwargs.get('closing_pr'):
+            bracket_tags.append(_('Closing'))
+        if bracket_tags:
             if subj.startswith('['):
-                subj = '[' + ', '.join(l) + ': ' + subj[1:]
+                subj = '[' + ', '.join(bracket_tags) + ': ' + subj[1:]
             else:
-                subj = '[' + ', '.join(l) + '] ' + subj
+                subj = '[' + ', '.join(bracket_tags) + '] ' + subj
         return subj
 
     def get_email_tmpl(self, type_, content_type, **kwargs):

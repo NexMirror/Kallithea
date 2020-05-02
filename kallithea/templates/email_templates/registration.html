@@ -2,7 +2,8 @@
 <%inherit file="main.html"/>\
 \
 <%block name="header">\
-<%include file="header.html" args="title=_('New User Registration'),link=registered_user_url"/>\
+<% title = _('New User Registration') %>\
+<%include file="header.html" args="title=title,link=registered_user_url"/>\
 </%block>\
 \
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -38,7 +39,8 @@
     </tr>
     <tr>
         <td colspan="2">
-<%include file="button.html" args="url=registered_user_url,title=_('View User Profile'),padding_bottom=False"/>\
+<% title = _('View User Profile') %>\
+<%include file="button.html" args="url=registered_user_url,title=title,padding_bottom=False"/>\
         </td>
     </tr>
 </table>

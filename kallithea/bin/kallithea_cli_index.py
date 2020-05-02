@@ -36,7 +36,7 @@ from kallithea.model.repo import RepoModel
 @click.option('--repo-location', help='Base path of repositories to index. Default: all')
 @click.option('--index-only', help='Comma-separated list of repositories to build index on. Default: all')
 @click.option('--update-only', help='Comma-separated list of repositories to re-build index on. Default: all')
-@click.option('-f', '--full', 'full_index', help='Recreate the index from scratch')
+@click.option('-f', '--full/--no-full', 'full_index', help='Recreate the index from scratch')
 def index_create(repo_location, index_only, update_only, full_index):
     """Create or update full text search index"""
 

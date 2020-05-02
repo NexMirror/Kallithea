@@ -72,7 +72,7 @@ ${self.repo_context_bar('changelog')}
                     <div class="cs_${op} clearfix">
                       <span class="node">
                           <i class="icon-diff-${op}"></i>
-                          ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                          ${h.link_to(path, '#%s' % fid)}
                       </span>
                       <div class="changes">${h.fancy_file_stats(stats)}</div>
                     </div>
@@ -98,7 +98,7 @@ ${self.repo_context_bar('changelog')}
     </div>
 
 </div>
-    <script type="text/javascript">
+    <script>'use strict';
 
    $(document).ready(function(){
     var cache = {};
@@ -154,7 +154,7 @@ ${self.repo_context_bar('changelog')}
     make_revision_dropdown("#compare_org",   ${h.js(c.a_repo.repo_name)},  ${h.js(c.a_ref_name)},  'cache');
     make_revision_dropdown("#compare_other", ${h.js(c.cs_repo.repo_name)}, ${h.js(c.cs_ref_name)}, 'cache2');
 
-    var values_changed = function() {
+    function values_changed() {
         var values = $('#compare_org').select2('data') && $('#compare_other').select2('data');
         if (values) {
              $('#compare_revs').removeClass("disabled");
@@ -167,7 +167,7 @@ ${self.repo_context_bar('changelog')}
     values_changed();
     $('#compare_org').change(values_changed);
     $('#compare_other').change(values_changed);
-    $('#compare_revs').on('click', function(e){
+    $('#compare_revs').on('click', function(){
         var org = $('#compare_org').select2('data');
         var other = $('#compare_other').select2('data');
         if (!org || !other) {

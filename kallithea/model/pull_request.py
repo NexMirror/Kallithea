@@ -33,7 +33,7 @@ from tg import request
 from tg.i18n import ugettext as _
 
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import extract_mentioned_users, safe_str, safe_unicode
+from kallithea.lib.utils2 import ascii_bytes, extract_mentioned_users
 from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, User
 from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel
@@ -68,14 +68,12 @@ class PullRequestModel(object):
         threading = ['%s-pr-%s@%s' % (pr.other_repo.repo_name,
                                       pr.pull_request_id,
                                       h.canonical_hostname())]
-        subject = safe_unicode(
-            h.link_to(
-              _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') %
+        subject = h.link_to(
+            _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') %
                 {'user': user.username,
                  'pr_title': pr.title,
                  'pr_nice_id': pr.nice_id()},
-                pr_url)
-            )
+            pr_url)
         body = pr.description
         _org_ref_type, org_ref_name, _org_rev = pr.org_ref.split(':')
         _other_ref_type, other_ref_name, _other_rev = pr.other_ref.split(':')
@@ -261,13 +259,13 @@ class CreatePullRequestAction(object):
 
         if self.org_repo.scm_instance.alias == 'git':
             # create a ref under refs/pull/ so that commits don't get garbage-collected
-            self.org_repo.scm_instance._repo["refs/pull/%d/head" % pr.pull_request_id] = safe_str(self.org_rev)
+            self.org_repo.scm_instance._repo[b"refs/pull/%d/head" % pr.pull_request_id] = ascii_bytes(self.org_rev)
 
         # reset state to under-review
         from kallithea.model.changeset_status import ChangesetStatusModel
         from kallithea.model.comment import ChangesetCommentsModel
         comment = ChangesetCommentsModel().create(
-            text=u'',
+            text='',
             repo=self.org_repo,
             author=created_by,
             pull_request=pr,
@@ -362,11 +360,11 @@ class CreatePullRequestIterationAction(object):
             infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
             # TODO: fail?
 
-        try:
-            title, old_v = re.match(r'(.*)\(v(\d+)\)\s*$', title).groups()
-            v = int(old_v) + 1
-        except (AttributeError, ValueError):
-            v = 2
+        v = 2
+        m = re.match(r'(.*)\(v(\d+)\)\s*$', title)
+        if m is not None:
+            title = m.group(1)
+            v = int(m.group(2)) + 1
         self.create_action.title = '%s (v%s)' % (title.strip(), v)
 
         # using a mail-like separator, insert new iteration info in description with latest first

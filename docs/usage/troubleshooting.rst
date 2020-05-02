@@ -8,7 +8,7 @@ Troubleshooting
 :A: Make sure either to set the ``static_files = true`` in the .ini file or
    double check the root path for your http setup. It should point to
    for example:
-   ``/home/my-virtual-python/lib/python2.7/site-packages/kallithea/public``
+   ``/home/my-virtual-python/lib/python3.7/site-packages/kallithea/public``
 
 |
 
@@ -67,7 +67,6 @@ Troubleshooting
     you have installed the latest Windows patches (especially KB2789397).
 
 
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
 .. _mercurial: https://www.mercurial-scm.org/
 .. _celery: http://celeryproject.org/

@@ -29,7 +29,7 @@ import logging
 
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import hybrid_property
-from kallithea.lib.utils2 import safe_str, safe_unicode, str2bool
+from kallithea.lib.utils2 import str2bool
 from kallithea.model.db import Setting
 
 
@@ -180,7 +180,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         # only way to log in is using environ
         username = None
         if userobj:
-            username = safe_str(getattr(userobj, 'username'))
+            username = getattr(userobj, 'username')
 
         if not username:
             # we don't have any objects in DB, user doesn't exist, extract
@@ -199,8 +199,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         user_data = {
             'username': username,
-            'firstname': safe_unicode(firstname or username),
-            'lastname': safe_unicode(lastname or ''),
+            'firstname': firstname or username,
+            'lastname': lastname or '',
             'groups': [],
             'email': email or '',
             'admin': admin or False,

@@ -29,6 +29,7 @@ import logging
 import traceback
 
 import formencode
+import mercurial.unionrepo
 from tg import request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
@@ -42,10 +43,8 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_int
+from kallithea.lib.utils2 import ascii_bytes, safe_bytes, safe_int
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
-from kallithea.lib.vcs.utils import safe_str
-from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, Repository, User
@@ -83,22 +82,15 @@ class PullrequestsController(BaseRepoController):
         # list named branches that has been merged to this named branch - it should probably merge back
         peers = []
 
-        if rev:
-            rev = safe_str(rev)
-
-        if branch:
-            branch = safe_str(branch)
-
         if branch_rev:
-            branch_rev = safe_str(branch_rev)
             # a revset not restricting to merge() would be better
             # (especially because it would get the branch point)
             # ... but is currently too expensive
             # including branches of children could be nice too
             peerbranches = set()
             for i in repo._repo.revs(
-                "sort(parents(branch(id(%s)) and merge()) - branch(id(%s)), -rev)",
-                branch_rev, branch_rev
+                b"sort(parents(branch(id(%s)) and merge()) - branch(id(%s)), -rev)",
+                ascii_bytes(branch_rev), ascii_bytes(branch_rev),
             ):
                 for abranch in repo.get_changeset(i).branches:
                     if abranch not in peerbranches:
@@ -111,7 +103,7 @@ class PullrequestsController(BaseRepoController):
         tipbranch = None
 
         branches = []
-        for abranch, branchrev in repo.branches.iteritems():
+        for abranch, branchrev in repo.branches.items():
             n = 'branch:%s:%s' % (abranch, branchrev)
             desc = abranch
             if branchrev == tiprev:
@@ -135,14 +127,14 @@ class PullrequestsController(BaseRepoController):
                 log.debug('branch %r not found in %s', branch, repo)
 
         bookmarks = []
-        for bookmark, bookmarkrev in repo.bookmarks.iteritems():
+        for bookmark, bookmarkrev in repo.bookmarks.items():
             n = 'book:%s:%s' % (bookmark, bookmarkrev)
             bookmarks.append((n, bookmark))
             if rev == bookmarkrev:
                 selected = n
 
         tags = []
-        for tag, tagrev in repo.tags.iteritems():
+        for tag, tagrev in repo.tags.items():
             if tag == 'tip':
                 continue
             n = 'tag:%s:%s' % (tag, tagrev)
@@ -173,7 +165,7 @@ class PullrequestsController(BaseRepoController):
                 if 'master' in repo.branches:
                     selected = 'branch:master:%s' % repo.branches['master']
                 else:
-                    k, v = repo.branches.items()[0]
+                    k, v = list(repo.branches.items())[0]
                     selected = 'branch:%s:%s' % (k, v)
 
         groups = [(specials, _("Special")),
@@ -201,6 +193,11 @@ class PullrequestsController(BaseRepoController):
     def show_all(self, repo_name):
         c.from_ = request.GET.get('from_') or ''
         c.closed = request.GET.get('closed') or ''
+        url_params = {}
+        if c.from_:
+            url_params['from_'] = 1
+        if c.closed:
+            url_params['closed'] = 1
         p = safe_int(request.GET.get('page'), 1)
 
         q = PullRequest.query(include_closed=c.closed, sorted=True)
@@ -210,7 +207,7 @@ class PullrequestsController(BaseRepoController):
             q = q.filter_by(other_repo=c.db_repo)
         c.pull_requests = q.all()
 
-        c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100)
+        c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100, **url_params)
 
         return render('/pullrequests/pullrequest_show_all.html')
 
@@ -335,7 +332,7 @@ class PullrequestsController(BaseRepoController):
         try:
             cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, description, owner, reviewers)
         except CreatePullRequestAction.ValidationError as e:
-            h.flash(str(e), category='error', logf=log.error)
+            h.flash(e, category='error', logf=log.error)
             raise HTTPNotFound
 
         try:
@@ -358,7 +355,7 @@ class PullrequestsController(BaseRepoController):
         try:
             cmd = CreatePullRequestIterationAction(old_pull_request, new_org_rev, new_other_rev, title, description, owner, reviewers)
         except CreatePullRequestAction.ValidationError as e:
-            h.flash(str(e), category='error', logf=log.error)
+            h.flash(e, category='error', logf=log.error)
             raise HTTPNotFound
 
         try:
@@ -531,14 +528,9 @@ class PullrequestsController(BaseRepoController):
                             # Note: org_scm_instance.path must come first so all
                             # valid revision numbers are 100% org_scm compatible
                             # - both for avail_revs and for revset results
-                            try:
-                                hgrepo = unionrepo.makeunionrepository(org_scm_instance.baseui,
-                                                                       org_scm_instance.path,
-                                                                       other_scm_instance.path)
-                            except AttributeError: # makeunionrepository was introduced in Mercurial 4.8 23f2299e9e53
-                                hgrepo = unionrepo.unionrepository(org_scm_instance.baseui,
-                                                                   org_scm_instance.path,
-                                                                   other_scm_instance.path)
+                            hgrepo = mercurial.unionrepo.makeunionrepository(org_scm_instance.baseui,
+                                                                   safe_bytes(org_scm_instance.path),
+                                                                   safe_bytes(other_scm_instance.path))
                         else:
                             hgrepo = org_scm_instance._repo
                         show = set(hgrepo.revs('::%ld & !::parents(%s) & !::%s',
@@ -588,11 +580,11 @@ class PullrequestsController(BaseRepoController):
         log.debug('running diff between %s and %s in %s',
                   c.a_rev, c.cs_rev, org_scm_instance.path)
         try:
-            raw_diff = diffs.get_diff(org_scm_instance, rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
+            raw_diff = diffs.get_diff(org_scm_instance, rev1=c.a_rev, rev2=c.cs_rev,
                                       ignore_whitespace=ignore_whitespace, context=line_context)
         except ChangesetDoesNotExistError:
-            raw_diff = _("The diff can't be shown - the PR revisions could not be found.")
-        diff_processor = diffs.DiffProcessor(raw_diff or '', diff_limit=diff_limit)
+            raw_diff = safe_bytes(_("The diff can't be shown - the PR revisions could not be found."))
+        diff_processor = diffs.DiffProcessor(raw_diff, diff_limit=diff_limit)
         c.limited_diff = diff_processor.limited_diff
         c.file_diff_data = []
         c.lines_added = 0

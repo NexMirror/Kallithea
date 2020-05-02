@@ -25,6 +25,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import base64
 import collections
 import datetime
 import functools
@@ -36,22 +37,20 @@ import traceback
 
 import ipaddr
 import sqlalchemy
-from beaker.cache import cache_region, region_invalidate
-from sqlalchemy import *
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, LargeBinary, String, Unicode, UnicodeText, UniqueConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import class_mapper, joinedload, relationship, validates
 from tg.i18n import lazy_ugettext as _
 from webob.exc import HTTPNotFound
 
 import kallithea
-from kallithea.lib.caching_query import FromCache
-from kallithea.lib.compat import json
+from kallithea.lib import ext_json
 from kallithea.lib.exceptions import DefaultUserException
-from kallithea.lib.utils2 import Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_int, safe_str, safe_unicode, str2bool, urlreadable
+from kallithea.lib.utils2 import (Optional, ascii_bytes, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_str, str2bool,
+                                  urlreadable)
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.model.meta import Base, Session
 
 
@@ -62,7 +61,8 @@ log = logging.getLogger(__name__)
 # BASE CLASSES
 #==============================================================================
 
-_hash_key = lambda k: hashlib.md5(safe_str(k)).hexdigest()
+def _hash_key(k):
+    return hashlib.md5(safe_bytes(k)).hexdigest()
 
 
 class BaseDbModel(object):
@@ -73,6 +73,7 @@ class BaseDbModel(object):
     @classmethod
     def _get_keys(cls):
         """return column names for this model """
+        # Note: not a normal dict - iterator gives "users.firstname", but keys gives "firstname"
         return class_mapper(cls).c.keys()
 
     def get_dict(self):
@@ -90,7 +91,7 @@ class BaseDbModel(object):
             # update with attributes from __json__
             if callable(_json_attr):
                 _json_attr = _json_attr()
-            for k, val in _json_attr.iteritems():
+            for k, val in _json_attr.items():
                 d[k] = val
         return d
 
@@ -135,8 +136,10 @@ class BaseDbModel(object):
             return None
         if isinstance(value, cls):
             return value
-        if isinstance(value, (int, long)) or safe_str(value).isdigit():
+        if isinstance(value, int):
             return cls.get(value)
+        if isinstance(value, str) and value.isdigit():
+            return cls.get(int(value))
         if callback is not None:
             return callback(value)
 
@@ -163,12 +166,6 @@ class BaseDbModel(object):
         Session().delete(obj)
 
     def __repr__(self):
-        if hasattr(self, '__unicode__'):
-            # python repr needs to return str
-            try:
-                return safe_str(self.__unicode__())
-            except UnicodeDecodeError:
-                pass
         return '<DB:%s>' % (self.__class__.__name__)
 
 
@@ -185,9 +182,9 @@ class Setting(Base, BaseDbModel):
     )
 
     SETTINGS_TYPES = {
-        'str': safe_str,
+        'str': safe_bytes,
         'int': safe_int,
-        'unicode': safe_unicode,
+        'unicode': safe_str,
         'bool': str2bool,
         'list': functools.partial(aslist, sep=',')
     }
@@ -205,7 +202,7 @@ class Setting(Base, BaseDbModel):
 
     @validates('_app_settings_value')
     def validate_settings_value(self, key, val):
-        assert type(val) == unicode
+        assert isinstance(val, str)
         return val
 
     @hybrid_property
@@ -218,11 +215,9 @@ class Setting(Base, BaseDbModel):
     @app_settings_value.setter
     def app_settings_value(self, val):
         """
-        Setter that will always make sure we use unicode in app_settings_value
-
-        :param val:
+        Setter that will always make sure we use str in app_settings_value
         """
-        self._app_settings_value = safe_unicode(val)
+        self._app_settings_value = safe_str(val)
 
     @hybrid_property
     def app_settings_type(self):
@@ -232,13 +227,13 @@ class Setting(Base, BaseDbModel):
     def app_settings_type(self, val):
         if val not in self.SETTINGS_TYPES:
             raise Exception('type must be one of %s got %s'
-                            % (self.SETTINGS_TYPES.keys(), val))
+                            % (list(self.SETTINGS_TYPES), val))
         self._app_settings_type = val
 
-    def __unicode__(self):
-        return u"<%s('%s:%s[%s]')>" % (
+    def __repr__(self):
+        return "<%s %s.%s=%r>" % (
             self.__class__.__name__,
-            self.app_settings_name, self.app_settings_value, self.app_settings_type
+            self.app_settings_name, self.app_settings_type, self.app_settings_value
         )
 
     @classmethod
@@ -281,13 +276,9 @@ class Setting(Base, BaseDbModel):
         return res
 
     @classmethod
-    def get_app_settings(cls, cache=False):
+    def get_app_settings(cls):
 
         ret = cls.query()
-
-        if cache:
-            ret = ret.options(FromCache("sql_cache_short", "get_hg_settings"))
-
         if ret is None:
             raise Exception('Could not get application settings !')
         settings = {}
@@ -298,7 +289,7 @@ class Setting(Base, BaseDbModel):
         return settings
 
     @classmethod
-    def get_auth_settings(cls, cache=False):
+    def get_auth_settings(cls):
         ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('auth_')).all()
         fd = {}
@@ -307,7 +298,7 @@ class Setting(Base, BaseDbModel):
         return fd
 
     @classmethod
-    def get_default_repo_settings(cls, cache=False, strip_prefix=False):
+    def get_default_repo_settings(cls, strip_prefix=False):
         ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('default_')).all()
         fd = {}
@@ -328,9 +319,9 @@ class Setting(Base, BaseDbModel):
         info = {
             'modules': sorted(mods, key=lambda k: k[0].lower()),
             'py_version': platform.python_version(),
-            'platform': safe_unicode(platform.platform()),
+            'platform': platform.platform(),
             'kallithea_version': kallithea.__version__,
-            'git_version': safe_unicode(check_git_version()),
+            'git_version': str(check_git_version()),
             'git_path': kallithea.CONFIG.get('git_path')
         }
         return info
@@ -339,9 +330,7 @@ class Setting(Base, BaseDbModel):
 class Ui(Base, BaseDbModel):
     __tablename__ = 'ui'
     __table_args__ = (
-        # FIXME: ui_key as key is wrong and should be removed when the corresponding
-        # Ui.get_by_key has been replaced by the composite key
-        UniqueConstraint('ui_key'),
+        Index('ui_ui_section_ui_key_idx', 'ui_section', 'ui_key'),
         UniqueConstraint('ui_section', 'ui_key'),
         _table_args_default_dict,
     )
@@ -374,6 +363,7 @@ class Ui(Base, BaseDbModel):
         q = cls.query()
         q = q.filter(cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE]))
         q = q.filter(cls.ui_section == 'hooks')
+        q = q.order_by(cls.ui_section, cls.ui_key)
         return q.all()
 
     @classmethod
@@ -381,6 +371,7 @@ class Ui(Base, BaseDbModel):
         q = cls.query()
         q = q.filter(~cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE]))
         q = q.filter(cls.ui_section == 'hooks')
+        q = q.order_by(cls.ui_section, cls.ui_key)
         return q.all()
 
     @classmethod
@@ -394,8 +385,9 @@ class Ui(Base, BaseDbModel):
         new_ui.ui_value = val
 
     def __repr__(self):
-        return '<%s[%s]%s=>%s]>' % (self.__class__.__name__, self.ui_section,
-                                    self.ui_key, self.ui_value)
+        return '<%s %s.%s=%r>' % (
+            self.__class__.__name__,
+            self.ui_section, self.ui_key, self.ui_value)
 
 
 class User(Base, BaseDbModel):
@@ -406,7 +398,7 @@ class User(Base, BaseDbModel):
         _table_args_default_dict,
     )
 
-    DEFAULT_USER = 'default'
+    DEFAULT_USER_NAME = 'default'
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
     # The name of the default auth type in extern_type, 'internal' lives in auth_internal.py
     DEFAULT_AUTH_TYPE = 'internal'
@@ -512,7 +504,7 @@ class User(Base, BaseDbModel):
 
     @hybrid_property
     def is_default_user(self):
-        return self.username == User.DEFAULT_USER
+        return self.username == User.DEFAULT_USER_NAME
 
     @hybrid_property
     def user_data(self):
@@ -520,20 +512,19 @@ class User(Base, BaseDbModel):
             return {}
 
         try:
-            return json.loads(self._user_data)
+            return ext_json.loads(self._user_data)
         except TypeError:
             return {}
 
     @user_data.setter
     def user_data(self, val):
         try:
-            self._user_data = json.dumps(val)
+            self._user_data = ascii_bytes(ext_json.dumps(val))
         except Exception:
             log.error(traceback.format_exc())
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
-                                      self.user_id, self.username)
+    def __repr__(self):
+        return "<%s %s: %r>" % (self.__class__.__name__, self.user_id, self.username)
 
     @classmethod
     def guess_instance(cls, value):
@@ -551,7 +542,7 @@ class User(Base, BaseDbModel):
         return user
 
     @classmethod
-    def get_by_username_or_email(cls, username_or_email, case_insensitive=False, cache=False):
+    def get_by_username_or_email(cls, username_or_email, case_insensitive=True):
         """
         For anything that looks like an email address, look up by the email address (matching
         case insensitively).
@@ -560,35 +551,24 @@ class User(Base, BaseDbModel):
         This assumes no normal username can have '@' symbol.
         """
         if '@' in username_or_email:
-            return User.get_by_email(username_or_email, cache=cache)
+            return User.get_by_email(username_or_email)
         else:
-            return User.get_by_username(username_or_email, case_insensitive=case_insensitive, cache=cache)
+            return User.get_by_username(username_or_email, case_insensitive=case_insensitive)
 
     @classmethod
-    def get_by_username(cls, username, case_insensitive=False, cache=False):
+    def get_by_username(cls, username, case_insensitive=False):
         if case_insensitive:
-            q = cls.query().filter(func.lower(cls.username) == func.lower(username))
+            q = cls.query().filter(sqlalchemy.func.lower(cls.username) == sqlalchemy.func.lower(username))
         else:
             q = cls.query().filter(cls.username == username)
-
-        if cache:
-            q = q.options(FromCache(
-                            "sql_cache_short",
-                            "get_user_%s" % _hash_key(username)
-                          )
-            )
         return q.scalar()
 
     @classmethod
-    def get_by_api_key(cls, api_key, cache=False, fallback=True):
+    def get_by_api_key(cls, api_key, fallback=True):
         if len(api_key) != 40 or not api_key.isalnum():
             return None
 
         q = cls.query().filter(cls.api_key == api_key)
-
-        if cache:
-            q = q.options(FromCache("sql_cache_short",
-                                    "get_api_key_%s" % api_key))
         res = q.scalar()
 
         if fallback and not res:
@@ -602,21 +582,13 @@ class User(Base, BaseDbModel):
 
     @classmethod
     def get_by_email(cls, email, cache=False):
-        q = cls.query().filter(func.lower(cls.email) == func.lower(email))
-
-        if cache:
-            q = q.options(FromCache("sql_cache_short",
-                                    "get_email_key_%s" % email))
-
+        q = cls.query().filter(sqlalchemy.func.lower(cls.email) == sqlalchemy.func.lower(email))
         ret = q.scalar()
         if ret is None:
             q = UserEmailMap.query()
             # try fetching in alternate email map
-            q = q.filter(func.lower(UserEmailMap.email) == func.lower(email))
+            q = q.filter(sqlalchemy.func.lower(UserEmailMap.email) == sqlalchemy.func.lower(email))
             q = q.options(joinedload(UserEmailMap.user))
-            if cache:
-                q = q.options(FromCache("sql_cache_short",
-                                        "get_email_map_key_%s" % email))
             ret = getattr(q.scalar(), 'user', None)
 
         return ret
@@ -654,8 +626,8 @@ class User(Base, BaseDbModel):
         return user
 
     @classmethod
-    def get_default_user(cls, cache=False):
-        user = User.get_by_username(User.DEFAULT_USER, cache=cache)
+    def get_default_user(cls):
+        user = User.get_by_username(User.DEFAULT_USER_NAME)
         if user is None:
             raise Exception('Missing default account!')
         return user
@@ -772,9 +744,8 @@ class UserIpMap(Base, BaseDbModel):
           ip_range=self._get_ip_range(self.ip_addr)
         )
 
-    def __unicode__(self):
-        return u"<%s('user_id:%s=>%s')>" % (self.__class__.__name__,
-                                            self.user_id, self.ip_addr)
+    def __repr__(self):
+        return "<%s %s: %s>" % (self.__class__.__name__, self.user_id, self.ip_addr)
 
 
 class UserLog(Base, BaseDbModel):
@@ -792,10 +763,10 @@ class UserLog(Base, BaseDbModel):
     action = Column(UnicodeText(), nullable=False)
     action_date = Column(DateTime(timezone=False), nullable=False)
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
-                                      self.repository_name,
-                                      self.action)
+    def __repr__(self):
+        return "<%s %r: %r>" % (self.__class__.__name__,
+                                  self.repository_name,
+                                  self.action)
 
     @property
     def action_as_day(self):
@@ -834,47 +805,37 @@ class UserGroup(Base, BaseDbModel):
             return {}
 
         try:
-            return json.loads(self._group_data)
+            return ext_json.loads(self._group_data)
         except TypeError:
             return {}
 
     @group_data.setter
     def group_data(self, val):
         try:
-            self._group_data = json.dumps(val)
+            self._group_data = ascii_bytes(ext_json.dumps(val))
         except Exception:
             log.error(traceback.format_exc())
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
-                                      self.users_group_id,
-                                      self.users_group_name)
+    def __repr__(self):
+        return "<%s %s: %r>" % (self.__class__.__name__,
+                                  self.users_group_id,
+                                  self.users_group_name)
 
     @classmethod
     def guess_instance(cls, value):
         return super(UserGroup, cls).guess_instance(value, UserGroup.get_by_group_name)
 
     @classmethod
-    def get_by_group_name(cls, group_name, cache=False,
-                          case_insensitive=False):
+    def get_by_group_name(cls, group_name, case_insensitive=False):
         if case_insensitive:
-            q = cls.query().filter(func.lower(cls.users_group_name) == func.lower(group_name))
+            q = cls.query().filter(sqlalchemy.func.lower(cls.users_group_name) == sqlalchemy.func.lower(group_name))
         else:
             q = cls.query().filter(cls.users_group_name == group_name)
-        if cache:
-            q = q.options(FromCache(
-                            "sql_cache_short",
-                            "get_group_%s" % _hash_key(group_name)
-                          )
-            )
         return q.scalar()
 
     @classmethod
-    def get(cls, user_group_id, cache=False):
+    def get(cls, user_group_id):
         user_group = cls.query()
-        if cache:
-            user_group = user_group.options(FromCache("sql_cache_short",
-                                    "get_users_group_%s" % user_group_id))
         return user_group.get(user_group_id)
 
     def get_api_data(self, with_members=True):
@@ -962,9 +923,9 @@ class Repository(Base, BaseDbModel):
     DEFAULT_CLONE_URI = '{scheme}://{user}@{netloc}/{repo}'
     DEFAULT_CLONE_SSH = 'ssh://{system_user}@{hostname}/{repo}'
 
-    STATE_CREATED = u'repo_state_created'
-    STATE_PENDING = u'repo_state_pending'
-    STATE_ERROR = u'repo_state_error'
+    STATE_CREATED = 'repo_state_created'
+    STATE_PENDING = 'repo_state_pending'
+    STATE_ERROR = 'repo_state_error'
 
     repo_id = Column(Integer(), primary_key=True)
     repo_name = Column(Unicode(255), nullable=False, unique=True)
@@ -1009,9 +970,9 @@ class Repository(Base, BaseDbModel):
                     primaryjoin='PullRequest.other_repo_id==Repository.repo_id',
                     cascade="all, delete-orphan")
 
-    def __unicode__(self):
-        return u"<%s('%s:%s')>" % (self.__class__.__name__, self.repo_id,
-                                   safe_unicode(self.repo_name))
+    def __repr__(self):
+        return "<%s %s: %r>" % (self.__class__.__name__,
+                                  self.repo_id, self.repo_name)
 
     @hybrid_property
     def landing_rev(self):
@@ -1033,7 +994,7 @@ class Repository(Base, BaseDbModel):
     @hybrid_property
     def changeset_cache(self):
         try:
-            cs_cache = json.loads(self._changeset_cache) # might raise on bad data
+            cs_cache = ext_json.loads(self._changeset_cache) # might raise on bad data
             cs_cache['raw_id'] # verify data, raise exception on error
             return cs_cache
         except (TypeError, KeyError, ValueError):
@@ -1042,7 +1003,7 @@ class Repository(Base, BaseDbModel):
     @changeset_cache.setter
     def changeset_cache(self, val):
         try:
-            self._changeset_cache = json.dumps(val)
+            self._changeset_cache = ascii_bytes(ext_json.dumps(val))
         except Exception:
             log.error(traceback.format_exc())
 
@@ -1055,13 +1016,9 @@ class Repository(Base, BaseDbModel):
         q = super(Repository, cls).query()
 
         if sorted:
-            q = q.order_by(func.lower(Repository.repo_name))
+            q = q.order_by(sqlalchemy.func.lower(Repository.repo_name))
 
         return q
-
-    @classmethod
-    def url_sep(cls):
-        return URL_SEP
 
     @classmethod
     def normalize_repo_name(cls, repo_name):
@@ -1072,7 +1029,7 @@ class Repository(Base, BaseDbModel):
         :param cls:
         :param repo_name:
         """
-        return cls.url_sep().join(repo_name.split(os.sep))
+        return URL_SEP.join(repo_name.split(os.sep))
 
     @classmethod
     def guess_instance(cls, value):
@@ -1083,7 +1040,7 @@ class Repository(Base, BaseDbModel):
         """Get the repo, defaulting to database case sensitivity.
         case_insensitive will be slower and should only be specified if necessary."""
         if case_insensitive:
-            q = Session().query(cls).filter(func.lower(cls.repo_name) == func.lower(repo_name))
+            q = Session().query(cls).filter(sqlalchemy.func.lower(cls.repo_name) == sqlalchemy.func.lower(repo_name))
         else:
             q = Session().query(cls).filter(cls.repo_name == repo_name)
         q = q.options(joinedload(Repository.fork)) \
@@ -1093,7 +1050,7 @@ class Repository(Base, BaseDbModel):
 
     @classmethod
     def get_by_full_path(cls, repo_full_path):
-        base_full_path = os.path.realpath(cls.base_path())
+        base_full_path = os.path.realpath(kallithea.CONFIG['base_path'])
         repo_full_path = os.path.realpath(repo_full_path)
         assert repo_full_path.startswith(base_full_path + os.path.sep)
         repo_name = repo_full_path[len(base_full_path) + 1:]
@@ -1103,18 +1060,6 @@ class Repository(Base, BaseDbModel):
     @classmethod
     def get_repo_forks(cls, repo_id):
         return cls.query().filter(Repository.fork_id == repo_id)
-
-    @classmethod
-    def base_path(cls):
-        """
-        Returns base path where all repos are stored
-
-        :param cls:
-        """
-        q = Session().query(Ui) \
-            .filter(Ui.ui_key == cls.url_sep())
-        q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
-        return q.one().ui_value
 
     @property
     def forks(self):
@@ -1132,7 +1077,7 @@ class Repository(Base, BaseDbModel):
 
     @property
     def just_name(self):
-        return self.repo_name.split(Repository.url_sep())[-1]
+        return self.repo_name.split(URL_SEP)[-1]
 
     @property
     def groups_with_parents(self):
@@ -1145,35 +1090,18 @@ class Repository(Base, BaseDbModel):
         groups.reverse()
         return groups
 
-    @LazyProperty
-    def repo_path(self):
-        """
-        Returns base full path for that repository means where it actually
-        exists on a filesystem
-        """
-        q = Session().query(Ui).filter(Ui.ui_key ==
-                                              Repository.url_sep())
-        q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
-        return q.one().ui_value
-
     @property
     def repo_full_path(self):
-        p = [self.repo_path]
+        """
+        Returns base full path for the repository - where it actually
+        exists on a filesystem.
+        """
+        p = [kallithea.CONFIG['base_path']]
         # we need to split the name by / since this is how we store the
         # names in the database, but that eventually needs to be converted
         # into a valid system path
-        p += self.repo_name.split(Repository.url_sep())
-        return os.path.join(*map(safe_unicode, p))
-
-    @property
-    def cache_keys(self):
-        """
-        Returns associated cache keys for that repo
-        """
-        return CacheInvalidation.query() \
-            .filter(CacheInvalidation.cache_args == self.repo_name) \
-            .order_by(CacheInvalidation.cache_key) \
-            .all()
+        p += self.repo_name.split(URL_SEP)
+        return os.path.join(*p)
 
     def get_new_name(self, repo_name):
         """
@@ -1182,7 +1110,7 @@ class Repository(Base, BaseDbModel):
         :param group_name:
         """
         path_prefix = self.group.full_path_splitted if self.group else []
-        return Repository.url_sep().join(path_prefix + [repo_name])
+        return URL_SEP.join(path_prefix + [repo_name])
 
     @property
     def _ui(self):
@@ -1190,7 +1118,7 @@ class Repository(Base, BaseDbModel):
         Creates an db based ui object for this repository
         """
         from kallithea.lib.utils import make_ui
-        return make_ui(clear_session=False)
+        return make_ui()
 
     @classmethod
     def is_valid(cls, repo_name):
@@ -1202,7 +1130,7 @@ class Repository(Base, BaseDbModel):
         """
         from kallithea.lib.utils import is_valid_repo
 
-        return is_valid_repo(repo_name, cls.base_path())
+        return is_valid_repo(repo_name, kallithea.CONFIG['base_path'])
 
     def get_api_data(self, with_revision_names=False,
                            with_pullrequests=False):
@@ -1397,47 +1325,34 @@ class Repository(Base, BaseDbModel):
 
     def set_invalidate(self):
         """
-        Mark caches of this repo as invalid.
+        Flush SA session caches of instances of on disk repo.
         """
-        CacheInvalidation.set_invalidate(self.repo_name)
+        try:
+            del self._scm_instance
+        except AttributeError:
+            pass
 
-    _scm_instance = None
+    _scm_instance = None  # caching inside lifetime of SA session
 
     @property
     def scm_instance(self):
         if self._scm_instance is None:
-            self._scm_instance = self.scm_instance_cached()
+            return self.scm_instance_no_cache()  # will populate self._scm_instance
         return self._scm_instance
 
-    def scm_instance_cached(self, valid_cache_keys=None):
-        @cache_region('long_term', 'scm_instance_cached')
-        def _c(repo_name): # repo_name is just for the cache key
-            log.debug('Creating new %s scm_instance and populating cache', repo_name)
-            return self.scm_instance_no_cache()
-        rn = self.repo_name
-
-        valid = CacheInvalidation.test_and_set_valid(rn, None, valid_cache_keys=valid_cache_keys)
-        if not valid:
-            log.debug('Cache for %s invalidated, getting new object', rn)
-            region_invalidate(_c, None, 'scm_instance_cached', rn)
-        else:
-            log.debug('Trying to get scm_instance of %s from cache', rn)
-        return _c(rn)
-
     def scm_instance_no_cache(self):
-        repo_full_path = safe_str(self.repo_full_path)
+        repo_full_path = self.repo_full_path
         alias = get_scm(repo_full_path)[0]
         log.debug('Creating instance of %s repository from %s',
                   alias, self.repo_full_path)
         backend = get_backend(alias)
 
         if alias == 'hg':
-            repo = backend(repo_full_path, create=False,
-                           baseui=self._ui)
+            self._scm_instance = backend(repo_full_path, create=False, baseui=self._ui)
         else:
-            repo = backend(repo_full_path, create=False)
+            self._scm_instance = backend(repo_full_path, create=False)
 
-        return repo
+        return self._scm_instance
 
     def __json__(self):
         return dict(
@@ -1476,7 +1391,7 @@ class RepoGroup(Base, BaseDbModel):
         q = super(RepoGroup, cls).query()
 
         if sorted:
-            q = q.order_by(func.lower(RepoGroup.group_name))
+            q = q.order_by(sqlalchemy.func.lower(RepoGroup.group_name))
 
         return q
 
@@ -1484,16 +1399,16 @@ class RepoGroup(Base, BaseDbModel):
         self.group_name = group_name
         self.parent_group = parent_group
 
-    def __unicode__(self):
-        return u"<%s('id:%s:%s')>" % (self.__class__.__name__, self.group_id,
-                                      self.group_name)
+    def __repr__(self):
+        return "<%s %s: %s>" % (self.__class__.__name__,
+                                self.group_id, self.group_name)
 
     @classmethod
     def _generate_choice(cls, repo_group):
         """Return tuple with group_id and name as html literal"""
         from webhelpers2.html import literal
         if repo_group is None:
-            return (-1, u'-- %s --' % _('top level'))
+            return (-1, '-- %s --' % _('top level'))
         return repo_group.group_id, literal(cls.SEP.join(repo_group.full_path_splitted))
 
     @classmethod
@@ -1503,28 +1418,18 @@ class RepoGroup(Base, BaseDbModel):
                       key=lambda c: c[1].split(cls.SEP))
 
     @classmethod
-    def url_sep(cls):
-        return URL_SEP
-
-    @classmethod
     def guess_instance(cls, value):
         return super(RepoGroup, cls).guess_instance(value, RepoGroup.get_by_group_name)
 
     @classmethod
-    def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
+    def get_by_group_name(cls, group_name, case_insensitive=False):
         group_name = group_name.rstrip('/')
         if case_insensitive:
             gr = cls.query() \
-                .filter(func.lower(cls.group_name) == func.lower(group_name))
+                .filter(sqlalchemy.func.lower(cls.group_name) == sqlalchemy.func.lower(group_name))
         else:
             gr = cls.query() \
                 .filter(cls.group_name == group_name)
-        if cache:
-            gr = gr.options(FromCache(
-                            "sql_cache_short",
-                            "get_group_%s" % _hash_key(group_name)
-                            )
-            )
         return gr.scalar()
 
     @property
@@ -1544,7 +1449,7 @@ class RepoGroup(Base, BaseDbModel):
 
     @property
     def name(self):
-        return self.group_name.split(RepoGroup.url_sep())[-1]
+        return self.group_name.split(URL_SEP)[-1]
 
     @property
     def full_path(self):
@@ -1552,7 +1457,7 @@ class RepoGroup(Base, BaseDbModel):
 
     @property
     def full_path_splitted(self):
-        return self.group_name.split(RepoGroup.url_sep())
+        return self.group_name.split(URL_SEP)
 
     @property
     def repositories(self):
@@ -1607,7 +1512,7 @@ class RepoGroup(Base, BaseDbModel):
         """
         path_prefix = (self.parent_group.full_path_splitted if
                        self.parent_group else [])
-        return RepoGroup.url_sep().join(path_prefix + [group_name])
+        return URL_SEP.join(path_prefix + [group_name])
 
     def get_api_data(self):
         """
@@ -1731,8 +1636,8 @@ class Permission(Base, BaseDbModel):
     permission_id = Column(Integer(), primary_key=True)
     permission_name = Column(String(255), nullable=False)
 
-    def __unicode__(self):
-        return u"<%s('%s:%s')>" % (
+    def __repr__(self):
+        return "<%s %s: %r>" % (
             self.__class__.__name__, self.permission_id, self.permission_name
         )
 
@@ -1746,27 +1651,27 @@ class Permission(Base, BaseDbModel):
 
     @classmethod
     def get_default_perms(cls, default_user_id):
-        q = Session().query(UserRepoToPerm, Repository, cls) \
-         .join((Repository, UserRepoToPerm.repository_id == Repository.repo_id)) \
-         .join((cls, UserRepoToPerm.permission_id == cls.permission_id)) \
+        q = Session().query(UserRepoToPerm) \
+         .options(joinedload(UserRepoToPerm.repository)) \
+         .options(joinedload(UserRepoToPerm.permission)) \
          .filter(UserRepoToPerm.user_id == default_user_id)
 
         return q.all()
 
     @classmethod
     def get_default_group_perms(cls, default_user_id):
-        q = Session().query(UserRepoGroupToPerm, RepoGroup, cls) \
-         .join((RepoGroup, UserRepoGroupToPerm.group_id == RepoGroup.group_id)) \
-         .join((cls, UserRepoGroupToPerm.permission_id == cls.permission_id)) \
+        q = Session().query(UserRepoGroupToPerm) \
+         .options(joinedload(UserRepoGroupToPerm.group)) \
+         .options(joinedload(UserRepoGroupToPerm.permission)) \
          .filter(UserRepoGroupToPerm.user_id == default_user_id)
 
         return q.all()
 
     @classmethod
     def get_default_user_group_perms(cls, default_user_id):
-        q = Session().query(UserUserGroupToPerm, UserGroup, cls) \
-         .join((UserGroup, UserUserGroupToPerm.user_group_id == UserGroup.users_group_id)) \
-         .join((cls, UserUserGroupToPerm.permission_id == cls.permission_id)) \
+        q = Session().query(UserUserGroupToPerm) \
+         .options(joinedload(UserUserGroupToPerm.user_group)) \
+         .options(joinedload(UserUserGroupToPerm.permission)) \
          .filter(UserUserGroupToPerm.user_id == default_user_id)
 
         return q.all()
@@ -1797,8 +1702,9 @@ class UserRepoToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<%s => %s >' % (self.user, self.repository)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.user, self.repository, self.permission)
 
 
 class UserUserGroupToPerm(Base, BaseDbModel):
@@ -1826,8 +1732,9 @@ class UserUserGroupToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<%s => %s >' % (self.user, self.user_group)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.user, self.user_group, self.permission)
 
 
 class UserToPerm(Base, BaseDbModel):
@@ -1844,8 +1751,9 @@ class UserToPerm(Base, BaseDbModel):
     user = relationship('User')
     permission = relationship('Permission')
 
-    def __unicode__(self):
-        return u'<%s => %s >' % (self.user, self.permission)
+    def __repr__(self):
+        return '<%s %s: %s>' % (
+            self.__class__.__name__, self.user, self.permission)
 
 
 class UserGroupRepoToPerm(Base, BaseDbModel):
@@ -1873,8 +1781,9 @@ class UserGroupRepoToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<UserGroupRepoToPerm:%s => %s >' % (self.users_group, self.repository)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.users_group, self.repository, self.permission)
 
 
 class UserGroupUserGroupToPerm(Base, BaseDbModel):
@@ -1902,8 +1811,9 @@ class UserGroupUserGroupToPerm(Base, BaseDbModel):
         Session().add(n)
         return n
 
-    def __unicode__(self):
-        return u'<UserGroupUserGroup:%s => %s >' % (self.target_user_group, self.user_group)
+    def __repr__(self):
+        return '<%s %s at %s: %s>' % (
+            self.__class__.__name__, self.user_group, self.target_user_group, self.permission)
 
 
 class UserGroupToPerm(Base, BaseDbModel):
@@ -2006,135 +1916,11 @@ class UserFollowing(Base, BaseDbModel):
     user = relationship('User', primaryjoin='User.user_id==UserFollowing.user_id')
 
     follows_user = relationship('User', primaryjoin='User.user_id==UserFollowing.follows_user_id')
-    follows_repository = relationship('Repository', order_by=lambda: func.lower(Repository.repo_name))
+    follows_repository = relationship('Repository', order_by=lambda: sqlalchemy.func.lower(Repository.repo_name))
 
     @classmethod
     def get_repo_followers(cls, repo_id):
         return cls.query().filter(cls.follows_repository_id == repo_id)
-
-
-class CacheInvalidation(Base, BaseDbModel):
-    __tablename__ = 'cache_invalidation'
-    __table_args__ = (
-        Index('key_idx', 'cache_key'),
-        _table_args_default_dict,
-    )
-
-    # cache_id, not used
-    cache_id = Column(Integer(), primary_key=True)
-    # cache_key as created by _get_cache_key
-    cache_key = Column(Unicode(255), nullable=False, unique=True)
-    # cache_args is a repo_name
-    cache_args = Column(Unicode(255), nullable=False)
-    # instance sets cache_active True when it is caching, other instances set
-    # cache_active to False to indicate that this cache is invalid
-    cache_active = Column(Boolean(), nullable=False, default=False)
-
-    def __init__(self, cache_key, repo_name=''):
-        self.cache_key = cache_key
-        self.cache_args = repo_name
-        self.cache_active = False
-
-    def __unicode__(self):
-        return u"<%s('%s:%s[%s]')>" % (
-            self.__class__.__name__,
-            self.cache_id, self.cache_key, self.cache_active)
-
-    def _cache_key_partition(self):
-        prefix, repo_name, suffix = self.cache_key.partition(self.cache_args)
-        return prefix, repo_name, suffix
-
-    def get_prefix(self):
-        """
-        get prefix that might have been used in _get_cache_key to
-        generate self.cache_key. Only used for informational purposes
-        in repo_edit.html.
-        """
-        # prefix, repo_name, suffix
-        return self._cache_key_partition()[0]
-
-    def get_suffix(self):
-        """
-        get suffix that might have been used in _get_cache_key to
-        generate self.cache_key. Only used for informational purposes
-        in repo_edit.html.
-        """
-        # prefix, repo_name, suffix
-        return self._cache_key_partition()[2]
-
-    @classmethod
-    def clear_cache(cls):
-        """
-        Delete all cache keys from database.
-        Should only be run when all instances are down and all entries thus stale.
-        """
-        cls.query().delete()
-        Session().commit()
-
-    @classmethod
-    def _get_cache_key(cls, key):
-        """
-        Wrapper for generating a unique cache key for this instance and "key".
-        key must / will start with a repo_name which will be stored in .cache_args .
-        """
-        prefix = kallithea.CONFIG.get('instance_id', '')
-        return "%s%s" % (prefix, key)
-
-    @classmethod
-    def set_invalidate(cls, repo_name):
-        """
-        Mark all caches of a repo as invalid in the database.
-        """
-        inv_objs = Session().query(cls).filter(cls.cache_args == repo_name).all()
-        log.debug('for repo %s got %s invalidation objects',
-                  safe_str(repo_name), inv_objs)
-
-        for inv_obj in inv_objs:
-            log.debug('marking %s key for invalidation based on repo_name=%s',
-                      inv_obj, safe_str(repo_name))
-            Session().delete(inv_obj)
-        Session().commit()
-
-    @classmethod
-    def test_and_set_valid(cls, repo_name, kind, valid_cache_keys=None):
-        """
-        Mark this cache key as active and currently cached.
-        Return True if the existing cache registration still was valid.
-        Return False to indicate that it had been invalidated and caches should be refreshed.
-        """
-
-        key = (repo_name + '_' + kind) if kind else repo_name
-        cache_key = cls._get_cache_key(key)
-
-        if valid_cache_keys and cache_key in valid_cache_keys:
-            return True
-
-        inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
-        if inv_obj is None:
-            inv_obj = cls(cache_key, repo_name)
-            Session().add(inv_obj)
-        elif inv_obj.cache_active:
-            return True
-        inv_obj.cache_active = True
-        try:
-            Session().commit()
-        except sqlalchemy.exc.IntegrityError:
-            log.error('commit of CacheInvalidation failed - retrying')
-            Session().rollback()
-            inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
-            if inv_obj is None:
-                log.error('failed to create CacheInvalidation entry')
-                # TODO: fail badly?
-            # else: TOCTOU - another thread added the key at the same time; no further action required
-        return False
-
-    @classmethod
-    def get_valid_cache_keys(cls):
-        """
-        Return opaque object with information of which caches still are valid
-        and can be used without checking for invalidation.
-        """
-        return set(inv_obj.cache_key for inv_obj in cls.query().filter(cls.cache_active).all())
 
 
 class ChangesetComment(Base, BaseDbModel):
@@ -2225,8 +2011,8 @@ class ChangesetStatus(Base, BaseDbModel):
     comment = relationship('ChangesetComment')
     pull_request = relationship('PullRequest')
 
-    def __unicode__(self):
-        return u"<%s('%s:%s')>" % (
+    def __repr__(self):
+        return "<%s %r by %r>" % (
             self.__class__.__name__,
             self.status, self.author
         )
@@ -2256,8 +2042,8 @@ class PullRequest(Base, BaseDbModel):
     )
 
     # values for .status
-    STATUS_NEW = u'new'
-    STATUS_CLOSED = u'closed'
+    STATUS_NEW = 'new'
+    STATUS_CLOSED = 'closed'
 
     pull_request_id = Column(Integer(), primary_key=True)
     title = Column(Unicode(255), nullable=False)
@@ -2278,7 +2064,7 @@ class PullRequest(Base, BaseDbModel):
 
     @revisions.setter
     def revisions(self, val):
-        self._revisions = safe_unicode(':'.join(val))
+        self._revisions = ':'.join(val)
 
     @property
     def org_ref_parts(self):
@@ -2426,9 +2212,9 @@ class Gist(Base, BaseDbModel):
         _table_args_default_dict,
     )
 
-    GIST_PUBLIC = u'public'
-    GIST_PRIVATE = u'private'
-    DEFAULT_FILENAME = u'gistfile1.txt'
+    GIST_PUBLIC = 'public'
+    GIST_PRIVATE = 'private'
+    DEFAULT_FILENAME = 'gistfile1.txt'
 
     gist_id = Column(Integer(), primary_key=True)
     gist_access_id = Column(Unicode(250), nullable=False)
@@ -2446,7 +2232,9 @@ class Gist(Base, BaseDbModel):
         return (self.gist_expires != -1) & (time.time() > self.gist_expires)
 
     def __repr__(self):
-        return '<Gist:[%s]%s>' % (self.gist_type, self.gist_access_id)
+        return "<%s %s %s>" % (
+            self.__class__.__name__,
+            self.gist_type, self.gist_access_id)
 
     @classmethod
     def guess_instance(cls, value):
@@ -2471,19 +2259,6 @@ class Gist(Base, BaseDbModel):
         import kallithea.lib.helpers as h
         return h.canonical_url('gist', gist_id=self.gist_access_id)
 
-    @classmethod
-    def base_path(cls):
-        """
-        Returns base path where all gists are stored
-
-        :param cls:
-        """
-        from kallithea.model.gist import GIST_STORE_LOC
-        q = Session().query(Ui) \
-            .filter(Ui.ui_key == URL_SEP)
-        q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
-        return os.path.join(q.one().ui_value, GIST_STORE_LOC)
-
     def get_api_data(self):
         """
         Common function for generating gist related data for API
@@ -2505,14 +2280,15 @@ class Gist(Base, BaseDbModel):
         )
         data.update(self.get_api_data())
         return data
+
     ## SCM functions
 
     @property
     def scm_instance(self):
         from kallithea.lib.vcs import get_repo
-        base_path = self.base_path()
-        return get_repo(os.path.join(*map(safe_str,
-                                          [base_path, self.gist_access_id])))
+        from kallithea.model.gist import GIST_STORE_LOC
+        gist_base_path = os.path.join(kallithea.CONFIG['base_path'], GIST_STORE_LOC)
+        return get_repo(os.path.join(gist_base_path, self.gist_access_id))
 
 
 class UserSshKeys(Base, BaseDbModel):
@@ -2543,5 +2319,5 @@ class UserSshKeys(Base, BaseDbModel):
         # the full public key is too long to be suitable as database key - instead,
         # use fingerprints similar to 'ssh-keygen -E sha256 -lf ~/.ssh/id_rsa.pub'
         self._public_key = full_key
-        enc_key = full_key.split(" ")[1]
-        self.fingerprint = hashlib.sha256(enc_key.decode('base64')).digest().encode('base64').replace('\n', '').rstrip('=')
+        enc_key = safe_bytes(full_key.split(" ")[1])
+        self.fingerprint = base64.b64encode(hashlib.sha256(base64.b64decode(enc_key)).digest()).replace(b'\n', b'').rstrip(b'=').decode()

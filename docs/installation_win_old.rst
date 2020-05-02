@@ -1,5 +1,7 @@
 .. _installation_win_old:
 
+.. warning:: This section is outdated and needs updating for Python 3.
+
 ==========================================================
 Installation on Windows (XP/Vista/Server 2003/Server 2008)
 ==========================================================
@@ -60,14 +62,11 @@ choose "Visual C++ 2008 Express" when installing.
 Step 2 -- Install Python
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install Python 2.7.x x86 version (32-bit). DO NOT USE A 3.x version.
-Download Python 2.7.x from:
+Install Python 3.8.x from:
 http://www.python.org/download/
 
-Choose "Windows Installer" (32-bit version) not "Windows X86-64
-Installer". While writing this guide, the latest version was v2.7.3.
 Remember the specific major and minor version installed, because it will
-be needed in the next step. In this case, it is "2.7".
+be needed in the next step. In this case, it is "3.8".
 
 .. note::
 
@@ -80,17 +79,17 @@ Download pywin32 from:
 http://sourceforge.net/projects/pywin32/files/
 
 - Click on "pywin32" folder
-- Click on the first folder (in this case, Build 217, maybe newer when you try)
-- Choose the file ending with ".win32-py2.x.exe" -> x being the minor
+- Click on the first folder (in this case, Build 218, maybe newer when you try)
+- Choose the file ending with ".win32-py3.x.exe" -> x being the minor
   version of Python you installed (in this case, 7)
   When writing this guide, the file was:
-  http://sourceforge.net/projects/pywin32/files/pywin32/Build%20217/pywin32-217.win32-py2.7.exe/download
+  http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py3.8.exe/download
 
   .. note::
 
      64-bit: Download and install the 64-bit version.
      At the time of writing you can find this at:
-     http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py2.7.exe/download
+     http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py3.8.exe/download
 
 Step 4 -- Python BIN
 ^^^^^^^^^^^^^^^^^^^^
@@ -117,7 +116,7 @@ that came preinstalled in Vista/7 and can be installed in Windows XP.
     SETX PATH "%PATH%;[your-python-path]" /M
 
   Please substitute [your-python-path] with your Python installation path.
-  Typically: C:\\Python27
+  Typically: C:\\Python38
 
 Step 5 -- Kallithea folder structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -139,22 +138,10 @@ Create the following folder structure::
 Step 6 -- Install virtualenv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install Virtual Env for Python
-
-Navigate to: http://www.virtualenv.org/en/latest/index.html#installation
-Right click on "virtualenv.py" file and choose "Save link as...".
-Download to C:\\Kallithea (or whatever you want)
-(the file is located at
-https://raw.github.com/pypa/virtualenv/master/virtualenv.py)
-
 Create a virtual Python environment in C:\\Kallithea\\Env (or similar). To
-do so, open a CMD (Python Path should be included in Step3), navigate
-where you downloaded "virtualenv.py", and write::
+do so, open a CMD (Python Path should be included in Step3), and write::
 
-  python2 virtualenv.py C:\Kallithea\Env
-
-(--no-site-packages is now the default behaviour of virtualenv, no need
-to include it)
+  python3 -m venv C:\Kallithea\Env
 
 Step 7 -- Install Kallithea
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

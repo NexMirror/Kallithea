@@ -22,9 +22,8 @@ import json
 import logging
 import random
 import re
-import StringIO
 import textwrap
-import urlparse
+import urllib.parse
 
 from beaker.cache import cache_region
 from pygments import highlight as code_highlight
@@ -49,13 +48,32 @@ from kallithea.lib.markup_renderer import url_re
 from kallithea.lib.pygmentsutils import get_custom_lexer
 from kallithea.lib.utils2 import MENTIONS_REGEX, AttributeDict
 from kallithea.lib.utils2 import age as _age
-from kallithea.lib.utils2 import credentials_filter, safe_int, safe_str, safe_unicode, str2bool, time_to_datetime
+from kallithea.lib.utils2 import credentials_filter, safe_bytes, safe_int, safe_str, str2bool, time_to_datetime
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 #==============================================================================
 # SCM FILTERS available via h.
 #==============================================================================
 from kallithea.lib.vcs.utils import author_email, author_name
+
+
+# mute pyflakes "imported but unused"
+assert Option
+assert checkbox
+assert end_form
+assert password
+assert radio
+assert submit
+assert text
+assert textarea
+assert format_byte_size
+assert chop_at
+assert wrap_paragraphs
+assert HasPermissionAny
+assert HasRepoGroupPermissionLevel
+assert HasRepoPermissionLevel
+assert time_to_datetime
+assert EmptyChangeset
 
 
 log = logging.getLogger(__name__)
@@ -167,7 +185,7 @@ def select(name, selected_values, options, id=NotGiven, **attrs):
         for x in option_list:
             if isinstance(x, tuple) and len(x) == 2:
                 value, label = x
-            elif isinstance(x, basestring):
+            elif isinstance(x, str):
                 value = label = x
             else:
                 log.error('invalid select option %r', x)
@@ -177,7 +195,7 @@ def select(name, selected_values, options, id=NotGiven, **attrs):
                 for x in value:
                     if isinstance(x, tuple) and len(x) == 2:
                         group_value, group_label = x
-                    elif isinstance(x, basestring):
+                    elif isinstance(x, str):
                         group_value = group_label = x
                     else:
                         log.error('invalid select option %r', x)
@@ -200,14 +218,12 @@ def FID(raw_id, path):
     :param path:
     """
 
-    return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_str(path)).hexdigest()[:12])
+    return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_bytes(path)).hexdigest()[:12])
 
 
 class _FilesBreadCrumbs(object):
 
     def __call__(self, repo_name, rev, paths):
-        if isinstance(paths, str):
-            paths = safe_unicode(paths)
         url_l = [link_to(repo_name, url('files_home',
                                         repo_name=repo_name,
                                         revision=rev, f_path=''),
@@ -246,12 +262,12 @@ class CodeHtmlFormatter(HtmlFormatter):
             yield i, t
 
     def _wrap_tablelinenos(self, inner):
-        dummyoutfile = StringIO.StringIO()
+        inner_lines = []
         lncount = 0
         for t, line in inner:
             if t:
                 lncount += 1
-            dummyoutfile.write(line)
+            inner_lines.append(line)
 
         fl = self.linenostart
         mw = len(str(lncount + fl - 1))
@@ -304,7 +320,7 @@ class CodeHtmlFormatter(HtmlFormatter):
                       '<tr><td class="linenos"><div class="linenodiv">'
                       '<pre>' + ls + '</pre></div></td>'
                       '<td id="hlcode" class="code">')
-        yield 0, dummyoutfile.getvalue()
+        yield 0, ''.join(inner_lines)
         yield 0, '</td></tr></table>'
 
 
@@ -331,7 +347,48 @@ def pygmentize(filenode, **kwargs):
     """
     lexer = get_custom_lexer(filenode.extension) or filenode.lexer
     return literal(markup_whitespace(
-        code_highlight(filenode.content, lexer, CodeHtmlFormatter(**kwargs))))
+        code_highlight(safe_str(filenode.content), lexer, CodeHtmlFormatter(**kwargs))))
+
+
+def hsv_to_rgb(h, s, v):
+    if s == 0.0:
+        return v, v, v
+    i = int(h * 6.0)  # XXX assume int() truncates!
+    f = (h * 6.0) - i
+    p = v * (1.0 - s)
+    q = v * (1.0 - s * f)
+    t = v * (1.0 - s * (1.0 - f))
+    i = i % 6
+    if i == 0:
+        return v, t, p
+    if i == 1:
+        return q, v, p
+    if i == 2:
+        return p, v, t
+    if i == 3:
+        return p, q, v
+    if i == 4:
+        return t, p, v
+    if i == 5:
+        return v, p, q
+
+
+def gen_color(n=10000):
+    """generator for getting n of evenly distributed colors using
+    hsv color and golden ratio. It always return same order of colors
+
+    :returns: RGB tuple
+    """
+
+    golden_ratio = 0.618033988749895
+    h = 0.22717784590367374
+
+    for _unused in range(n):
+        h += golden_ratio
+        h %= 1
+        HSV_tuple = [h, 0.95, 0.95]
+        RGB_tuple = hsv_to_rgb(*HSV_tuple)
+        yield [str(int(x * 256)) for x in RGB_tuple]
 
 
 def pygmentize_annotation(repo_name, filenode, **kwargs):
@@ -340,82 +397,38 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
 
     :param filenode:
     """
-
-    color_dict = {}
-
-    def gen_color(n=10000):
-        """generator for getting n of evenly distributed colors using
-        hsv color and golden ratio. It always return same order of colors
-
-        :returns: RGB tuple
-        """
-
-        def hsv_to_rgb(h, s, v):
-            if s == 0.0:
-                return v, v, v
-            i = int(h * 6.0)  # XXX assume int() truncates!
-            f = (h * 6.0) - i
-            p = v * (1.0 - s)
-            q = v * (1.0 - s * f)
-            t = v * (1.0 - s * (1.0 - f))
-            i = i % 6
-            if i == 0:
-                return v, t, p
-            if i == 1:
-                return q, v, p
-            if i == 2:
-                return p, v, t
-            if i == 3:
-                return p, q, v
-            if i == 4:
-                return t, p, v
-            if i == 5:
-                return v, p, q
-
-        golden_ratio = 0.618033988749895
-        h = 0.22717784590367374
-
-        for _unused in xrange(n):
-            h += golden_ratio
-            h %= 1
-            HSV_tuple = [h, 0.95, 0.95]
-            RGB_tuple = hsv_to_rgb(*HSV_tuple)
-            yield map(lambda x: str(int(x * 256)), RGB_tuple)
-
     cgenerator = gen_color()
+    color_dict = {}
 
     def get_color_string(cs):
         if cs in color_dict:
             col = color_dict[cs]
         else:
-            col = color_dict[cs] = cgenerator.next()
+            col = color_dict[cs] = next(cgenerator)
         return "color: rgb(%s)! important;" % (', '.join(col))
 
-    def url_func(repo_name):
+    def url_func(changeset):
+        author = escape(changeset.author)
+        date = changeset.date
+        message = escape(changeset.message)
+        tooltip_html = ("<b>Author:</b> %s<br/>"
+                        "<b>Date:</b> %s</b><br/>"
+                        "<b>Message:</b> %s") % (author, date, message)
 
-        def _url_func(changeset):
-            author = escape(changeset.author)
-            date = changeset.date
-            message = escape(changeset.message)
-            tooltip_html = ("<b>Author:</b> %s<br/>"
-                            "<b>Date:</b> %s</b><br/>"
-                            "<b>Message:</b> %s") % (author, date, message)
+        lnk_format = show_id(changeset)
+        uri = link_to(
+                lnk_format,
+                url('changeset_home', repo_name=repo_name,
+                    revision=changeset.raw_id),
+                style=get_color_string(changeset.raw_id),
+                **{'data-toggle': 'popover',
+                   'data-content': tooltip_html}
+              )
 
-            lnk_format = show_id(changeset)
-            uri = link_to(
-                    lnk_format,
-                    url('changeset_home', repo_name=repo_name,
-                        revision=changeset.raw_id),
-                    style=get_color_string(changeset.raw_id),
-                    **{'data-toggle': 'popover',
-                       'data-content': tooltip_html}
-                  )
+        uri += '\n'
+        return uri
 
-            uri += '\n'
-            return uri
-        return _url_func
-
-    return literal(markup_whitespace(annotate_highlight(filenode, url_func(repo_name), **kwargs)))
+    return literal(markup_whitespace(annotate_highlight(filenode, url_func, **kwargs)))
 
 
 class _Message(object):
@@ -424,21 +437,13 @@ class _Message(object):
     Converting the message to a string returns the message text. Instances
     also have the following attributes:
 
-    * ``message``: the message text.
     * ``category``: the category specified when the message was created.
+    * ``message``: the html-safe message text.
     """
 
     def __init__(self, category, message):
         self.category = category
         self.message = message
-
-    def __str__(self):
-        return self.message
-
-    __unicode__ = __str__
-
-    def __html__(self):
-        return escape(safe_unicode(self.message))
 
 
 def _session_flash_messages(append=None, clear=False):
@@ -461,7 +466,7 @@ def _session_flash_messages(append=None, clear=False):
     return flash_messages
 
 
-def flash(message, category=None, logf=None):
+def flash(message, category, logf=None):
     """
     Show a message to the user _and_ log it through the specified function
 
@@ -471,14 +476,22 @@ def flash(message, category=None, logf=None):
     logf defaults to log.info, unless category equals 'success', in which
     case logf defaults to log.debug.
     """
+    assert category in ('error', 'success', 'warning'), category
+    if hasattr(message, '__html__'):
+        # render to HTML for storing in cookie
+        safe_message = str(message)
+    else:
+        # Apply str - the message might be an exception with __str__
+        # Escape, so we can trust the result without further escaping, without any risk of injection
+        safe_message = html_escape(str(message))
     if logf is None:
         logf = log.info
         if category == 'success':
             logf = log.debug
 
-    logf('Flash %s: %s', category, message)
+    logf('Flash %s: %s', category, safe_message)
 
-    _session_flash_messages(append=(category, message))
+    _session_flash_messages(append=(category, safe_message))
 
 
 def pop_flash_messages():
@@ -486,14 +499,22 @@ def pop_flash_messages():
 
     The return value is a list of ``Message`` objects.
     """
-    return [_Message(*m) for m in _session_flash_messages(clear=True)]
+    return [_Message(category, message) for category, message in _session_flash_messages(clear=True)]
 
 
-age = lambda x, y=False: _age(x, y)
-capitalize = lambda x: x.capitalize()
+def age(x, y=False):
+    return _age(x, y)
+
+def capitalize(x):
+    return x.capitalize()
+
 email = author_email
-short_id = lambda x: x[:12]
-hide_credentials = lambda x: ''.join(credentials_filter(x))
+
+def short_id(x):
+    return x[:12]
+
+def hide_credentials(x):
+    return ''.join(credentials_filter(x))
 
 
 def show_id(cs):
@@ -516,8 +537,7 @@ def show_id(cs):
 
 def fmt_date(date):
     if date:
-        return date.strftime("%Y-%m-%d %H:%M:%S").decode('utf-8')
-
+        return date.strftime("%Y-%m-%d %H:%M:%S")
     return ""
 
 
@@ -548,7 +568,7 @@ def user_attr_or_none(author, show_attr):
     email = author_email(author)
     if email:
         from kallithea.model.db import User
-        user = User.get_by_email(email, cache=True) # cache will only use sql_cache_short
+        user = User.get_by_email(email)
         if user is not None:
             return getattr(user, show_attr)
     return None
@@ -590,15 +610,12 @@ def person(author, show_attr="username"):
 
 def person_by_id(id_, show_attr="username"):
     from kallithea.model.db import User
-    # attr to return from fetched user
-    person_getter = lambda usr: getattr(usr, show_attr)
-
     # maybe it's an ID ?
     if str(id_).isdigit() or isinstance(id_, int):
         id_ = int(id_)
         user = User.get(id_)
         if user is not None:
-            return person_getter(user)
+            return getattr(user, show_attr)
     return id_
 
 
@@ -677,7 +694,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
             return _op, _name
 
         revs = []
-        if len(filter(lambda v: v != '', revs_ids)) > 0:
+        if len([v for v in revs_ids if v != '']) > 0:
             repo = None
             for rev in revs_ids[:revs_top_limit]:
                 _op, _name = _get_op(rev)
@@ -850,10 +867,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
             .replace('[', '<b>') \
             .replace(']', '</b>')
 
-    action_params_func = lambda: ""
-
-    if callable(action_str[1]):
-        action_params_func = action_str[1]
+    action_params_func = action_str[1] if callable(action_str[1]) else (lambda: "")
 
     def action_parser_icon():
         action = user_log.action
@@ -937,13 +951,13 @@ def gravatar_url(email_address, size=30, default=''):
     if email_address == _def:
         return default
 
-    parsed_url = urlparse.urlparse(url.current(qualified=True))
+    parsed_url = urllib.parse.urlparse(url.current(qualified=True))
     url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL) \
                .replace('{email}', email_address) \
-               .replace('{md5email}', hashlib.md5(safe_str(email_address).lower()).hexdigest()) \
+               .replace('{md5email}', hashlib.md5(safe_bytes(email_address).lower()).hexdigest()) \
                .replace('{netloc}', parsed_url.netloc) \
                .replace('{scheme}', parsed_url.scheme) \
-               .replace('{size}', safe_str(size))
+               .replace('{size}', str(size))
     return url
 
 
@@ -959,7 +973,7 @@ def changed_tooltip(nodes):
         suf = ''
         if len(nodes) > 30:
             suf = '<br/>' + _(' and %s more') % (len(nodes) - 30)
-        return literal(pref + '<br/> '.join([safe_unicode(x.path)
+        return literal(pref + '<br/> '.join([x.path
                                              for x in nodes[:30]]) + suf)
     else:
         return ': ' + _('No files')
@@ -1069,6 +1083,8 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     URLs links to what they say.
     Issues are linked to given issue-server.
     If link_ is provided, all text not already linking somewhere will link there.
+    >>> urlify_text("Urlify http://example.com/ and 'https://example.com' *and* <b>markup/b>")
+    literal('Urlify <a href="http://example.com/">http://example.com/</a> and &#39;<a href="https://example.com&apos">https://example.com&apos</a>; <b>*and*</b> &lt;b&gt;markup/b&gt;')
     """
 
     def _replace(match_obj):
@@ -1162,10 +1178,11 @@ def urlify_issues(newtext, repo_name):
         assert CONFIG['sqlalchemy.url'] # make sure config has been loaded
 
         # Build chain of urlify functions, starting with not doing any transformation
-        tmp_urlify_issues_f = lambda s: s
+        def tmp_urlify_issues_f(s):
+            return s
 
         issue_pat_re = re.compile(r'issue_pat(.*)')
-        for k in CONFIG.keys():
+        for k in CONFIG:
             # Find all issue_pat* settings that also have corresponding server_link and prefix configuration
             m = issue_pat_re.match(k)
             if m is None:
@@ -1214,9 +1231,9 @@ def urlify_issues(newtext, repo_name):
                      'url': issue_url,
                      'text': issue_text,
                     }
-            tmp_urlify_issues_f = (lambda s,
-                                          issue_re=issue_re, issues_replace=issues_replace, chain_f=tmp_urlify_issues_f:
-                                   issue_re.sub(issues_replace, chain_f(s)))
+
+            def tmp_urlify_issues_f(s, issue_re=issue_re, issues_replace=issues_replace, chain_f=tmp_urlify_issues_f):
+                return issue_re.sub(issues_replace, chain_f(s))
 
         # Set tmp function globally - atomically
         _urlify_issues_f = tmp_urlify_issues_f
@@ -1229,7 +1246,7 @@ def render_w_mentions(source, repo_name=None):
     Render plain text with revision hashes and issue references urlified
     and with @mention highlighting.
     """
-    s = safe_unicode(source)
+    s = safe_str(source)
     s = urlify_text(s, repo_name=repo_name)
     return literal('<div class="formatted-fixed">%s</div>' % s)
 

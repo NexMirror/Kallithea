@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""
+pyflakes with filter configuration for Kallithea.
+Inspired by pyflakes/api.py and flake8/plugins/pyflakes.py .
+"""
+
+import sys
+
+import pyflakes.api
+import pyflakes.messages
+
+
+class Reporter:
+
+    warned = False
+
+    def flake(self, warning):
+        # ignore known warnings
+        if isinstance(warning, pyflakes.messages.UnusedVariable):
+            return
+        if warning.filename == 'kallithea/bin/kallithea_cli_ishell.py':
+            if isinstance(warning, pyflakes.messages.ImportStarUsed) and warning.message_args == ('kallithea.model.db',):
+                return
+            if isinstance(warning, pyflakes.messages.UnusedImport) and warning.message_args == ('kallithea.model.db.*',):
+                return
+
+        print('%s:%s %s   [%s %s]' % (warning.filename, warning.lineno, warning.message % warning.message_args, type(warning).__name__, warning.message_args))
+        self.warned = True
+
+    def unexpectedError(self, filename, msg):
+        print('Unexpected error for %s: %s' % (filename, msg))
+
+
+reporter = Reporter()
+
+for filename in sorted(set(sys.argv[1:])):
+    pyflakes.api.checkPath(filename, reporter=reporter)
+if reporter.warned:
+    raise SystemExit(1)

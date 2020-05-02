@@ -31,13 +31,16 @@ import platform
 import sys
 
 
-VERSION = (0, 5, 2)
+if sys.version_info < (3, 6):
+    raise Exception('Kallithea requires python 3.6 or later')
+
+VERSION = (0, 5, 99)
 BACKENDS = {
     'hg': 'Mercurial repository',
     'git': 'Git repository',
 }
 
-CELERY_ON = False
+CELERY_APP = None  # set to Celery app instance if using Celery
 CELERY_EAGER = False
 
 CONFIG = {}

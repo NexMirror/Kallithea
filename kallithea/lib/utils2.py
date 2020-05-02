@@ -27,23 +27,35 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import print_function
-
 import binascii
 import datetime
+import json
 import os
-import pwd
 import re
 import time
-import urllib
+import urllib.parse
 
 import urlobject
 from tg.i18n import ugettext as _
 from tg.i18n import ungettext
 from webhelpers2.text import collapse, remove_formatting, strip_tags
 
-from kallithea.lib.compat import json
+from kallithea.lib.vcs.utils import ascii_bytes, ascii_str, safe_bytes, safe_str  # re-export
 from kallithea.lib.vcs.utils.lazy import LazyProperty
+
+
+try:
+    import pwd
+except ImportError:
+    pass
+
+
+# mute pyflakes "imported but unused"
+assert ascii_bytes
+assert ascii_str
+assert safe_bytes
+assert safe_str
+assert LazyProperty
 
 
 def str2bool(_str):
@@ -71,7 +83,7 @@ def aslist(obj, sep=None, strip=True):
     :param sep:
     :param strip:
     """
-    if isinstance(obj, (basestring)):
+    if isinstance(obj, (str)):
         lst = obj.split(sep)
         if strip:
             lst = [v.strip() for v in lst]
@@ -98,14 +110,12 @@ def convert_line_endings(line, mode):
     :rtype: str
     :return: converted line according to mode
     """
-    from string import replace
-
     if mode == 0:
-        line = replace(line, '\r\n', '\n')
-        line = replace(line, '\r', '\n')
+        line = line.replace('\r\n', '\n')
+        line = line.replace('\r', '\n')
     elif mode == 1:
-        line = replace(line, '\r\n', '\r')
-        line = replace(line, '\n', '\r')
+        line = line.replace('\r\n', '\r')
+        line = line.replace('\n', '\r')
     elif mode == 2:
         line = re.sub("\r(?!\n)|(?<!\r)\n", "\r\n", line)
     return line
@@ -142,7 +152,7 @@ def generate_api_key():
         unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
     """
     # Hexadecimal certainly qualifies as URL-safe.
-    return binascii.hexlify(os.urandom(20))
+    return ascii_str(binascii.hexlify(os.urandom(20)))
 
 
 def safe_int(val, default=None):
@@ -153,102 +163,11 @@ def safe_int(val, default=None):
     :param val:
     :param default:
     """
-
     try:
         val = int(val)
     except (ValueError, TypeError):
         val = default
-
     return val
-
-
-def safe_unicode(str_, from_encoding=None):
-    """
-    safe unicode function. Does few trick to turn str_ into unicode
-
-    In case of UnicodeDecode error we try to return it with encoding detected
-    by chardet library if it fails fallback to unicode with errors replaced
-
-    :param str_: string to decode
-    :rtype: unicode
-    :returns: unicode object
-    """
-    if isinstance(str_, unicode):
-        return str_
-
-    if not from_encoding:
-        import kallithea
-        DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf-8'), sep=',')
-        from_encoding = DEFAULT_ENCODINGS
-
-    if not isinstance(from_encoding, (list, tuple)):
-        from_encoding = [from_encoding]
-
-    try:
-        return unicode(str_)
-    except UnicodeDecodeError:
-        pass
-
-    for enc in from_encoding:
-        try:
-            return unicode(str_, enc)
-        except UnicodeDecodeError:
-            pass
-
-    try:
-        import chardet
-        encoding = chardet.detect(str_)['encoding']
-        if encoding is None:
-            raise Exception()
-        return str_.decode(encoding)
-    except (ImportError, UnicodeDecodeError, Exception):
-        return unicode(str_, from_encoding[0], 'replace')
-
-
-def safe_str(unicode_, to_encoding=None):
-    """
-    safe str function. Does few trick to turn unicode_ into string
-
-    In case of UnicodeEncodeError we try to return it with encoding detected
-    by chardet library if it fails fallback to string with errors replaced
-
-    :param unicode_: unicode to encode
-    :rtype: str
-    :returns: str object
-    """
-
-    # if it's not basestr cast to str
-    if not isinstance(unicode_, basestring):
-        return str(unicode_)
-
-    if isinstance(unicode_, str):
-        return unicode_
-
-    if not to_encoding:
-        import kallithea
-        DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf-8'), sep=',')
-        to_encoding = DEFAULT_ENCODINGS
-
-    if not isinstance(to_encoding, (list, tuple)):
-        to_encoding = [to_encoding]
-
-    for enc in to_encoding:
-        try:
-            return unicode_.encode(enc)
-        except UnicodeEncodeError:
-            pass
-
-    try:
-        import chardet
-        encoding = chardet.detect(unicode_)['encoding']
-        if encoding is None:
-            raise UnicodeEncodeError()
-
-        return unicode_.encode(encoding)
-    except (ImportError, UnicodeEncodeError):
-        return unicode_.encode(to_encoding[0], 'replace')
 
 
 def remove_suffix(s, suffix):
@@ -271,8 +190,8 @@ def age(prevdate, show_short_version=False, now=None):
 
     :param prevdate: datetime object
     :param show_short_version: if it should approximate the date and return a shorter string
-    :rtype: unicode
-    :returns: unicode words describing age
+    :rtype: str
+    :returns: str words describing age
     """
     now = now or datetime.datetime.now()
     order = ['year', 'month', 'day', 'hour', 'minute', 'second']
@@ -331,12 +250,12 @@ def age(prevdate, show_short_version=False, now=None):
 
     # Format the result
     fmt_funcs = {
-        'year': lambda d: ungettext(u'%d year', '%d years', d) % d,
-        'month': lambda d: ungettext(u'%d month', '%d months', d) % d,
-        'day': lambda d: ungettext(u'%d day', '%d days', d) % d,
-        'hour': lambda d: ungettext(u'%d hour', '%d hours', d) % d,
-        'minute': lambda d: ungettext(u'%d minute', '%d minutes', d) % d,
-        'second': lambda d: ungettext(u'%d second', '%d seconds', d) % d,
+        'year': lambda d: ungettext('%d year', '%d years', d) % d,
+        'month': lambda d: ungettext('%d month', '%d months', d) % d,
+        'day': lambda d: ungettext('%d day', '%d days', d) % d,
+        'hour': lambda d: ungettext('%d hour', '%d hours', d) % d,
+        'minute': lambda d: ungettext('%d minute', '%d minutes', d) % d,
+        'second': lambda d: ungettext('%d second', '%d seconds', d) % d,
     }
 
     for i, part in enumerate(order):
@@ -370,7 +289,7 @@ def uri_filter(uri):
     Removes user:password from given url string
 
     :param uri:
-    :rtype: unicode
+    :rtype: str
     :returns: filtered list of strings
     """
     if not uri:
@@ -394,7 +313,7 @@ def uri_filter(uri):
     else:
         host, port = uri[:cred_pos], uri[cred_pos + 1:]
 
-    return filter(None, [proto, host, port])
+    return [_f for _f in [proto, host, port] if _f]
 
 
 def credentials_filter(uri):
@@ -414,19 +333,19 @@ def credentials_filter(uri):
 
 def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None):
     parsed_url = urlobject.URLObject(prefix_url)
-    prefix = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
+    prefix = urllib.parse.unquote(parsed_url.path.rstrip('/'))
     try:
         system_user = pwd.getpwuid(os.getuid()).pw_name
-    except Exception: # TODO: support all systems - especially Windows
+    except NameError: # TODO: support all systems - especially Windows
         system_user = 'kallithea' # hardcoded default value ...
     args = {
         'scheme': parsed_url.scheme,
-        'user': safe_unicode(urllib.quote(safe_str(username or ''))),
+        'user': urllib.parse.quote(username or ''),
         'netloc': parsed_url.netloc + prefix,  # like "hostname:port/prefix" (with optional ":port" and "/prefix")
         'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,
         'repoid': str(repo_id),
-        'system_user': safe_unicode(system_user),
+        'system_user': system_user,
         'hostname': parsed_url.hostname,
     }
     url = re.sub('{([^{}]+)}', lambda m: args.get(m.group(1), m.group(0)), clone_uri_tmpl)
@@ -436,7 +355,7 @@ def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None)
     if not url_obj.username:
         url_obj = url_obj.with_username(None)
 
-    return safe_unicode(url_obj)
+    return str(url_obj)
 
 
 def get_changeset_safe(repo, rev):
@@ -468,7 +387,7 @@ def datetime_to_time(dt):
 
 def time_to_datetime(tm):
     if tm:
-        if isinstance(tm, basestring):
+        if isinstance(tm, str):
             try:
                 tm = float(tm)
             except ValueError:
@@ -577,10 +496,10 @@ def get_current_authuser():
     defined, else returns None.
     """
     from tg import tmpl_context
-    if hasattr(tmpl_context, 'authuser'):
-        return tmpl_context.authuser
-
-    return None
+    try:
+        return getattr(tmpl_context, 'authuser', None)
+    except TypeError:  # No object (name: context) has been registered for this thread
+        return None
 
 
 class OptionalAttr(object):
@@ -653,7 +572,7 @@ class Optional(object):
 
 
 def urlreadable(s, _cleanstringsub=re.compile('[^-a-zA-Z0-9./]+').sub):
-    return _cleanstringsub('_', safe_str(s)).rstrip('_')
+    return _cleanstringsub('_', s).rstrip('_')
 
 
 def recursive_replace(str_, replace=' '):
@@ -694,7 +613,7 @@ def repo_name_slug(value):
 
 def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
     while True:
-        ok = raw_input(prompt)
+        ok = input(prompt)
         if ok in ('y', 'ye', 'yes'):
             return True
         if ok in ('n', 'no', 'nop', 'nope'):

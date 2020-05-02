@@ -33,7 +33,7 @@ import traceback
 import bleach
 import markdown as markdown_mod
 
-from kallithea.lib.utils2 import MENTIONS_REGEX, safe_unicode
+from kallithea.lib.utils2 import MENTIONS_REGEX, safe_str
 
 
 log = logging.getLogger(__name__)
@@ -119,17 +119,17 @@ class MarkupRenderer(object):
         At last it will just do a simple html replacing new lines with <br/>
 
         >>> MarkupRenderer.render('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''', '.md')
-        u'<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
+        '<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
         >>> MarkupRenderer.render('''<img class="c d" src="file://localhost/test.jpg">''', 'b.mkd')
-        u'<p><img class="c d"></p>'
+        '<p><img class="c d"></p>'
         >>> MarkupRenderer.render('''<a href="foo">foo</a>''', 'c.mkdn')
-        u'<p><a href="foo">foo</a></p>'
+        '<p><a href="foo">foo</a></p>'
         >>> MarkupRenderer.render('''<script>alert(1)</script>''', 'd.mdown')
-        u'&lt;script&gt;alert(1)&lt;/script&gt;'
+        '&lt;script&gt;alert(1)&lt;/script&gt;'
         >>> MarkupRenderer.render('''<div onclick="alert(2)">yo</div>''', 'markdown')
-        u'<div>yo</div>'
+        '<div>yo</div>'
         >>> MarkupRenderer.render('''<a href="javascript:alert(3)">yo</a>''', 'md')
-        u'<p><a>yo</a></p>'
+        '<p><a>yo</a></p>'
         """
 
         renderer = cls._detect_renderer(source, filename)
@@ -150,7 +150,11 @@ class MarkupRenderer(object):
 
     @classmethod
     def plain(cls, source, universal_newline=True):
-        source = safe_unicode(source)
+        """
+        >>> MarkupRenderer.plain('https://example.com/')
+        '<br /><a href="https://example.com/">https://example.com/</a>'
+        """
+        source = safe_str(source)
         if universal_newline:
             newline = '\n'
             source = newline.join(source.splitlines())
@@ -168,30 +172,30 @@ class MarkupRenderer(object):
         with "safe" fall-back to plaintext. Output from this method should be sanitized before use.
 
         >>> MarkupRenderer.markdown('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''')
-        u'<p><img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg"></p>'
+        '<p><img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg"></p>'
         >>> MarkupRenderer.markdown('''<img class="c d" src="file://localhost/test.jpg">''')
-        u'<p><img class="c d" src="file://localhost/test.jpg"></p>'
+        '<p><img class="c d" src="file://localhost/test.jpg"></p>'
         >>> MarkupRenderer.markdown('''<a href="foo">foo</a>''')
-        u'<p><a href="foo">foo</a></p>'
+        '<p><a href="foo">foo</a></p>'
         >>> MarkupRenderer.markdown('''<script>alert(1)</script>''')
-        u'<script>alert(1)</script>'
+        '<script>alert(1)</script>'
         >>> MarkupRenderer.markdown('''<div onclick="alert(2)">yo</div>''')
-        u'<div onclick="alert(2)">yo</div>'
+        '<div onclick="alert(2)">yo</div>'
         >>> MarkupRenderer.markdown('''<a href="javascript:alert(3)">yo</a>''')
-        u'<p><a href="javascript:alert(3)">yo</a></p>'
+        '<p><a href="javascript:alert(3)">yo</a></p>'
         >>> MarkupRenderer.markdown('''## Foo''')
-        u'<h2>Foo</h2>'
-        >>> print MarkupRenderer.markdown('''
+        '<h2>Foo</h2>'
+        >>> print(MarkupRenderer.markdown('''
         ...     #!/bin/bash
         ...     echo "hello"
-        ... ''')
+        ... '''))
         <table class="code-highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
         2</pre></div></td><td class="code"><div class="code-highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
         <span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span>
         </pre></div>
         </td></tr></table>
         """
-        source = safe_unicode(source)
+        source = safe_str(source)
         try:
             if flavored:
                 source = cls._flavored_markdown(source)
@@ -209,7 +213,7 @@ class MarkupRenderer(object):
 
     @classmethod
     def rst(cls, source, safe=True):
-        source = safe_unicode(source)
+        source = safe_str(source)
         try:
             from docutils.core import publish_parts
             from docutils.parsers.rst import directives
@@ -219,7 +223,7 @@ class MarkupRenderer(object):
             docutils_settings.update({'input_encoding': 'unicode',
                                       'report_level': 4})
 
-            for k, v in docutils_settings.iteritems():
+            for k, v in docutils_settings.items():
                 directives.register_directive(k, v)
 
             parts = publish_parts(source=source,

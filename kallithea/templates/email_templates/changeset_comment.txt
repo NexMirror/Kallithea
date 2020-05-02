@@ -13,4 +13,5 @@ ${branch|n,unicode}:
 ${_('by')|n,unicode} \
 ${cs_author.full_name_and_username|n,unicode}.
 
-<%include file="button.txt" args="url=cs_comment_url,title=_('View Comment')"/>\
+<% title = _('View Comment') %>\
+<%include file="button.txt" args="url=cs_comment_url,title=title"/>\

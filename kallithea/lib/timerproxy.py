@@ -20,7 +20,7 @@ from sqlalchemy.interfaces import ConnectionProxy
 
 log = logging.getLogger('timerproxy')
 
-BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = xrange(30, 38)
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(30, 38)
 
 
 def color_sql(sql):

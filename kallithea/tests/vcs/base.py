@@ -27,8 +27,8 @@ class _BackendTestMixin(object):
     def _get_commits(cls):
         commits = [
             {
-                'message': u'Initial commit',
-                'author': u'Joe Doe <joe.doe@example.com>',
+                'message': 'Initial commit',
+                'author': 'Joe Doe <joe.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 20),
                 'added': [
                     FileNode('foobar', content='Foobar'),
@@ -37,8 +37,8 @@ class _BackendTestMixin(object):
                 ],
             },
             {
-                'message': u'Changes...',
-                'author': u'Jane Doe <jane.doe@example.com>',
+                'message': 'Changes...',
+                'author': 'Jane Doe <jane.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 21),
                 'added': [
                     FileNode('some/new.txt', content='news...'),
@@ -79,8 +79,8 @@ class _BackendTestMixin(object):
             for node in commit.get('removed', []):
                 cls.imc.remove(FileNode(node.path))
 
-            cls.tip = cls.imc.commit(message=unicode(commit['message']),
-                                     author=unicode(commit['author']),
+            cls.tip = cls.imc.commit(message=commit['message'],
+                                     author=commit['author'],
                                      date=commit['date'])
 
     @pytest.fixture(autouse=True)

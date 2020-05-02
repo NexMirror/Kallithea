@@ -20,7 +20,7 @@ import logging
 import traceback
 
 from kallithea.lib.auth import AuthUser, PasswordGenerator
-from kallithea.lib.compat import formatted_json, hybrid_property
+from kallithea.lib.compat import hybrid_property
 from kallithea.lib.utils2 import str2bool
 from kallithea.model.db import Setting, User
 from kallithea.model.meta import Session
@@ -136,9 +136,6 @@ class KallitheaAuthPluginBase(object):
                   username)
         if username:
             user = User.get_by_username_or_email(username)
-            if user is None:
-                log.debug('Fallback to fetch user in case insensitive mode')
-                user = User.get_by_username(username, case_insensitive=True)
         else:
             log.debug('provided username:`%s` is empty skipping...', username)
         return user
@@ -286,11 +283,11 @@ def loadplugin(plugin):
         ImportError -- if we couldn't import the plugin at all
     """
     log.debug("Importing %s", plugin)
-    if not plugin.startswith(u'kallithea.lib.auth_modules.auth_'):
-        parts = plugin.split(u'.lib.auth_modules.auth_', 1)
+    if not plugin.startswith('kallithea.lib.auth_modules.auth_'):
+        parts = plugin.split('.lib.auth_modules.auth_', 1)
         if len(parts) == 2:
             _module, pn = parts
-            plugin = u'kallithea.lib.auth_modules.auth_' + pn
+            plugin = 'kallithea.lib.auth_modules.auth_' + pn
     PLUGIN_CLASS_NAME = "KallitheaAuthPlugin"
     try:
         module = importlib.import_module(plugin)
@@ -309,7 +306,7 @@ def loadplugin(plugin):
                         "a subclass of %s" % (plugin, KallitheaAuthPluginBase))
 
     plugin = pluginclass()
-    if plugin.plugin_settings.im_func != KallitheaAuthPluginBase.plugin_settings.im_func:
+    if plugin.plugin_settings.__func__ != KallitheaAuthPluginBase.plugin_settings:
         raise TypeError("Authentication class %s.KallitheaAuthPluginBase "
                         "has overridden the plugin_settings method, which is "
                         "forbidden." % plugin)
@@ -351,7 +348,7 @@ def authenticate(username, password, environ=None):
             conf_key = "auth_%s_%s" % (plugin_name, v["name"])
             setting = Setting.get_by_name(conf_key)
             plugin_settings[v["name"]] = setting.app_settings_value if setting else None
-        log.debug('Settings for auth plugin %s:\n%s', plugin_name, formatted_json(plugin_settings))
+        log.debug('Settings for auth plugin %s: %s', plugin_name, plugin_settings)
 
         if not str2bool(plugin_settings["enabled"]):
             log.info("Authentication plugin %s is disabled, skipping for %s",

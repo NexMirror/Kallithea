@@ -45,7 +45,6 @@ def pytest_configure():
             #'ssh_locale': 'C',
             'app_instance_uuid': 'test',
             'show_revision_number': 'true',
-            'beaker.cache.sql_cache_short.expire': '1',
             'session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',
             #'i18n.lang': '',
         },
@@ -146,7 +145,7 @@ def auto_clear_ip_permissions():
     user_model = UserModel()
 
     user_ids = []
-    user_ids.append(User.get_default_user().user_id)
+    user_ids.append(kallithea.DEFAULT_USER_ID)
     user_ids.append(User.get_by_username(TEST_USER_REGULAR_LOGIN).user_id)
 
     for user_id in user_ids:

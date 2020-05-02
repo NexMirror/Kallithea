@@ -9,7 +9,7 @@ class GetsliceTestCaseMixin(_BackendTestMixin):
     @classmethod
     def _get_commits(cls):
         start_date = datetime.datetime(2010, 1, 1, 20)
-        for x in xrange(5):
+        for x in range(5):
             yield {
                 'message': 'Commit %d' % x,
                 'author': 'Joe Doe <joe.doe@example.com>',

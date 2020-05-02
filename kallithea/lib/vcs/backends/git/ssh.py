@@ -17,7 +17,6 @@ import os
 
 from kallithea.lib.hooks import log_pull_action
 from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
 
 
@@ -33,15 +32,15 @@ class GitSshHandler(BaseSshHandler):
         >>> import shlex
 
         >>> GitSshHandler.make(shlex.split("git-upload-pack '/foo bar'")).repo_name
-        u'foo bar'
+        'foo bar'
         >>> GitSshHandler.make(shlex.split("git-upload-pack '/foo bar'")).verb
         'git-upload-pack'
         >>> GitSshHandler.make(shlex.split(" git-upload-pack /blåbærgrød ")).repo_name # might not be necessary to support no quoting ... but we can
-        u'bl\xe5b\xe6rgr\xf8d'
+        'bl\xe5b\xe6rgr\xf8d'
         >>> GitSshHandler.make(shlex.split('''git-upload-pack "/foo'bar"''')).repo_name
-        u"foo'bar"
+        "foo'bar"
         >>> GitSshHandler.make(shlex.split("git-receive-pack '/foo'")).repo_name
-        u'foo'
+        'foo'
         >>> GitSshHandler.make(shlex.split("git-receive-pack '/foo'")).verb
         'git-receive-pack'
 
@@ -56,7 +55,7 @@ class GitSshHandler(BaseSshHandler):
             ssh_command_parts[0] in ['git-upload-pack', 'git-receive-pack'] and
             ssh_command_parts[1].startswith('/')
         ):
-            return cls(safe_unicode(ssh_command_parts[1][1:]), ssh_command_parts[0])
+            return cls(ssh_command_parts[1][1:], ssh_command_parts[0])
 
         return None
 
@@ -70,7 +69,7 @@ class GitSshHandler(BaseSshHandler):
             log_pull_action(ui=make_ui(), repo=self.db_repo.scm_instance._repo)
         else: # probably verb 'git-receive-pack', action 'push'
             if not self.allow_push:
-                self.exit('Push access to %r denied' % safe_str(self.repo_name))
+                self.exit('Push access to %r denied' % self.repo_name)
             # Note: push logging is handled by Git post-receive hook
 
         # git shell is not a real shell but use shell inspired quoting *inside* the argument.

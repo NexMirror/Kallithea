@@ -36,6 +36,9 @@ msgstr "Nie można znaleźć innego repozytorium %s"
 msgid "No response"
 msgstr "Brak odpowiedzi"
 
+msgid "Unknown error"
+msgstr "Nieznany błąd"
+
 msgid ""
 "The request could not be understood by the server due to malformed syntax."
 msgstr ""
@@ -125,6 +128,9 @@ msgstr "Etykiety"
 msgid "An error occurred during repository forking %s"
 msgstr "Wystąpił błąd podczas rozgałęzienia %s repozytorium"
 
+msgid "Groups"
+msgstr "Grupy"
+
 msgid "Repositories"
 msgstr "Repozytoria"
 
@@ -154,6 +160,9 @@ msgstr "Twój link zresetowania hasła został wysłany"
 
 msgid "Invalid password reset token"
 msgstr "Nieprawidłowy token resetowania hasła"
+
+msgid "Successfully updated password"
+msgstr "Pomyślnie zaktualizowano hasło"
 
 msgid "%s (closed)"
 msgstr "%s (zamknięty)"
@@ -246,6 +255,9 @@ msgstr "Twoje konto zostało pomyślnie zaktualizowane"
 
 msgid "Error occurred during update of user %s"
 msgstr "wystąpił błąd podczas aktualizacji użytkownika %s"
+
+msgid "Error occurred during update of user password"
+msgstr "Wystąpił błąd w trakcie aktualizacji hasła użytkownika"
 
 msgid "Added email %s to user"
 msgstr "Dodano e-mail %s do użytkownika"

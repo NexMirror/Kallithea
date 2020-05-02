@@ -1,7 +1,6 @@
 """
 Utilities aimed to help achieve mostly basic tasks.
 """
-from __future__ import division
 
 import datetime
 import os
@@ -33,16 +32,14 @@ def get_scm(path, search_up=False, explicit_alias=None):
     if not os.path.isdir(path):
         raise VCSError("Given path %s is not a directory" % path)
 
-    def get_scms(path):
-        return [(scm, path) for scm in get_scms_for_path(path)]
-
-    found_scms = get_scms(path)
-    while not found_scms and search_up:
+    while True:
+        found_scms = [(scm, path) for scm in get_scms_for_path(path)]
+        if found_scms or not search_up:
+            break
         newpath = abspath(path, '..')
         if newpath == path:
             break
         path = newpath
-        found_scms = get_scms(path)
 
     if len(found_scms) > 1:
         for scm in found_scms:
@@ -133,7 +130,7 @@ def parse_changesets(text):
         >>> parse_changesets('aaabbb')
         {'start': None, 'main': 'aaabbb', 'end': None}
         >>> parse_changesets('aaabbb..cccddd')
-        {'start': 'aaabbb', 'main': None, 'end': 'cccddd'}
+        {'start': 'aaabbb', 'end': 'cccddd', 'main': None}
 
     """
     text = text.strip()

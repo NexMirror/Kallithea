@@ -171,12 +171,12 @@ var pyroutes = (function() {
             return output.join('');
         }
 
-        var str_format = function() {
+        function str_format() {
             if (!str_format.cache.hasOwnProperty(arguments[0])) {
                 str_format.cache[arguments[0]] = str_format.parse(arguments[0]);
             }
             return str_format.format.call(null, str_format.cache[arguments[0]], arguments);
-        };
+        }
 
         str_format.format = function(parse_tree, argv) {
             var cursor = 1, tree_length = parse_tree.length, node_type = '', arg, output = [], i, k, match, pad, pad_character, pad_length;
@@ -239,7 +239,7 @@ var pyroutes = (function() {
                 else if ((match = /^\x25{2}/.exec(_fmt)) !== null) {
                     parse_tree.push('%');
                 }
-                else if ((match = /^\x25(?:([1-9]\d*)\$|\(([^\)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/.exec(_fmt)) !== null) {
+                else if ((match = /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/.exec(_fmt)) !== null) {
                     if (match[2]) {
                         arg_names |= 1;
                         var field_list = [], replacement_field = match[2], field_match = [];
@@ -281,10 +281,6 @@ var pyroutes = (function() {
         return str_format;
     })();
 
-    var vsprintf = function(fmt, argv) {
-        argv.unshift(fmt);
-        return sprintf.apply(null, argv);
-    };
     return {
         'url': function(route_name, params) {
             var result = route_name;
@@ -335,25 +331,10 @@ var pyroutes = (function() {
 })();
 
 
-/* Invoke all functions in callbacks */
-var _run_callbacks = function(callbacks){
-    if (callbacks !== undefined){
-        var _l = callbacks.length;
-        for (var i=0;i<_l;i++){
-            var func = callbacks[i];
-            if(typeof(func)=='function'){
-                try{
-                    func();
-                }catch (err){};
-            }
-        }
-    }
-}
-
 /**
  * turns objects into GET query string
  */
-var _toQueryString = function(o) {
+function _toQueryString(o) {
     if(typeof o !== 'object') {
         return false;
     }
@@ -362,7 +343,7 @@ var _toQueryString = function(o) {
         _qs.push(encodeURIComponent(_p) + '=' + encodeURIComponent(o[_p]));
     }
     return _qs.join('&');
-};
+}
 
 /**
  * Load HTML into DOM using Ajax
@@ -386,18 +367,18 @@ function asynchtml(url, $target, success, args){
                     success();
                 }
             })
-        .fail(function(jqXHR, textStatus, errorThrown) {
+        .fail(function(jqXHR, textStatus) {
                 if (textStatus == "abort")
                     return;
                 $target.html('<span class="bg-danger">ERROR: {0}</span>'.format(textStatus));
                 $target.css('opacity','1.0');
             })
         ;
-};
+}
 
-var ajaxGET = function(url, success, failure) {
+function ajaxGET(url, success, failure) {
     if(failure === undefined) {
-        failure = function(jqXHR, textStatus, errorThrown) {
+        failure = function(jqXHR, textStatus) {
                 if (textStatus != "abort")
                     alert("Ajax GET error: " + textStatus);
             };
@@ -405,21 +386,20 @@ var ajaxGET = function(url, success, failure) {
     return $.ajax({url: url, headers: {'X-PARTIAL-XHR': '1'}, cache: false})
         .done(success)
         .fail(failure);
-};
+}
 
-var ajaxPOST = function(url, postData, success, failure) {
+function ajaxPOST(url, postData, success, failure) {
     postData['_session_csrf_secret_token'] = _session_csrf_secret_token;
-    var postData = _toQueryString(postData);
     if(failure === undefined) {
-        failure = function(jqXHR, textStatus, errorThrown) {
+        failure = function(jqXHR, textStatus) {
                 if (textStatus != "abort")
                     alert("Error posting to server: " + textStatus);
             };
     }
-    return $.ajax({url: url, data: postData, type: 'POST', headers: {'X-PARTIAL-XHR': '1'}, cache: false})
+    return $.ajax({url: url, data: _toQueryString(postData), type: 'POST', headers: {'X-PARTIAL-XHR': '1'}, cache: false})
         .done(success)
         .fail(failure);
-};
+}
 
 
 /**
@@ -427,45 +407,47 @@ var ajaxPOST = function(url, postData, success, failure) {
  * the .show_more must have an id that is the the id of an element to hide prefixed with _
  * the parentnode will be displayed
  */
-var show_more_event = function(){
+function show_more_event(){
     $('.show_more').click(function(e){
         var el = e.currentTarget;
         $('#' + el.id.substring(1)).hide();
         $(el.parentNode).show();
     });
-};
+}
 
 
-var _onSuccessFollow = function(target){
+function _onSuccessFollow(target){
     var $target = $(target);
     var $f_cnt = $('#current_followers_count');
     if ($target.hasClass('follow')) {
         $target.removeClass('follow').addClass('following');
         $target.prop('title', _TM['Stop following this repository']);
         if ($f_cnt.html()) {
-            var cnt = Number($f_cnt.html())+1;
+            const cnt = Number($f_cnt.html())+1;
             $f_cnt.html(cnt);
         }
     } else {
         $target.removeClass('following').addClass('follow');
         $target.prop('title', _TM['Start following this repository']);
         if ($f_cnt.html()) {
-            var cnt = Number($f_cnt.html())-1;
+            const cnt = Number($f_cnt.html())-1;
             $f_cnt.html(cnt);
         }
     }
 }
 
-var toggleFollowingRepo = function(target, follows_repository_id){
-    var args = 'follows_repository_id=' + follows_repository_id;
-    args += '&amp;_session_csrf_secret_token=' + _session_csrf_secret_token;
-    $.post(TOGGLE_FOLLOW_URL, args, function(data){
+function toggleFollowingRepo(target, follows_repository_id){
+    var args = {
+        'follows_repository_id': follows_repository_id,
+        '_session_csrf_secret_token': _session_csrf_secret_token
+    }
+    $.post(TOGGLE_FOLLOW_URL, args, function(){
             _onSuccessFollow(target);
         });
     return false;
-};
+}
 
-var showRepoSize = function(target, repo_name){
+function showRepoSize(target, repo_name){
     var args = '_session_csrf_secret_token=' + _session_csrf_secret_token;
 
     if(!$("#" + target).hasClass('loaded')){
@@ -477,12 +459,12 @@ var showRepoSize = function(target, repo_name){
         });
     }
     return false;
-};
+}
 
 /**
  * load tooltips dynamically based on data attributes, used for .lazy-cs changeset links
  */
-var get_changeset_tooltip = function() {
+function get_changeset_tooltip() {
     var $target = $(this);
     var tooltip = $target.data('tooltip');
     if (!tooltip) {
@@ -499,12 +481,12 @@ var get_changeset_tooltip = function() {
         $target.data('tooltip', tooltip);
     }
     return tooltip;
-};
+}
 
 /**
  * activate tooltips and popups
  */
-var tooltip_activate = function(){
+function tooltip_activate(){
     function placement(p, e){
         if(e.getBoundingClientRect().top > 2*$(window).height()/3){
             return 'top';
@@ -529,63 +511,7 @@ var tooltip_activate = function(){
             placement: placement
         });
     });
-};
-
-
-/**
- * Quick filter widget
- *
- * @param target: filter input target
- * @param nodes: list of nodes in html we want to filter.
- * @param display_element function that takes current node from nodes and
- *    does hide or show based on the node
- */
-var q_filter = (function() {
-    var _namespace = {};
-    var namespace = function (target) {
-        if (!(target in _namespace)) {
-            _namespace[target] = {};
-        }
-        return _namespace[target];
-    };
-    return function (target, $nodes, display_element) {
-        var $nodes = $nodes;
-        var $q_filter_field = $('#' + target);
-        var F = namespace(target);
-
-        $q_filter_field.keyup(function (e) {
-            clearTimeout(F.filterTimeout);
-            F.filterTimeout = setTimeout(F.updateFilter, 600);
-        });
-
-        F.filterTimeout = null;
-
-        F.updateFilter = function () {
-            // Reset timeout
-            F.filterTimeout = null;
-
-            var obsolete = [];
-
-            var req = $q_filter_field.val().toLowerCase();
-
-            var showing = 0;
-            $nodes.each(function () {
-                var n = this;
-                var target_element = display_element(n);
-                if (req && n.innerHTML.toLowerCase().indexOf(req) == -1) {
-                    $(target_element).hide();
-                }
-                else {
-                    $(target_element).show();
-                    showing += 1;
-                }
-            });
-
-            $('#repo_count').html(showing);
-            /* FIXME: don't hardcode */
-        }
-    }
-})();
+}
 
 
 /**
@@ -661,12 +587,13 @@ function _comment_div_append_add($comment_div, f_path, line_no) {
     var addlabel = TRANSLATION_MAP['Add Another Comment'];
     var $add = $('<div class="add-button-row"><span class="btn btn-default btn-xs add-button">{0}</span></div>'.format(addlabel));
     $comment_div.append($add);
-    $add.children('.add-button').click(function(e) {
+    $add.children('.add-button').click(function() {
         comment_div_state($comment_div, f_path, line_no, true);
     });
 }
 
 // append a comment form to $comment_div
+// Note: var AJAX_COMMENT_URL must have been defined before invoking this function
 function _comment_div_append_form($comment_div, f_path, line_no) {
     var $form_div = $('#comment-inline-form-template').children()
         .clone()
@@ -725,7 +652,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
             'save_close': pr_close,
             'save_delete': pr_delete
         };
-        var success = function(json_data) {
+        function success(json_data) {
             if (pr_delete) {
                 location = json_data['location'];
             } else {
@@ -738,8 +665,8 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
                     location.reload(true);
                 }
             }
-        };
-        var failure = function(x, s, e) {
+        }
+        function failure(x, s, e) {
             $preview.removeClass('submitting').addClass('failed');
             var $status = $preview.find('.comment-submission-status');
             $('<span>', {
@@ -764,12 +691,12 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
                     comment_div_state($comment_div, f_path, line_no);
                 })
             ).appendTo($status);
-        };
+        }
         ajaxPOST(AJAX_COMMENT_URL, postData, success, failure);
     });
 
     // add event handler for hide/cancel buttons
-    $form.find('.hide-inline-form').click(function(e) {
+    $form.find('.hide-inline-form').click(function() {
         comment_div_state($comment_div, f_path, line_no);
     });
 
@@ -783,10 +710,11 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
 }
 
 
+// Note: var AJAX_COMMENT_URL must have been defined before invoking this function
 function deleteComment(comment_id) {
     var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
     var postData = {};
-    var success = function(o) {
+    function success() {
         $('#comment-'+comment_id).remove();
         // Ignore that this might leave a stray Add button (or have a pending form with another comment) ...
     }
@@ -797,7 +725,7 @@ function deleteComment(comment_id) {
 /**
  * Double link comments
  */
-var linkInlineComments = function($firstlinks, $comments){
+function linkInlineComments($firstlinks, $comments){
     if ($comments.length > 0) {
         $firstlinks.html('<a href="#{0}">First comment</a>'.format($comments.prop('id')));
     }
@@ -805,7 +733,7 @@ var linkInlineComments = function($firstlinks, $comments){
         return;
     }
 
-    $comments.each(function(i, e){
+    $comments.each(function(i){
             var prev = '';
             if (i > 0){
                 var prev_anchor = $($comments.get(i-1)).prop('id');
@@ -823,13 +751,13 @@ var linkInlineComments = function($firstlinks, $comments){
 }
 
 /* activate files.html stuff */
-var fileBrowserListeners = function(node_list_url, url_base){
+function fileBrowserListeners(node_list_url, url_base){
     var $node_filter = $('#node_filter');
 
     var filterTimeout = null;
     var nodes = null;
 
-    var initFilter = function(){
+    function initFilter(){
         $('#node_filter_box_loading').show();
         $('#search_activate_id').hide();
         $('#add_node_id').hide();
@@ -850,7 +778,7 @@ var fileBrowserListeners = function(node_list_url, url_base){
         ;
     }
 
-    var updateFilter = function(e) {
+    function updateFilter(e) {
         return function(){
             // Reset timeout
             filterTimeout = null;
@@ -897,7 +825,7 @@ var fileBrowserListeners = function(node_list_url, url_base){
                 $('#tbody_filtered').hide();
             }
         }
-    };
+    }
 
     $('#filter_activate').click(function(){
             initFilter();
@@ -912,10 +840,10 @@ var fileBrowserListeners = function(node_list_url, url_base){
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(updateFilter(e),600);
         });
-};
+}
 
 
-var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
+function initCodeMirror(textarea_id, baseUrl, resetUrl){
     var myCodeMirror = CodeMirror.fromTextArea($('#' + textarea_id)[0], {
             mode: "null",
             lineNumbers: true,
@@ -924,7 +852,7 @@ var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
         });
     CodeMirror.modeURL = baseUrl + "/codemirror/mode/%N/%N.js";
 
-    $('#reset').click(function(e){
+    $('#reset').click(function(){
             window.location=resetUrl;
         });
 
@@ -941,14 +869,14 @@ var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
         });
 
     return myCodeMirror
-};
+}
 
-var setCodeMirrorMode = function(codeMirrorInstance, mode) {
+function setCodeMirrorMode(codeMirrorInstance, mode) {
     CodeMirror.autoLoadMode(codeMirrorInstance, mode);
 }
 
 
-var _getIdentNode = function(n){
+function _getIdentNode(n){
     //iterate thrugh nodes until matching interesting node
 
     if (typeof n == 'undefined'){
@@ -961,11 +889,11 @@ var _getIdentNode = function(n){
     else{
         return _getIdentNode(n.parentNode);
     }
-};
+}
 
 /* generate links for multi line selects that can be shown by files.html page_highlights.
  * This is a mouseup handler for hlcode from CodeHtmlFormatter and pygmentize */
-var getSelectionLink = function(e) {
+function getSelectionLink() {
     //get selection from start/to nodes
     if (typeof window.getSelection != "undefined") {
         var s = window.getSelection();
@@ -973,8 +901,8 @@ var getSelectionLink = function(e) {
         var from = _getIdentNode(s.anchorNode);
         var till = _getIdentNode(s.focusNode);
 
-        var f_int = parseInt(from.id.replace('L',''));
-        var t_int = parseInt(till.id.replace('L',''));
+        //var f_int = parseInt(from.id.replace('L',''));
+        //var t_int = parseInt(till.id.replace('L',''));
 
         var yoffset = 35;
         var ranges = [parseInt(from.id.replace('L','')), parseInt(till.id.replace('L',''))];
@@ -1002,53 +930,15 @@ var getSelectionLink = function(e) {
             $hl_div.hide();
         }
     }
-};
+}
 
 /**
  * Autocomplete functionality
  */
 
-// Custom search function for the DataSource of users
-var autocompleteMatchUsers = function (sQuery, myUsers) {
-    // Case insensitive matching
-    var query = sQuery.toLowerCase();
-    var i = 0;
-    var l = myUsers.length;
-    var matches = [];
-
-    // Match against each name of each contact
-    for (; i < l; i++) {
-        var contact = myUsers[i];
-        if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-             ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-             ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-            matches[matches.length] = contact;
-        }
-    }
-    return matches;
-};
-
-// Custom search function for the DataSource of userGroups
-var autocompleteMatchGroups = function (sQuery, myGroups) {
-    // Case insensitive matching
-    var query = sQuery.toLowerCase();
-    var i = 0;
-    var l = myGroups.length;
-    var matches = [];
-
-    // Match against each name of each group
-    for (; i < l; i++) {
-        var matched_group = myGroups[i];
-        if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
-            matches[matches.length] = matched_group;
-        }
-    }
-    return matches;
-};
-
 // Highlight the snippet if it is found in the full text, while escaping any existing markup.
 // Snippet must be lowercased already.
-var autocompleteHighlightMatch = function (full, snippet) {
+function autocompleteHighlightMatch(full, snippet) {
     var matchindex = full.toLowerCase().indexOf(snippet);
     if (matchindex <0)
         return full.html_escape();
@@ -1057,10 +947,10 @@ var autocompleteHighlightMatch = function (full, snippet) {
         + full.substr(matchindex, snippet.length).html_escape()
         + '</span>'
         + full.substring(matchindex + snippet.length).html_escape();
-};
+}
 
 // Return html snippet for showing the provided gravatar url
-var gravatar = function(gravatar_lnk, size, cssclass) {
+function gravatar(gravatar_lnk, size, cssclass) {
     if (!gravatar_lnk) {
         return '';
     }
@@ -1072,7 +962,7 @@ var gravatar = function(gravatar_lnk, size, cssclass) {
             '></i>').format(size, gravatar_lnk, cssclass);
 }
 
-var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
+function autocompleteGravatar(res, gravatar_lnk, size, group) {
     var elem;
     if (group !== undefined) {
         elem = '<i class="perm-gravatar-ac icon-users"></i>';
@@ -1083,7 +973,7 @@ var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
 }
 
 // Custom formatter to highlight the matching letters and do HTML escaping
-var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
+function autocompleteFormatter(oResultData, sQuery, sResultMatch) {
     var query;
     if (sQuery && sQuery.toLowerCase) // YAHOO AutoComplete
         query = sQuery.toLowerCase();
@@ -1113,9 +1003,9 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     }
 
     return '';
-};
+}
 
-var SimpleUserAutoComplete = function ($inputElement) {
+function SimpleUserAutoComplete($inputElement) {
     $inputElement.select2({
         formatInputTooShort: $inputElement.attr('placeholder'),
         initSelection : function (element, callback) {
@@ -1134,12 +1024,12 @@ var SimpleUserAutoComplete = function ($inputElement) {
         ajax: {
             url: pyroutes.url('users_and_groups_data'),
             dataType: 'json',
-            data: function(term, page){
+            data: function(term){
               return {
                 query: term
               };
             },
-            results: function (data, page){
+            results: function (data){
               return data;
             },
             cache: true
@@ -1150,7 +1040,7 @@ var SimpleUserAutoComplete = function ($inputElement) {
     });
 }
 
-var MembersAutoComplete = function ($inputElement, $typeElement) {
+function MembersAutoComplete($inputElement, $typeElement) {
 
     $inputElement.select2({
         placeholder: $inputElement.attr('placeholder'),
@@ -1158,13 +1048,13 @@ var MembersAutoComplete = function ($inputElement, $typeElement) {
         ajax: {
             url: pyroutes.url('users_and_groups_data'),
             dataType: 'json',
-            data: function(term, page){
+            data: function(term){
               return {
                 query: term,
                 types: 'users,groups'
               };
             },
-            results: function (data, page){
+            results: function (data){
               return data;
             },
             cache: true
@@ -1178,7 +1068,7 @@ var MembersAutoComplete = function ($inputElement, $typeElement) {
     });
 }
 
-var MentionsAutoComplete = function ($inputElement) {
+function MentionsAutoComplete($inputElement) {
   $inputElement.atwho({
     at: "@",
     callbacks: {
@@ -1194,7 +1084,7 @@ var MentionsAutoComplete = function ($inputElement) {
           }
         );
       },
-      sorter: function(query, items, searchKey) {
+      sorter: function(query, items) {
         return items;
       }
     },
@@ -1207,28 +1097,10 @@ var MentionsAutoComplete = function ($inputElement) {
     },
     insertTpl: "${atwho-at}${nname}"
   });
-};
-
-
-// Set caret at the given position in the input element
-function _setCaretPosition($inputElement, caretPos) {
-    $inputElement.each(function(){
-        if(this.createTextRange) { // IE
-            var range = this.createTextRange();
-            range.move('character', caretPos);
-            range.select();
-        }
-        else if(this.selectionStart) { // other recent browsers
-            this.focus();
-            this.setSelectionRange(caretPos, caretPos);
-        }
-        else // last resort - very old browser
-            this.focus();
-    });
 }
 
 
-var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
+function addReviewMember(id,fname,lname,nname,gravatar_link,gravatar_size){
     var displayname = nname;
     if ((fname != "") && (lname != "")) {
         displayname = "{0} {1} ({2})".format(fname, lname, nname);
@@ -1265,7 +1137,7 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     }
 }
 
-var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
+function removeReviewMember(reviewer_id){
     var $li = $('#reviewer_{0}'.format(reviewer_id));
     $li.find('div div').css("text-decoration", "line-through");
     $li.find('input').prop('name', 'review_members_removed');
@@ -1273,7 +1145,7 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 }
 
 /* activate auto completion of users as PR reviewers */
-var PullRequestAutoComplete = function ($inputElement) {
+function PullRequestAutoComplete($inputElement) {
     $inputElement.select2(
     {
         placeholder: $inputElement.attr('placeholder'),
@@ -1281,12 +1153,12 @@ var PullRequestAutoComplete = function ($inputElement) {
         ajax: {
             url: pyroutes.url('users_and_groups_data'),
             dataType: 'json',
-            data: function(term, page){
+            data: function(term){
               return {
                 query: term
               };
             },
-            results: function (data, page){
+            results: function (data){
               return data;
             },
             cache: true
@@ -1320,12 +1192,12 @@ function addPermAction(perm_type) {
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {
-    var success = function (o) {
+    function success() {
             $('#' + field_id).remove();
-        };
-    var failure = function (o) {
+        }
+    function failure(o) {
             alert(_TM['Failed to revoke permission'] + ": " + o.status);
-        };
+        }
     var query_params = {};
     // put extra data into POST
     if (extra_data !== undefined && (typeof extra_data === 'object')){
@@ -1344,11 +1216,11 @@ function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data)
     }
 
     ajaxPOST(url, query_params, success, failure);
-};
+}
 
 /* Multi selectors */
 
-var MultiSelectWidget = function(selected_id, available_id, form_id){
+function MultiSelectWidget(selected_id, available_id, form_id){
     var $availableselect = $('#' + available_id);
     var $selectedselect = $('#' + selected_id);
 
@@ -1363,10 +1235,10 @@ var MultiSelectWidget = function(selected_id, available_id, form_id){
             return false;
         }).remove();
 
-    $('#add_element').click(function(e){
+    $('#add_element').click(function(){
             $selectedselect.append($availableselect.children('option:selected'));
         });
-    $('#remove_element').click(function(e){
+    $('#remove_element').click(function(){
             $availableselect.append($selectedselect.children('option:selected'));
         });
 
@@ -1382,7 +1254,7 @@ var MultiSelectWidget = function(selected_id, available_id, form_id){
  Branch Sorting callback for select2, modifying the filtered result so prefix
  matches come before matches in the line.
  **/
-var branchSort = function(results, container, query) {
+function branchSort(results, container, query) {
     if (query.term) {
         return results.sort(function (a, b) {
             // Put closed branches after open ones (a bit of a hack ...)
@@ -1416,9 +1288,9 @@ var branchSort = function(results, container, query) {
         });
     }
     return results;
-};
+}
 
-var prefixFirstSort = function(results, container, query) {
+function prefixFirstSort(results, container, query) {
     if (query.term) {
         return results.sort(function (a, b) {
             // if parent node, no sorting
@@ -1447,23 +1319,23 @@ var prefixFirstSort = function(results, container, query) {
         });
     }
     return results;
-};
+}
 
 /* Helper for jQuery DataTables */
 
-var updateRowCountCallback = function updateRowCountCallback($elem, onlyDisplayed) {
+function updateRowCountCallback($elem, onlyDisplayed) {
     return function drawCallback() {
         var info = this.api().page.info(),
             count = onlyDisplayed === true ? info.recordsDisplay : info.recordsTotal;
         $elem.html(count);
     }
-};
+}
 
 
 /**
  * activate changeset parent/child navigation links
  */
-var activate_parent_child_links = function(){
+function activate_parent_child_links(){
 
     $('.parent-child-link').on('click', function(e){
         var $this = $(this);

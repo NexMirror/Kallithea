@@ -46,8 +46,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Kallithea'
-copyright = u'2010-2020 by various authors, licensed as GPLv3.'
+project = 'Kallithea'
+copyright = '2010-2020 by various authors, licensed as GPLv3.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -187,8 +187,8 @@ htmlhelp_basename = 'Kallithea-docs'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Kallithea.tex', u'Kallithea Documentation',
-   u'Kallithea Developers', 'manual'),
+  ('index', 'Kallithea.tex', 'Kallithea Documentation',
+   'Kallithea Developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -220,8 +220,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'kallithea', u'Kallithea Documentation',
-     [u'Kallithea Developers'], 1)
+    ('index', 'kallithea', 'Kallithea Documentation',
+     ['Kallithea Developers'], 1)
 ]
 
 

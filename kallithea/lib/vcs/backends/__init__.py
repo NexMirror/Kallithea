@@ -9,7 +9,6 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 import os
-from pprint import pformat
 
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import VCSError
@@ -51,7 +50,7 @@ def get_backend(alias):
     """
     if alias not in settings.BACKENDS:
         raise VCSError("Given alias '%s' is not recognized! Allowed aliases:\n"
-            "%s" % (alias, pformat(settings.BACKENDS.keys())))
+            "%s" % (alias, '", "'.join(settings.BACKENDS)))
     backend_path = settings.BACKENDS[alias]
     klass = import_class(backend_path)
     return klass

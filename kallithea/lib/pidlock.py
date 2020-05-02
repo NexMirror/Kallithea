@@ -12,8 +12,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-
 import errno
 import os
 from multiprocessing.util import Finalize
@@ -137,6 +135,6 @@ class DaemonLock(object):
         dir_, file_ = os.path.split(pidfile)
         if not os.path.isdir(dir_):
             os.makedirs(dir_)
-        with open(self.pidfile, 'wb') as f:
+        with open(self.pidfile, 'w') as f:
             f.write(lockname)
         self.held = True

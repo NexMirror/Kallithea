@@ -12,6 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import celery.bin.worker
 import click
 
 import kallithea
@@ -31,10 +32,9 @@ def celery_run(celery_args):
     by this CLI command.
     """
 
-    if not kallithea.CELERY_ON:
+    if not kallithea.CELERY_APP:
         raise Exception('Please set use_celery = true in .ini config '
                         'file before running this command')
 
-    from kallithea.lib import celerypylons
-    cmd = celerypylons.worker.worker(celerypylons.app)
+    cmd = celery.bin.worker.worker(kallithea.CELERY_APP)
     return cmd.run_from_argv(None, command='celery-run -c CONFIG_FILE --', argv=list(celery_args))

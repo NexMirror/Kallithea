@@ -699,7 +699,7 @@ jQuery.extend(Mgly.CodeMirrorDiffView.prototype, {
 		// resize
 		if (this.settings.autoresize) {
 			var sz_timeout1 = null;
-			var sz = function(init) {
+			function sz(init) {
 				//self.em_height = null; //recalculate
 				if (self.settings.resize) self.settings.resize(init);
 				self.editor[self.id + '-lhs'].refresh();
@@ -854,7 +854,7 @@ jQuery.extend(Mgly.CodeMirrorDiffView.prototype, {
 	_clear: function() {
 		var self = this, name, editor, fns, timer, i, change, l;
 
-		var clear_changes = function() {
+		function clear_changes() {
 			timer = new Mgly.Timer();
 			for (i = 0, l = editor.lineCount(); i < l; ++i) {
 				editor.removeLineClass(i, 'background');

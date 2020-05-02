@@ -15,11 +15,11 @@
 import pytest
 
 from kallithea.model.db import Repository
-from kallithea.tests.base import *
+from kallithea.tests import base
 
 
-@pytest.mark.skipif("not os.environ.has_key('TEST_PERFORMANCE')", reason="skipping performance tests, set TEST_PERFORMANCE in environment if desired")
-class TestVCSPerformance(TestController):
+@pytest.mark.skipif("'TEST_PERFORMANCE' not in os.environ", reason="skipping performance tests, set TEST_PERFORMANCE in environment if desired")
+class TestVCSPerformance(base.TestController):
 
     def graphmod(self, repo):
         """ Simple test for running the graph_data function for profiling/testing performance. """
@@ -31,7 +31,7 @@ class TestVCSPerformance(TestController):
         jsdata = graph_data(scm_inst, revs)
 
     def test_graphmod_hg(self, benchmark):
-        benchmark(self.graphmod, HG_REPO)
+        benchmark(self.graphmod, base.HG_REPO)
 
     def test_graphmod_git(self, benchmark):
-        benchmark(self.graphmod, GIT_REPO)
+        benchmark(self.graphmod, base.GIT_REPO)

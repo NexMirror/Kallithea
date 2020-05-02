@@ -25,15 +25,14 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import print_function
-
 import argparse
 import fileinput
+import json
 import os
 import stat
 import sys
 
-from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call, json
+from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call
 
 
 def argparser(argv):
@@ -69,7 +68,7 @@ def argparser(argv):
                        'be also `%s`' % (FORMAT_PRETTY, FORMAT_JSON),
             default=FORMAT_PRETTY
     )
-    args, other = parser.parse_known_args()
+    args, other = parser.parse_known_args(args=argv[1:])
     return parser, args, other
 
 

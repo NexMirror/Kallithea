@@ -42,7 +42,7 @@ from kallithea.lib.base import BaseController, render
 from kallithea.lib.celerylib import tasks
 from kallithea.lib.exceptions import HgsubversionImportError
 from kallithea.lib.utils import repo2db_mapper, set_app_settings
-from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs import VCSError
 from kallithea.model.db import Repository, Setting, Ui
 from kallithea.model.forms import ApplicationSettingsForm, ApplicationUiSettingsForm, ApplicationVisualisationForm
@@ -120,6 +120,7 @@ class SettingsController(BaseController):
                 if sett.ui_active:
                     try:
                         import hgsubversion  # pragma: no cover
+                        assert hgsubversion
                     except ImportError:
                         raise HgsubversionImportError
 
@@ -168,10 +169,10 @@ class SettingsController(BaseController):
                                             user=request.authuser.username,
                                             overwrite_git_hooks=overwrite_git_hooks)
             added_msg = h.HTML(', ').join(
-                h.link_to(safe_unicode(repo_name), h.url('summary_home', repo_name=repo_name)) for repo_name in added
+                h.link_to(safe_str(repo_name), h.url('summary_home', repo_name=repo_name)) for repo_name in added
             ) or '-'
             removed_msg = h.HTML(', ').join(
-                safe_unicode(repo_name) for repo_name in removed
+                safe_str(repo_name) for repo_name in removed
             ) or '-'
             h.flash(h.HTML(_('Repositories successfully rescanned. Added: %s. Removed: %s.')) %
                     (added_msg, removed_msg), category='success')
@@ -423,7 +424,7 @@ class SettingsController(BaseController):
         import kallithea
         c.ini = kallithea.CONFIG
         server_info = Setting.get_server_info()
-        for key, val in server_info.iteritems():
+        for key, val in server_info.items():
             setattr(c, key, val)
 
         return htmlfill.render(

@@ -25,16 +25,15 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import StringIO
-
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
+from kallithea.lib.vcs.utils import safe_str
 
 
-def annotate_highlight(filenode, annotate_from_changeset_func=None,
+def annotate_highlight(filenode, annotate_from_changeset_func,
         order=None, headers=None, **options):
     """
     Returns html portion containing annotated table with 3 columns: line
@@ -51,26 +50,26 @@ def annotate_highlight(filenode, annotate_from_changeset_func=None,
     """
     from kallithea.lib.pygmentsutils import get_custom_lexer
     options['linenos'] = True
-    formatter = AnnotateHtmlFormatter(filenode=filenode, order=order,
-        headers=headers,
-        annotate_from_changeset_func=annotate_from_changeset_func, **options)
+    formatter = AnnotateHtmlFormatter(filenode=filenode,
+        annotate_from_changeset_func=annotate_from_changeset_func, order=order,
+        headers=headers, **options)
     lexer = get_custom_lexer(filenode.extension) or filenode.lexer
-    highlighted = highlight(filenode.content, lexer, formatter)
+    highlighted = highlight(safe_str(filenode.content), lexer, formatter)
     return highlighted
 
 
 class AnnotateHtmlFormatter(HtmlFormatter):
 
-    def __init__(self, filenode, annotate_from_changeset_func=None,
+    def __init__(self, filenode, annotate_from_changeset_func,
             order=None, **options):
         """
-        If ``annotate_from_changeset_func`` is passed it should be a function
+        ``annotate_from_changeset_func`` must be a function
         which returns string from the given changeset. For example, we may pass
         following function as ``annotate_from_changeset_func``::
 
             def changeset_to_anchor(changeset):
                 return '<a href="/changesets/%s/">%s</a>\n' % \
-                       (changeset.id, changeset.id)
+                       (changeset.raw_id, changeset.raw_id)
 
         :param annotate_from_changeset_func: see above
         :param order: (default: ``['ls', 'annotate', 'code']``); order of
@@ -101,22 +100,13 @@ class AnnotateHtmlFormatter(HtmlFormatter):
             raise VCSError("This formatter expect FileNode parameter, not %r"
                 % type(filenode))
 
-    def annotate_from_changeset(self, changeset):
-        """
-        Returns full html line for single changeset per annotated line.
-        """
-        if self.annotate_from_changeset_func:
-            return self.annotate_from_changeset_func(changeset)
-        else:
-            return ''.join((changeset.id, '\n'))
-
     def _wrap_tablelinenos(self, inner):
-        dummyoutfile = StringIO.StringIO()
+        inner_lines = []
         lncount = 0
         for t, line in inner:
             if t:
                 lncount += 1
-            dummyoutfile.write(line)
+            inner_lines.append(line)
 
         fl = self.linenostart
         mw = len(str(lncount + fl - 1))
@@ -166,7 +156,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
 #        ln_ = len(ls.splitlines())
 #        if  ln_cs > ln_:
 #            annotate_changesets = annotate_changesets[:ln_ - ln_cs]
-        annotate = ''.join((self.annotate_from_changeset(el[2]())
+        annotate = ''.join((self.annotate_from_changeset_func(el[2]())
                             for el in self.filenode.annotate))
         # in case you wonder about the seemingly redundant <div> here:
         # since the content in the other cell also is wrapped in a div,
@@ -176,7 +166,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
                   '<tr><td class="linenos"><div class="linenodiv"><pre>' +
                   ls + '</pre></div></td>' +
                   '<td class="code">')
-        yield 0, dummyoutfile.getvalue()
+        yield 0, ''.join(inner_lines)
         yield 0, '</td></tr></table>'
 
         '''
@@ -204,5 +194,5 @@ class AnnotateHtmlFormatter(HtmlFormatter):
                   ''.join(headers_row) +
                   ''.join(body_row_start)
                   )
-        yield 0, dummyoutfile.getvalue()
+        yield 0, ''.join(inner_lines)
         yield 0, '</td></tr></table>'

@@ -30,6 +30,7 @@ import logging
 import os
 import string
 
+import bcrypt
 import ipaddr
 from decorator import decorator
 from sqlalchemy.orm import joinedload
@@ -38,14 +39,13 @@ from tg import request
 from tg.i18n import ugettext as _
 from webob.exc import HTTPForbidden, HTTPFound
 
-from kallithea import __platform__, is_unix, is_windows
+import kallithea
 from kallithea.config.routing import url
-from kallithea.lib.caching_query import FromCache
-from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
-from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.utils import get_repo_group_slug, get_repo_slug, get_user_group_slug
+from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.model.db import (
-    Permission, RepoGroup, Repository, User, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
+from kallithea.model.db import (Permission, UserApiKeys, UserGroup, UserGroupMember, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm,
+                                UserGroupUserGroupToPerm, UserIpMap, UserToPerm)
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 
@@ -87,44 +87,34 @@ class PasswordGenerator(object):
 
 def get_crypt_password(password):
     """
-    Cryptographic function used for password hashing based on pybcrypt
-    or Python's own OpenSSL wrapper on windows
+    Cryptographic function used for bcrypt password hashing.
 
     :param password: password to hash
     """
-    if is_windows:
-        return hashlib.sha256(password).hexdigest()
-    elif is_unix:
-        import bcrypt
-        return bcrypt.hashpw(safe_str(password), bcrypt.gensalt(10))
-    else:
-        raise Exception('Unknown or unsupported platform %s'
-                        % __platform__)
+    return ascii_str(bcrypt.hashpw(safe_bytes(password), bcrypt.gensalt(10)))
 
 
 def check_password(password, hashed):
     """
-    Checks matching password with it's hashed value, runs different
-    implementation based on platform it runs on
+    Checks password match the hashed value using bcrypt.
+    Remains backwards compatible and accept plain sha256 hashes which used to
+    be used on Windows.
 
     :param password: password
     :param hashed: password in hashed form
     """
     # sha256 hashes will always be 64 hex chars
     # bcrypt hashes will always contain $ (and be shorter)
-    if is_windows or len(hashed) == 64 and all(x in string.hexdigits for x in hashed):
+    if len(hashed) == 64 and all(x in string.hexdigits for x in hashed):
         return hashlib.sha256(password).hexdigest() == hashed
-    elif is_unix:
-        import bcrypt
-        try:
-            return bcrypt.checkpw(safe_str(password), safe_str(hashed))
-        except ValueError as e:
-            # bcrypt will throw ValueError 'Invalid hashed_password salt' on all password errors
-            log.error('error from bcrypt checking password: %s', e)
-            return False
-    else:
-        raise Exception('Unknown or unsupported platform %s'
-                        % __platform__)
+    try:
+        return bcrypt.checkpw(safe_bytes(password), ascii_bytes(hashed))
+    except ValueError as e:
+        # bcrypt will throw ValueError 'Invalid hashed_password salt' on all password errors
+        log.error('error from bcrypt checking password: %s', e)
+        return False
+    log.error('check_password failed - no method found for hash length %s', len(hashed))
+    return False
 
 
 def _cached_perms_data(user_id, user_is_admin):
@@ -149,12 +139,9 @@ def _cached_perms_data(user_id, user_is_admin):
     #======================================================================
     # fetch default permissions
     #======================================================================
-    default_user = User.get_by_username('default', cache=True)
-    default_user_id = default_user.user_id
-
-    default_repo_perms = Permission.get_default_perms(default_user_id)
-    default_repo_groups_perms = Permission.get_default_group_perms(default_user_id)
-    default_user_group_perms = Permission.get_default_user_group_perms(default_user_id)
+    default_repo_perms = Permission.get_default_perms(kallithea.DEFAULT_USER_ID)
+    default_repo_groups_perms = Permission.get_default_group_perms(kallithea.DEFAULT_USER_ID)
+    default_user_group_perms = Permission.get_default_user_group_perms(kallithea.DEFAULT_USER_ID)
 
     if user_is_admin:
         #==================================================================
@@ -166,19 +153,19 @@ def _cached_perms_data(user_id, user_is_admin):
 
         # repositories
         for perm in default_repo_perms:
-            r_k = perm.UserRepoToPerm.repository.repo_name
+            r_k = perm.repository.repo_name
             p = 'repository.admin'
             permissions[RK][r_k] = p
 
         # repository groups
         for perm in default_repo_groups_perms:
-            rg_k = perm.UserRepoGroupToPerm.group.group_name
+            rg_k = perm.group.group_name
             p = 'group.admin'
             permissions[GK][rg_k] = p
 
         # user groups
         for perm in default_user_group_perms:
-            u_k = perm.UserUserGroupToPerm.user_group.users_group_name
+            u_k = perm.user_group.users_group_name
             p = 'usergroup.admin'
             permissions[UK][u_k] = p
         return permissions
@@ -189,7 +176,7 @@ def _cached_perms_data(user_id, user_is_admin):
 
     # default global permissions taken from the default user
     default_global_perms = UserToPerm.query() \
-        .filter(UserToPerm.user_id == default_user_id) \
+        .filter(UserToPerm.user_id == kallithea.DEFAULT_USER_ID) \
         .options(joinedload(UserToPerm.permission))
 
     for perm in default_global_perms:
@@ -197,27 +184,27 @@ def _cached_perms_data(user_id, user_is_admin):
 
     # defaults for repositories, taken from default user
     for perm in default_repo_perms:
-        r_k = perm.UserRepoToPerm.repository.repo_name
-        if perm.Repository.owner_id == user_id:
+        r_k = perm.repository.repo_name
+        if perm.repository.owner_id == user_id:
             p = 'repository.admin'
-        elif perm.Repository.private:
+        elif perm.repository.private:
             p = 'repository.none'
         else:
-            p = perm.Permission.permission_name
+            p = perm.permission.permission_name
         permissions[RK][r_k] = p
 
     # defaults for repository groups taken from default user permission
     # on given group
     for perm in default_repo_groups_perms:
-        rg_k = perm.UserRepoGroupToPerm.group.group_name
-        p = perm.Permission.permission_name
+        rg_k = perm.group.group_name
+        p = perm.permission.permission_name
         permissions[GK][rg_k] = p
 
     # defaults for user groups taken from default user permission
     # on given user group
     for perm in default_user_group_perms:
-        u_k = perm.UserUserGroupToPerm.user_group.users_group_name
-        p = perm.Permission.permission_name
+        u_k = perm.user_group.users_group_name
+        p = perm.permission.permission_name
         permissions[UK][u_k] = p
 
     #======================================================================
@@ -271,30 +258,28 @@ def _cached_perms_data(user_id, user_is_admin):
 
     # user group for repositories permissions
     user_repo_perms_from_users_groups = \
-     Session().query(UserGroupRepoToPerm, Permission, Repository,) \
-        .join((Repository, UserGroupRepoToPerm.repository_id ==
-               Repository.repo_id)) \
-        .join((Permission, UserGroupRepoToPerm.permission_id ==
-               Permission.permission_id)) \
+     Session().query(UserGroupRepoToPerm) \
         .join((UserGroup, UserGroupRepoToPerm.users_group_id ==
                UserGroup.users_group_id)) \
         .filter(UserGroup.users_group_active == True) \
         .join((UserGroupMember, UserGroupRepoToPerm.users_group_id ==
                UserGroupMember.users_group_id)) \
         .filter(UserGroupMember.user_id == user_id) \
+        .options(joinedload(UserGroupRepoToPerm.repository)) \
+        .options(joinedload(UserGroupRepoToPerm.permission)) \
         .all()
 
     for perm in user_repo_perms_from_users_groups:
         bump_permission(RK,
-            perm.UserGroupRepoToPerm.repository.repo_name,
-            perm.Permission.permission_name)
+            perm.repository.repo_name,
+            perm.permission.permission_name)
 
     # user permissions for repositories
     user_repo_perms = Permission.get_default_perms(user_id)
     for perm in user_repo_perms:
         bump_permission(RK,
-            perm.UserRepoToPerm.repository.repo_name,
-            perm.Permission.permission_name)
+            perm.repository.repo_name,
+            perm.permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR REPOSITORY GROUPS !!
@@ -305,59 +290,56 @@ def _cached_perms_data(user_id, user_is_admin):
     #======================================================================
     # user group for repo groups permissions
     user_repo_group_perms_from_users_groups = \
-     Session().query(UserGroupRepoGroupToPerm, Permission, RepoGroup) \
-     .join((RepoGroup, UserGroupRepoGroupToPerm.group_id == RepoGroup.group_id)) \
-     .join((Permission, UserGroupRepoGroupToPerm.permission_id
-            == Permission.permission_id)) \
+     Session().query(UserGroupRepoGroupToPerm) \
      .join((UserGroup, UserGroupRepoGroupToPerm.users_group_id ==
             UserGroup.users_group_id)) \
      .filter(UserGroup.users_group_active == True) \
      .join((UserGroupMember, UserGroupRepoGroupToPerm.users_group_id
             == UserGroupMember.users_group_id)) \
      .filter(UserGroupMember.user_id == user_id) \
+     .options(joinedload(UserGroupRepoGroupToPerm.permission)) \
      .all()
 
     for perm in user_repo_group_perms_from_users_groups:
         bump_permission(GK,
-            perm.UserGroupRepoGroupToPerm.group.group_name,
-            perm.Permission.permission_name)
+            perm.group.group_name,
+            perm.permission.permission_name)
 
     # user explicit permissions for repository groups
     user_repo_groups_perms = Permission.get_default_group_perms(user_id)
     for perm in user_repo_groups_perms:
         bump_permission(GK,
-            perm.UserRepoGroupToPerm.group.group_name,
-            perm.Permission.permission_name)
+            perm.group.group_name,
+            perm.permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR USER GROUPS !!
     #======================================================================
     # user group for user group permissions
     user_group_user_groups_perms = \
-     Session().query(UserGroupUserGroupToPerm, Permission, UserGroup) \
+     Session().query(UserGroupUserGroupToPerm) \
      .join((UserGroup, UserGroupUserGroupToPerm.target_user_group_id
             == UserGroup.users_group_id)) \
-     .join((Permission, UserGroupUserGroupToPerm.permission_id
-            == Permission.permission_id)) \
      .join((UserGroupMember, UserGroupUserGroupToPerm.user_group_id
             == UserGroupMember.users_group_id)) \
      .filter(UserGroupMember.user_id == user_id) \
      .join((UserGroup, UserGroupMember.users_group_id ==
             UserGroup.users_group_id), aliased=True, from_joinpoint=True) \
      .filter(UserGroup.users_group_active == True) \
+     .options(joinedload(UserGroupUserGroupToPerm.permission)) \
      .all()
 
     for perm in user_group_user_groups_perms:
         bump_permission(UK,
-            perm.UserGroupUserGroupToPerm.target_user_group.users_group_name,
-            perm.Permission.permission_name)
+            perm.target_user_group.users_group_name,
+            perm.permission.permission_name)
 
     # user explicit permission for user groups
     user_user_groups_perms = Permission.get_default_user_group_perms(user_id)
     for perm in user_user_groups_perms:
         bump_permission(UK,
-            perm.UserUserGroupToPerm.user_group.users_group_name,
-            perm.Permission.permission_name)
+            perm.user_group.users_group_name,
+            perm.permission.permission_name)
 
     return permissions
 
@@ -405,7 +387,7 @@ class AuthUser(object):
         if not dbuser.active:
             log.info('Db user %s not active', dbuser.username)
             return None
-        allowed_ips = AuthUser.get_allowed_ips(dbuser.user_id, cache=True)
+        allowed_ips = AuthUser.get_allowed_ips(dbuser.user_id)
         if not check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
             log.info('Access for %s from %s forbidden - not in %s', dbuser.username, ip_addr, allowed_ips)
             return None
@@ -414,9 +396,8 @@ class AuthUser(object):
     def __init__(self, user_id=None, dbuser=None, is_external_auth=False):
         self.is_external_auth = is_external_auth # container auth - don't show logout option
 
-        # These attributes will be overridden by fill_data, below, unless the
-        # requested user cannot be found and the default anonymous user is
-        # not enabled.
+        # These attributes will be overridden below if the requested user is
+        # found or anonymous access (using the default user) is enabled.
         self.user_id = None
         self.username = None
         self.api_key = None
@@ -442,7 +423,7 @@ class AuthUser(object):
             self.is_default_user = False
         else:
             # copy non-confidential database fields from a `db.User` to this `AuthUser`.
-            for k, v in dbuser.get_dict().iteritems():
+            for k, v in dbuser.get_dict().items():
                 assert k not in ['api_keys', 'permissions']
                 setattr(self, k, v)
             self.is_default_user = dbuser.is_default_user
@@ -450,7 +431,15 @@ class AuthUser(object):
 
     @LazyProperty
     def permissions(self):
-        return self.__get_perms(user=self, cache=False)
+        """
+        Fills user permission attribute with permissions taken from database
+        works for permissions given for repositories, and for permissions that
+        are granted to groups
+
+        :param user: `AuthUser` instance
+        """
+        log.debug('Getting PERMISSION tree for %s', self)
+        return _cached_perms_data(self.user_id, self.is_admin)
 
     def has_repository_permission_level(self, repo_name, level, purpose=None):
         required_perms = {
@@ -492,22 +481,6 @@ class AuthUser(object):
     def api_keys(self):
         return self._get_api_keys()
 
-    def __get_perms(self, user, cache=False):
-        """
-        Fills user permission attribute with permissions taken from database
-        works for permissions given for repositories, and for permissions that
-        are granted to groups
-
-        :param user: `AuthUser` instance
-        """
-        user_id = user.user_id
-        user_is_admin = user.is_admin
-
-        log.debug('Getting PERMISSION tree')
-        compute = conditional_cache('short_term', 'cache_desc',
-                                    condition=cache, func=_cached_perms_data)
-        return compute(user_id, user_is_admin)
-
     def _get_api_keys(self):
         api_keys = [self.api_key]
         for api_key in UserApiKeys.query() \
@@ -525,7 +498,7 @@ class AuthUser(object):
         """
         Returns list of repositories you're an admin of
         """
-        return [x[0] for x in self.permissions['repositories'].iteritems()
+        return [x[0] for x in self.permissions['repositories'].items()
                 if x[1] == 'repository.admin']
 
     @property
@@ -533,7 +506,7 @@ class AuthUser(object):
         """
         Returns list of repository groups you're an admin of
         """
-        return [x[0] for x in self.permissions['repositories_groups'].iteritems()
+        return [x[0] for x in self.permissions['repositories_groups'].items()
                 if x[1] == 'group.admin']
 
     @property
@@ -541,11 +514,11 @@ class AuthUser(object):
         """
         Returns list of user groups you're an admin of
         """
-        return [x[0] for x in self.permissions['user_groups'].iteritems()
+        return [x[0] for x in self.permissions['user_groups'].items()
                 if x[1] == 'usergroup.admin']
 
     def __repr__(self):
-        return "<AuthUser('id:%s[%s]')>" % (self.user_id, self.username)
+        return "<%s %s: %r>" % (self.__class__.__name__, self.user_id, self.username)
 
     def to_cookie(self):
         """ Serializes this login session to a cookie `dict`. """
@@ -566,14 +539,10 @@ class AuthUser(object):
         )
 
     @classmethod
-    def get_allowed_ips(cls, user_id, cache=False):
+    def get_allowed_ips(cls, user_id):
         _set = set()
 
-        default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
-                                        User.get_default_user(cache=True).user_id)
-        if cache:
-            default_ips = default_ips.options(FromCache("sql_cache_short",
-                                              "get_user_ips_default"))
+        default_ips = UserIpMap.query().filter(UserIpMap.user_id == kallithea.DEFAULT_USER_ID)
         for ip in default_ips:
             try:
                 _set.add(ip.ip_addr)
@@ -583,9 +552,6 @@ class AuthUser(object):
                 pass
 
         user_ips = UserIpMap.query().filter(UserIpMap.user_id == user_id)
-        if cache:
-            user_ips = user_ips.options(FromCache("sql_cache_short",
-                                                  "get_user_ips_%s" % user_id))
         for ip in user_ips:
             try:
                 _set.add(ip.ip_addr)
@@ -594,24 +560,6 @@ class AuthUser(object):
                 # deleted objects here, we just skip them
                 pass
         return _set or set(['0.0.0.0/0', '::/0'])
-
-
-def set_available_permissions(config):
-    """
-    This function will propagate globals with all available defined
-    permission given in db. We don't want to check each time from db for new
-    permissions since adding a new permission also requires application restart
-    ie. to decorate new views with the newly created permission
-
-    :param config: current config instance
-
-    """
-    log.info('getting information about all available permissions')
-    try:
-        all_perms = Session().query(Permission).all()
-        config['available_permissions'] = [x.permission_name for x in all_perms]
-    finally:
-        Session.remove()
 
 
 #==============================================================================
@@ -778,7 +726,7 @@ class _PermsFunction(object):
     def __init__(self, *required_perms):
         self.required_perms = required_perms # usually very short - a list is thus fine
 
-    def __nonzero__(self):
+    def __bool__(self):
         """ Defend against accidentally forgetting to call the object
             and instead evaluating it directly in a boolean context,
             which could have security implications.
@@ -835,10 +783,6 @@ class HasPermissionAnyMiddleware(object):
         self.required_perms = set(perms)
 
     def __call__(self, authuser, repo_name, purpose=None):
-        # repo_name MUST be unicode, since we handle keys in ok
-        # dict by unicode
-        repo_name = safe_unicode(repo_name)
-
         try:
             ok = authuser.permissions['repositories'][repo_name] in self.required_perms
         except KeyError:

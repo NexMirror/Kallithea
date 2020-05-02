@@ -32,8 +32,8 @@ from datetime import datetime
 from tg import request
 
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
-from kallithea.lib.auth import (
-    AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel)
+from kallithea.lib.auth import (AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel,
+                                HasUserGroupPermissionLevel)
 from kallithea.lib.exceptions import DefaultUserException, UserGroupsAssignedException
 from kallithea.lib.utils import action_logger, repo2db_mapper
 from kallithea.lib.utils2 import OAttr, Optional
@@ -433,7 +433,7 @@ class ApiController(JSONRPCController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def create_user(self, username, email, password=Optional(''),
-                    firstname=Optional(u''), lastname=Optional(u''),
+                    firstname=Optional(''), lastname=Optional(''),
                     active=Optional(True), admin=Optional(False),
                     extern_type=Optional(User.DEFAULT_AUTH_TYPE),
                     extern_name=Optional('')):
@@ -686,7 +686,7 @@ class ApiController(JSONRPCController):
         ]
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.usergroup.create.true')
-    def create_user_group(self, group_name, description=Optional(u''),
+    def create_user_group(self, group_name, description=Optional(''),
                           owner=Optional(OAttr('apiuser')), active=Optional(True)):
         """
         Creates new user group. This command can be executed only using api_key
@@ -1160,7 +1160,7 @@ class ApiController(JSONRPCController):
             return _map[ret_type]
         except KeyError:
             raise JSONRPCError('ret_type must be one of %s'
-                               % (','.join(_map.keys())))
+                               % (','.join(sorted(_map))))
         except Exception:
             log.error(traceback.format_exc())
             raise JSONRPCError(
@@ -2339,7 +2339,7 @@ class ApiController(JSONRPCController):
                                                  branch_name,
                                                  reverse, max_revisions)]
         except EmptyRepositoryError as e:
-            raise JSONRPCError(e.message)
+            raise JSONRPCError('Repository is empty')
 
     # permission check inside
     def get_changeset(self, repoid, raw_id, with_reviews=Optional(False)):
@@ -2373,7 +2373,7 @@ class ApiController(JSONRPCController):
         return pull_request.get_api_data()
 
     # permission check inside
-    def comment_pullrequest(self, pull_request_id, comment_msg=u'', status=None, close_pr=False):
+    def comment_pullrequest(self, pull_request_id, comment_msg='', status=None, close_pr=False):
         """
         Add comment, close and change status of pull request.
         """
@@ -2400,7 +2400,7 @@ class ApiController(JSONRPCController):
             pull_request=pull_request.pull_request_id,
             f_path=None,
             line_no=None,
-            status_change=(ChangesetStatus.get_status_lbl(status)),
+            status_change=ChangesetStatus.get_status_lbl(status),
             closing_pr=close_pr
         )
         action_logger(apiuser,

@@ -13,9 +13,6 @@ The :mod:`models` module
 .. automodule:: kallithea.model.permission
    :members:
 
-.. automodule:: kallithea.model.repo_permission
-   :members:
-
 .. automodule:: kallithea.model.repo
    :members:
 

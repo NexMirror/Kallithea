@@ -5,11 +5,11 @@
         % for message in messages:
             <div class="alert alert-dismissable ${alert_categories[message.category]}" role="alert">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="icon-cancel-circled"></i></button>
-              ${message}
+              ${message.message|n}
             </div>
         % endfor
     % endif
-    <script>
+    <script>'use strict';
     if (typeof jQuery != 'undefined') {
         $(".alert").alert();
     }

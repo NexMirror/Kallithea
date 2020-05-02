@@ -238,7 +238,7 @@ def PasswordResetConfirmationForm():
     return _PasswordResetConfirmationForm
 
 
-def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS,
              repo_groups=None, landing_revs=None):
     old_data = old_data or {}
     repo_groups = repo_groups or []
@@ -315,7 +315,7 @@ def RepoFieldForm():
     return _RepoFieldForm
 
 
-def RepoForkForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+def RepoForkForm(edit=False, old_data=None, supported_backends=BACKENDS,
                  repo_groups=None, landing_revs=None):
     old_data = old_data or {}
     repo_groups = repo_groups or []
@@ -435,7 +435,7 @@ def CustomDefaultPermissionsForm():
     return _CustomDefaultPermissionsForm
 
 
-def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS.keys()):
+def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS):
     class _DefaultsForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -558,11 +558,11 @@ def GistForm(lifetime_options):
 
         filename = All(v.BasePath()(),
                        v.UnicodeString(strip=True, required=False))
-        description = v.UnicodeString(required=False, if_missing=u'')
+        description = v.UnicodeString(required=False, if_missing='')
         lifetime = v.OneOf(lifetime_options)
         mimetype = v.UnicodeString(required=False, if_missing=None)
         content = v.UnicodeString(required=True, not_empty=True)
-        public = v.UnicodeString(required=False, if_missing=u'')
-        private = v.UnicodeString(required=False, if_missing=u'')
+        public = v.UnicodeString(required=False, if_missing='')
+        private = v.UnicodeString(required=False, if_missing='')
 
     return _GistForm
