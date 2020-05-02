@@ -1191,6 +1191,9 @@ def urlify_issues(newtext, repo_name):
             issue_pat = CONFIG.get(k)
             issue_server_link = CONFIG.get('issue_server_link%s' % suffix)
             issue_sub = CONFIG.get('issue_sub%s' % suffix)
+            issue_prefix = CONFIG.get('issue_prefix%s' % suffix)
+            if issue_prefix:
+                log.error('found unsupported issue_prefix%s = %r - use issue_sub%s instead', suffix, issue_prefix, suffix)
             if not issue_pat or not issue_server_link or issue_sub is None: # issue_sub can be empty but should be present
                 log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_sub)
                 continue
