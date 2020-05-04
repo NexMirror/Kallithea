@@ -318,7 +318,7 @@ msgstr ""
 "Bedeutung für die ganze Applikation ist"
 
 msgid "Your account was updated successfully"
-msgstr "Ihr Account wurde erfolgreich aktualisiert"
+msgstr "Ihr Konto wurde erfolgreich aktualisiert"
 
 msgid "Error occurred during update of user %s"
 msgstr "Fehler beim Aktualisieren der Benutzer %s"
@@ -327,13 +327,13 @@ msgid "Error occurred during update of user password"
 msgstr "Fehler bei der Änderung des Kennworts"
 
 msgid "Added email %s to user"
-msgstr "Die EMail Addresse %s wurde zum Benutzer hinzugefügt"
+msgstr "Die E-Mail-Addresse %s wurde zum Benutzer hinzugefügt"
 
 msgid "An error occurred during email saving"
-msgstr "Währen der Speicherung der EMail Addresse trat ein Fehler auf"
+msgstr "Währen der Speicherung der E-Mail-Addresse trat ein Fehler auf"
 
 msgid "Removed email from user"
-msgstr "Die EMail Addresse wurde vom Benutzer entfernt"
+msgstr "Die E-Mail-Addresse wurde vom Benutzer entfernt"
 
 msgid "API key successfully created"
 msgstr "API Key wurde erfolgreich erstellt"
@@ -515,7 +515,7 @@ msgstr ""
 "aufgetreten"
 
 msgid "Please enter email address"
-msgstr "Bitte gebe eine E-Mailadresse an"
+msgstr "Bitte geben Sie eine E-Mail-Adresse an"
 
 msgid "Send email task created"
 msgstr "Task zum Versenden von E-Mails erstellt"
@@ -1049,6 +1049,12 @@ msgstr "Dieser Benutzername oder Benutzergruppenname ist nicht gültig"
 msgid "This is not a valid path"
 msgstr "Dies ist ein Ungültiger Pfad"
 
+msgid "This email address is already in use"
+msgstr "Diese E-Mail-Addresse ist bereits in Benutzung"
+
+msgid "Email address \"%(email)s\" not found"
+msgstr "E-Mail-Addresse „%(email)s“ existiert nicht."
+
 msgid ""
 "The LDAP Login attribute of the CN must be specified - this is the name "
 "of the attribute that is equivalent to \"username\""
@@ -1142,13 +1148,20 @@ msgid "Reset Your Password"
 msgstr "Setze dein Passwort zurück"
 
 msgid "Email Address"
-msgstr "E-Mailadresse"
+msgstr "E-Mail-Adresse"
 
 msgid "Captcha"
 msgstr "CAPTCHA"
 
 msgid "Send Password Reset Email"
 msgstr "E-Mail zum Zurücksetzen des Passworts anfordern"
+
+msgid ""
+"A password reset link will be sent to the specified email address if it "
+"is registered in the system."
+msgstr ""
+"Ein Link zum Zurücksetzen des Passworts wird an die angegebene E-Mail-"
+"Adresse gesendet, wenn diese im System registriert ist."
 
 msgid "You are about to set a new password for the email address %s."
 msgstr ""
@@ -1430,7 +1443,7 @@ msgid "Primary"
 msgstr "Primär"
 
 msgid "Confirm to delete this email: %s"
-msgstr "Löschen der E-Mail \"%s\" bestätigen"
+msgstr "Löschen der E-Mail „%s“ bestätigen"
 
 msgid "No additional emails specified."
 msgstr "Keine weiteren E-Mails spezifiziert."
@@ -2428,6 +2441,9 @@ msgstr "Hallo %s"
 msgid "or"
 msgstr "oder"
 
+msgid "Upload File"
+msgstr "Datei hochladen"
+
 msgid "Commit Changes"
 msgstr "Änderungen einchecken"
 
@@ -2588,6 +2604,9 @@ msgstr "Letzte Änderungen"
 
 msgid "Quick Start"
 msgstr "Schnelleinstieg"
+
+msgid "Add or upload files directly via Kallithea"
+msgstr "Dateien direkt über Kallithea hinzufügen oder hochladen"
 
 msgid "Readme file from revision %s:%s"
 msgstr "Liesmich-Datei von Revision %s:%s"
