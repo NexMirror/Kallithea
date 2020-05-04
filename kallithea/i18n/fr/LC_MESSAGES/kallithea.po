@@ -194,6 +194,9 @@ msgstr "Journal public"
 msgid "Journal"
 msgstr "Historique"
 
+msgid "Authentication failed."
+msgstr "Échec de l'authentification."
+
 msgid "Bad captcha"
 msgstr "Mauvais captcha"
 
@@ -1098,6 +1101,15 @@ msgstr "Fermé, itération suivante : %s."
 msgid "latest tip"
 msgstr "Dernier sommet"
 
+msgid "SSH key %r is invalid: %s"
+msgstr "La clé SSH %r est invalide : %s"
+
+msgid "SSH key %s is already used by %s"
+msgstr "La clé SSH %s est déjà utilisée par %s"
+
+msgid "SSH key with fingerprint %r found"
+msgstr "Clé SSH avec l'empreinte %r trouvée"
+
 msgid "New user registration"
 msgstr "Nouveau enregistrement d'utilisateur"
 
@@ -1592,6 +1604,9 @@ msgstr "Profil"
 msgid "Email Addresses"
 msgstr "Adresses e-mail"
 
+msgid "SSH Keys"
+msgstr "Clés SSH"
+
 msgid "API Keys"
 msgstr "Clés de l'API"
 
@@ -1659,10 +1674,10 @@ msgid "Confirm to delete this email: %s"
 msgstr "Veuillez confirmer la suppression de l’e-mail : %s"
 
 msgid "No additional emails specified."
-msgstr "Pas d'adresse email supplémentaires spécifiées."
+msgstr "Pas d'adresse e-mail supplémentaires spécifiées."
 
 msgid "New email address"
-msgstr "Nouvelle adrese"
+msgstr "Nouvelle adresse e-mail"
 
 msgid "Change Your Account Password"
 msgstr "Changer le mot de passe de votre compte"
@@ -1698,6 +1713,21 @@ msgstr "Dépôts dont vous êtes le propriétaire"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "Fingerprint"
+msgstr "Empreinte"
+
+msgid "Confirm to remove this SSH key: %s"
+msgstr "Confirmer la suppression de cette clé SSH : %s"
+
+msgid "No SSH keys have been added"
+msgstr "Aucune clé SSH n'a été ajoutée"
+
+msgid "New SSH key"
+msgstr "Nouvelle clé SSH"
+
+msgid "Public key"
+msgstr "Clé publique"
 
 msgid "Repositories You are Watching"
 msgstr "Dépôts que vous surveillez"
@@ -2106,6 +2136,9 @@ msgstr ""
 
 msgid "This repository does not have a remote repository URL."
 msgstr "Ce dépôt n'a pas d'URL de dépôt distant."
+
+msgid "Permanent URL"
+msgstr "URL permanente"
 
 msgid ""
 "In case this repository is renamed or moved into another group the "
@@ -3107,11 +3140,17 @@ msgstr "branche"
 msgid "by"
 msgstr "par"
 
+msgid "View Comment"
+msgstr "Afficher le commentaire"
+
 msgid "Status change:"
 msgstr "Changement de statut :"
 
 msgid "The pull request has been closed."
 msgstr "La requête de pull a été fermée."
+
+msgid "Message"
+msgstr "Message"
 
 msgid "Hello %s"
 msgstr "Bonjour %s"
@@ -3169,8 +3208,14 @@ msgstr "Requête de pull %s « %s » fermée"
 msgid "Comment on Pull Request %s \"%s\""
 msgstr "Commentaire sur la requête de pull %s « %s »"
 
+msgid "New User Registration"
+msgstr "Nouvel enregistrement d'utilisateur"
+
 msgid "Full Name"
 msgstr "Nom complet"
+
+msgid "View User Profile"
+msgstr "Afficher le profil utilisateur"
 
 msgid "%s File side-by-side diff"
 msgstr "Diff côte-à-côte de fichier pour %s"
@@ -3200,7 +3245,7 @@ msgid "or"
 msgstr "ou"
 
 msgid "Upload File"
-msgstr "Uploader un fichier"
+msgstr "Téléverser un fichier"
 
 msgid "Create New File"
 msgstr "Créer un nouveau fichier"
@@ -3636,11 +3681,14 @@ msgstr "Cloner depuis"
 msgid "Clone URL"
 msgstr "URL de clone"
 
+msgid "Use Name"
+msgstr "Utiliser le nom"
+
 msgid "Trending files"
 msgstr "Populaires"
 
 msgid "Download"
-msgstr "Téléchargements"
+msgstr "Télécharger"
 
 msgid "There are no downloads yet"
 msgstr "Il n’y a pas encore de téléchargements proposés"
