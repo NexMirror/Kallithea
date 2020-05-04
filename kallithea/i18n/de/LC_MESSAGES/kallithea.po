@@ -472,12 +472,6 @@ msgstr "Markiere Repository %s als Abzweig von Repository %s"
 msgid "An error occurred during this operation"
 msgstr "Während dieser operation trat ein Fehler auf"
 
-msgid "Cache invalidation successful"
-msgstr "Cache Entfernung war erfolgreich"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Währen der Cache Invalidierung trat ein Fehler auf"
-
 msgid "Pulled from remote location"
 msgstr "Von entferntem Ort übertragen"
 
@@ -1764,9 +1758,6 @@ msgstr "%s Repositoryeinstellungen"
 msgid "Extra Fields"
 msgstr "Extra-Feld"
 
-msgid "Caches"
-msgstr "Zwischenspeicher"
-
 msgid "Remote"
 msgstr "Entfernt"
 
@@ -1825,30 +1816,11 @@ msgstr ""
 "Administrierender es verfallen lässt. Der Administrierende kann es sowohl "
 "permanent löschen oder wiederherstellen."
 
-msgid "Invalidate Repository Cache"
-msgstr "Ungültiger Repositorycache"
-
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr ""
-"Manuell den Zwischenspeicher für dieses Repository verfallen lassen. Beim "
-"ersten Zugriff wird der Zwischenspeicher erneut aufgefüllt."
-
-msgid "List of Cached Values"
-msgstr "Liste der zwischengespeicherten Werte"
-
-msgid "Prefix"
-msgstr "Präfix"
+msgid "Label"
+msgstr "Bezeichnung"
 
 msgid "Key"
 msgstr "Schlüssel"
-
-msgid "Active"
-msgstr "Aktiv"
-
-msgid "Label"
-msgstr "Bezeichnung"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Löschen des Felds bestätigen: %s"
@@ -2251,6 +2223,9 @@ msgstr "Benutzergruppe hinzufügen"
 
 msgid "Short, optional description for this user group."
 msgstr "Kurze, optionale Beschreibung für diese Benutzergruppe."
+
+msgid "Active"
+msgstr "Aktiv"
 
 msgid "User Group: %s"
 msgstr "Benutzergruppe: %s"

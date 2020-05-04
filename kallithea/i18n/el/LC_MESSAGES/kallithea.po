@@ -447,12 +447,6 @@ msgstr "Σημειώθηκε το αποθετήριο %s σαν κλώνος τ
 msgid "An error occurred during this operation"
 msgstr "Παρουσιάστηκε ένα σφάλμα κατά τη διάρκεια αυτής της λειτουργίας"
 
-msgid "Cache invalidation successful"
-msgstr "Η ακύρωση της cache ήταν επιτυχής"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Παρουσιάστηκε ένα σφάλμα κατά τη διάρκεια ακύρωσης της cache"
-
 msgid "Please enter a password"
 msgstr "Παρακαλώ εισάγετε έναν κωδικό πρόσβασης"
 

@@ -527,12 +527,6 @@ msgstr "Le dépôt %s a été marké comme fork de %s"
 msgid "An error occurred during this operation"
 msgstr "Une erreur est survenue durant cette opération"
 
-msgid "Cache invalidation successful"
-msgstr "Invalidation du cache réalisée avec succès"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Une erreur est survenue durant l’invalidation du cache"
-
 msgid "Pulled from remote location"
 msgstr "Les changements distants ont été récupérés"
 
@@ -1974,9 +1968,6 @@ msgstr "Réglages du dépôt %s"
 msgid "Extra Fields"
 msgstr "Champs supplémentaires"
 
-msgid "Caches"
-msgstr "Caches"
-
 msgid "Remote"
 msgstr "Dépôt distant"
 
@@ -2035,30 +2026,11 @@ msgstr ""
 "l'administrateur le fasse expirer. L'administrateur peut soit le "
 "supprimer définitivement, soit le restaurer."
 
-msgid "Invalidate Repository Cache"
-msgstr "Invalider le cache du dépôt"
-
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr ""
-"Invalider manuellement le cache de ce dépôt. Au prochain accès sur ce "
-"dépôt, il sera à nouveau mis en cache."
-
-msgid "List of Cached Values"
-msgstr "Liste des valeurs en cache"
-
-msgid "Prefix"
-msgstr "Préfixe"
+msgid "Label"
+msgstr "Libellé"
 
 msgid "Key"
 msgstr "Clé"
-
-msgid "Active"
-msgstr "Actif"
-
-msgid "Label"
-msgstr "Libellé"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Voulez-vous vraiment supprimer ce champ : %s ?"
@@ -2480,6 +2452,9 @@ msgstr "Ajouter un groupe d'utilisateurs"
 
 msgid "Short, optional description for this user group."
 msgstr "Description courte pour ce groupe d'utilisateur (optionnel)."
+
+msgid "Active"
+msgstr "Actif"
 
 msgid "%s user group settings"
 msgstr "Réglages du groupe d'utilisateurs %s"

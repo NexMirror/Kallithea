@@ -423,12 +423,6 @@ msgstr "%s リポジトリを %s のフォークとする"
 msgid "An error occurred during this operation"
 msgstr "操作中にエラーが発生しました"
 
-msgid "Cache invalidation successful"
-msgstr "キャッシュの無効化に成功しました"
-
-msgid "An error occurred during cache invalidation"
-msgstr "キャッシュの無効化中にエラーが発生しました"
-
 msgid "Pulled from remote location"
 msgstr "リモートから取得"
 
@@ -1521,9 +1515,6 @@ msgstr "%s リポジトリ設定"
 msgid "Extra Fields"
 msgstr "拡張フィールド"
 
-msgid "Caches"
-msgstr "キャッシュ"
-
 msgid "Remote"
 msgstr "リモート"
 
@@ -1570,30 +1561,11 @@ msgstr "フォークの切り離し"
 msgid "Delete forks"
 msgstr "フォークも削除"
 
-msgid "Invalidate Repository Cache"
-msgstr "リポジトリのキャッシュを無効化"
-
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr ""
-"このリポジトリのキャッシュを手動で無効化します。リポジトリへの初回アクセス"
-"時に再びキャッシュされます。"
-
-msgid "List of Cached Values"
-msgstr "キャッシュしている値の一覧"
-
-msgid "Prefix"
-msgstr "プレフィックス"
+msgid "Label"
+msgstr "ラベル"
 
 msgid "Key"
 msgstr "キー"
-
-msgid "Active"
-msgstr "アクティブ"
-
-msgid "Label"
-msgstr "ラベル"
 
 msgid "Confirm to delete this field: %s"
 msgstr "このフィールドを削除してもよろしいですか？ : %s"
@@ -1921,6 +1893,9 @@ msgstr "ユーザーグループを追加"
 
 msgid "Short, optional description for this user group."
 msgstr "このユーザーグループの簡潔な説明を書いてください。"
+
+msgid "Active"
+msgstr "アクティブ"
 
 msgid "%s user group settings"
 msgstr "%s ユーザーグループ設定"

@@ -396,12 +396,6 @@ msgstr "Oznaczono %s repo jako rozwidlenie %s"
 msgid "An error occurred during this operation"
 msgstr "Wystąpił błąd podczas tej operacji"
 
-msgid "Cache invalidation successful"
-msgstr "Cache wyczyszczony poprawnie"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Wystąpił błąd podczas unieważniania cache"
-
 msgid "Pulled from remote location"
 msgstr "Pobieranie z lokalizacji zdalnej"
 
@@ -1295,14 +1289,8 @@ msgstr "Ustaw jako rozwidlenie"
 msgid "Delete forks"
 msgstr "Usuń rozwidlenie"
 
-msgid "Prefix"
-msgstr "Prefiks"
-
 msgid "Key"
 msgstr "Klucz"
-
-msgid "Active"
-msgstr "Aktywny"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Potwierdź, aby usunąć to pole: %s"
@@ -1398,6 +1386,9 @@ msgstr "Pokazuj w prywatnym repo ikonę w repozytoriach"
 
 msgid "Add user group"
 msgstr "Dodaj grupę użytkowników"
+
+msgid "Active"
+msgstr "Aktywny"
 
 msgid "Members"
 msgstr "Użytkownicy"
