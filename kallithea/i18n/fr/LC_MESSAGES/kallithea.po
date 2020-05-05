@@ -819,30 +819,27 @@ msgstr ""
 "l’application pour rescanner les dépôts"
 
 msgid "SSH key is missing"
-msgstr "La clé SSH est absente"
+msgstr "La clé SSH est manquante"
 
 msgid ""
 "Incorrect SSH key - it must have both a key type and a base64 part, like "
 "'ssh-rsa ASRNeaZu4FA...xlJp='"
 msgstr ""
-"Clé SSH incorrecte - elle doit comporter à la fois un type de clé et une "
-"partie en base64, comme 'ssh-rsa ASRNeaZu4FA...xlJp='"
+"Clé SSH incorrecte – elle doit comporter à la fois un type de clé et une "
+"partie base64, comme 'ssh-rsa ASRNeaZu4FA...xlJp='"
 
 msgid "Incorrect SSH key - it must start with 'ssh-(rsa|dss|ed25519)'"
-msgstr ""
-"Clé SSH incorrecte - elle doit commencer par 'ssh-(rsa|dss|ed25519)'"
+msgstr "Clé SSH incorrecte – elle doit commencer par « ssh-(rsa|dss|ed25519) »"
 
 msgid "Incorrect SSH key - unexpected characters in base64 part %r"
-msgstr ""
-"Clé SSH incorrecte - caractères invalide dans la partie en base 64 %r"
+msgstr "Clé SSH incorrecte – caractères inattendus dans la partie base 64 %r"
 
 msgid "Incorrect SSH key - failed to decode base64 part %r"
-msgstr "Clé SSH incorrecte - échec au décodage de la partie en base64 %r"
+msgstr "Clé SSH incorrecte – échec du décodage de la partie base64 %r"
 
 msgid "Incorrect SSH key - base64 part is not %r as claimed but %r"
 msgstr ""
-"Clé SSH incorrecte - la partie en base 64 n'est pas %r comme attendu mais "
-"%r"
+"Clé SSH incorrecte – la partie base 64 n'est pas %r comme il est dit mais %r"
 
 msgid "%d year"
 msgid_plural "%d years"
