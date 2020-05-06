@@ -40,6 +40,7 @@ name_fixes['Hosted Weblate'] = "<>"
 name_fixes['Weblate'] = "<>"
 name_fixes['xpol'] = "xpol <xpolife@gmail.com>"
 name_fixes['Lars <devel@sumpfralle.de>'] = "Lars Kruse <devel@sumpfralle.de>"
+name_fixes['Jeannette L'] = "J. Lavoie <j.lavoie@net-c.ca>"
 
 # Some committer email address domains that indicate that another entity might
 # hold some copyright too:
