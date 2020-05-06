@@ -638,32 +638,32 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         repo = RepoModel().get_by_repo_name(self.REPO)
-        ret = repo.get_api_data()
+        assert len(repo.repo_to_perm) >= 2  # make sure we actually are testing something - probably the default 2 permissions, possibly more
+
+        expected = repo.get_api_data()
 
         members = []
-        followers = []
-        assert 2 == len(repo.repo_to_perm)
         for user in repo.repo_to_perm:
             perm = user.permission.permission_name
             user_obj = user.user
             user_data = {'name': user_obj.username, 'type': "user",
                          'permission': perm}
             members.append(user_data)
-
         for user_group in repo.users_group_to_perm:
             perm = user_group.permission.permission_name
             user_group_obj = user_group.users_group
             user_group_data = {'name': user_group_obj.users_group_name,
                                'type': "user_group", 'permission': perm}
             members.append(user_group_data)
+        expected['members'] = members
+
+        followers = []
 
         for user in repo.followers:
             followers.append(user.user.get_api_data())
 
-        ret['members'] = members
-        ret['followers'] = followers
+        expected['followers'] = followers
 
-        expected = ret
         try:
             self._compare_ok(id_, expected, given=response.body)
         finally:

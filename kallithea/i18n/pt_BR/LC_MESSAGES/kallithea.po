@@ -306,9 +306,6 @@ msgstr "Marcado repositório %s como bifurcação de %s"
 msgid "An error occurred during this operation"
 msgstr "Ocorreu um erro durante essa operação"
 
-msgid "An error occurred during cache invalidation"
-msgstr "Ocorreu um erro ao invalidar o cache"
-
 msgid "Pulled from remote location"
 msgstr "Realizado pull de localização remota"
 
@@ -949,14 +946,8 @@ msgstr "Desassociar bifurcações"
 msgid "Delete forks"
 msgstr "Excluir bifurcações"
 
-msgid "Prefix"
-msgstr "Prefixo"
-
 msgid "Key"
 msgstr "Chave"
-
-msgid "Active"
-msgstr "Ativo"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Confirme para excluir este campo: %s"
@@ -1051,6 +1042,9 @@ msgstr "Mostrar ícone de repositório privado nos repositórios"
 
 msgid "Add user group"
 msgstr "Adicionar grupo de usuários"
+
+msgid "Active"
+msgstr "Ativo"
 
 msgid "Members"
 msgstr "Membros"

@@ -1,0 +1,257 @@
+.. _translations:
+
+============
+Translations
+============
+
+Translations are available on Hosted Weblate at the following URL:
+
+    https://hosted.weblate.org/projects/kallithea/kallithea/
+
+Registered users may contribute to the existing languages, or request a new
+language translation.
+
+
+Translating using Weblate
+-------------------------
+
+Weblate_ offers a simple and easy to use interface featuring glossary, machine
+translation, suggestions based on similar translations in other projects,
+automatic checks etc. Weblate imports the source code tree directly from
+the version control system, and commits edits back from time to time.
+
+When registering at Weblate, make sure you use the name and email address you
+prefer to be used when your changes are committed. We can and probably will
+amend changesets coming from Weblate, but having things right from the beginning
+makes things easier.
+
+Weblate performs sanity checks all the time and tries to prevent you from ignoring
+them. Most common mistakes are inconsistent punctuation, whitespace, missing or extra
+format parameters, untranslated strings copied into the translation. Please perform
+necessary corrections when they're needed, or override the false positives.
+
+
+Merging translations from Weblate (admin-only)
+----------------------------------------------
+
+Weblate rebases its changes every time it pulls from our repository. Pulls are triggered
+by a web hook from Our Own Kallithea every time it receives new commits. Usually merging
+the new translations is a straightforward process consisting of a pull from the Weblate-hosted
+repository which is available under the Data Exports tab in the Weblate interface.
+
+Weblate tries to minimise the number of commits, but that doesn't always work, especially
+when two translators work with different languages at more or less the same time.
+It makes sense sometimes to re-order or fold commits by the same author when they touch
+just the same language translation. That, however, may confuse Weblate sometimes, in
+which case it should be manually convinced it has to discard the commits it created by
+using its administrative interface.
+
+
+Regenerating translations after source code changes (admin-only)
+----------------------------------------------------------------
+
+When the Kallithea source code changes, both the location as the content of
+translation strings can change. It is therefore necessary to regularly
+regenerate the `kallithea.pot` file containing these strings, as well as aligning
+the translation files (`*.po`).
+
+First update the translation strings::
+
+    python3 setup.py extract_messages
+
+Then regenerate the translation files. This could either be done with `python3
+setup.py update_catalog` or with `msgmerge` from the `gettext` package. As
+Weblate is also touching these translation files, it is preferred to use the
+same tools (`msgmerge`) and settings as Weblate to minimize the diff::
+
+    find kallithea/i18n -name kallithea.po | xargs -I '{}' \
+        msgmerge --width=76 --backup=none --previous --update '{}' \
+        kallithea/i18n/kallithea.pot
+
+
+Manual creation of a new language translation
+---------------------------------------------
+
+In the prepared development environment, run the following to ensure
+all translation strings are extracted and up-to-date::
+
+    python3 setup.py extract_messages
+
+Create new language by executing following command::
+
+    python3 setup.py init_catalog -l <new_language_code>
+
+This creates a new translation under directory `kallithea/i18n/<new_language_code>`
+based on the translation template file, `kallithea/i18n/kallithea.pot`.
+
+Edit the new PO file located in `LC_MESSAGES` directory with poedit or your
+favorite PO files editor. After you finished with the translations, check the
+translation file for errors by executing::
+
+    msgfmt -f -c kallithea/i18n/<new_language_code>/LC_MESSAGES/<updated_file.po>
+
+Finally, compile the translations::
+
+    python3 setup.py compile_catalog -l <new_language_code>
+
+
+Manually updating translations
+------------------------------
+
+Extract the latest versions of strings for translation by running::
+
+    python3 setup.py extract_messages
+
+Update the PO file by doing::
+
+    python3 setup.py update_catalog -l <new_language_code>
+
+Edit the newly updated translation file. Repeat all steps after the
+`init_catalog` step from the 'new translation' instructions above.
+
+
+Testing translations
+--------------------
+
+Edit `kallithea/tests/conftest.py` and set `i18n.lang` to `<new_language_code>`
+and run Kallithea tests by executing::
+
+    py.test
+
+
+Managing translations with scripts/i18n tooling
+-----------------------------------------------
+
+The general idea with the ``scripts/i18n`` tooling is to keep changes in the
+main repository focussed on actual and reviewable changes with minimal noise.
+Noisy generated or redundant localization changes (that are useful when
+translations) are contained in the ``kallithea-i18n`` repo on the ``i18n``
+branch. The translation files in the main repository have no line numbers, no
+untranslated entries, no fuzzy entries, no unused entries, and no constantly
+changing records of "latest" this and that (name, date, version, etc).
+
+The branches in the main repo (``default`` and ``stable``) will thus only have
+stripped ``.pot`` and ``.po`` files: an (almost) empty
+``kallithea/i18n/kallithea.pot`` file, and minimal ``.po`` files. There are no
+binary ``.mo`` files in any repo - these are only generated when packaging for
+release (or locally if installing from source).
+
+Generally, ``kallithea/i18n/`` should not be changed on the ``default`` and
+``stable`` branches at all. The ``i18n`` branch should *only* change
+``kallithea/i18n/`` . If there are changesets with exceptions from that, these
+changesets should probably be grafted/redone in the "right" place.
+
+The basic flow is thus:
+
+0. All weblate translation is done on the ``i18n`` branch which generally is
+   based on the ``stable`` branch.
+1. Graft the essential part of all new changes on the ``i18n`` branch to
+   ``stable`` (while normalizing to current stripped state of stable).
+2. Merge from ``stable`` to ``i18n`` (while normalizing to the resulting
+   unstripped and fully ``msgmerge``'d state and ``.pot``-updating state).
+3. Verify that the content of the ``i18n`` branch will give exactly the content
+   of the ``stable`` branch after stripping. If there is a diff, something has
+   to be fixed in one way or the other ... and the whole process should
+   probably be redone.
+
+Translate
+^^^^^^^^^
+
+First land full translation changes in the ``kallithea-i18n`` repo on the
+``i18n`` branch. That can be done in pretty much any way you want. If changes
+for some reason have to be grafted or merged, there might be odd conflicts due
+to all the noise. Conflicts on the full ``i18n`` branch can perhaps be resolved
+more easily using non-stripping normalization before merging::
+
+  python3 setup.py extract_messages && cp kallithea/i18n/kallithea.pot full.pot && hg revert kallithea/i18n/kallithea.pot -r .
+  hg resolve kallithea/i18n/ --tool X --config merge-tools.X.executable=python3 --config merge-tools.X.args='scripts/i18n normalized-merge --merge-pot-file full.pot $local $base $other $output'
+
+Land in main repository - stripped
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When the full i18n changes have landed on the ``i18n`` branch, prepare to land
+them on ``stable``::
+
+  hg up -cr stable
+  python3 setup.py extract_messages && cp kallithea/i18n/kallithea.pot full.pot && hg revert kallithea/i18n/kallithea.pot
+
+Consider all new ``i18n`` changes since last merge from ``stable``::
+
+  hg log -G --style compact -r 'only("i18n", children(::stable))'
+
+Graft them one by one (or in collapsed chunks) while normalizing.
+
+If the graft has conflicts, use the ``scripts/i18n`` normalization tool to
+apply ``msgmerge`` and strip before doing 3-way merge and resolving conflicts::
+
+  hg resolve kallithea/i18n/ --tool X --config merge-tools.X.executable=python3 --config merge-tools.X.args='scripts/i18n normalized-merge --merge-pot-file full.pot --strip $local $base $other $output'
+
+When all conflicts have been resolved, continue the graft::
+
+  hg graft --continue
+
+Then make sure any non-conflicting files are normalized and stripped too::
+
+  scripts/i18n normalize-po-files --strip --merge-pot-file full.pot kallithea/i18n/*/LC_MESSAGES/kallithea.po
+  hg ci --amend --config ui.editor=true
+
+When things have been grafted to the ``stable`` branch, clean up history if
+necessary: clean up the author and commit message when necessary, and perhaps
+merge multiple changesets from same contributor.
+
+Merge back to ``i18n``
+^^^^^^^^^^^^^^^^^^^^^^
+
+For any i18n changes that for some reason have been done on the ``stable``
+branch, apply them manually on the ``i18n`` branch too - perhaps by grafting
+and editing manually. The merge done in this step will `not` take care of it.
+If the verification step done a bit later points out that something has been
+missed, strip and go back to this point.
+
+Then merge back to the ``i18n`` branch using normalization while keeping the
+full ``.po`` files, and updating the full ``.pot`` and ``.po`` to current
+state::
+
+  hg up -cr i18n
+  hg merge stable --tool internal:fail
+  hg revert kallithea/i18n/*/LC_MESSAGES/*.po -r .
+  hg resolve -m kallithea/i18n/*/LC_MESSAGES/*.po
+  hg resolve -l  # verify all conflicts have been resolved
+  python3 setup.py extract_messages && cp kallithea/i18n/kallithea.pot full.pot
+  scripts/i18n normalize-po-files --merge-pot-file full.pot kallithea/i18n/*/LC_MESSAGES/kallithea.po
+  hg commit  # "Merge from stable"
+
+Note: ``normalize-po-files`` can also pretty much be done manually with::
+
+  for po in kallithea/i18n/*/LC_MESSAGES/kallithea.po; do msgmerge --width=76 --backup=none --previous --update $po full.pot ; done
+
+Note: Additional merges from ``stable`` to ``i18n`` can be done any time.
+
+Verify
+^^^^^^
+
+Verify things are in sync between the full ``i18n`` branch and the stripped
+``stable`` branch::
+
+  hg up -cr stable
+  hg revert -a -r i18n
+  python3 setup.py extract_messages && cp kallithea/i18n/kallithea.pot full.pot && hg revert kallithea/i18n/kallithea.pot
+  scripts/i18n normalize-po-files --strip --merge-pot-file full.pot kallithea/i18n/*/LC_MESSAGES/kallithea.po
+  hg diff
+
+If there is a diff, figure out where it came from, go back and fix the root
+cause, and redo the graft/merge.
+
+Push
+^^^^
+
+The changes on the ``stable`` branch should now be ready for pushing - verify
+the actual changes with a thorough review of::
+
+  hg out -pvr stable
+
+When ``stable`` changes have been pushed, also push the ``i18n`` branch to the
+``kallithea-i18n`` repo so Weblate can see it.
+
+
+.. _Weblate: http://weblate.org/

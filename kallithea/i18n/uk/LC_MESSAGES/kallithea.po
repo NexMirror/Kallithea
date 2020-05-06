@@ -503,12 +503,6 @@ msgstr "Позначено репозиторій %s як відгалуженн
 msgid "An error occurred during this operation"
 msgstr "Сталася помилка під час виконання цієї операції"
 
-msgid "Cache invalidation successful"
-msgstr "Інвалідація кешу успішна"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Сталася помилка під час Анулювання кеша"
-
 msgid "Pulled from remote location"
 msgstr "Витягнуто з віддаленого місця"
 
@@ -1144,9 +1138,6 @@ msgstr "Параметри репозиторію %s"
 msgid "Extra Fields"
 msgstr "Додаткові поля"
 
-msgid "Caches"
-msgstr "Кеши"
-
 msgid "Remote"
 msgstr "Віддалений"
 
@@ -1190,30 +1181,11 @@ msgstr "Від'єднати forks"
 msgid "Delete forks"
 msgstr "Видалити forks"
 
-msgid "Invalidate Repository Cache"
-msgstr "Скинути Кеш Репозиторію"
-
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr ""
-"Вручну скинути кеш для цього репозиторію. При першому доступі, сховище "
-"буде знову кешовано."
-
-msgid "List of Cached Values"
-msgstr "Список кешованих значень"
-
-msgid "Prefix"
-msgstr "Префікс"
+msgid "Label"
+msgstr "Мітка"
 
 msgid "Key"
 msgstr "Ключ"
-
-msgid "Active"
-msgstr "Активний"
-
-msgid "Label"
-msgstr "Мітка"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Підтвердити видалення цього поля: %s"
@@ -1532,6 +1504,9 @@ msgstr "Показати публічні/приватні значки пору
 
 msgid "Meta Tagging"
 msgstr "Мета-теги"
+
+msgid "Active"
+msgstr "Активний"
 
 msgid "Files"
 msgstr "Файли"

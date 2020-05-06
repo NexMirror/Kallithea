@@ -13,5 +13,212 @@ msgstr ""
 msgid "There are no changesets yet"
 msgstr "Et sinn nach keng Ännerungen do"
 
+msgid "None"
+msgstr "Keng"
+
 msgid "(closed)"
 msgstr "(Zou)"
+
+msgid "Show whitespace"
+msgstr "Leerzeechen uweisen"
+
+msgid "Ignore whitespace"
+msgstr "Leerzechen ignoréieren"
+
+msgid "No permission to change status"
+msgstr "Keng Erlabnis fir den Status ze änneren"
+
+msgid "No response"
+msgstr "Keng Äntwert"
+
+msgid "Unknown error"
+msgstr "Onbekannten Feeler"
+
+msgid "Click here to add new file"
+msgstr "Klick hei fir eng Datei bäizefügen"
+
+msgid "There are no files yet."
+msgstr "Et sinn nach keng Dateien do."
+
+msgid "No changes"
+msgstr "Keng Ännerungen"
+
+msgid "Added file via Kallithea"
+msgstr "Datei iwwert Kallithea bäifügen"
+
+msgid "No content"
+msgstr "Keen Contenu"
+
+msgid "No filename"
+msgstr "Keen Dateinumm"
+
+msgid "Downloads disabled"
+msgstr "Eroflueden ausgeschalt"
+
+msgid "Empty repository"
+msgstr "Eidel Quell"
+
+msgid "Changesets"
+msgstr "Ännerungen"
+
+msgid "Branches"
+msgstr "Äascht"
+
+msgid "Groups"
+msgstr "Gruppen"
+
+msgid "Repositories"
+msgstr "Quellen"
+
+msgid "Branch"
+msgstr "Aascht"
+
+msgid "Bookmark"
+msgstr "Lieszeechen"
+
+msgid "Public Journal"
+msgstr "Ëffentleche Protokoll"
+
+msgid "Journal"
+msgstr "Protokoll"
+
+msgid "You have successfully registered with %s"
+msgstr "Dir sidd erfollegräich registréiert mat %s"
+
+msgid "Successfully updated password"
+msgstr "Passwuert erfollegräich erneiert"
+
+msgid "%s (closed)"
+msgstr "%s (Zou)"
+
+msgid "Changeset"
+msgstr "Ännerung"
+
+msgid "Special"
+msgstr "Spezial"
+
+msgid "Bookmarks"
+msgstr "Lieszeechen"
+
+msgid "No description"
+msgstr "Keng Beschreiwung"
+
+msgid "No data ready yet"
+msgstr "Daten sinn nach net prett"
+
+msgid "Statistics are disabled for this repository"
+msgstr "Statistike si fir des Quell ausgeschalt"
+
+msgid "Forever"
+msgstr "Éiweg"
+
+msgid "5 minutes"
+msgstr "5 Minutten"
+
+msgid "1 hour"
+msgstr "1 Stonn"
+
+msgid "1 day"
+msgstr "1 Dag"
+
+msgid "1 month"
+msgstr "1 Mount"
+
+msgid "Lifetime"
+msgstr "Liewenszäit"
+
+msgid "Unmodified"
+msgstr "Onmodifizéiert"
+
+msgid "SSH key %s successfully added"
+msgstr "SSH Schlëssel %s erfollegräich bäigefüügt"
+
+msgid "SSH key successfully deleted"
+msgstr "SSH Schlëssel erfollegräich geläscht"
+
+msgid "Read"
+msgstr "Liesen"
+
+msgid "Write"
+msgstr "Schreiwen"
+
+msgid "Admin"
+msgstr "Administrateur"
+
+msgid "Disabled"
+msgstr "Ausgeschalt"
+
+msgid "Enabled"
+msgstr "Aktivéiert"
+
+msgid "Created repository %s"
+msgstr "Quell %s erstallt"
+
+msgid "Deleted repository %s"
+msgstr "Quell %s geläscht"
+
+msgid "Nothing"
+msgstr "Näischt"
+
+msgid "Please enter email address"
+msgstr "Wannechgelift E-Mail-Adress afügen"
+
+msgid "SSH access is disabled."
+msgstr "SSH Accès ass ausgeschalt."
+
+msgid "Binary file"
+msgstr "Binär Datei"
+
+msgid "%d year"
+msgid_plural "%d years"
+msgstr[0] "%d Joer"
+msgstr[1] "%d Joer"
+
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d Mount"
+msgstr[1] "%d Méint"
+
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d Dag"
+msgstr[1] "%d Deeg"
+
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d Stonn"
+msgstr[1] "%d Stonnen"
+
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d Minutt"
+msgstr[1] "%d Minutten"
+
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d Sekonn"
+msgstr[1] "%d Sekonnen"
+
+msgid "There are no gists yet"
+msgstr "Et sinn nach keng Gists do"
+
+msgid "There are no changes yet"
+msgstr "Et sinn nach keng Ännerungen do"
+
+msgid "Close"
+msgstr "(Zou)"
+
+msgid "No changesets"
+msgstr "Keng Ännerungen"
+
+msgid "No changesets yet"
+msgstr "Nach keng Ännerungen do"
+
+msgid "There are no forks yet"
+msgstr "Et sinn nach keng Ofzweigungen do"
+
+msgid "Closed"
+msgstr "(Zou)"
+
+msgid "There are no downloads yet"
+msgstr "Et sinn nach keng Erofluedungen do"

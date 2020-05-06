@@ -63,7 +63,7 @@ class TestRepoGroups(base.TestController):
 
         assert self.__check_path('newGroup')
 
-    def test_create_same_name_group(self):
+        # test_create_same_name_group
         with pytest.raises(IntegrityError):
             fixture.create_repo_group('newGroup')
         Session().rollback()

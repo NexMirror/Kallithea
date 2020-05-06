@@ -515,12 +515,6 @@ msgstr "Репозиторий %s отмечен как форк от %s"
 msgid "An error occurred during this operation"
 msgstr "Произошла ошибка при выполнении операции"
 
-msgid "Cache invalidation successful"
-msgstr "Кэш сброшен"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Произошла ошибка при очистке кэша"
-
 msgid "Pulled from remote location"
 msgstr "Внесены изменения из удалённого репозитория"
 
@@ -796,6 +790,13 @@ msgstr ""
 
 msgid "SSH key is missing"
 msgstr "Отсутствует ключ SSH"
+
+msgid ""
+"Incorrect SSH key - it must have both a key type and a base64 part, like "
+"'ssh-rsa ASRNeaZu4FA...xlJp='"
+msgstr ""
+"Некорректный ключ SSH — должен присутствовать тип ключа и код base64, "
+"например 'ssh-rsa ASRNeaZu4FA...xlJp='"
 
 msgid "Incorrect SSH key - it must start with 'ssh-(rsa|dss|ed25519)'"
 msgstr ""
@@ -1074,6 +1075,9 @@ msgstr "Ошибка ключа SSH %r: %s"
 
 msgid "SSH key %s is already used by %s"
 msgstr "Ключ SSH %s уже используется пользователем %s"
+
+msgid "SSH key with fingerprint %r found"
+msgstr "Найден ключ SSH с отпечатком %r"
 
 msgid "New user registration"
 msgstr "Регистрация нового пользователя"
@@ -1987,9 +1991,6 @@ msgstr "Настройки репозитория %s"
 msgid "Extra Fields"
 msgstr "Дополнительные поля"
 
-msgid "Caches"
-msgstr "Кэш"
-
 msgid "Remote"
 msgstr "Удалённый репозиторий"
 
@@ -2048,29 +2049,11 @@ msgstr ""
 "администратором. Администратор может либо удалить, либо восстановить "
 "репозиторий."
 
-msgid "Invalidate Repository Cache"
-msgstr "Сбросить кэш репозитория"
-
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr ""
-"Ручной сброс кэша репозитория. При первом доступе кэш восстановится."
-
-msgid "List of Cached Values"
-msgstr "Список кешированных значений"
-
-msgid "Prefix"
-msgstr "Префикс"
+msgid "Label"
+msgstr "Имя"
 
 msgid "Key"
 msgstr "Ключ"
-
-msgid "Active"
-msgstr "Активный"
-
-msgid "Label"
-msgstr "Имя"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Подтвердите удаление этого поля: %s"
@@ -2544,6 +2527,9 @@ msgstr "Добавить группу пользователей"
 
 msgid "Short, optional description for this user group."
 msgstr "Краткое, опциональное описание этой группы."
+
+msgid "Active"
+msgstr "Активный"
 
 msgid "%s user group settings"
 msgstr "Настройки группы %s"

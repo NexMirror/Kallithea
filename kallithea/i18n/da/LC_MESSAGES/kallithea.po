@@ -486,12 +486,6 @@ msgstr "Mærket repository %s som fork af %s"
 msgid "An error occurred during this operation"
 msgstr "Der opstod en fejl under denne operation"
 
-msgid "Cache invalidation successful"
-msgstr "Ugyldiggørelse af cache er succesfuld"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Der opstod en fejl under cache ugyldiggørelse"
-
 msgid "An error occurred during pull from remote location"
 msgstr "Der opstod en fejl under pull fra remote placering"
 

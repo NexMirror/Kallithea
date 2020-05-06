@@ -66,7 +66,10 @@ def _get_scm_size(alias, root_path):
 
 
 def repo_size(ui, repo, hooktype=None, **kwargs):
-    """Show size of Mercurial repository, to be called after push."""
+    """Show size of Mercurial repository.
+
+    Called as Mercurial hook changegroup.repo_size after push.
+    """
     size_hg_f, size_root_f, size_total_f = _get_scm_size('.hg', safe_str(repo.root))
 
     last_cs = repo[len(repo) - 1]
@@ -103,12 +106,13 @@ def log_pull_action(ui, repo, **kwargs):
 
 def log_push_action(ui, repo, node, node_last, **kwargs):
     """
-    Entry point for Mercurial hook changegroup.push_logger.
+    Register that changes have been added to the repo - log the action *and* invalidate caches.
+    Note: This hook is not only logging, but also the side effect invalidating
+    caches! The function should perhaps be renamed.
+
+    Called as Mercurial hook changegroup.kallithea_log_push_action .
 
     The pushed changesets is given by the revset 'node:node_last'.
-
-    Note: This hook is not only logging, but also the side effect invalidating
-    cahes! The function should perhaps be renamed.
     """
     revs = [ascii_str(repo[r].hex()) for r in mercurial.scmutil.revrange(repo, [b'%s:%s' % (node, node_last)])]
     process_pushed_raw_ids(revs)
@@ -119,7 +123,7 @@ def process_pushed_raw_ids(revs):
     """
     Register that changes have been added to the repo - log the action *and* invalidate caches.
 
-    Called from  Mercurial changegroup.push_logger calling hook log_push_action,
+    Called from Mercurial changegroup.kallithea_log_push_action calling hook log_push_action,
     or from the Git post-receive hook calling handle_git_post_receive ...
     or from scm _handle_push.
     """

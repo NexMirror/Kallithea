@@ -450,12 +450,6 @@ msgstr "Рэпазітар %s адзначаны як форк %s"
 msgid "An error occurred during this operation"
 msgstr "Памылка пры выкананні аперацыі"
 
-msgid "Cache invalidation successful"
-msgstr "Кэш скінуты"
-
-msgid "An error occurred during cache invalidation"
-msgstr "Памылка пры скіданні кэша"
-
 msgid "Pulled from remote location"
 msgstr "Занесеныя змены з аддаленага рэпазітара"
 
@@ -1496,9 +1490,6 @@ msgstr "Налады рэпазітара %s"
 msgid "Extra Fields"
 msgstr "Дадатковыя палі"
 
-msgid "Caches"
-msgstr "Кэшы"
-
 msgid "Remote"
 msgstr "Выдалены"
 
@@ -1548,25 +1539,8 @@ msgstr "Адлучыць форкі"
 msgid "Delete forks"
 msgstr "Выдаліць форкі"
 
-msgid "Invalidate Repository Cache"
-msgstr "Скінуць кэш рэпазітара"
-
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr "Ручное скіданне кэша рэпазітара. Пры першым доступе кэш адновіцца."
-
-msgid "List of Cached Values"
-msgstr "Спіс кэшаваных значэнняў"
-
-msgid "Prefix"
-msgstr "Прэфікс"
-
 msgid "Key"
 msgstr "Ключ"
-
-msgid "Active"
-msgstr "Актыўны"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Пацвердзіце выдаленне гэтага поля: %s"
@@ -1756,6 +1730,9 @@ msgstr "Дадаць групу карыстальнікаў"
 
 msgid "Short, optional description for this user group."
 msgstr "Кароткае дадатковае апісанне для гэтай групы карыстальнікаў."
+
+msgid "Active"
+msgstr "Актыўны"
 
 msgid "Show Members"
 msgstr "Паказаць удзельнікаў"

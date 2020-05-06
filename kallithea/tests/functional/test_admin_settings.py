@@ -46,8 +46,7 @@ class TestAdminSettingsController(base.TestController):
         response.mustcontain('test_hooks_1')
         response.mustcontain('cd %s' % base.TESTS_TMP_PATH)
 
-    def test_edit_custom_hook(self):
-        self.log_user()
+        # test_edit_custom_hook
         response = self.app.post(base.url('admin_settings_hooks'),
                                 params=dict(hook_ui_key='test_hooks_1',
                                             hook_ui_value='old_value_of_hook_1',
@@ -58,8 +57,7 @@ class TestAdminSettingsController(base.TestController):
         response.mustcontain('test_hooks_1')
         response.mustcontain('new_value_of_hook_1')
 
-    def test_add_existing_custom_hook(self):
-        self.log_user()
+        # test_add_existing_custom_hook
         response = self.app.post(base.url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_1',
                                             new_hook_ui_value='attempted_new_value',

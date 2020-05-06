@@ -77,12 +77,13 @@ def expand(template, mako_variable_values, settings):
     ... #variable6 = 6.1
     ... #variable7 = 7.0
     ... variable7 = 7.1
+    ... variable8 = 8.0
     ... '''
     >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function': (lambda: 'FUNCTION RESULT'),
     ...                         'conditional_options': 'option-a', 'http_server': 'nc'}
     >>> settings = { # only partially used
-    ...     '[first-section]': {'variable2': 'VAL2', 'first_extra': 'EXTRA'},
-    ...     '[comment-section]': {'variable3': '3.0', 'variable4': '4.1', 'variable5': '5.2', 'variable6': '6.2', 'variable7': '7.0'},
+    ...     '[first-section]': {'variable2': 'VAL2', 'first_extra': 'EXTRA', 'spacey': ' '},
+    ...     '[comment-section]': {'variable3': '3.0', 'variable4': '4.1', 'variable5': '5.2', 'variable6': '6.2', 'variable7': '7.0', 'variable8': None, 'variable9': None},
     ...     '[third-section]': {'third_extra': ' 3'},
     ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
     ... }
@@ -96,6 +97,7 @@ def expand(template, mako_variable_values, settings):
     variable2 = VAL2
     <BLANKLINE>
     first_extra = EXTRA
+    spacey =
     <BLANKLINE>
     <BLANKLINE>
     # FUNCTION RESULT
@@ -114,6 +116,10 @@ def expand(template, mako_variable_values, settings):
     variable6 = 6.2
     variable7 = 7.0
     #variable7 = 7.1
+    #variable8 = 8.0
+    <BLANKLINE>
+    variable8 = None
+    variable9 = None
     <BLANKLINE>
     [fourth-section]
     fourth = "four"
@@ -160,6 +166,8 @@ def expand(template, mako_variable_values, settings):
 
             lines = re.sub(r'^(#)?([^#\n\s]*)[ \t]*=[ \t]*(.*)$', comment_out, lines, flags=re.MULTILINE)
 
+            # 2nd pass:
+            # find the best comment line and un-comment or add after
             def add_after_comment(m):
                 """process a section comment line and add new value"""
                 line = m.group(0)
@@ -178,11 +186,12 @@ def expand(template, mako_variable_values, settings):
 
             lines = re.sub(r'^#([^#\n\s]*)[ \t]*=[ \t]*(.*)$', add_after_comment, lines, flags=re.MULTILINE)
 
-            # add unused section settings
+            # 3rd pass:
+            # settings that haven't been consumed yet at is appended to section
             if section_settings:
                 lines += '\n' + ''.join('%s = %s\n' % (key, value) for key, value in sorted(section_settings.items()))
 
-        return sectionname + '\n' + lines
+        return sectionname + '\n' + re.sub('[ \t]+\n', '\n', lines)
 
     # process sections until comments before next section or end
     ini_lines = re.sub(r'''^

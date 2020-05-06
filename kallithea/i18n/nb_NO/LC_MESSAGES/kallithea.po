@@ -925,14 +925,11 @@ msgstr[1] "Denne pakkebrønnen har %s forgreninger"
 msgid "Delete forks"
 msgstr "Slett forgreninger"
 
-msgid "Key"
-msgstr "Nøkkel"
-
-msgid "Active"
-msgstr "Aktiv"
-
 msgid "Label"
 msgstr "Etikett"
+
+msgid "Key"
+msgstr "Nøkkel"
 
 msgid "Confirm to delete this field: %s"
 msgstr "Bekreft sletting av dette feltet: %s"
@@ -1020,6 +1017,9 @@ msgstr "Brukergrupper"
 
 msgid "Add User Group"
 msgstr "Legg til brukergruppe"
+
+msgid "Active"
+msgstr "Aktiv"
 
 msgid "%s user group settings"
 msgstr "%s brukergruppeinnstillinger"

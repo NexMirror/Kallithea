@@ -269,8 +269,8 @@ be ``None``).
 Debugging
 ^^^^^^^^^
 
-A good way to trace what Kallithea is doing is to keep an eye on the output of
-stdout/stderr from the server process. Perhaps change ``my.ini`` to log at
+A good way to trace what Kallithea is doing is to keep an eye on the output on
+stdout/stderr of the server process. Perhaps change ``my.ini`` to log at
 ``DEBUG`` or ``INFO`` level, especially ``[logger_kallithea]``, but perhaps
 also other loggers. It is often easier to add additional ``log`` or ``print``
 statements than to use a Python debugger.

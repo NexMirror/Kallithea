@@ -74,7 +74,7 @@ Developer guide
    :maxdepth: 1
 
    contributing
-   dev/translation
+   dev/i18n
    dev/dbmigrations
 
 

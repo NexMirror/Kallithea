@@ -31,5 +31,5 @@ class RootController(RoutedController, BaseController):
     def __init__(self):
         self.mapper = make_map(config)
 
-        # the following assignment hooks in error handling
+        # The URL '/error/document' (the default TG errorpage.path) should be handled by ErrorController.document
         self.error = ErrorController()

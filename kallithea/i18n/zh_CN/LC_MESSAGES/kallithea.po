@@ -349,9 +349,6 @@ msgstr "成功将版本库%s标记为复刻自%s"
 msgid "An error occurred during this operation"
 msgstr "在搜索操作中发生错误"
 
-msgid "An error occurred during cache invalidation"
-msgstr "清除缓存时发生错误"
-
 msgid "Pulled from remote location"
 msgstr "成功拉取自远程路径"
 
@@ -763,14 +760,8 @@ msgstr "从公共日志删除"
 msgid "Confirm to delete this repository: %s"
 msgstr "确认删除版本库：%s"
 
-msgid "Prefix"
-msgstr "前缀"
-
 msgid "Key"
 msgstr "键"
-
-msgid "Active"
-msgstr "启用"
 
 msgid "Default revision for files page, downloads, whoosh and readme"
 msgstr "文件浏览、下载、whoosh和README的默认修订版本"
@@ -807,6 +798,9 @@ msgstr "显示公共版本库图标"
 
 msgid "Show private repository icon on repositories"
 msgstr "显示私有版本库图标"
+
+msgid "Active"
+msgstr "启用"
 
 msgid "Members"
 msgstr "成员"

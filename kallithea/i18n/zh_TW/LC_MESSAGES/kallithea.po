@@ -299,9 +299,6 @@ msgstr "統計"
 msgid "Remove from public journal"
 msgstr "從公開日誌移除"
 
-msgid "Active"
-msgstr "啟用"
-
 msgid "Failed to remove hook"
 msgstr "移除hook失敗"
 
@@ -313,6 +310,9 @@ msgstr "push 後顯示版本庫大小"
 
 msgid "Update repository after push (hg update)"
 msgstr "push後更新版本庫 (hg update)"
+
+msgid "Active"
+msgstr "啟用"
 
 msgid "Members"
 msgstr "成員"

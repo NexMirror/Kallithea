@@ -1191,18 +1191,27 @@ def urlify_issues(newtext, repo_name):
             issue_pat = CONFIG.get(k)
             issue_server_link = CONFIG.get('issue_server_link%s' % suffix)
             issue_sub = CONFIG.get('issue_sub%s' % suffix)
-            if not issue_pat or not issue_server_link or issue_sub is None: # issue_sub can be empty but should be present
-                log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_sub)
+            issue_prefix = CONFIG.get('issue_prefix%s' % suffix)
+            if issue_prefix:
+                log.error('found unsupported issue_prefix%s = %r - use issue_sub%s instead', suffix, issue_prefix, suffix)
+            if not issue_pat:
+                log.error('skipping incomplete issue pattern %r: it needs a regexp', k)
+                continue
+            if not issue_server_link:
+                log.error('skipping incomplete issue pattern %r: it needs issue_server_link%s', k, suffix)
+                continue
+            if issue_sub is None: # issue_sub can be empty but should be present
+                log.error('skipping incomplete issue pattern %r: it needs (a potentially empty) issue_sub%s', k, suffix)
                 continue
 
             # Wrap tmp_urlify_issues_f with substitution of this pattern, while making sure all loop variables (and compiled regexpes) are bound
             try:
                 issue_re = re.compile(issue_pat)
             except re.error as e:
-                log.error('skipping invalid issue pattern %r: %r -> %r %r. Error: %s', suffix, issue_pat, issue_server_link, issue_sub, str(e))
+                log.error('skipping invalid issue pattern %r: %r -> %r %r. Error: %s', k, issue_pat, issue_server_link, issue_sub, str(e))
                 continue
 
-            log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_sub)
+            log.debug('issue pattern %r: %r -> %r %r', k, issue_pat, issue_server_link, issue_sub)
 
             def issues_replace(match_obj,
                                issue_server_link=issue_server_link, issue_sub=issue_sub):

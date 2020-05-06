@@ -28,11 +28,29 @@ msgstr "Αγνόηση κενού"
 msgid "Increase diff context to %(num)s lines"
 msgstr "Αύξηση του diff πλαισίου σε %(num)s γραμμές"
 
+msgid "No permission to change status"
+msgstr "Χωρίς δικαιώματα αλλαγής της κατάστασης"
+
 msgid "Successfully deleted pull request %s"
 msgstr "Επιτυχής διαγραφή αιτήματος έλξης %s"
 
 msgid "Such revision does not exist for this repository"
 msgstr "Δεν υπάρχει τέτοια αναθεώρηση για αυτό το αποθετήριο"
+
+msgid "Could not find other repository %s"
+msgstr "Δεν βρέθηκε το αποθετήριο %s"
+
+msgid "Cannot compare repositories of different types"
+msgstr "Δεν μπορεί να γίνει σύγκριση αποθετηρίων διαφορετικού τύπου"
+
+msgid "Cannot show empty diff"
+msgstr "Δεν μπορεί να γίνει η εμφάνιση άδειου diff"
+
+msgid "No ancestor found for merge diff"
+msgstr "Δεν βρέθηκε πρόγονος για να συγχωνευθούν οι διαφορές"
+
+msgid "Multiple merge ancestors found for merge compare"
+msgstr "Βρέθηκαν πολλαπλοί πρόγονοι για σύγκριση της συγχώνευσης"
 
 msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
@@ -43,7 +61,7 @@ msgid "No response"
 msgstr "Χωρίς απόκριση"
 
 msgid "Unknown error"
-msgstr "Άγνωστο λάθος"
+msgstr "Άγνωστο σφάλμα"
 
 msgid ""
 "The request could not be understood by the server due to malformed syntax."
@@ -82,17 +100,25 @@ msgstr "Αλλαγές στο αποθετήριο %s"
 msgid "Click here to add new file"
 msgstr "Κλικ εδώ για προθήκη νέου αρχείου"
 
+msgid "There are no files yet."
+msgstr "Δεν υπάρχουν αρχεία ακόμα."
+
 msgid "%s at %s"
 msgstr "%s την %s"
 
+msgid "You can only delete files with revision being a valid branch"
+msgstr ""
+"Μπορείτε να διαγράψετε μόνο αρχεία με αναθεώρηση που βρίσκονται σε έγκυρη "
+"διακλάδωση"
+
 msgid "Deleted file %s via Kallithea"
-msgstr "Διαγραφή αρχείου %s μέσω του Kallithea"
+msgstr "Διαγραφή αρχείου %s μέσω της Καλλιθέας"
 
 msgid "Successfully deleted file %s"
 msgstr "Επιτυχής διαγραφή αρχείου %s"
 
 msgid "Error occurred during commit"
-msgstr "Συνέβη λάθος κατά το commit"
+msgstr "Παρουσιάστηκε σφάλμα κατά το commit"
 
 msgid "You can only edit files with revision being a valid branch"
 msgstr ""
@@ -100,7 +126,7 @@ msgstr ""
 "έγκυρη διακλάδωση"
 
 msgid "Edited file %s via Kallithea"
-msgstr "Επεξεργασία αρχείου %s μέσω του Kallithea"
+msgstr "Επεξεργασία αρχείου %s μέσω της Καλλιθέας"
 
 msgid "No changes"
 msgstr "Καμία αλλαγή"
@@ -109,7 +135,7 @@ msgid "Successfully committed to %s"
 msgstr "Επιτυχής παράδοση σε %s"
 
 msgid "Added file via Kallithea"
-msgstr "Προσθήκη αρχείου μέσω Kallithea"
+msgstr "Προσθήκη αρχείου μέσω της Καλλιθέας"
 
 msgid "No content"
 msgstr "Χωρίς περιεχόμενο"
@@ -144,7 +170,7 @@ msgid "Tags"
 msgstr "Ετικέτες"
 
 msgid "An error occurred during repository forking %s"
-msgstr "Συνέβει ένα λάθος κατά την διακλάδωση του αποθετηρίου %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά την διακλάδωση του αποθετηρίου %s"
 
 msgid "Groups"
 msgstr "Ομάδες"
@@ -204,13 +230,22 @@ msgid "Bookmarks"
 msgstr "Σελιδοδείκτες"
 
 msgid "Error creating pull request: %s"
-msgstr "Λάθος στη δημιουργία αιτήματος έλξης - pull request: %s"
+msgstr "Σφάλμα στη δημιουργία αιτήματος έλξης - pull request: %s"
 
 msgid "Error occurred while creating pull request"
-msgstr "Λάθος κατά τη δημιουργία αιτήματος έλξης (pull request)"
+msgstr "Παρουσιάστηκε σφάλμα κατά τη δημιουργία αίτησης έλξης"
 
 msgid "Successfully opened new pull request"
 msgstr "Ένα νέο αίτημα έλξης (pull request) δημιουργήθηκε επιτυχώς"
+
+msgid "New pull request iteration created"
+msgstr "Δημιουργήθηκε νέο αίτημα έλξης"
+
+msgid "Meanwhile, the following reviewers have been added: %s"
+msgstr "Εντωμεταξύ, οι ακόλουθοι κριτικοί προστέθηκαν: %s"
+
+msgid "Meanwhile, the following reviewers have been removed: %s"
+msgstr "Εντωμεταξύ, οι ακόλουθοι κριτικοί αφαιρέθηκαν: %s"
 
 msgid "No description"
 msgstr "Χωρίς περιγραφή"
@@ -221,20 +256,52 @@ msgstr "Ενημερώθηκε η αίτηση έλξης"
 msgid "Successfully deleted pull request"
 msgstr "Επιτυχής διαγραφή αιτήματος έλξης"
 
+msgid "Revision %s not found in %s"
+msgstr "Η αναθεώρηση %s δεν βρέθηκε στο %s"
+
+msgid "Error: changesets not found when displaying pull request from %s."
+msgstr ""
+"Σφάλμα: τα σετ αλλαγών δεν βρέθηκαν όταν εμφανίζεται το αίτημα έλξης από "
+"το %s."
+
 msgid "This pull request has already been merged to %s."
 msgstr "Το αίτημα έλξης έχει ήδη συγχωνευτεί με το %s."
 
 msgid "This pull request has been closed and can not be updated."
 msgstr "Αυτό το αίτημα έλξης έχει κλείσει και δεν μπορεί να ενημερωθεί."
 
+msgid "The following additional changes are available on %s:"
+msgstr "Οι επιπλέον ακόλουθες αλλαγές είναι διαθέσιμες στο %s:"
+
+msgid "No additional changesets found for iterating on this pull request."
+msgstr ""
+"Δεν βρέθηκαν επιπλέον σετ αλλαγών στην προσέγγιση αυτού του αιτήματος "
+"έλξης."
+
 msgid "Note: Branch %s has another head: %s."
 msgstr "Σημείωση: Ο κλάδος %s έχει άλλη κεφαλή (head): %s."
+
+msgid "Git pull requests don't support iterating yet."
+msgstr "Αιτήματα έλξης του git δεν υποστηρίζουν ακόμα ενημερώσεις."
+
+msgid ""
+"Error: some changesets not found when displaying pull request from %s."
+msgstr ""
+"Σφάλμα: κάποια σετ αλλαγών δεν βρέθηκαν όταν εμφανιζόταν αυτό το αίτημα "
+"έλξης από το %s."
+
+msgid "The diff can't be shown - the PR revisions could not be found."
+msgstr ""
+"Οι διαφορές δεν μπορούν να εμφανιστούν - οι αναθεωρήσεις δεν βρέθηκαν."
 
 msgid "Invalid search query. Try quoting it."
 msgstr "Άκυρο αίτημα αναζήτησης. Δοκιμάστε με εισαγωγικά."
 
+msgid "The server has no search index."
+msgstr "Ο διακομιστής δεν έχει ευρετήριο αναζήτησης."
+
 msgid "An error occurred during search operation."
-msgstr "Ένα λάθος συνέβη κατά την διαδικασία αναζήτησης."
+msgstr "Παρουσιάστηκε σφάλμα κατά τη λειτουργία αναζήτησης."
 
 msgid "No data ready yet"
 msgstr "Δεν υπάρχουν ακόμα έτοιμα δεδομένα"
@@ -246,13 +313,14 @@ msgid "Auth settings updated successfully"
 msgstr "Οι ρυθμίσεις εξουσιοδότησης ενημερώθηκαν επιτυχώς"
 
 msgid "error occurred during update of auth settings"
-msgstr "παρουσιάστηκε βλάβη κατά την ενημέρωση των ρυθμίσεων εξουσιοδότησης"
+msgstr ""
+"παρουσιάστηκε σφάλμα κατά την ενημέρωση των ρυθμίσεων εξουσιοδότησης"
 
 msgid "Default settings updated successfully"
 msgstr "Οι προεπιλεγμένες ρυθμίσεις ενημερώθηκαν επιτυχώς"
 
 msgid "Error occurred during update of defaults"
-msgstr "Συνέβη μία βλάβη κατά την ενημέρωση των προεπιλογών"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ενημέρωση των προεπιλογών"
 
 msgid "Forever"
 msgstr "Πάντα"
@@ -273,7 +341,7 @@ msgid "Lifetime"
 msgstr "Διάρκεια ζωής"
 
 msgid "Error occurred during gist creation"
-msgstr "Συνέβη μία βλάβη κατά τη δημιουργία του gist"
+msgstr "Παρουσιάστηκε σφάλμα κατά τη δημιουργία του gist"
 
 msgid "Deleted gist %s"
 msgstr "Διαγράφηκε το gist %s"
@@ -322,6 +390,12 @@ msgstr "Το API κλειδί επαναφέρθηκε επιτυχώς"
 msgid "API key successfully deleted"
 msgstr "Το API κλειδί διαγράφηκε επιτυχώς"
 
+msgid "SSH key %s successfully added"
+msgstr "Το SSH κλειδί %s δημιουργήθηκε επιτυχώς"
+
+msgid "SSH key successfully deleted"
+msgstr "Το SSH κλειδί διαγράφηκε επιτυχώς"
+
 msgid "Read"
 msgstr "Ανάγνωση"
 
@@ -353,10 +427,10 @@ msgid "Global permissions updated successfully"
 msgstr "Τα καθολικά δικαιώματα ενημερώθηκαν επιτυχώς"
 
 msgid "Error occurred during update of permissions"
-msgstr "Συνέβει μια βλάβη κατά την ενημέρωση των δικαιωμάτων"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ενημέρωση δικαιωμάτων"
 
 msgid "Error occurred during creation of repository group %s"
-msgstr "Συνέβει μια βλάβη κατά την δημιουργία της ομάδας αποθετηρίου %s"
+msgstr "Συνέβηκε κάποιο λάθος κατά την δημιουργία της ομάδας αποθετηρίου %s"
 
 msgid "Created repository group %s"
 msgstr "Δημιουργήθηκε η ομάδα αποθετηρίου %s"
@@ -365,7 +439,7 @@ msgid "Updated repository group %s"
 msgstr "Ενημερώθηκε η ομάδα αποθετηρίου %s"
 
 msgid "Error occurred during update of repository group %s"
-msgstr "Συνέβει μια βλάβη κατά την ενημέρωση της ομάδας αποθετηρίου %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ενημέρωση της ομάδας αποθετηρίων %s"
 
 msgid "This group contains %s repositories and cannot be deleted"
 msgstr "Αυτή η ομάδα περιέχει %s αποθετήρια και δε μπορεί να διαγραφεί"
@@ -377,7 +451,7 @@ msgid "Removed repository group %s"
 msgstr "Αφαιρέθηκε η ομάδα αποθετηρίου %s"
 
 msgid "Error occurred during deletion of repository group %s"
-msgstr "Συνέβει μια βλάβη κατά την διαγραφή της ομάδας αποθετηρίου %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά τη διαγραφή της ομάδας αποθετηρίων %s"
 
 msgid "Cannot revoke permission for yourself as admin"
 msgstr "Δεν μπορείτε να ανακαλέσετε την άδεια σας ως διαχειριστής"
@@ -386,10 +460,10 @@ msgid "Repository group permissions updated"
 msgstr "Τα δικαιώματα της ομάδας αποθετηρίου ενημερώθηκαν"
 
 msgid "An error occurred during revoking of permission"
-msgstr "Συνέβει μια βλάβη κατά την ανάκληση της άδειας"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ανάκληση του δικαιώματος"
 
 msgid "Error creating repository %s"
-msgstr "Βλάβη κατά τη δημιουργία του αποθετηρίου %s"
+msgstr "Σφάλμα κατά τη δημιουργία αποθετηρίου %s"
 
 msgid "Created repository %s from %s"
 msgstr "Δημιουργήθηκε το αποθετήριο %s από το %s"
@@ -404,7 +478,7 @@ msgid "Repository %s updated successfully"
 msgstr "Το αποθετήριο %s ενημερώθηκε επιτυχώς"
 
 msgid "Error occurred during update of repository %s"
-msgstr "Συνέβει μια βλάβη κατά την ενημέρωση του αποθετηρίου %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ενημέρωση του αποθετηρίου %s"
 
 msgid "Detached %s forks"
 msgstr "Αποσυνδέθηκαν %s κλώνοι"
@@ -419,13 +493,19 @@ msgid "Cannot delete repository %s which still has forks"
 msgstr "Δε μπορεί να διαγραφεί το αποθετήριο %s που ακόμα έχει κλώνους"
 
 msgid "An error occurred during deletion of %s"
-msgstr "Συνέβει μια βλάβη κατά την διαγραφή του %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά την διαγραφή του %s"
 
 msgid "Repository permissions updated"
 msgstr "Τα δικαιώματα του αποθετηρίου ενημερώθηκαν"
 
+msgid "Field validation error: %s"
+msgstr "Σφάλμα στην επιβεβαίωση του πεδίου: %s"
+
+msgid "An error occurred during creation of field: %r"
+msgstr "Παρουσιάστηκε σφάλμα κατά τη δημιουργία πεδίου: %r"
+
 msgid "An error occurred during removal of field"
-msgstr "Συνέβει μια βλάβη κατά την απομάκρυνση του πεδίου"
+msgstr "Παρουσιάστηκε σφάλμα κατά την απομάκρυνση του πεδίου"
 
 msgid "-- Not a fork --"
 msgstr "-- Όχι κλώνος --"
@@ -435,7 +515,7 @@ msgstr "Ενημερώθηκε η ορατότητα του αποθετηρίο
 
 msgid "An error occurred during setting this repository in public journal"
 msgstr ""
-"Συνέβει μια βλάβη κατά την τοποθέτηση αυτού το αποθετηρίου στο δημόσιο "
+"Παρουσιάστηκε σφάλμα κατά την τοποθέτηση αυτού το αποθετηρίου στο δημόσιο "
 "ημερολόγιο"
 
 msgid "Nothing"
@@ -447,14 +527,3073 @@ msgstr "Σημειώθηκε το αποθετήριο %s σαν κλώνος τ
 msgid "An error occurred during this operation"
 msgstr "Παρουσιάστηκε ένα σφάλμα κατά τη διάρκεια αυτής της λειτουργίας"
 
-msgid "Cache invalidation successful"
-msgstr "Η ακύρωση της cache ήταν επιτυχής"
+msgid "Pulled from remote location"
+msgstr "Ελκύσθηκε από απομακρυσμένη τοποθεσία"
 
-msgid "An error occurred during cache invalidation"
-msgstr "Παρουσιάστηκε ένα σφάλμα κατά τη διάρκεια ακύρωσης της cache"
+msgid "An error occurred during pull from remote location"
+msgstr "Παρουσιάστηκε σφάλμα κατά την έλξη από την απομακρυσμένη τοποθεσία"
+
+msgid "An error occurred during deletion of repository stats"
+msgstr ""
+"Παρουσιάστηκε σφάλμα κατά τη διαγραφή των στατιστικών του αποθετηρίου"
+
+msgid "Updated VCS settings"
+msgstr "Ενημερωμένες ρυθμίσεις VCS"
+
+msgid ""
+"Unable to activate hgsubversion support. The \"hgsubversion\" library is "
+"missing"
+msgstr ""
+"Δεν γίνεται να ενεργοποιηθεί υποστήριξη για το hgsubversion. Λείπει η "
+"βιβλιοθήκη \"hgsubversion\""
+
+msgid "Error occurred while updating application settings"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ενημέρωση των ρυθμίσεων της εφαρμογής"
+
+msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
+msgstr ""
+"Τα αποθετήρια ξανασαρώθηκαν επιτυχώς. Προστέθηκαν: %s. Αφαιρέθηκαν %s."
+
+msgid "Invalidated %s repositories"
+msgstr "Ακυρώθηκαν %s αποθετήρια"
+
+msgid "Updated application settings"
+msgstr "Ενημερώθηκαν οι ρυθμίσεις της εφαρμογής"
+
+msgid "Updated visualisation settings"
+msgstr "Ενημερώθηκαν οι ρυθμίσεις της απεικόνισης"
+
+msgid "Error occurred during updating visualisation settings"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ενημέρωση των ρυθμίσεων απεικόνισης"
+
+msgid "Please enter email address"
+msgstr "Παρακαλώ εισάγετε την διεύθυνση ηλεκτρονικού ταχυδρομείου"
+
+msgid "Send email task created"
+msgstr "Δημιουργήθηκε η εργασία της αποστολής ηλεκτρονικού ταχυδρομείου"
+
+msgid "Hook already exists"
+msgstr "Το άγκιστρο υπάρχει ήδη"
+
+msgid "Builtin hooks are read-only. Please use another hook name."
+msgstr ""
+"Τα ενσωματωμένα άγκιστρα είναι μόνο για ανάγνωση. Παρακαλώ δώστε άλλο "
+"όνομα στο άγκιστρο."
+
+msgid "Added new hook"
+msgstr "Προσθήκη νέου άγκιστρου"
+
+msgid "Updated hooks"
+msgstr "Τα άγκιστρα ενημερώθηκαν"
+
+msgid "Error occurred during hook creation"
+msgstr "Παρουσιάστηκε σφάλμα κατά την δημιουργία του άγκιστρου"
+
+msgid "Whoosh reindex task scheduled"
+msgstr "Προγραμματίστηκε η αναδημιουργία ευρετηρίου για το Whoosh"
+
+msgid "Created user group %s"
+msgstr "Δημιουργήθηκε η ομάδα χρηστών %s"
+
+msgid "Error occurred during creation of user group %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά τη δημιουργία της ομάδας χρηστών %s"
+
+msgid "Updated user group %s"
+msgstr "Ενημερώθηκε η ομάδα χρηστών %s"
+
+msgid "Error occurred during update of user group %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά την ενημέρωση της ομάδας χρηστών %s"
+
+msgid "Successfully deleted user group"
+msgstr "Η ομάδα χρηστών διαγράφηκε επιτυχώς"
+
+msgid "An error occurred during deletion of user group"
+msgstr "Παρουσιάστηκε σφάλμα κατά την διαγραφή της ομάδας χρηστών"
+
+msgid "Target group cannot be the same"
+msgstr "Η ομάδα προορισμός δεν μπορεί να είναι η ίδια"
+
+msgid "User group permissions updated"
+msgstr "Τα δικαιώματα της ομάδας χρηστών ενημερώθηκαν"
+
+msgid "Updated permissions"
+msgstr "Τα δικαιώματα ενημερώθηκαν"
+
+msgid "An error occurred during permissions saving"
+msgstr "Παρουσιάστηκε σφάλμα κατά την αποθήκευση των δικαιωμάτων"
+
+msgid "Created user %s"
+msgstr "Δημιουργήθηκε ο χρήστης %s"
+
+msgid "Error occurred during creation of user %s"
+msgstr "Παρουσιάστηκε σφάλμα κατά την δημιουργία του χρήστη %s"
+
+msgid "User updated successfully"
+msgstr "Ο χρήστης ενημερώθηκε επιτυχώς"
+
+msgid "Successfully deleted user"
+msgstr "Ο χρήστης διαγράφηκε επιτυχώς"
+
+msgid "An error occurred during deletion of user"
+msgstr "Παρουσιάστηκε σφάλμα κατά τη διαγραφή του χρήστη"
+
+msgid "The default user cannot be edited"
+msgstr "Δεν μπορεί να γίνει επεξεργασία στον προεπιλεγμένο χρήστη"
+
+msgid "Added IP address %s to user whitelist"
+msgstr "Η IP διεύθυνση %s προστέθηκε στην λίστα επιτρεπόμενων του χρήστη"
+
+msgid "An error occurred while adding IP address"
+msgstr "Παρουσιάστηκε σφάλμα κατά την προσθήκη της IP διεύθυνσης"
+
+msgid "Removed IP address from user whitelist"
+msgstr "Η IP διεύθυνση αφαιρέθηκε από τη λίστα επιτρεπόμενων του χρήστη"
+
+msgid "You need to be a registered user to perform this action"
+msgstr ""
+"Πρέπει να είστε εγγεγραμμένος χρήστης για να εκτελέσετε αυτή την ενέργεια"
+
+msgid "You need to be signed in to view this page"
+msgstr "Πρέπει να είστε συνδεμένος για να δείτε αυτήν τη σελίδα"
+
+msgid ""
+"CSRF token leak has been detected - all form tokens have been expired"
+msgstr ""
+"Εντοπίστηκε διαρροή ενός διακριτικού CSRF - όλα τα διακριτικά της φόρμας "
+"έχουν λήξει"
+
+msgid "Repository not found in the filesystem"
+msgstr "Το αποθετήριο δε βρέθηκε στο σύστημα αρχείων"
+
+msgid "Changeset for %s %s not found in %s"
+msgstr "Το σετ αλλαγών για %s %sδεν βρέθηκε στο %s"
+
+msgid "SSH access is disabled."
+msgstr "Η πρόσβαση μέσω SSH είναι απενεργοποιημένη."
+
+msgid "Binary file"
+msgstr "Δυαδικό αρχείο"
+
+msgid ""
+"Changeset was too big and was cut off, use diff menu to display this diff"
+msgstr ""
+"Το σετ αλλαγών ήταν πολύ μεγάλο και αποκόπηκε, χρησιμοποιήστε το μενού "
+"διαφορών για να εμφανίσετε τις διαφορές"
+
+msgid "No changes detected"
+msgstr "Δεν εντοπίστηκαν αλλαγές"
+
+msgid "Deleted branch: %s"
+msgstr "Διαγραφή κλάδου: %s"
+
+msgid "Created tag: %s"
+msgstr "Δημιουργηθείσα ετικέτα: %s"
+
+msgid "Changeset %s not found"
+msgstr "Δεν βρέθηκε το σετ αλλαγών %s"
+
+msgid "Show all combined changesets %s->%s"
+msgstr "Εμφάνιση όλων των συνδυασμένων σετ αλλαγών %s->%s"
+
+msgid "Compare view"
+msgstr "Σύγκριση εμφάνισης"
+
+msgid "and"
+msgstr "και"
+
+msgid "%s more"
+msgstr "%s επιπλέον"
+
+msgid "revisions"
+msgstr "αναθεωρήσεις"
+
+msgid "Fork name %s"
+msgstr "Όνομα κλώνου %s"
+
+msgid "Pull request %s"
+msgstr "Αίτημα έλξης %s"
+
+msgid "[deleted] repository"
+msgstr "[διαγραμμένο] αποθετήριο"
+
+msgid "[created] repository"
+msgstr "[δημιουργημένο] αποθετήριο"
+
+msgid "[updated] repository"
+msgstr "[ενημερωμένο] αποθετήριο"
+
+msgid "[downloaded] archive from repository"
+msgstr "[λήψη] αρχείο από το αποθετήριο"
+
+msgid "[delete] repository"
+msgstr "[διαγραμμένο] αποθετήριο"
+
+msgid " and %s more"
+msgstr " και %s περισσότερα"
+
+msgid "No files"
+msgstr "Δεν υπάρχουν αρχεία"
+
+msgid "new file"
+msgstr "νέο αρχείο"
+
+msgid "mod"
+msgstr "τροποποιημένο"
+
+msgid "del"
+msgstr "διαγραμμένο"
+
+msgid "rename"
+msgstr "μετονομασμένο"
+
+msgid "chmod"
+msgstr "αλλ δικαιωμ"
+
+msgid ""
+"%s repository is not mapped to db perhaps it was created or renamed from "
+"the filesystem please run the application again in order to rescan "
+"repositories"
+msgstr ""
+"Το αποθετήριο δεδομένων %s δεν έχει αντιστοιχιστεί στη βάση δεδομένων. "
+"Ίσως δημιουργήθηκε ή μετονομάστηκε από το σύστημα αρχείων. Εκτελέστε ξανά "
+"την εφαρμογή για να σαρώσετε ξανά τα αποθετήρια δεδομένων"
+
+msgid "SSH key is missing"
+msgstr "Το κλειδί SSH λείπει"
+
+msgid ""
+"Incorrect SSH key - it must have both a key type and a base64 part, like "
+"'ssh-rsa ASRNeaZu4FA...xlJp='"
+msgstr ""
+"Λανθασμένο κλειδί SSH - πρέπει να έχει έναν τύπο κλειδιού καθώς και ένα "
+"τμήμα base64, όπως \"ssh-rsa ASRNeaZu4FA ... xlJp =\""
+
+msgid "Incorrect SSH key - it must start with 'ssh-(rsa|dss|ed25519)'"
+msgstr "Εσφαλμένο κλειδί SSH - πρέπει να ξεκινά με 'ssh-(rsa|dss|ed25519)'"
+
+msgid "Incorrect SSH key - unexpected characters in base64 part %r"
+msgstr ""
+"Εσφαλμένο κλειδί SSH - μη αναμενόμενοι χαρακτήρες στο τμήμα base64 %r"
+
+msgid "Incorrect SSH key - failed to decode base64 part %r"
+msgstr ""
+"Εσφαλμένο κλειδί SSH - απέτυχε η αποκωδικοποίηση του τμήματος base64 %r"
+
+msgid "Incorrect SSH key - base64 part is not %r as claimed but %r"
+msgstr ""
+"Εσφαλμένο κλειδί SSH - το base64 μέρος δεν είναι %r όπως ζητήθηκε, αλλά %r"
+
+msgid "%d year"
+msgid_plural "%d years"
+msgstr[0] "%d έτος"
+msgstr[1] "%d έτη"
+
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d μήνας"
+msgstr[1] "%d μήνες"
+
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d ημέρα"
+msgstr[1] "%d ημέρες"
+
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d ώρα"
+msgstr[1] "%d ώρες"
+
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d λεπτό"
+msgstr[1] "%d λεπτά"
+
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d δευτερόλεπτο"
+msgstr[1] "%d δευτερόλεπτα"
+
+msgid "in %s"
+msgstr "σε %s"
+
+msgid "%s ago"
+msgstr "%s πριν"
+
+msgid "in %s and %s"
+msgstr "σε %s και %s"
+
+msgid "%s and %s ago"
+msgstr "%s και %s πριν"
+
+msgid "just now"
+msgstr "μόλις τώρα"
+
+msgid "on line %s"
+msgstr "στη γραμμή %s"
+
+msgid "[Mention]"
+msgstr "[Αναφορά]"
+
+msgid "top level"
+msgstr "ανώτερο επίπεδο"
+
+msgid "Kallithea Administrator"
+msgstr "Διαχειριστής Καλλιθέας"
+
+msgid "Default user has no access to new repositories"
+msgstr "Ο προεπιλεγμένος χρήστης δεν έχει πρόσβαση σε νέα αποθετήρια"
+
+msgid "Default user has read access to new repositories"
+msgstr "Ο προεπιλεγμένος χρήστης έχει πρόσβαση ανάγνωσης σε νέα αποθετήρια"
+
+msgid "Default user has write access to new repositories"
+msgstr "Ο προεπιλεγμένος χρήστης έχει πρόσβαση εγγραφής σε νέα αποθετήρια"
+
+msgid "Default user has admin access to new repositories"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης έχει πρόσβαση διαχειριστή σε νέα αποθετήρια"
+
+msgid "Default user has no access to new repository groups"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης δεν έχει πρόσβαση σε νέες ομάδες αποθετηρίων"
+
+msgid "Default user has read access to new repository groups"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης έχει πρόσβαση ανάγνωσης σε νέες ομάδες "
+"αποθετηρίων"
+
+msgid "Default user has write access to new repository groups"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης έχει πρόσβαση εγγραφής σε νέες ομάδες αποθετηρίων"
+
+msgid "Default user has admin access to new repository groups"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης έχει πρόσβαση διαχειριστή σε νέες ομάδες "
+"αποθετηρίων"
+
+msgid "Default user has no access to new user groups"
+msgstr "Ο προεπιλεγμένος χρήστης δεν έχει πρόσβαση σε νέες ομάδες χρηστών"
+
+msgid "Default user has read access to new user groups"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης έχει πρόσβαση ανάγνωσης σε νέες ομάδες χρηστών"
+
+msgid "Default user has write access to new user groups"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης έχει πρόσβαση εγγραφής σε νέες ομάδες χρηστών"
+
+msgid "Default user has admin access to new user groups"
+msgstr ""
+"Ο προεπιλεγμένος χρήστης έχει πρόσβαση διαχειριστή σε νέες ομάδες χρηστών"
+
+msgid "Only admins can create repository groups"
+msgstr "Μόνο οι διαχειριστές μπορούν να δημιουργήσουν ομάδες αποθετηρίων"
+
+msgid "Non-admins can create repository groups"
+msgstr "Οι μη διαχειριστές μπορούν να δημιουργήσουν ομάδες αποθετηρίων"
+
+msgid "Only admins can create user groups"
+msgstr "Μόνο οι διαχειριστές μπορούν να δημιουργήσουν ομάδες χρηστών"
+
+msgid "Non-admins can create user groups"
+msgstr "Οι μη διαχειριστές μπορούν να δημιουργήσουν ομάδες χρηστών"
+
+msgid "Only admins can create top level repositories"
+msgstr ""
+"Μόνο οι διαχειριστές μπορούν να δημιουργήσουν αποθετήρια ανώτατου επιπέδου"
+
+msgid "Non-admins can create top level repositories"
+msgstr ""
+"Οι μη διαχειριστές μπορούν να δημιουργήσουν αποθετήρια ανώτατου επιπέδου"
+
+msgid ""
+"Repository creation enabled with write permission to a repository group"
+msgstr ""
+"Η δημιουργία αποθετηρίου είναι ενεργοποιημένη με δικαιώματα εγγραφής σε "
+"μια ομάδα αποθετηρίων"
+
+msgid ""
+"Repository creation disabled with write permission to a repository group"
+msgstr ""
+"Η δημιουργία αποθετηρίου απενεργοποιήθηκε με δικαιώματα εγγραφής σε μια "
+"ομάδα αποθετηρίων"
+
+msgid "Registration disabled"
+msgstr "Η εγγραφή απενεργοποιήθηκε"
+
+msgid "User registration with manual account activation"
+msgstr "Εγγραφή χρήστη με χειροκίνητη ενεργοποίηση λογαριασμού"
+
+msgid "User registration with automatic account activation"
+msgstr "Εγγραφή χρήστη με αυτόματη ενεργοποίηση λογαριασμού"
+
+msgid "Not reviewed"
+msgstr "Δεν έχει ελεγχθεί"
+
+msgid "Under review"
+msgstr "Υπό εξέταση"
+
+msgid "Not approved"
+msgstr "Δεν έχει εγκριθεί"
+
+msgid "Approved"
+msgstr "Εγκρίθηκε"
+
+msgid "Please enter a login"
+msgstr "Παρακαλώ εισάγετε ένα όνομα χρήστη"
+
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Εισαγάγετε μια τιμή με μήκος %(min)i χαρακτήρες ή περισσότερους"
 
 msgid "Please enter a password"
 msgstr "Παρακαλώ εισάγετε έναν κωδικό πρόσβασης"
 
+msgid "Enter %(min)i characters or more"
+msgstr "Εισαγάγετε %(min)i χαρακτήρες ή περισσότερους"
+
+msgid "Name must not contain only digits"
+msgstr "Το όνομα δεν πρέπει να περιέχει μόνο ψηφία"
+
+msgid "New user %(new_username)s registered"
+msgstr "Καταχωρήθηκε νέος χρήστης %(new_username)s"
+
+msgid "Closing"
+msgstr "Κλείσιμο"
+
+msgid ""
+"%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s"
+msgstr ""
+"Ο χρήστης %(user)s θέλει να αναθεωρήσετε την αίτηση έλξης %(pr_nice_id)s: "
+"%(pr_title)s"
+
+msgid "Cannot create empty pull request"
+msgstr "Δεν είναι δυνατή η δημιουργία κενής αίτησης έλξης"
+
+msgid ""
+"Cannot create pull request - criss cross merge detected, please merge a "
+"later %s revision to %s"
+msgstr ""
+"Δεν είναι δυνατή η δημιουργία αίτησης έλξης - εντοπίστηκε διασταυρούμενη "
+"συγχώνευση, παρακαλώ συγχωνεύστε μια μεταγενέστερη αναθεώρηση %s στο %s"
+
+msgid "You are not authorized to create the pull request"
+msgstr "Δεν έχετε εξουσιοδότηση για τη δημιουργία του αιτήματος έλξης"
+
+msgid "Missing changesets since the previous iteration:"
+msgstr "Λείπουν σετ αλλαγών από την προηγούμενη επανάληψη:"
+
+msgid "New changesets on %s %s since the previous iteration:"
+msgstr "Νέα σετ αλλαγών στο %s %s από την προηγούμενη επανάληψη:"
+
+msgid "Ancestor didn't change - diff since previous iteration:"
+msgstr "Ο πρόγονος δεν άλλαξε - διαφορά από την προηγούμενη επανάληψη:"
+
+msgid ""
+"This iteration is based on another %s revision and there is no simple "
+"diff."
+msgstr ""
+"Αυτή η επανάληψη βασίζεται σε μια άλλη αναθεώρηση %s και δεν υπάρχει απλή "
+"διαφορά."
+
+msgid "No changes found on %s %s since previous iteration."
+msgstr "Δεν βρέθηκαν αλλαγές στο %s %s από την προηγούμενη έκδοση."
+
+msgid "Closed, next iteration: %s ."
+msgstr "Κλειστή, επόμενη επανάληψη: %s ."
+
+msgid "latest tip"
+msgstr "τελευταία κεφαλή"
+
+msgid "SSH key %r is invalid: %s"
+msgstr "Το κλειδί SSH %r δεν είναι έγκυρο: %s"
+
+msgid "SSH key %s is already used by %s"
+msgstr "Το κλειδί SSH %s χρησιμοποιείται ήδη από το χρήστη %s"
+
+msgid "SSH key with fingerprint %r found"
+msgstr "Βρέθηκε κλειδί SSH με δακτυλικό αποτύπωμα %r"
+
+msgid "New user registration"
+msgstr "Εγγραφή νέου χρήστη"
+
+msgid ""
+"You can't remove this user since it is crucial for the entire application"
+msgstr ""
+"Δεν μπορείτε να καταργήσετε αυτόν το χρήστη, καθώς είναι ζωτικής σημασίας "
+"για ολόκληρη την εφαρμογή"
+
+msgid ""
+"User \"%s\" still owns %s repositories and cannot be removed. Switch "
+"owners or remove those repositories: %s"
+msgstr ""
+"Ο χρήστης \"%s\" εξακολουθεί να κατέχει %s αποθετήρια και δεν είναι "
+"δυνατόν να αφαιρεθεί. Αλλάξτε κάτοχο ή καταργείστε αυτά τα αποθετήρια: %s"
+
+msgid ""
+"User \"%s\" still owns %s repository groups and cannot be removed. Switch "
+"owners or remove those repository groups: %s"
+msgstr ""
+"Ο χρήστης \"%s\" εξακολουθεί να κατέχει %s ομάδες αποθετηρίων και δεν "
+"είναι δυνατόν να αφαιρεθεί. Αλλάξτε κάτοχο ή καταργείστε αυτές τις "
+"ομάδες: %s"
+
+msgid ""
+"User \"%s\" still owns %s user groups and cannot be removed. Switch "
+"owners or remove those user groups: %s"
+msgstr ""
+"Ο χρήστης \"%s\" εξακολουθεί να κατέχει %s ομάδες χρηστών και δεν είναι "
+"δυνατόν να αφαιρεθεί. Αλλάξτε κάτοχο ή αφαιρέστε αυτές τις ομάδες "
+"χρηστών: %s"
+
+msgid "Password reset link"
+msgstr "Σύνδεσμος επαναφοράς κωδικού πρόσβασης"
+
+msgid "Password reset notification"
+msgstr "Ειδοποίηση επαναφοράς κωδικού πρόσβασης"
+
+msgid ""
+"The password to your account %s has been changed using password reset "
+"form."
+msgstr ""
+"Ο κωδικός πρόσβασης στο λογαριασμό σας %s έχει αλλάξει χρησιμοποιώντας τη "
+"φόρμα επαναφοράς κωδικού πρόσβασης."
+
+msgid "Value cannot be an empty list"
+msgstr "Η τιμή δεν μπορεί να είναι μια κενή λίστα"
+
+msgid "Username \"%(username)s\" already exists"
+msgstr "Το όνομα χρήστη \"%(username)s\" υπάρχει ήδη"
+
+msgid "Username \"%(username)s\" cannot be used"
+msgstr "Δεν είναι δυνατή η χρήση του ονόματος χρήστη \"%(username)s\""
+
+msgid ""
+"Username may only contain alphanumeric characters underscores, periods or "
+"dashes and must begin with an alphanumeric character or underscore"
+msgstr ""
+"Το όνομα χρήστη μπορεί να περιέχει μόνο αλφαριθμητικούς χαρακτήρες, κάτω "
+"παύλες, τελείες ή παύλες και πρέπει να ξεκινά με αλφαριθμητικό χαρακτήρα "
+"ή κάτω παύλα"
+
+msgid "The input is not valid"
+msgstr "Η είσοδος δεν είναι έγκυρη"
+
+msgid "Username %(username)s is not valid"
+msgstr "Το όνομα χρήστη %(username)s δεν είναι έγκυρο"
+
+msgid "Invalid user group name"
+msgstr "Μη έγκυρο όνομα ομάδας χρηστών"
+
+msgid "User group \"%(usergroup)s\" already exists"
+msgstr "Η ομάδα χρηστών \"%(usergroup)s\" υπάρχει ήδη"
+
+msgid ""
+"user group name may only contain alphanumeric characters underscores, "
+"periods or dashes and must begin with alphanumeric character"
+msgstr ""
+"Το όνομα της ομάδας χρηστών μπορεί να περιέχει μόνο αλφαριθμητικούς "
+"χαρακτήρες, κάτω παύλες, τελείες ή παύλες και πρέπει να ξεκινά με "
+"αλφαριθμητικό χαρακτήρα"
+
+msgid "Cannot assign this group as parent"
+msgstr "Δεν είναι δυνατή η εκχώρηση αυτής της ομάδας ως γονικής"
+
+msgid "Group \"%(group_name)s\" already exists"
+msgstr "Η ομάδα \"%(group_name)s\" υπάρχει ήδη"
+
+msgid "Repository with name \"%(group_name)s\" already exists"
+msgstr "Το αποθετήριο με όνομα \"%(group_name)s\" υπάρχει ήδη"
+
+msgid "Invalid characters (non-ascii) in password"
+msgstr "Μη έγκυροι χαρακτήρες (μη ascii) στον κωδικό πρόσβασης"
+
+msgid "Invalid old password"
+msgstr "Ο παλιός κωδικός πρόσβασης δεν είναι έγκυρος"
+
+msgid "Passwords do not match"
+msgstr "Οι κωδικοί πρόσβασης δεν ταιριάζουν"
+
+msgid "Invalid username or password"
+msgstr "Το όνομα χρήστη ή ο κωδικός πρόσβασης δεν είναι έγκυρος"
+
+msgid "Repository name %(repo)s is not allowed"
+msgstr "Δεν επιτρέπεται το %(repo)s ως όνομα του αποθετηρίου"
+
+msgid "Repository named %(repo)s already exists"
+msgstr "Το αποθετήριο με το όνομα %(repo)s υπάρχει ήδη"
+
+msgid "Repository \"%(repo)s\" already exists in group \"%(group)s\""
+msgstr "Το αποθετήριο \"%(repo)s\" υπάρχει ήδη στην ομάδα \"%(group)s\""
+
+msgid "Repository group with name \"%(repo)s\" already exists"
+msgstr "Η ομάδα αποθετηρίου με το όνομα \"%(repo)s\" υπάρχει ήδη"
+
+msgid "Invalid repository URL"
+msgstr "Μη έγκυρη διεύθυνση URL αποθετηρίου"
+
+msgid ""
+"Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
+"svn+https URL"
+msgstr ""
+"Μη έγκυρη διεύθυνση URL του αποθετηρίου. Πρέπει να είναι μια έγκυρη http, "
+"https, ssh, svn+http ή svn+https διεύθυνση URL"
+
+msgid "You don't have permissions to create repository in this group"
+msgstr "Δεν έχετε δικαιώματα δημιουργίας αποθετηρίου σε αυτήν την ομάδα"
+
+msgid "no permission to create repository in root location"
+msgstr "Δεν υπάρχει δικαίωμα δημιουργίας αποθετηρίου στη ριζική τοποθεσία"
+
+msgid "You don't have permissions to create a group in this location"
+msgstr "Δεν έχετε δικαιώματα δημιουργίας ομάδας σε αυτήν την τοποθεσία"
+
+msgid "This username or user group name is not valid"
+msgstr "Αυτό το όνομα χρήστη ή το όνομα ομάδας χρηστών δεν είναι έγκυρο"
+
+msgid "This is not a valid path"
+msgstr "Αυτή η διαδρομή δεν είναι έγκυρη"
+
+msgid "This email address is already in use"
+msgstr "Αυτή η διεύθυνση ηλεκτρονικού ταχυδρομείου χρησιμοποιείται ήδη"
+
+msgid "Email address \"%(email)s\" not found"
+msgstr "Η διεύθυνση ηλεκτρονικού ταχυδρομείου \"%(email)s\" δεν βρέθηκε"
+
+msgid ""
+"The LDAP Login attribute of the CN must be specified - this is the name "
+"of the attribute that is equivalent to \"username\""
+msgstr ""
+"Πρέπει να προσδιοριστεί το χαρακτηριστικό LDAP Login του CN - αυτό είναι "
+"το όνομα του χαρακτηριστικού που είναι ισοδύναμο με το \"όνομα χρήστη\""
+
+msgid "Please enter a valid IPv4 or IPv6 address"
+msgstr "Παρακαλώ εισαγάγετε μια έγκυρη διεύθυνση IPv4 ή IPv6"
+
+msgid ""
+"The network size (bits) must be within the range of 0-32 (not %(bits)r)"
+msgstr ""
+"Το μέγεθος δικτύου (bits) πρέπει να βρίσκεται εντός της περιοχής 0-32 "
+"(όχι %(bits)r)"
+
+msgid "Key name can only consist of letters, underscore, dash or numbers"
+msgstr ""
+"Το όνομα κλειδιού μπορεί να αποτελείται μόνο από γράμματα, κάτω παύλα, "
+"παύλα ή αριθμούς"
+
+msgid "Filename cannot be inside a directory"
+msgstr "Το όνομα αρχείου δεν μπορεί να βρίσκεται μέσα σε έναν κατάλογο"
+
+msgid "Plugins %(loaded)s and %(next_to_load)s both export the same name"
+msgstr ""
+"Τα πρόσθετα %(loaded)s και %(next_to_load)s εξάγουν και τα δύο το ίδιο "
+"όνομα"
+
+msgid "About"
+msgstr "Σχετικά"
+
+msgid "Add Repository"
+msgstr "Προσθήκη Αποθετηρίου"
+
+msgid "Add Repository Group"
+msgstr "Προσθήκη Ομάδας Αποθετηρίων"
+
+msgid "You have admin right to this group, and can edit it"
+msgstr ""
+"Έχετε δικαίωμα διαχειριστή σε αυτήν την ομάδα και μπορείτε να την "
+"επεξεργαστείτε"
+
+msgid "Edit Repository Group"
+msgstr "Επεξεργασία Ομάδας Αποθετηρίων"
+
+msgid "Repository"
+msgstr "Αποθετήριο"
+
+msgid "Description"
+msgstr "Περιγραφή"
+
+msgid "Last Change"
+msgstr "Τελευταία Αλλαγή"
+
+msgid "Tip"
+msgstr "Κεφαλή"
+
+msgid "Owner"
+msgstr "Κάτοχος"
+
+msgid "Log In"
+msgstr "Σύνδεση"
+
+msgid "Log In to %s"
+msgstr "Συνδεθείτε στο %s"
+
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+msgid "Password"
+msgstr "Κωδικό πρόσβασης"
+
+msgid "Stay logged in after browser restart"
+msgstr ""
+"Μείνετε συνδεδεμένοι μετά την επανεκκίνηση του προγράμματος περιήγησης"
+
+msgid "Forgot your password ?"
+msgstr "Ξεχάσατε τον κωδικό σας;"
+
+msgid "Don't have an account ?"
+msgstr "Δεν έχετε λογαριασμό;"
+
+msgid "Sign In"
+msgstr "Είσοδος"
+
+msgid "Password Reset"
+msgstr "Επαναφορά κωδικού"
+
+msgid "Reset Your Password to %s"
+msgstr "Επαναφορά του κωδικού πρόσβασής σας στο %s"
+
+msgid "Reset Your Password"
+msgstr "Επαναφορά του κωδικού πρόσβασής σας"
+
+msgid "Email Address"
+msgstr "Διεύθυνση ηλεκτρονικού ταχυδρομείου"
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid "Send Password Reset Email"
+msgstr ""
+"Αποστολή μηνύματος ηλεκτρονικού ταχυδρομείου για την επαναφορά του "
+"κωδικού πρόσβασης"
+
+msgid ""
+"A password reset link will be sent to the specified email address if it "
+"is registered in the system."
+msgstr ""
+"Ένας σύνδεσμος για την επαναφορά του κωδικού πρόσβασης θα σταλεί στην "
+"καθορισμένη διεύθυνση ηλεκτρονικού ταχυδρομείου, εάν έχει καταχωρηθεί στο "
+"σύστημα."
+
+msgid "You are about to set a new password for the email address %s."
+msgstr ""
+"Πρόκειται να ορίσετε έναν νέο κωδικό πρόσβασης για τη διεύθυνση "
+"ηλεκτρονικού ταχυδρομείου %s."
+
+msgid ""
+"Note that you must use the same browser session for this as the one used "
+"to request the password reset."
+msgstr ""
+"Λάβετε υπόψη ότι πρέπει να χρησιμοποιήσετε την ίδια περίοδο λειτουργίας "
+"του προγράμματος περιήγησης με αυτήν που χρησιμοποιήθηκε για να ζητήσετε "
+"την επαναφορά του κωδικού πρόσβασης."
+
+msgid "Code you received in the email"
+msgstr "Κωδικός που λάβατε στο μήνυμα ηλεκτρονικού ταχυδρομείου"
+
+msgid "New Password"
+msgstr "Νέος Κωδικός"
+
+msgid "Confirm New Password"
+msgstr "Επιβεβαίωση Νέου Κωδικού Πρόσβασης"
+
+msgid "Confirm"
+msgstr "Επιβεβαίωση"
+
+msgid "Sign Up"
+msgstr "Εγγραφή"
+
+msgid "Sign Up to %s"
+msgstr "Εγγραφείτε στο %s"
+
+msgid "Re-enter password"
+msgstr "Εισαγάγετε ξανά τον κωδικό πρόσβασης"
+
+msgid "First Name"
+msgstr "Όνομα"
+
+msgid "Last Name"
+msgstr "Επώνυμο"
+
+msgid "Email"
+msgstr "Διεύθυνση Ηλεκτρονικού Ταχυδρομείου"
+
+msgid "Registered accounts are ready to use and need no further action."
+msgstr ""
+"Οι εγγεγραμμένοι λογαριασμοί είναι έτοιμοι για χρήση και δεν χρειάζονται "
+"περαιτέρω ενέργειες."
+
+msgid "Please wait for an administrator to activate your account."
+msgstr ""
+"Περιμένετε έως ότου ένας διαχειριστής ενεργοποιήσει τον λογαριασμό σας."
+
+msgid "Admin Journal"
+msgstr "Ημερολόγιο Διαχειριστή"
+
+msgid "journal filter..."
+msgstr "φίλτρο εγγραφών..."
+
+msgid "Filter"
+msgstr "Φίλτρο"
+
+msgid "%s Entry"
+msgid_plural "%s Entries"
+msgstr[0] "%s Καταχώρηση"
+msgstr[1] "%s Καταχωρήσεις"
+
+msgid "Action"
+msgstr "Ενέργεια"
+
+msgid "Date"
+msgstr "Ημερομηνία"
+
+msgid "From IP"
+msgstr "Από IP"
+
+msgid "No actions yet"
+msgstr "Καμία ενέργεια ακόμα"
+
+msgid "Authentication Settings"
+msgstr "Ρυθμίσεις ελέγχου ταυτότητας"
+
+msgid "Authentication"
+msgstr "Έλεγχος ταυτότητας"
+
+msgid "Authentication Plugins"
+msgstr "Πρόσθετα ελέγχου ταυτότητας"
+
+msgid "Enabled Plugins"
+msgstr "Ενεργοποιημένα Πρόσθετα"
+
+msgid ""
+"Comma-separated list of plugins; Kallithea will try user authentication "
+"in plugin order"
+msgstr ""
+"Λίστα πρόσθετων διαχωρισμένη με κόμματα. Η Καλλιθέα θα προσπαθήσει να "
+"ελέγξει την ταυτότητα του χρήστη με τη σειρά του πρόσθετου"
+
+msgid "Available built-in plugins"
+msgstr "Διαθέσιμα ενσωματωμένα πρόσθετα"
+
+msgid "Plugin"
+msgstr "Πρόσθετο"
+
+msgid "Save"
+msgstr "Αποθήκευση"
+
+msgid "Repository Defaults"
+msgstr "Προεπιλογές Αποθετηρίου"
+
+msgid "Type"
+msgstr "Τύπος"
+
+msgid "Private repository"
+msgstr "Ιδιωτικό αποθετήριο"
+
+msgid ""
+"Private repositories are only visible to people explicitly added as "
+"collaborators."
+msgstr ""
+"Τα ιδιωτικά αποθετήρια είναι ορατά μόνο σε άτομα που προστίθενται ρητά ως "
+"συνεργάτες."
+
+msgid "Enable statistics"
+msgstr "Ενεργοποίηση στατιστικών"
+
+msgid "Enable statistics window on summary page."
+msgstr "Ενεργοποίηση παραθύρου στατιστικών στοιχείων στη σελίδα περίληψης."
+
+msgid "Enable downloads"
+msgstr "Ενεργοποίηση λήψεων"
+
+msgid "Enable download menu on summary page."
+msgstr "Ενεργοποίηση μενού λήψης στη σελίδα περίληψης."
+
+msgid "Edit Gist"
+msgstr "Επεξεργασία Gist"
+
+msgid ""
+"Gist was updated since you started editing. Copy your changes and click "
+"%(here)s to reload new version."
+msgstr ""
+"Το gist ενημερώθηκε από τότε που αρχίσατε την επεξεργασία. Αντιγράψτε τις "
+"αλλαγές σας και κάντε κλικ στο κουμπί %(here)s για να φορτώσετε τη νέα "
+"έκδοση."
+
+msgid "here"
+msgstr "εδώ"
+
+msgid "Gist description ..."
+msgstr "Περιγραφή gist..."
+
+msgid "Gist lifetime"
+msgstr "Διάρκεια ζωής του gist"
+
+msgid "Expires"
+msgstr "Λήγει"
+
+msgid "Never"
+msgstr "Ποτέ"
+
+msgid "Update Gist"
+msgstr "Ενημέρωση του gist"
+
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+msgid "Private Gists for User %s"
+msgstr "Ιδιωτικά gists για το χρήστη %s"
+
+msgid "Public Gists for User %s"
+msgstr "Δημόσια gists για το χρήστη %s"
+
+msgid "Public Gists"
+msgstr "Δημόσια Gists"
+
+msgid "Create New Gist"
+msgstr "Δημιουργία Νέου Gist"
+
+msgid "Created"
+msgstr "Δημιουργήθηκε"
+
+msgid "There are no gists yet"
+msgstr "Δεν υπάρχουν ακόμη gists"
+
+msgid "New Gist"
+msgstr "Νέο Gist"
+
+msgid "Name this gist ..."
+msgstr "Ονομάστε αυτό το gist..."
+
+msgid "Create Private Gist"
+msgstr "Δημιουργία Ιδιωτικού Gist"
+
+msgid "Create Public Gist"
+msgstr "Δημιουργία Δημόσιου Gist"
+
+msgid "Reset"
+msgstr "Επαναφορά"
+
+msgid "Gist"
+msgstr "Gist"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Public Gist"
+msgstr "Δημόσιο Gist"
+
+msgid "Private Gist"
+msgstr "Ιδιωτικό Gist"
+
+msgid "Delete"
+msgstr "Διαγραφή"
+
+msgid "Confirm to delete this Gist"
+msgstr "Επιβεβαίωση για διαγραφή αυτού του Gist"
+
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+msgid "Show as Raw"
+msgstr "Ακατέργαστη Εμφάνιση"
+
+msgid "created"
+msgstr "δημιουργήθηκε"
+
+msgid "Show as raw"
+msgstr "Ακατέργαστη εμφάνιση"
+
+msgid "My Account"
+msgstr "Ο Λογαριασμός Μου"
+
+msgid "Profile"
+msgstr "Προφίλ"
+
+msgid "Email Addresses"
+msgstr "Διευθύνσεις ηλεκτρονικού ταχυδρομείου"
+
+msgid "SSH Keys"
+msgstr "Κλειδιά SSH"
+
+msgid "API Keys"
+msgstr "Κλειδιά API"
+
+msgid "Owned Repositories"
+msgstr "Αποθετήρια που μου Ανήκουν"
+
+msgid "Watched Repositories"
+msgstr "Αποθετήρια που Παρακολουθώ"
+
+msgid "Show Permissions"
+msgstr "Εμφάνιση Δικαιωμάτων"
+
+msgid "Built-in"
+msgstr "Ενσωματωμένο"
+
+msgid "Confirm to reset this API key: %s"
+msgstr "Επιβεβαίωση για επαναφορά αυτού του κλειδιού API: %s"
+
+msgid "Expired"
+msgstr "Έληξε"
+
+msgid "Confirm to remove this API key: %s"
+msgstr "Επιβεβαίωση κατάργησης αυτού του κλειδιού API: %s"
+
+msgid "Remove"
+msgstr "Κατάργηση"
+
+msgid "No additional API keys specified"
+msgstr "Δεν έχουν καθοριστεί πρόσθετα κλειδιά API"
+
+msgid "New API key"
+msgstr "Νέο κλειδί API"
+
+msgid "Add"
+msgstr "Προσθήκη"
+
+msgid ""
+"\n"
+"API keys are used to let scripts or services access %s using your\n"
+"account, as if you had provided the script or service with your actual\n"
+"password.\n"
+msgstr ""
+"\n"
+"Τα κλειδιά API χρησιμοποιούνται για να επιτρέπουν προγράμματα ή υπηρεσίες "
+"να έχουν πρόσβαση στο %s χρησιμοποιώντας το λογαριασμό σας, σαν να "
+"παρείχατε στο πρόγραμμα ή την υπηρεσία, τον πραγματικό σας κωδικό "
+"πρόσβασης.\n"
+
+msgid ""
+"\n"
+"Like passwords, API keys should therefore never be shared with others,\n"
+"nor passed to untrusted scripts or services. If such sharing should\n"
+"happen anyway, reset the API key on this page to prevent further use.\n"
+msgstr ""
+"\n"
+"Όπως οι κωδικοί πρόσβασης, τα κλειδιά API δεν πρέπει επομένως να "
+"κοινοποιούνται ποτέ σε άλλους,\n"
+"ούτε να μεταβιβάζονται σε μη αξιόπιστα προγράμματα ή υπηρεσίες. Εάν μια "
+"τέτοια κοινοποίηση πρέπει\n"
+"γίνει, επαναφέρετε το κλειδί API σε αυτήν τη σελίδα για να αποφύγετε "
+"περαιτέρω χρήση.\n"
+
+msgid "Primary"
+msgstr "Πρωτεύων"
+
+msgid "Confirm to delete this email: %s"
+msgstr ""
+"Επιβεβαίωση διαγραφής αυτού του μηνύματος ηλεκτρονικού ταχυδρομείου: %s"
+
+msgid "No additional emails specified."
+msgstr "Δεν έχουν καθοριστεί πρόσθετα μηνύματα ηλεκτρονικού ταχυδρομείου."
+
+msgid "New email address"
+msgstr "Νέα διεύθυνση ηλεκτρονικού ταχυδρομείου"
+
+msgid "Change Your Account Password"
+msgstr "Αλλαγή του Κωδικού Πρόσβασης του Λογαριασμού σας"
+
+msgid "Current password"
+msgstr "Τρέχων κωδικός πρόσβασης"
+
+msgid "New password"
+msgstr "Νέος κωδικός πρόσβασης"
+
+msgid "Confirm new password"
+msgstr "Επιβεβαίωση νέου κωδικού πρόσβασης"
+
+msgid ""
+"This account is managed with %s and the password cannot be changed here"
+msgstr ""
+"Η διαχείριση αυτού του λογαριασμού γίνεται με %s και ο κωδικός πρόσβασης "
+"δεν μπορεί να αλλάξει εδώ"
+
+msgid "Current IP"
+msgstr "Τρέχουσα IP"
+
+msgid "Gravatar"
+msgstr "Gravatar"
+
+msgid "Change %s avatar at"
+msgstr "Αλλαγή avatar %s στο"
+
+msgid "Avatars are disabled"
+msgstr "Τα Avatars είναι απενεργοποιημένα"
+
+msgid "Repositories You Own"
+msgstr "Αποθετήρια που σας ανήκουν"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid "Fingerprint"
+msgstr "Αποτύπωμα"
+
+msgid "Last Used"
+msgstr "Τελευταία χρησιμοποιήθηκε"
+
+msgid "Confirm to remove this SSH key: %s"
+msgstr "Επιβεβαίωση κατάργησης αυτού του κλειδιού SSH: %s"
+
+msgid "No SSH keys have been added"
+msgstr "Δεν έχουν προστεθεί κλειδιά SSH"
+
+msgid "New SSH key"
+msgstr "Νέο κλειδί SSH"
+
+msgid "Public key"
+msgstr "Δημόσιο κλειδί"
+
+msgid "Public key (contents of e.g. ~/.ssh/id_rsa.pub)"
+msgstr "Δημόσιο κλειδί (περιεχόμενο π.χ. ~/.ssh/id_rsa.pub)"
+
+msgid "Repositories You are Watching"
+msgstr "Αποθετήρια που παρακολουθείτε"
+
+msgid "Default Permissions"
+msgstr "Προεπιλεγμένα Δικαιώματα"
+
+msgid "Global"
+msgstr "Γενικά"
+
+msgid "IP Whitelist"
+msgstr "Λίστα επιτρεπόμενων IP"
+
+msgid "Anonymous access"
+msgstr "Ανώνυμη πρόσβαση"
+
+msgid "Allow anonymous access"
+msgstr "Να επιτρέπεται η ανώνυμη πρόσβαση"
+
+msgid ""
+"Allow access to Kallithea without needing to log in. Anonymous users use "
+"%s user permissions."
+msgstr ""
+"Να επιτρέπεται η πρόσβαση στην Καλλιθέα χωρίς να χρειάζεται να "
+"συνδεθείτε. Οι ανώνυμοι χρήστες χρησιμοποιούν δικαιώματα χρήστη %s."
+
+msgid ""
+"All default permissions on each repository will be reset to chosen "
+"permission, note that all custom default permission on repositories will "
+"be lost"
+msgstr ""
+"Όλα τα προεπιλεγμένα δικαιώματα σε κάθε αποθετήριο θα επαναφερθούν στα "
+"επιλεγμένα δικαιώματα. Σημειώστε ότι όλα τα προσαρμοσμένα προεπιλεγμένα "
+"δικαιώματα στα αποθετήρια θα χαθούν"
+
+msgid "Apply to all existing repositories"
+msgstr "Εφαρμογή σε όλα τα υπάρχοντα αποθετήρια"
+
+msgid "Permissions for the Default user on new repositories."
+msgstr "Δικαιώματα για τον προεπιλεγμένο χρήστη σε νέα αποθετήρια."
+
+msgid "Repository group"
+msgstr "Ομάδα αποθετηρίου"
+
+msgid ""
+"All default permissions on each repository group will be reset to chosen "
+"permission, note that all custom default permission on repository groups "
+"will be lost"
+msgstr ""
+"Όλα τα προεπιλεγμένα δικαιώματα σε κάθε ομάδα αποθετηρίων θα επαναφερθούν "
+"στα επιλεγμένα δικαιώματα. Σημειώστε ότι όλα τα προσαρμοσμένα "
+"προεπιλεγμένα δικαιώματα στις ομάδες αποθετηρίων θα χαθούν"
+
+msgid "Apply to all existing repository groups"
+msgstr "Εφαρμογή σε όλες τις υπάρχουσες ομάδες αποθετηρίων"
+
+msgid "Permissions for the Default user on new repository groups."
+msgstr "Δικαιώματα για τον προεπιλεγμένο χρήστη σε νέες ομάδες αποθετηρίων."
+
+msgid "User group"
+msgstr "Ομάδα χρηστών"
+
+msgid ""
+"All default permissions on each user group will be reset to chosen "
+"permission, note that all custom default permission on user groups will "
+"be lost"
+msgstr ""
+"Όλα τα προεπιλεγμένα δικαιώματα σε κάθε ομάδα χρηστών θα επαναφερθούν στα "
+"επιλεγμένα δικαιώματα. Σημειώστε ότι όλα τα προσαρμοσμένα προεπιλεγμένα "
+"δικαιώματα στις ομάδες χρηστών θα χαθούν"
+
+msgid "Apply to all existing user groups"
+msgstr "Εφαρμογή σε όλες τις υπάρχουσες ομάδες χρηστών"
+
+msgid "Permissions for the Default user on new user groups."
+msgstr "Δικαιώματα για τον προεπιλεγμένο χρήστη σε νέες ομάδες χρηστών."
+
+msgid "Top level repository creation"
+msgstr "Δημιουργία αποθετηρίου ανώτατου επιπέδου"
+
+msgid ""
+"Enable this to allow non-admins to create repositories at the top level."
+msgstr ""
+"Ενεργοποιήστε αυτήν την επιλογή ώστε να επιτρέπεται σε μη διαχειριστές να "
+"δημιουργούν αποθετήρια στο ανώτερο επίπεδο."
+
+msgid ""
+"Note: This will also give all users API access to create repositories "
+"everywhere. That might change in future versions."
+msgstr ""
+"Σημείωση: Αυτό θα δώσει επίσης σε όλους τους χρήστες πρόσβαση API για τη "
+"δημιουργία αποθετηρίων παντού. Αυτό μπορεί να αλλάξει σε μελλοντικές "
+"εκδόσεις."
+
+msgid "Repository creation with group write access"
+msgstr "Δημιουργία αποθετηρίου με πρόσβαση εγγραφής ομάδας"
+
+msgid ""
+"With this, write permission to a repository group allows creating "
+"repositories inside that group. Without this, group write permissions "
+"mean nothing."
+msgstr ""
+"Με αυτό, η άδεια εγγραφής σε μια ομάδα αποθετηρίων επιτρέπει τη "
+"δημιουργία αποθετηρίων εντός αυτής της ομάδας. Χωρίς αυτό, τα δικαιώματα "
+"ομαδικής εγγραφής δεν σημαίνουν τίποτα."
+
+msgid "User group creation"
+msgstr "Δημιουργία ομάδας χρηστών"
+
+msgid "Enable this to allow non-admins to create user groups."
+msgstr ""
+"Ενεργοποιήστε αυτήν την επιλογή για να επιτρέψετε σε μη διαχειριστές να "
+"δημιουργούν ομάδες χρηστών."
+
+msgid "Registration"
+msgstr "Εγγραφή"
+
+msgid "External auth account activation"
+msgstr "Ενεργοποίηση λογαριασμού εξωτερικού ελέγχου"
+
+msgid "Confirm to delete this IP address: %s"
+msgstr "Επιβεβαίωση για διαγραφή αυτής της διεύθυνσης IP: %s"
+
+msgid "All IP addresses are allowed."
+msgstr "Επιτρέπονται όλες οι διευθύνσεις IP."
+
+msgid "New IP address"
+msgstr "Νέα διεύθυνση IP"
+
+msgid "Repository Groups"
+msgstr "Ομάδες Αποθετηρίου"
+
+msgid "Group name"
+msgstr "Όνομα ομάδας"
+
+msgid "Group parent"
+msgstr "Γονική ομάδα"
+
+msgid "Copy parent group permissions"
+msgstr "Αντιγραφή δικαιωμάτων γονικής ομάδας"
+
+msgid "Copy permission set from parent repository group."
+msgstr "Αντιγραφή συνόλου δικαιωμάτων από γονική ομάδα αποθετηρίου."
+
+msgid "%s Repository Group Settings"
+msgstr "Ρυθμίσεις ομάδας αποθετηρίου %s"
+
+msgid "Add Child Group"
+msgstr "Προσθήκη Θυγατρικής Ομάδας"
+
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+msgid "Advanced"
+msgstr "Προχωρημένες Ρυθμίσεις"
+
+msgid "Permissions"
+msgstr "Δικαιώματα"
+
+msgid "Repository Group: %s"
+msgstr "Ομάδα αποθετηρίου: %s"
+
+msgid "Top level repositories"
+msgstr "Αποθετήρια ανώτατου επιπέδου"
+
+msgid "Total repositories"
+msgstr "Σύνολο αποθετηρίων"
+
+msgid "Children groups"
+msgstr "Θυγατρικές ομάδες"
+
+msgid "Created on"
+msgstr "Δημιουργήθηκε στις"
+
+msgid "Confirm to delete this group: %s with %s repository"
+msgid_plural "Confirm to delete this group: %s with %s repositories"
+msgstr[0] ""
+"Επιβεβαίωση διαγραφής αυτής της ομάδας: %s με αποθετήριο δεδομένων %s"
+msgstr[1] ""
+"Επιβεβαίωση διαγραφής αυτής της ομάδας: %s με αποθετήρια δεδομένων %s"
+
+msgid "Delete this repository group"
+msgstr "Διαγραφή αυτής της ομάδας αποθετηρίων"
+
+msgid "Not visible"
+msgstr "Μη ορατό"
+
+msgid "Visible"
+msgstr "Ορατό"
+
+msgid "Add repos"
+msgstr "Προσθήκη αποθετηρίων"
+
+msgid "Add/Edit groups"
+msgstr "Προσθήκη/Επεξεργασία ομάδων"
+
+msgid "User/User Group"
+msgstr "Χρήστης / Ομάδα χρηστών"
+
+msgid "Default"
+msgstr "Προεπιλογή"
+
+msgid "Revoke"
+msgstr "Ανακάλεσε"
+
+msgid "Add new"
+msgstr "Προσθήκη νέου"
+
+msgid "Apply to children"
+msgstr "Εφαρμογή στα θυγατρικά"
+
+msgid "Both"
+msgstr "Και τα δυο"
+
+msgid ""
+"Set or revoke permission to all children of that group, including non-"
+"private repositories and other groups if selected."
+msgstr ""
+"Ορίστε ή ανακαλέστε τα θυγατρικά δικαιώματα αυτής της ομάδας, "
+"συμπεριλαμβανομένων των μη ιδιωτικών αποθετηρίων και άλλων ομάδων, εάν "
+"επιλεγεί."
+
+msgid "Remove this group"
+msgstr "Κατάργηση αυτής της ομάδας"
+
+msgid "Confirm to delete this group"
+msgstr "Επιβεβαιώστε για να διαγράψετε αυτή την ομάδα"
+
+msgid "Repository group %s"
+msgstr "Ομάδα αποθετηρίων %s"
+
+msgid "Repository Groups Administration"
+msgstr "Διαχείριση Ομάδων Αποθετηρίου"
+
+msgid "Number of Top-level Repositories"
+msgstr "Αριθμός αποθετηρίων ανώτατου επιπέδου"
+
+msgid "Clone remote repository"
+msgstr "Κλωνοποίηση απομακρυσμένου αποθετηρίου"
+
+msgid ""
+"Optional: URL of a remote repository. If set, the repository will be "
+"created as a clone from this URL."
+msgstr ""
+"Προαιρετικό: Διεύθυνση URL ενός απομακρυσμένου αποθετηρίου. Εάν οριστεί, "
+"το αποθετήριο θα δημιουργηθεί ως κλώνος από αυτήν τη διεύθυνση URL."
+
+msgid ""
+"Keep it short and to the point. Use a README file for longer descriptions."
+msgstr ""
+"Κρατήστε τη σύντομη και περιεκτική. Χρησιμοποιήστε ένα αρχείο README για "
+"μεγαλύτερες περιγραφές."
+
+msgid "Optionally select a group to put this repository into."
+msgstr ""
+"Προαιρετικά, επιλέξτε μια ομάδα για να τοποθετήσετε αυτό το αποθετήριο."
+
+msgid "Type of repository to create."
+msgstr "Τύπος αποθετηρίου προς δημιουργία."
+
+msgid ""
+"Default revision for files page, downloads, full text search index and "
+"readme generation"
+msgstr ""
+"Προεπιλεγμένη αναθεώρηση για τη σελίδα αρχείων, λήψεων, ευρετήριο "
+"αναζήτησης πλήρους κειμένου και δημιουργία readme"
+
+msgid "%s Creating Repository"
+msgstr "%s Δημιουργία Αποθετηρίου"
+
+msgid "Creating repository"
+msgstr "Δημιουργία αποθετηρίου"
+
+msgid ""
+"Repository \"%(repo_name)s\" is being created, you will be redirected "
+"when this process is finished.repo_name"
+msgstr ""
+"Δημιουργείται το αποθετήριο \"%(repo_name)s\", θα ανακατευθυνθείτε όταν "
+"ολοκληρωθεί αυτή η διαδικασία."
+
+msgid ""
+"We're sorry but error occurred during this operation. Please check your "
+"Kallithea server logs, or contact administrator."
+msgstr ""
+"Λυπούμαστε, αλλά παρουσιάστηκε σφάλμα κατά τη διάρκεια αυτής της "
+"λειτουργίας. Ελέγξτε τα αρχεία καταγραφής του διακομιστή Καλλιθέας ή "
+"επικοινωνήστε με το διαχειριστή."
+
+msgid "%s Repository Settings"
+msgstr "Ρυθμίσεις Αποθετηρίου %s"
+
+msgid "Extra Fields"
+msgstr "Επιπλέον Πεδία"
+
+msgid "Remote"
+msgstr "Απομακρυσμένο"
+
+msgid "Statistics"
+msgstr "Στατιστικά"
+
+msgid "Parent"
+msgstr "Γονικό"
+
+msgid "Set"
+msgstr "Ορισμός"
+
+msgid "Public Journal Visibility"
+msgstr "Ορατότητα δημόσιων εγγραφών"
+
+msgid "Remove from public journal"
+msgstr "Κατάργηση από τις δημόσιες εγγραφές"
+
+msgid "Add to Public Journal"
+msgstr "Προσθήκη στις Δημόσια Εγγραφές"
+
+msgid ""
+"All actions done in this repository will be visible to everyone in the "
+"public journal."
+msgstr ""
+"Όλες οι ενέργειες που γίνονται σε αυτό το αποθετήριο θα είναι ορατές σε "
+"όλους στις δημόσιες εγγραφές."
+
+msgid "Confirm to delete this repository: %s"
+msgstr "Επιβεβαίωση διαγραφής αυτού του αποθετηρίου: %s"
+
+msgid "Delete this Repository"
+msgstr "Διαγραφή αυτού του Αποθετηρίου"
+
+msgid "This repository has %s fork"
+msgid_plural "This repository has %s forks"
+msgstr[0] "Αυτό το αποθετήριο έχει %s παράγωγο"
+msgstr[1] "Αυτό το αποθετήριο έχει %s παράγωγα"
+
+msgid ""
+"The deleted repository will be moved away and hidden until the "
+"administrator expires it. The administrator can both permanently delete "
+"it or restore it."
+msgstr ""
+"Το διαγραμμένο αποθετήριο θα απομακρυνθεί και θα κρυφτεί έως ότου το "
+"λήξει ο διαχειριστής. Ο διαχειριστής μπορεί να το διαγράψει οριστικά ή να "
+"το επαναφέρει."
+
+msgid "Label"
+msgstr "Ετικέτα"
+
+msgid "Key"
+msgstr "Κλειδί"
+
+msgid "Confirm to delete this field: %s"
+msgstr "Επιβεβαίωση διαγραφής αυτού του πεδίου: %s"
+
+msgid "New field key"
+msgstr "Νέο κλειδί πεδίου"
+
+msgid "New field label"
+msgstr "Νέα ετικέτα πεδίου"
+
+msgid "Enter short label"
+msgstr "Εισαγωγή σύντομης ετικέτας"
+
+msgid "New field description"
+msgstr "Νέα περιγραφή πεδίου"
+
+msgid "Enter description of a field"
+msgstr "Εισαγωγή περιγραφής ενός πεδίου"
+
+msgid "Extra fields are disabled."
+msgstr "Τα επιπλέον πεδία είναι απενεργοποιημένα."
+
+msgid "Private Repository"
+msgstr "Ιδιωτικό Αποθετήριο"
+
+msgid "Remote repository URL"
+msgstr "Διεύθυνση URL απομακρυσμένου αποθετηρίου"
+
+msgid "Pull Changes from Remote Repository"
+msgstr "Τραβήξτε τις αλλαγές από το απομακρυσμένο αποθετήριο"
+
+msgid "Confirm to pull changes from remote repository."
+msgstr ""
+"Επιβεβαιώστε ότι θα τραβήξετε αλλαγές από το απομακρυσμένο αποθετήριο "
+"δεδομένων."
+
+msgid "This repository does not have a remote repository URL."
+msgstr ""
+"Αυτό το αποθετήριο δεν έχει διεύθυνση URL απομακρυσμένου αποθετηρίου."
+
+msgid "Permanent URL"
+msgstr "Μόνιμη διεύθυνση URL"
+
+msgid ""
+"In case this repository is renamed or moved into another group the "
+"repository URL changes.\n"
+"                               Using the above permanent URL guarantees "
+"that this repository always will be accessible on that URL.\n"
+"                               This is useful for CI systems, or any "
+"other cases that you need to hardcode the URL into a 3rd party service."
+msgstr ""
+"Η διεύθυνση URL του αποθετηρίου αλλάζει όταν αυτό μετονομαστεί ή "
+"μετακινηθεί σε άλλη ομάδα.\n"
+"                               Η χρήση της παραπάνω μόνιμης διεύθυνσης "
+"URL εγγυάται ότι αυτό το αποθετήριο θα είναι πάντα προσβάσιμο σε αυτήν τη "
+"διεύθυνση URL.\n"
+"                               Αυτό είναι χρήσιμο για συστήματα CI ή για "
+"άλλες περιπτώσεις που χρειάζεστε να κωδικοποιήσετε τη διεύθυνση URL σε "
+"κάποια υπηρεσία τρίτου μέρους."
+
+msgid "Remote repository"
+msgstr "Απομακρυσμένο αποθετήριο"
+
+msgid "Repository URL"
+msgstr "URL Αποθετηρίου"
+
+msgid ""
+"Optional: URL of a remote repository. If set, the repository can be "
+"pulled from this URL."
+msgstr ""
+"Προαιρετικό: Διεύθυνση URL ενός απομακρυσμένου αποθετηρίου. Εάν οριστεί, "
+"το αποθετήριο μπορεί να τραβηχτεί από αυτήν τη διεύθυνση URL."
+
+msgid "Default revision for files page, downloads, whoosh and readme"
+msgstr ""
+"Προεπιλεγμένη αναθεώρηση για τη σελίδα αρχείων, λήψεων, Whoosh και readme"
+
+msgid "Type name of user"
+msgstr "Πληκτρολογήστε το όνομα του χρήστη"
+
+msgid "Change owner of this repository."
+msgstr "Αλλάξτε τον κάτοχο αυτού του αποθετηρίου."
+
+msgid "Processed commits"
+msgstr "Επεξεργασμένα commits"
+
+msgid "Processed progress"
+msgstr "Επεξεργασμένη πρόοδος"
+
+msgid "Reset Statistics"
+msgstr "Επαναφορά Στατιστικών"
+
+msgid "Confirm to remove current statistics."
+msgstr "Επιβεβαιώστε την κατάργηση των τρεχόντων στατιστικών στοιχείων."
+
+msgid "Repositories Administration"
+msgstr "Διαχείριση Αποθετηρίων"
+
+msgid "State"
+msgstr "Κατάσταση"
+
+msgid "Settings Administration"
+msgstr "Διαχείριση Ρυθμίσεων"
+
+msgid "VCS"
+msgstr "VCS"
+
+msgid "Remap and Rescan"
+msgstr "Επανάληψη αντιστοίχισης και επανασάρωση"
+
+msgid "Visual"
+msgstr "Εμφάνιση"
+
+msgid "Full Text Search"
+msgstr "Αναζήτηση Πλήρους Κειμένου"
+
+msgid "System Info"
+msgstr "Πληροφορίες Συστήματος"
+
+msgid "Send test email to"
+msgstr "Αποστολή δοκιμαστικού μηνύματος ηλεκτρονικού ταχυδρομείου σε"
+
+msgid "Send"
+msgstr "Αποστολή"
+
+msgid "Site branding"
+msgstr "Επωνυμία ιστότοπου"
+
+msgid "Set a custom title for your Kallithea Service."
+msgstr "Ορίστε έναν προσαρμοσμένο τίτλο για την υπηρεσία της Καλλιθέα σας."
+
+msgid "HTML/JavaScript/CSS customization block"
+msgstr "Μπλοκ προσαρμογής HTML / JavaScript / CSS"
+
+msgid ""
+"HTML (possibly with                         JavaScript and/or CSS) that "
+"will be added to the bottom                         of every page. This "
+"can be used for web analytics                         systems, but also "
+"to                         perform instance-specific customizations like "
+"adding a                         project banner at the top of every page."
+msgstr ""
+"HTML (ενδεχομένως με JavaScript ή / και CSS) που θα προστεθούν στο κάτω "
+"μέρος της κάθε σελίδας. Αυτό μπορεί να χρησιμοποιηθεί για web analytics, "
+"αλλά και για την προσαρμογή της εμφάνισης, όπως η προσθήκη ενός banner "
+"στο επάνω μέρος κάθε σελίδας."
+
+msgid "ReCaptcha public key"
+msgstr "Δημόσιο κλειδί ReCaptcha"
+
+msgid "Public key for reCaptcha system."
+msgstr "Δημόσιο κλειδί για το σύστημα reCaptcha."
+
+msgid "ReCaptcha private key"
+msgstr "Ιδιωτικό κλειδί ReCaptcha"
+
+msgid ""
+"Private key for reCaptcha system. Setting this value will enable captcha "
+"on registration."
+msgstr ""
+"Ιδιωτικό κλειδί για το σύστημα reCaptcha. Ο καθορισμός αυτής της τιμής θα "
+"ενεργοποιήσει το captcha κατά την εγγραφή."
+
+msgid "Save Settings"
+msgstr "Αποθήκευση Ρυθμίσεων"
+
+msgid "Built-in Mercurial Hooks (Read-Only)"
+msgstr "Ενσωματωμένοι Mercurial Hooks (μόνο για ανάγνωση)"
+
+msgid "Rescan options"
+msgstr "Επιλογές Επανασάρωσης"
+
+msgid "Delete records of missing repositories"
+msgstr "Διαγραφή εγγραφών αποθετηρίων που λείπουν"
+
+msgid ""
+"Check this option to remove all comments, pull requests and other records "
+"related to repositories that no longer exist in the filesystem."
+msgstr ""
+"Επιλέξτε αυτήν την επιλογή για να καταργήσετε όλα τα σχόλια, να αιτήματα "
+"έλξης και άλλες εγγραφές που σχετίζονται με αποθετήρια που δεν υπάρχουν "
+"πλέον στο σύστημα αρχείων."
+
+msgid "Invalidate cache for all repositories"
+msgstr "Ακυρώνει την προσωρινή αποθήκευση για όλα τα αποθετήρια"
+
+msgid "Check this to reload data and clear cache keys for all repositories."
+msgstr ""
+"Επιλέξτε αυτό για να φορτώσετε ξανά τα δεδομένα και να καταργήστε την "
+"cache για όλα τα αποθετήρια."
+
+msgid "Install Git hooks"
+msgstr "Εγκατάσταση Git hooks"
+
+msgid ""
+"Verify if Kallithea's Git hooks are installed for each repository. "
+"Current hooks will be updated to the latest version."
+msgstr ""
+"Επαληθεύστε εάν τα Git hooks της Καλλιθέας είναι εγκατεστημένα για κάθε "
+"αποθετήριο. Τα τρέχοντα hooks θα ενημερωθούν στην τελευταία έκδοση."
+
+msgid "Overwrite existing Git hooks"
+msgstr "Αντικατάσταση υπαρχόντων Git hooks"
+
+msgid ""
+"If installing Git hooks, overwrite any existing hooks, even if they do "
+"not seem to come from Kallithea. WARNING: This operation will destroy any "
+"custom git hooks you may have deployed by hand!"
+msgstr ""
+"Εάν εγκαθιστάτε Git hooks, αντικαταστήστε τυχόν υπάρχοντα hooks, ακόμα κι "
+"αν δεν φαίνεται να προέρχονται από την Καλλιθέα. ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτή η "
+"λειτουργία θα καταστρέψει τυχόν προσαρμοσμένα git hooks που μπορεί να "
+"έχετε αναπτύξει με το χέρι!"
+
+msgid "Rescan Repositories"
+msgstr "Επανασάρωση αποθετηρίων"
+
+msgid "Index build option"
+msgstr "Επιλογή δημιουργίας ευρετηρίου"
+
+msgid "Build from scratch"
+msgstr "Κατασκευή από το μηδέν"
+
+msgid ""
+"This option completely reindexeses all of the repositories for proper "
+"fulltext search capabilities."
+msgstr ""
+"Αυτή η επιλογή ξαναδημιουργεί πλήρως τα ευρετήρια σε όλα τα αποθετήρια "
+"για δυνατότητα αναζήτησης πλήρους κειμένου."
+
+msgid "Reindex"
+msgstr "Αναδημιουργία ευρετηρίου"
+
+msgid "Checking for updates..."
+msgstr "Έλεγχος για ενημερώσεις..."
+
+msgid "Kallithea version"
+msgstr "Έκδοση Καλλιθέας"
+
+msgid "Kallithea configuration file"
+msgstr "Αρχείο διαμόρφωσης Καλλιθέας"
+
+msgid "Python version"
+msgstr "Έκδοση Python"
+
+msgid "Platform"
+msgstr "Πλατφόρμα"
+
+msgid "Git version"
+msgstr "Έκδοση Git"
+
+msgid "Git path"
+msgstr "Διαδρομή Git"
+
+msgid "Python Packages"
+msgstr "Πακέτα Python"
+
+msgid "Show repository size after push"
+msgstr "Εμφάνιση μεγέθους αποθετηρίου μετά την ώθηση"
+
+msgid "Update repository after push (hg update)"
+msgstr "Ενημέρωση αποθετηρίου μετά την ώθηση (hg update)"
+
+msgid "Mercurial extensions"
+msgstr "Επεκτάσεις Mercurial"
+
+msgid "Enable largefiles extension"
+msgstr "Ενεργοποίηση επέκτασης μεγάλων αρχείων"
+
+msgid "Enable hgsubversion extension"
+msgstr "Ενεργοποίηση επέκτασης hgsubversion"
+
+msgid ""
+"Requires hgsubversion library to be installed. Enables cloning of remote "
+"Subversion repositories while converting them to Mercurial."
+msgstr ""
+"Απαιτεί την εγκατάσταση της βιβλιοθήκης hgsubversion. Ενεργοποιεί την "
+"κλωνοποίηση απομακρυσμένων Subversion αποθετηρίων και τη μετατροπή τους "
+"σε Mercurial."
+
+msgid "Location of repositories"
+msgstr "Τοποθεσία αποθετηρίων"
+
+msgid ""
+"Click to unlock. You must restart Kallithea in order to make this setting "
+"take effect."
+msgstr ""
+"Κάντε κλικ για να ξεκλειδώσετε. Πρέπει να επανεκκινήσετε την Καλλιθέα για "
+"να εφαρμοστεί αυτή η ρύθμιση."
+
+msgid ""
+"Filesystem location where repositories are stored. After changing this "
+"value, a restart and rescan of the repository folder are both required."
+msgstr ""
+"Θέση συστήματος αρχείων όπου αποθηκεύονται τα αποθετήρια. Μετά την αλλαγή "
+"αυτής της τιμής, απαιτείται επανεκκίνηση και σάρωση του φακέλου "
+"αποθετηρίου."
+
+msgid "General"
+msgstr "Γενικά"
+
+msgid "Use repository extra fields"
+msgstr "Χρήση πρόσθετων πεδίων αποθετηρίου"
+
+msgid "Allows storing additional customized fields per repository."
+msgstr ""
+"Επιτρέπει την αποθήκευση πρόσθετων προσαρμοσμένων πεδίων ανά αποθετήριο."
+
+msgid "Show Kallithea version"
+msgstr "Εμφάνιση της έκδοσης Καλλιθέας"
+
+msgid ""
+"Shows or hides a version number of Kallithea displayed in the footer."
+msgstr ""
+"Εμφανίζει ή αποκρύπτει τον αριθμό έκδοσης της Καλλιθέας που εμφανίζεται "
+"στο υποσέλιδο."
+
+msgid "Show user Gravatars"
+msgstr "Εμφάνιση Gravatars του χρήστη"
+
+msgid ""
+"Gravatar URL allows you to use another avatar server application.\n"
+"                                                        The following "
+"variables of the URL will be replaced accordingly.\n"
+"                                                        {scheme}    "
+"'http' or 'https' sent from running Kallithea server,\n"
+"                                                        {email}     user "
+"email,\n"
+"                                                        {md5email}  md5 "
+"hash of the user email (like at gravatar.com),\n"
+"                                                        {size}      size "
+"of the image that is expected from the server application,\n"
+"                                                        {netloc}    "
+"network location/server host of running Kallithea server"
+msgstr ""
+"Το Gravatar URL σας επιτρέπει να χρησιμοποιήσετε avatar από έναν άλλο "
+"διακομιστή.\n"
+"                                                        Οι ακόλουθες "
+"μεταβλητές της διεύθυνσης URL θα αντικατασταθούν ανάλογα.\n"
+"                                                        {scheme} 'http' ή "
+"'https' που αποστέλλεται από την εκτέλεση του διακομιστή της Καλλιθέας,\n"
+"                                                        {email} "
+"ηλεκτρονικό ταχυδρομείο,\n"
+"                                                        {md5email} md5 "
+"hash του email χρήστη (όπως στο gravatar.com),\n"
+"                                                        {size} μέγεθος "
+"της εικόνας που αναμένεται από το διακομιστή,\n"
+"                                                        {netloc} θέση "
+"δικτύου/διακομιστή που τρέχει την Καλλιθέα"
+
+msgid "HTTP Clone URL"
+msgstr "HTTP Clone URL"
+
+msgid ""
+"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/"
+"{repo}'.\n"
+"                                                    The following "
+"variables are available:\n"
+"                                                    {scheme} 'http' or "
+"'https' sent from running Kallithea server,\n"
+"                                                    {user}   current user "
+"username,\n"
+"                                                    {netloc} network "
+"location/server host of running Kallithea server,\n"
+"                                                    {repo}   full "
+"repository name,\n"
+"                                                    {repoid} ID of "
+"repository, can be used to construct clone-by-id,\n"
+"                                                    {system_user}  name "
+"of the Kallithea system user,\n"
+"                                                    {hostname}  server "
+"hostname\n"
+"                                                    "
+msgstr ""
+"Κατασκευή σχήματος του URL clone π.χ. '{scheme}}}{user}@{netloc}/"
+"{repo}'.\n"
+"                                                    Οι ακόλουθες "
+"μεταβλητές είναι διαθέσιμες:\n"
+"                                                    {scheme} 'http' ή "
+"'https' αποστέλλεται από την εκτέλεση του διακομιστή της Καλλιθέας,\n"
+"                                                    {user} τρέχον όνομα "
+"χρήστη,\n"
+"                                                    {netloc} θέση δικτύου/"
+"κεντρικός υπολογιστής διακομιστή που τρέχει το διακομιστή της Καλλιθέας,\n"
+"                                                    {repo} πλήρες όνομα "
+"αποθετηρίου,\n"
+"                                                    {repoid} ID του "
+"αποθετηρίου, μπορεί να χρησιμοποιηθεί για την κατασκευή clone-by-id,\n"
+"                                                    {system_user} όνομα "
+"του χρήστη του συστήματος Καλλιθέας,\n"
+"                                                    {hostname} όνομα του "
+"διακομιστή\n"
+"                                                    "
+
+msgid "SSH Clone URL"
+msgstr "SSH Clone URL"
+
+msgid ""
+"Schema for constructing SSH clone URL, eg. 'ssh://{system_user}"
+"@{hostname}/{repo}'."
+msgstr ""
+"Κατασκευή σχήματος SSH clone URL, πχ. 'ssh://{system_user}@{hostname}/"
+"{repo}'."
+
+msgid "Repository page size"
+msgstr "Μέγεθος σελίδας αποθετηρίου"
+
+msgid ""
+"Number of items displayed in the repository pages before pagination is "
+"shown."
+msgstr ""
+"Ο αριθμός των αντικειμένων που εμφανίζονται στις σελίδες αποθετηρίου πριν "
+"εφαρμοστεί η σελιδοποίηση."
+
+msgid "Admin page size"
+msgstr "Μέγεθος σελίδας διαχειριστή"
+
+msgid ""
+"Number of items displayed in the admin pages grids before pagination is "
+"shown."
+msgstr ""
+"Ο αριθμός των στοιχείων που εμφανίζονται στα πλέγματα των σελίδων "
+"διαχειριστή πριν εφαρμοστεί η σελιδοποίηση."
+
+msgid "Icons"
+msgstr "Εικονίδια"
+
+msgid "Show public repository icon on repositories"
+msgstr "Εμφάνιση δημόσιου εικονιδίου αποθετηρίου στα αποθετήρια"
+
+msgid "Show private repository icon on repositories"
+msgstr "Εμφάνιση εικονιδίου ιδιωτικού αποθετηρίου στα αποθετήρια"
+
+msgid "Show public/private icons next to repository names."
+msgstr ""
+"Εμφάνιση δημόσιων/ιδιωτικών εικονιδίων δίπλα στα ονόματα αποθετηρίων."
+
+msgid "Meta Tagging"
+msgstr "Μεταετικέτες"
+
+msgid ""
+"Parses meta tags from the repository description field and turns them "
+"into colored tags."
+msgstr ""
+"Αναλύει τις μετα-ετικέτες από το πεδίο περιγραφής του αποθετηρίου και τις "
+"μετατρέπει σε έγχρωμες ετικέτες."
+
+msgid "Add user group"
+msgstr "Προσθήκη ομάδας χρηστών"
+
+msgid "User Groups"
+msgstr "Ομάδες Χρηστών"
+
+msgid "Add User Group"
+msgstr "Προσθήκη Ομάδας Χρηστών"
+
+msgid "Short, optional description for this user group."
+msgstr "Σύντομη, προαιρετική περιγραφή για αυτήν την ομάδα χρηστών."
+
+msgid "Active"
+msgstr "Ενεργό"
+
+msgid "%s user group settings"
+msgstr "Ρυθμίσεις ομάδας χρηστών %s"
+
+msgid "Show Members"
+msgstr "Εμφάνιση Μελών"
+
+msgid "User Group: %s"
+msgstr "Ομάδα Χρηστών: %s"
+
+msgid "Members"
+msgstr "Μέλη"
+
+msgid "Confirm to delete this user group: %s"
+msgstr "Επιβεβαίωση για διαγραφή αυτής της ομάδας χρηστών: %s"
+
+msgid "Delete this user group"
+msgstr "Διαγραφή αυτής της ομάδας χρηστών"
+
+msgid "No members yet"
+msgstr "Δεν υπάρχουν μέλη ακόμα"
+
+msgid "Chosen group members"
+msgstr "Επιλεγμένα μέλη της ομάδας"
+
+msgid "Available members"
+msgstr "Διαθέσιμα μέλη"
+
+msgid "User Groups Administration"
+msgstr "Διαχείριση Ομάδων Χρηστών"
+
+msgid "Add user"
+msgstr "Προσθήκη χρήστη"
+
+msgid "Users"
+msgstr "Χρήστες"
+
+msgid "Add User"
+msgstr "Προσθήκη χρήστη"
+
+msgid "Password confirmation"
+msgstr "Επιβεβαίωση κωδικού πρόσβασης"
+
+msgid "%s user settings"
+msgstr "Ρυθμίσεις χρήστη %s"
+
+msgid "Emails"
+msgstr "Μηνύματα ηλεκτρονικού ταχυδρομείου"
+
+msgid "User: %s"
+msgstr "Χρήστης: %s"
+
+msgid "Source of Record"
+msgstr "Προέλευση εγγραφής"
+
+msgid "Last Login"
+msgstr "Τελευταία Σύνδεση"
+
+msgid "Member of User Groups"
+msgstr "Μέλος των Ομάδων Χρηστών"
+
+msgid "Confirm to delete this user: %s"
+msgstr "Επιβεβαίωση διαγραφής αυτού του χρήστη: %s"
+
+msgid "Delete this user"
+msgstr "Διαγραφή αυτού του χρήστη"
+
+msgid "Inherited from %s"
+msgstr "Κληρονομήθηκε από %s"
+
+msgid "New password confirmation"
+msgstr "Επιβεβαίωση νέου κωδικού πρόσβασης"
+
+msgid "Users Administration"
+msgstr "Διαχείριση Χρηστών"
+
+msgid "Auth Type"
+msgstr "Τύπος Πιστοποίησης"
+
+msgid "Server instance: %s"
+msgstr "Παρουσία διακομιστή: %s"
+
+msgid "Support"
+msgstr "Υποστήριξη"
+
+msgid "Mercurial repository"
+msgstr "Αποθετήριο Mercurial"
+
+msgid "Git repository"
+msgstr "Αποθετήριο Git"
+
+msgid "Summary"
+msgstr "Περίληψη"
+
+msgid "Changelog"
+msgstr "Ιστορικό αλλαγών"
+
+msgid "Files"
+msgstr "Αρχεία"
+
+msgid "Show Pull Requests for %s"
+msgstr "Εμφάνιση Αιτήσεων Έλξης για %s"
+
+msgid "Pull Requests"
+msgstr "Αιτήματα Έλξης"
+
+msgid "Options"
+msgstr "Επιλογές"
+
+msgid "Compare"
+msgstr "Σύγκριση"
+
+msgid "Search"
+msgstr "Αναζήτηση"
+
+msgid "Follow"
+msgstr "Παρακολούθηση"
+
+msgid "Unfollow"
+msgstr "Κατάργηση παρακολούθησης"
+
+msgid "Create Pull Request"
+msgstr "Δημιουργία Αιτήματος Έλξης"
+
+msgid "Switch To"
+msgstr "Αλλαγή Σε"
+
+msgid "No matches found"
+msgstr "Δεν βρέθηκαν αντιστοιχίσεις"
+
+msgid "Show recent activity"
+msgstr "Εμφάνιση πρόσφατης δραστηριότητας"
+
+msgid "Public journal"
+msgstr "Δημόσιο Ημερολόγιο"
+
+msgid "Show public gists"
+msgstr "Εμφάνιση δημόσιων gists"
+
+msgid "Gists"
+msgstr "Gists"
+
+msgid "All Public Gists"
+msgstr "Όλα τα Δημόσια Gists"
+
+msgid "My Public Gists"
+msgstr "Τα Δημόσιά μου Gists"
+
+msgid "My Private Gists"
+msgstr "Τα Ιδιωτικά μου Gists"
+
+msgid "Search in repositories"
+msgstr "Αναζήτηση σε αποθετήρια"
+
+msgid "My Pull Requests"
+msgstr "Τα αιτήματά μου για έλξη"
+
+msgid "Not Logged In"
+msgstr "Δεν έχετε συνδεθεί"
+
+msgid "Login to Your Account"
+msgstr "Συνδεθείτε στο λογαριασμό σας"
+
+msgid "Forgot password?"
+msgstr "Ξεχάσατε τον κωδικό πρόσβασης;"
+
+msgid "Don't have an account?"
+msgstr "Δεν έχετε λογαριασμό;"
+
+msgid "Log Out"
+msgstr "Αποσύνδεση"
+
+msgid "Parent rev."
+msgstr "Γονική αναθ."
+
+msgid "Child rev."
+msgstr "Θυγατρική αναθ."
+
+msgid "Create repositories"
+msgstr "Δημιουργία αποθετηρίων"
+
+msgid "Select this option to allow repository creation for this user"
+msgstr ""
+"Ενεργοποιήστε αυτήν την επιλογή για να επιτρέψετε τη δημιουργία "
+"αποθετηρίου για αυτόν το χρήστη"
+
+msgid "Create user groups"
+msgstr "Δημιουργία ομάδων χρηστών"
+
+msgid "Select this option to allow user group creation for this user"
+msgstr ""
+"Ενεργοποιήστε αυτήν την επιλογή για να επιτρέψετε τη δημιουργία ομάδας "
+"χρηστών για αυτόν το χρήστη"
+
+msgid "Show"
+msgstr "Εμφάνιση"
+
+msgid "No permissions defined yet"
+msgstr "Δεν έχουν οριστεί ακόμα δικαιώματα"
+
+msgid "Permission"
+msgstr "Δικαίωμα"
+
+msgid "Edit Permission"
+msgstr "Επεξεργασία Δικαιώματος"
+
+msgid "No permission defined"
+msgstr "Δεν έχει οριστεί κανένα δικαίωμα"
+
+msgid "Retry"
+msgstr "Επανάληψη"
+
+msgid "Submitting ..."
+msgstr "Υποβολή..."
+
+msgid "Unable to post"
+msgstr "Δεν είναι δυνατή η δημοσίευση"
+
+msgid "Add Another Comment"
+msgstr "Προσθήκη και άλλου Σχολίου"
+
+msgid "Stop following this repository"
+msgstr "Διακοπή παρακολούθησης αυτού του αποθετηρίου"
+
+msgid "Start following this repository"
+msgstr "Έναρξη παρακολούθησης αυτού του αποθετηρίου"
+
+msgid "Group"
+msgstr "Ομάδα"
+
+msgid "Loading ..."
+msgstr "Φόρτωση..."
+
+msgid "loading ..."
+msgstr "φόρτωση ..."
+
+msgid "Search truncated"
+msgstr "Περικομμένη αναζήτηση"
+
+msgid "No matching files"
+msgstr "Δεν υπάρχουν αρχεία που να ταιριάζουν"
+
+msgid "Open New Pull Request from {0}"
+msgstr "Άνοιγμα νέας αίτησης έλξης από {0}"
+
+msgid "Open New Pull Request for {0} &rarr; {1}"
+msgstr "Άνοιγμα νέου αιτήματος έλξης για {0} &rarr; {1}"
+
+msgid "Show Selected Changesets {0} &rarr; {1}"
+msgstr "Εμφάνιση Επιλεγμένων Σετ Αλλαγών {0} &rarr; {1}"
+
+msgid "Selection Link"
+msgstr "Σύνδεσμος Επιλογής"
+
+msgid "Collapse Diff"
+msgstr "Σύμπτυξη Διαφοράς"
+
+msgid "Expand Diff"
+msgstr "Ανάπτυξη Διαφοράς"
+
+msgid "No revisions"
+msgstr "Χωρίς αναθεωρήσεις"
+
+msgid "Type name of user or member to grant permission"
+msgstr ""
+"Πληκτρολογήστε το όνομα του χρήστη ή του μέλους για την εκχώρηση "
+"δικαιωμάτων"
+
+msgid "Failed to revoke permission"
+msgstr "Απέτυχε η ανάκληση του δικαιωμάτος"
+
+msgid "Confirm to revoke permission for {0}: {1} ?"
+msgstr "Επιβεβαιώστε την ανάκληση του δικαιώματος για {0}: {1};"
+
 msgid "Select changeset"
 msgstr "Επιλογή σετ αλλαγών"
+
+msgid "Specify changeset"
+msgstr "Καθορισμός σετ αλλαγών"
+
+msgid "Click to sort ascending"
+msgstr "Κάντε κλικ για αύξουσα ταξινόμηση"
+
+msgid "Click to sort descending"
+msgstr "Κάντε κλικ για φθίνουσα ταξινόμηση"
+
+msgid "No records found."
+msgstr "Δεν βρέθηκαν εγγραφές."
+
+msgid "Data error."
+msgstr "Σφάλμα δεδομένων."
+
+msgid "Loading..."
+msgstr "Φόρτωση..."
+
+msgid "%s Changelog"
+msgstr "%s Αρχείο καταγραφής αλλαγών"
+
+msgid "showing %d out of %d revision"
+msgid_plural "showing %d out of %d revisions"
+msgstr[0] "εμφάνιση %d από %d αναθεώρηση"
+msgstr[1] "εμφάνιση %d από %d αναθεώρησεις"
+
+msgid "Clear selection"
+msgstr "Καθαρισμός επιλογής"
+
+msgid "Go to tip of repository"
+msgstr "Μετάβαση στην κεφαλή του αποθετηρίου"
+
+msgid "Branch filter:"
+msgstr "Φίλτρο κλάδου:"
+
+msgid "There are no changes yet"
+msgstr "Δεν υπάρχουν αλλαγές ακόμα"
+
+msgid "Removed"
+msgstr "Αφαιρέθηκε"
+
+msgid "Changed"
+msgstr "Αλλάχτηκε"
+
+msgid "Added"
+msgstr "Προστέθηκε"
+
+msgid "Affected %s files"
+msgstr "Επηρεάστηκαν %s αρχεία"
+
+msgid "First (oldest) changeset in this list"
+msgstr "Πρώτο (παλαιότερο) σετ αλλαγών σε αυτήν τη λίστα"
+
+msgid "Last (most recent) changeset in this list"
+msgstr "Τελευταίο (πιο πρόσφατο) σετ αλλαγών σε αυτήν τη λίστα"
+
+msgid "Position in this list of changesets"
+msgstr "Θέση σε αυτήν τη λίστα των αλλαγών"
+
+msgid ""
+"Changeset status: %s by %s\n"
+"Click to open associated pull request %s"
+msgstr ""
+"Κατάσταση συνόλου αλλαγών: %s από %s\n"
+"Κάντε κλικ για να ανοίξετε το συσχετισμένο αίτημα έλξης %s"
+
+msgid "Changeset status: %s by %s"
+msgstr "Κατάσταση σετ αλλαγών: %s από %s"
+
+msgid "Expand commit message"
+msgstr "Ανάπτυξη μηνύματος commit"
+
+msgid "%s comments"
+msgstr "%s σχόλια"
+
+msgid "Bookmark %s"
+msgstr "Σελιδοδείκτης %s"
+
+msgid "Tag %s"
+msgstr "Ετικέτα %s"
+
+msgid "Branch %s"
+msgstr "Κλάδος %s"
+
+msgid "%s Changeset"
+msgstr "Σετ αλλαγών %s"
+
+msgid "Changeset status"
+msgstr "Κατάσταση σετ αλλαγών"
+
+msgid "Raw diff"
+msgstr "Ακατέργαστη διαφορά"
+
+msgid "Patch diff"
+msgstr "Διαφορά κώδικα"
+
+msgid "Download diff"
+msgstr "Λήψη διαφοράς"
+
+msgid "Merge"
+msgstr "Συγχώνευση"
+
+msgid "Replaced by:"
+msgstr "Αντικαταστάθηκε από:"
+
+msgid "Preceded by:"
+msgstr "Προηγείται από:"
+
+msgid "%s file changed"
+msgid_plural "%s files changed"
+msgstr[0] "Άλλαξε %s αρχείο"
+msgstr[1] "Άλλαξαν %s αρχεία"
+
+msgid "%s file changed with %s insertions and %s deletions"
+msgid_plural "%s files changed with %s insertions and %s deletions"
+msgstr[0] "Άλλαξε %s αρχείο με %s εισαγωγές και %s διαγραφές"
+msgstr[1] "Άλλαξαν %s αρχεία με %s εισαγωγές και %s διαγραφές"
+
+msgid "Show full diff anyway"
+msgstr "Εμφάνιση πλήρους διαφοράς ούτως ή άλλως"
+
+msgid "comment"
+msgstr "σχόλιο"
+
+msgid "on pull request"
+msgstr "κατόπιν αιτήματος έλξης"
+
+msgid "No title"
+msgstr "Χωρίς τίτλο"
+
+msgid "on this changeset"
+msgstr "σε αυτό το σετ αλλαγών"
+
+msgid "Delete comment?"
+msgstr "Διαγραφή σχολίου;"
+
+msgid "Status change"
+msgstr "Αλλαγή κατάστασης"
+
+msgid "Comments are in plain text. Use @username to notify another user."
+msgstr ""
+"Τα σχόλια είναι σε απλό κείμενο. Χρησιμοποιήστε @username για να "
+"ειδοποιήσετε έναν άλλο χρήστη."
+
+msgid "Set changeset status"
+msgstr "Ορισμός κατάστασης σετ αλλαγών"
+
+msgid "Vote for pull request status"
+msgstr "Ψηφοφορία για την κατάσταση του αιτήματος έλξης"
+
+msgid "No change"
+msgstr "Καμία αλλαγή"
+
+msgid "Finish pull request"
+msgstr "Τερματισμός αιτήματος έλξης"
+
+msgid "Close"
+msgstr "Κλείσιμο"
+
+msgid "Comment"
+msgstr "Σχολιασμός"
+
+msgid "You need to be logged in to comment."
+msgstr "Πρέπει να είστε συνδεδεμένος για να σχολιάσετε."
+
+msgid "Login now"
+msgstr "Συνδεθείτε τώρα"
+
+msgid "Hide"
+msgstr "Απόκρυψη"
+
+msgid "%d comment"
+msgid_plural "%d comments"
+msgstr[0] "%d σχόλιο"
+msgstr[1] "%d σχόλια"
+
+msgid "%d inline"
+msgid_plural "%d inline"
+msgstr[0] "%d ενσωματωμένο"
+msgstr[1] "%d ενσωματωμένα"
+
+msgid "%d general"
+msgid_plural "%d general"
+msgstr[0] "%d γενικά"
+msgstr[1] "%d γενικά"
+
+msgid "%s Changesets"
+msgstr "Σετ αλλαγών του %s"
+
+msgid "Changeset status: %s"
+msgstr "Κατάσταση σετ αλλαγών: %s"
+
+msgid "Files affected"
+msgstr "Αρχεία που επηρεάστηκαν"
+
+msgid "No file before"
+msgstr "Δεν υπάρχει αρχείο πριν"
+
+msgid "File before"
+msgstr "Αρχείο πριν"
+
+msgid "Modified"
+msgstr "Τροποποιημένο"
+
+msgid "Deleted"
+msgstr "Διαγράφηκε"
+
+msgid "Renamed"
+msgstr "Μετονομάστηκε"
+
+msgid "Unknown operation: %r"
+msgstr "Άγνωστη λειτουργία: %r"
+
+msgid "No file after"
+msgstr "Δεν υπάρχει αρχείο μετά"
+
+msgid "File after"
+msgstr "Αρχείο μετά"
+
+msgid "Show full diff for this file"
+msgstr "Εμφάνιση πλήρους διαφοράς για αυτό το αρχείο"
+
+msgid "Show full side-by-side diff for this file"
+msgstr "Εμφάνιση πλήρους διαφοράς δίπλα-δίπλα για αυτό το αρχείο"
+
+msgid "Show inline comments"
+msgstr "Εμφάνιση ενσωματωμένων σχολίων"
+
+msgid "No changesets"
+msgstr "Χωρίς σετ αλλαγών"
+
+msgid "Criss cross merge situation with multiple merge ancestors detected!"
+msgstr ""
+"Εντοπίστηκε κατάσταση διασταυρούμενης συγχώνευσης με πολλούς προγόνους "
+"συγχώνευσης!"
+
+msgid ""
+"Please merge the target branch to your branch before creating a pull "
+"request."
+msgstr ""
+"Παρακαλώ συγχωνεύστε τον κλάδο-στόχο στον κλάδο σας πριν δημιουργήσετε "
+"ένα αίτημα έλξης."
+
+msgid "Merge Ancestor"
+msgstr "Πρόγονος Συγχώνευσης"
+
+msgid "Show merge diff"
+msgstr "Εμφάνιση διαφοράς συγχώνευσης"
+
+msgid "is"
+msgstr "είναι"
+
+msgid "%s changesets"
+msgstr "%s σετ αλλαγών"
+
+msgid "behind"
+msgstr "πίσω"
+
+msgid "%s Compare"
+msgstr "Σύγκριση %s"
+
+msgid "Compare Revisions"
+msgstr "Σύγκριση Αναθεωρήσεων"
+
+msgid "Swap"
+msgstr "Ανταλαγή"
+
+msgid "Compare revisions, branches, bookmarks, or tags."
+msgstr "Συγκρίνετε αναθεωρήσεις, κλάδους, σελιδοδείκτες ή ετικέτες."
+
+msgid "Showing %s commit"
+msgid_plural "Showing %s commits"
+msgstr[0] "Εμφάνιση %s commit"
+msgstr[1] "Εμφάνιση %s commits"
+
+msgid "Show full diff"
+msgstr "Εμφάνιση πλήρους διαφοράς"
+
+msgid "Public repository"
+msgstr "Δημόσιο αποθετήριο"
+
+msgid "Repository creation in progress..."
+msgstr "Η δημιουργία αποθετηρίου βρίσκεται σε εξέλιξη..."
+
+msgid "No changesets yet"
+msgstr "Δεν υπάρχουν ακόμα σετ αλλαγών"
+
+msgid "Subscribe to %s rss feed"
+msgstr "Εγγραφή στην τροφοδοσία rss του %s"
+
+msgid "Subscribe to %s atom feed"
+msgstr "Εγγραφή στην τροφοδοσία του %s atom"
+
+msgid "Creating"
+msgstr "Δημιουργία σε εξέλιξη"
+
+msgid "Mention in Comment on Changeset \"%s\""
+msgstr "Αναφορά στο Σχόλιο για το σετ αλλαγών \"%s\""
+
+msgid "Comment on Changeset \"%s\""
+msgstr "Σχόλιο για το σετ αλλαγών \"%s\""
+
+msgid "Changeset on"
+msgstr "Σετ αλλαγών σε"
+
+msgid "branch"
+msgstr "κλάδος"
+
+msgid "by"
+msgstr "από"
+
+msgid "Status change:"
+msgstr "Αλλαγή κατάστασης:"
+
+msgid "The pull request has been closed."
+msgstr "Το αίτημα έλξης έχει κλείσει."
+
+msgid "Hello %s"
+msgstr "Γεια σας %s"
+
+msgid "We have received a request to reset the password for your account."
+msgstr ""
+"Λάβαμε ένα αίτημα για επαναφορά του κωδικού πρόσβασης για το λογαριασμό "
+"σας."
+
+msgid ""
+"This account is however managed outside this system and the password "
+"cannot be changed here."
+msgstr ""
+"Ωστόσο, η διαχείριση αυτού του λογαριασμού γίνεται εκτός αυτού του "
+"συστήματος και ο κωδικός πρόσβασης δεν μπορεί να αλλάξει εδώ."
+
+msgid "To set a new password, click the following link"
+msgstr ""
+"Για να ορίσετε έναν νέο κωδικό πρόσβασης, κάντε κλικ στον ακόλουθο "
+"σύνδεσμο"
+
+msgid ""
+"Should you not be able to use the link above, please type the following "
+"code into the password reset form"
+msgstr ""
+"Εάν δεν μπορείτε να χρησιμοποιήσετε τον παραπάνω σύνδεσμο, πληκτρολογήστε "
+"τον ακόλουθο κώδικα στη φόρμα επαναφοράς κωδικού πρόσβασης"
+
+msgid ""
+"If it weren't you who requested the password reset, just disregard this "
+"message."
+msgstr ""
+"Αν δεν ήσασταν εσείς που ζητήσατε την επαναφορά κωδικού πρόσβασης, απλώς "
+"αγνοήστε αυτό το μήνυμα."
+
+msgid "Mention on Pull Request %s \"%s\" by %s"
+msgstr "Αναφορά στην αίτημα έλξης %s \"%s\" από %s"
+
+msgid "Added as Reviewer of Pull Request %s \"%s\" by %s"
+msgstr "Προστεθήκατε ως αναθεωρητής του αιτήματος έλξης %s \"%s\" από %s"
+
+msgid "Pull request"
+msgstr "Αίτημα έλξης"
+
+msgid "from"
+msgstr "από"
+
+msgid "to"
+msgstr "προς"
+
+msgid "Mention in Comment on Pull Request %s \"%s\""
+msgstr "Αναφορά στο σχόλιο για το αίτημα έλξης %s \"%s\""
+
+msgid "Pull Request %s \"%s\" Closed"
+msgstr "Το αίτημα έλξης %s \"%s\" είναι Κλειστό"
+
+msgid "Comment on Pull Request %s \"%s\""
+msgstr "Σχόλιο στην αίτηση έλξης %s \"%s\""
+
+msgid "Full Name"
+msgstr "Ονοματεπώνυμο"
+
+msgid "%s File side-by-side diff"
+msgstr "%s Αρχείο διαφοράς δίπλα-δίπλα"
+
+msgid "File diff"
+msgstr "Αρχείο διαφοράς"
+
+msgid "%s File Diff"
+msgstr "%s Αρχείο διαφοράς"
+
+msgid "%s Files"
+msgstr "%s Αρχεία"
+
+msgid "%s Files Add"
+msgstr "%s Προσθήκη Αρχείων"
+
+msgid "Add New File"
+msgstr "Προσθήκη Νέου Αρχείου"
+
+msgid "Location"
+msgstr "Τοποθεσία"
+
+msgid "Enter filename..."
+msgstr "Εισαγωγή ονόματος αρχείου..."
+
+msgid "or"
+msgstr "ή"
+
+msgid "Upload File"
+msgstr "Ανέβασμα Αρχείου"
+
+msgid "Create New File"
+msgstr "Δημιουργία Νέου Αρχείου"
+
+msgid "New file type"
+msgstr "Νέος τύπος αρχείου"
+
+msgid "Commit Message"
+msgstr "Μήνυμα Υποβολής"
+
+msgid "Commit Changes"
+msgstr "Υποβολή Των Αλλαγών"
+
+msgid "Search File List"
+msgstr "Αναζήτηση στη Λίστα Αρχείων"
+
+msgid "Loading file list..."
+msgstr "Φόρτωση λίστας αρχείων..."
+
+msgid "Size"
+msgstr "Μέγεθος"
+
+msgid "Last Revision"
+msgstr "Τελευταία Αναθεώρηση"
+
+msgid "Last Modified"
+msgstr "Τελευταία Τροποποίηση"
+
+msgid "Last Committer"
+msgstr "Τελευταίος Υποβάλλων"
+
+msgid "%s Files Delete"
+msgstr "%s Διαγραφή Αρχείων"
+
+msgid "Delete file"
+msgstr "Διαγραφή αρχείου"
+
+msgid "%s File Edit"
+msgstr "%s Επεξεργασία Αρχείου"
+
+msgid "Edit file"
+msgstr "Επεξεργασία αρχείου"
+
+msgid "Show Annotation"
+msgstr "Εμφάνιση Σχολιασμού"
+
+msgid "Download as Raw"
+msgstr "Λήψη ως ακατέργαστο"
+
+msgid "Source"
+msgstr "Πηγή"
+
+msgid "%s author"
+msgid_plural "%s authors"
+msgstr[0] "%s συντάκτης"
+msgstr[1] "%s συντάκτες"
+
+msgid "Diff to Revision"
+msgstr "Διαφορά σε Αναθεώρηση"
+
+msgid "Show at Revision"
+msgstr "Εμφάνιση στην Αναθεώρηση"
+
+msgid "Show Full History"
+msgstr "Εμφάνιση Πλήρους Ιστορικού"
+
+msgid "Show Authors"
+msgstr "Εμφάνιση Συντακτών"
+
+msgid "Show Source"
+msgstr "Εμφάνιση Πηγής"
+
+msgid "Edit on Branch: %s"
+msgstr "Επεξεργασία στον κλάδο: %s"
+
+msgid "Editing binary files not allowed"
+msgstr "Η επεξεργασία δυαδικών αρχείων δεν επιτρέπεται"
+
+msgid "Editing files allowed only when on branch head revision"
+msgstr ""
+"Η επεξεργασία αρχείων επιτρέπεται μόνο σε αναθεώρηση επί της κεφαλής του "
+"κλάδου"
+
+msgid "Deleting files allowed only when on branch head revision"
+msgstr ""
+"Η διαγραφή αρχείων επιτρέπεται μόνο σε αναθεώρηση επί της κεφαλής του "
+"κλάδου"
+
+msgid "Binary file (%s)"
+msgstr "Δυαδικό αρχείο (%s)"
+
+msgid "File is too big to display."
+msgstr "Το αρχείο είναι πολύ μεγάλο για προβολή."
+
+msgid "Show full annotation anyway."
+msgstr "Εμφάνιση πλήρους σχολιασμού ούτως ή άλλως."
+
+msgid "Show as raw."
+msgstr "Ακατέργαστη εμφάνιση."
+
+msgid "annotation"
+msgstr "σχολιασμός"
+
+msgid "Go Back"
+msgstr "Πήγαινε Πίσω"
+
+msgid "No files at given path"
+msgstr "Δεν υπάρχουν αρχεία στη δοσμένη διαδρομή"
+
+msgid "%s Followers"
+msgstr "%s Ακόλουθοι"
+
+msgid "Followers"
+msgstr "Ακόλουθοι"
+
+msgid "Started following -"
+msgstr "Ξεκίνησαν να ακολουθούν -"
+
+msgid "Default revision for files page, downloads, whoosh, and readme."
+msgstr ""
+"Προεπιλεγμένη αναθεώρηση για τη σελίδα αρχείων, λήψεων, whoosh, και "
+"readme."
+
+msgid "Private"
+msgstr "Ιδιωτικό"
+
+msgid "Copy permissions"
+msgstr "Αντιγραφή δικαιωμάτων"
+
+msgid "Update after clone"
+msgstr "Ενημέρωση μετά την κλωνοποίηση"
+
+msgid "Checkout source after making a clone"
+msgstr "Πηγαίνετε στον κώδικα μετά την κλωνοποίηση"
+
+msgid "ATOM journal feed"
+msgstr "Ημερολόγιο τροφοδοσίας ATOM"
+
+msgid "RSS journal feed"
+msgstr "Ημερολόγιο τροφοδοσίας RSS"
+
+msgid "My Repositories"
+msgstr "Τα αποθετήριά μου"
+
+msgid "No entries yet"
+msgstr "Δεν υπάρχουν ακόμη καταχωρήσεις"
+
+msgid "ATOM public journal feed"
+msgstr "Δημόσιο ημερολόγιο τροφοδοσίας ATOM"
+
+msgid "RSS public journal feed"
+msgstr "Δημόσιο ημερολόγιο τροφοδοσίας RSS"
+
+msgid "New Pull Request"
+msgstr "Νέο Αίτημα Έλξης"
+
+msgid "Title"
+msgstr "Τίτλος"
+
+msgid "Summarize the changes - or leave empty"
+msgstr "Συνοψίστε τις αλλαγές - ή αφήστε το κενό"
+
+msgid "Write a short description on this pull request"
+msgstr "Γράψτε μια σύντομη περιγραφή σχετικά με αυτό το αίτημα έλξης"
+
+msgid "Changeset flow"
+msgstr "Ροή σετ αλλαγών"
+
+msgid "Origin repository"
+msgstr "Αποθετήριο προέλευσης"
+
+msgid "Revision"
+msgstr "Αναθεώρηση"
+
+msgid "Destination repository"
+msgstr "Αποθετήριο προορισμού"
+
+msgid "No entries"
+msgstr "Χωρίς καταχωρήσεις"
+
+msgid "Vote"
+msgstr "Ψήφος"
+
+msgid "Age"
+msgstr "Ηλικία"
+
+msgid "From"
+msgstr "Από"
+
+msgid "To"
+msgstr "Προς"
+
+msgid "You voted: %s"
+msgstr "Ψηφίσατε: %s"
+
+msgid "You didn't vote"
+msgstr "Δεν ψηφίσατε"
+
+msgid "(no title)"
+msgstr "(χωρίς τίτλο)"
+
+msgid "Closed"
+msgstr "Κλειστό"
+
+msgid "Delete Pull Request"
+msgstr "Διαγραφή Αιτήματος Έλξης"
+
+msgid "Confirm to delete this pull request"
+msgstr "Επιβεβαίωση διαγραφής αυτού του αιτήματος έλξης"
+
+msgid "Confirm again to delete this pull request with %s comments"
+msgstr ""
+"Επιβεβαίωση ξανά για τη διαγραφή αυτού του αιτήματος έλξης με %s σχόλια"
+
+msgid "%s Pull Request %s"
+msgstr "%s Αίτημα Έλξης %s"
+
+msgid "Pull request %s from %s#%s"
+msgstr "Αίτημα έλξης %s από %s#%s"
+
+msgid "Summarize the changes"
+msgstr "Σύνοψη των αλλαγών"
+
+msgid "Voting Result"
+msgstr "Αποτέλεσμα Ψηφοφορίας"
+
+msgid "Pull request status calculated from votes"
+msgstr "Η κατάσταση του αιτήματος έλξης υπολογισμένο από τις ψήφους"
+
+msgid "Origin"
+msgstr "Προέλευση"
+
+msgid "on"
+msgstr "επί"
+
+msgid "Target"
+msgstr "Στόχος"
+
+msgid ""
+"This is just a range of changesets and doesn't have a target or a real "
+"merge ancestor."
+msgstr ""
+"Αυτό είναι μόνο μια σειρά από σετ αλλαγών και δεν έχει προορισμό ή "
+"πραγματικό πρόγονο συγχώνευσης."
+
+msgid "Pull changes"
+msgstr "Τράβηγμα αλλαγών"
+
+msgid "Next iteration"
+msgstr "Επόμενη επανάληψη"
+
+msgid "Current revision - no change"
+msgstr "Τρέχουσα αναθεώρηση - καμία αλλαγή"
+
+msgid ""
+"Pull request iterations do not change content once created. Select a "
+"revision to create a new iteration."
+msgstr ""
+"Οι επαναλήψεις αιτήσεων έλξης δεν αλλάζουν περιεχόμενο μετά τη δημιουργία "
+"τους. Επιλέξτε μια αναθεώρηση για να δημιουργήσετε μια νέα επανάληψη."
+
+msgid "Save Changes"
+msgstr "Αποθήκευση Αλλαγών"
+
+msgid "Create New Iteration with Changes"
+msgstr "Δημιουργία Νέας Επανάληψης με τις Αλλαγές"
+
+msgid "Cancel Changes"
+msgstr "Ακύρωση Αλλαγών"
+
+msgid "Reviewers"
+msgstr "Επιθεωρητές"
+
+msgid "Remove reviewer"
+msgstr "Κατάργηση επιθεωρητή"
+
+msgid "Type name of reviewer to add"
+msgstr "Πληκτρολογήστε το όνομα του επιθεωρητή για προσθήκη"
+
+msgid "Potential Reviewers"
+msgstr "Πιθανοί Επιθεωρητές"
+
+msgid "Click to add the repository owner as reviewer:"
+msgstr ""
+"Κάντε κλικ για να προσθέσετε τον κάτοχο του αποθετηρίου ως επιθεωρητή:"
+
+msgid "Pull Request Content"
+msgstr "Περιεχόμενο Αιτήματος Έλξης"
+
+msgid "Common ancestor"
+msgstr "Κοινός πρόγονος"
+
+msgid "%s Pull Requests"
+msgstr "%s Αιτήματα Έλξης"
+
+msgid "Pull Requests from '%s'"
+msgstr "Αιτήματα Έλξης από '%s'"
+
+msgid "Pull Requests to '%s'"
+msgstr "Αιτήματα Έλξης προς '%s'"
+
+msgid "Open New Pull Request"
+msgstr "Άνοιγμα Νέου Αιτήματος Έλξης"
+
+msgid "Show Pull Requests to %s"
+msgstr "Εμφάνιση Αιτημάτων Έλξης προς %s"
+
+msgid "Show Pull Requests from '%s'"
+msgstr "Εμφάνιση Αιτημάτων Έλξης από '%s'"
+
+msgid "Hide closed pull requests (only show open pull requests)"
+msgstr ""
+"Απόκρυψη κλειστών αιτημάτων έλξης (εμφάνιση μόνο ανοικτών αιτημάτων έλξης)"
+
+msgid "Show closed pull requests (in addition to open pull requests)"
+msgstr ""
+"Εμφάνιση κλειστών αιτημάτων έλξης (εκτός από τα ανοιχτά αιτήματα έλξης)"
+
+msgid "Pull Requests Created by Me"
+msgstr "Αιτήματα Έλξης που Δημιουργήθηκαν από Εμένα"
+
+msgid "Pull Requests Needing My Review"
+msgstr "Αιτήματα Έλξης που Χρειάζονται την Επιθεώρησή μου"
+
+msgid "Pull Requests I Participate In"
+msgstr "Αιτήματα Έλξης που Συμμετέχω"
+
+msgid "%s Search"
+msgstr "%s Αναζήτηση"
+
+msgid "Search in All Repositories"
+msgstr "Αναζήτηση σε Όλα τα Αποθετήρια"
+
+msgid "Search term"
+msgstr "Όρος αναζήτησης"
+
+msgid "Search in"
+msgstr "Αναζήτηση σε"
+
+msgid "File contents"
+msgstr "Περιεχόμενα αρχείου"
+
+msgid "Commit messages"
+msgstr "Μηνύματα commit"
+
+msgid "File names"
+msgstr "Ονόματα αρχείων"
+
+msgid "Permission denied"
+msgstr "Άρνηση δικαιώματος"
+
+msgid "%s Statistics"
+msgstr "%s Στατιστικά"
+
+msgid "%s ATOM feed"
+msgstr "%s Τροφοδοσία ATOM"
+
+msgid "%s RSS feed"
+msgstr "%s Τροφοδοσία RSS"
+
+msgid "Enable"
+msgstr "Ενεργοποίηση"
+
+msgid "Stats gathered: "
+msgstr "Στατιστικά που συγκεντρώθηκαν: "
+
+msgid "files"
+msgstr "αρχεία"
+
+msgid "Show more"
+msgstr "Εμφάνιση περισσότερων"
+
+msgid "commits"
+msgstr "commits"
+
+msgid "files added"
+msgstr "αρχεία που προστέθηκαν"
+
+msgid "files changed"
+msgstr "αρχεία που άλλαξαν"
+
+msgid "files removed"
+msgstr "αρχεία που αφαιρέθηκαν"
+
+msgid "commit"
+msgstr "commit"
+
+msgid "file added"
+msgstr "αρχείο προστέθηκε"
+
+msgid "file changed"
+msgstr "αρχείο άλλαξε"
+
+msgid "file removed"
+msgstr "αρχείο αφαιρέθηκε"
+
+msgid "%s Summary"
+msgstr "%s Σύνοψη"
+
+msgid "Clone from"
+msgstr "Κλώνος από"
+
+msgid "Clone URL"
+msgstr "Clone URL"
+
+msgid "Use ID"
+msgstr "Χρήση ID"
+
+msgid "Use SSH"
+msgstr "Χρήση SSH"
+
+msgid "Use Name"
+msgstr "Χρήση Ονόματος"
+
+msgid "Use HTTP"
+msgstr "Χρήση HTTP"
+
+msgid "Trending files"
+msgstr "Δημοφιλή αρχεία"
+
+msgid "Download"
+msgstr "Λήψη"
+
+msgid "There are no downloads yet"
+msgstr "Δεν υπάρχουν λήψεις ακόμα"
+
+msgid "Downloads are disabled for this repository"
+msgstr "Οι λήψεις είναι απενεργοποιημένες για αυτό το αποθετήριο"
+
+msgid "Download as zip"
+msgstr "Λήψη ως zip"
+
+msgid "Check this to download archive with subrepos"
+msgstr "Επιλέξτε αυτό για τη λήψη του αρχείου με τα υπο-αποθετήρια"
+
+msgid "With subrepos"
+msgstr "Με υπο-αποθετήρια"
+
+msgid "Feed"
+msgstr "Ροή"
+
+msgid "Latest Changes"
+msgstr "Τελευταίες Αλλαγές"
+
+msgid "Quick Start"
+msgstr "Γρήγορη Εκκίνηση"
+
+msgid "Add or upload files directly via Kallithea"
+msgstr "Προσθέστε ή ανεβάστε αρχεία απευθείας μέσω Καλλιθέας"
+
+msgid "Push new repository"
+msgstr "Ώθηση νέου αποθετηρίου"
+
+msgid "Existing repository?"
+msgstr "Υπάρχον αποθετήριο;"
+
+msgid "Readme file from revision %s:%s"
+msgstr "Αρχείο Readme από την αναθεώρηση %s:%s"
+
+msgid "Download %s as %s"
+msgstr "Λήψη %s ως %s"
