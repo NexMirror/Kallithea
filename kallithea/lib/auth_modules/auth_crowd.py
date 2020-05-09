@@ -78,42 +78,26 @@ class CrowdServer(object):
         handler = urllib.request.HTTPBasicAuthHandler(mgr)
         self.opener = urllib.request.build_opener(handler)
 
-    def _request(self, url, body=None, headers=None,
-                 method=None, noformat=False,
-                 empty_response_ok=False):
+    def _request(self, url, body=None):
         _headers = {"Content-type": "application/json",
                     "Accept": "application/json"}
         if self.user and self.passwd:
             authstring = ascii_str(base64.b64encode(safe_bytes("%s:%s" % (self.user, self.passwd))))
             _headers["Authorization"] = "Basic %s" % authstring
-        if headers:
-            _headers.update(headers)
         log.debug("Sent to crowd at %s:\nHeaders: %s\nBody:\n%s", url, _headers, body)
         req = urllib.request.Request(url, body, _headers)
-        if method:
-            req.get_method = lambda: method
 
         global msg
         msg = None
         try:
             rdoc = self.opener.open(req)
             msg = rdoc.read()
-            if not msg and empty_response_ok:
-                rval = {}
-                rval["status"] = True
-                rval["error"] = "Response body was empty"
-            elif not noformat:
-                rval = ext_json.loads(msg)
-                rval["status"] = True
-            else:
-                rval = "".join(rdoc.readlines())
+            rval = ext_json.loads(msg)
+            rval["status"] = True
         except Exception as e:
-            if not noformat:
-                rval = {"status": False,
-                        "body": body,
-                        "error": "%s\n%r" % (e, msg)}
-            else:
-                rval = None
+            rval = {"status": False,
+                    "body": body,
+                    "error": "%s\n%r" % (e, msg)}
         return rval
 
     def user_auth(self, username, password):
