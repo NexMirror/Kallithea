@@ -231,9 +231,9 @@ class GitChangeset(BaseChangeset):
         # Only used to feed diffstat
         rev1 = self.parents[0] if self.parents else self.repository.EMPTY_CHANGESET
         rev2 = self
-        return b''.join(self.repository.get_diff(rev1, rev2,
+        return self.repository.get_diff(rev1, rev2,
                                     ignore_whitespace=ignore_whitespace,
-                                    context=context))
+                                    context=context)
 
     def get_file_mode(self, path):
         """
