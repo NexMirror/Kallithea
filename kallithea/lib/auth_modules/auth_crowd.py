@@ -94,10 +94,10 @@ class CrowdServer(object):
             req.get_method = lambda: method
 
         global msg
-        msg = ""
+        msg = None
         try:
             rdoc = self.opener.open(req)
-            msg = "".join(rdoc.readlines())
+            msg = rdoc.read()
             if not msg and empty_response_ok:
                 rval = {}
                 rval["status"] = True
@@ -111,7 +111,7 @@ class CrowdServer(object):
             if not noformat:
                 rval = {"status": False,
                         "body": body,
-                        "error": str(e) + "\n" + msg}
+                        "error": "%s\n%r" % (e, msg)}
             else:
                 rval = None
         return rval
