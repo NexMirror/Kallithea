@@ -4,7 +4,7 @@
   "dependencies": {
     "at.js": "1.5.4",
     "bootstrap": "3.3.7",
-    "codemirror": "5.49.0",
+    "codemirror": "5.58.2",
     "datatables.net": "1.10.20",
     "datatables.net-bs": "1.10.20",
     "jquery": "3.4.1",
